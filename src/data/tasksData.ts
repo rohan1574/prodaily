@@ -22,7 +22,7 @@ const tasksData: Record<string, any> = {
     'Visualization ': require('../../assets/images/Walking.png'),
     'Relaxation ': require('../../assets/images/Walking.png'),
     'Nature Interaction ': require('../../assets/images/Walking.png'),
-    'Laughing & Smiling 😄': require('../../assets/images/Walking.png'),
+    'Laughing & Smiling ': require('../../assets/images/Walking.png'),
     'Digital Detox 📴': require('../../assets/images/Walking.png'),
     'Creative Outlets 🎨': require('../../assets/images/Walking.png'),
     'Engaging in Fun Activities 🎉': require('../../assets/images/Walking.png'),
