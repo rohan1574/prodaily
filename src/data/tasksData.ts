@@ -25,7 +25,7 @@ const tasksData: Record<string, any> = {
     'Laughing & Smiling ': require('../../assets/images/Walking.png'),
     'Digital Detox ': require('../../assets/images/Walking.png'),
     'Creative Outlets 🎨': require('../../assets/images/Walking.png'),
-    'Engaging in Fun Activities 🎉': require('../../assets/images/Walking.png'),
+    'Engaging in Fun Activities ': require('../../assets/images/Walking.png'),
     'Watching Comedies 📺': require('../../assets/images/Walking.png'),
     'Barefoot Earth Touching': require('../../assets/images/Walking.png'),
     'Other Wellness': require('../../assets/images/Walking.png'),
