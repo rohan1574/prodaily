@@ -10,7 +10,7 @@ const categoryIcons: Record<string, any> = {
 
 const taskIcons: Record<string, any> = {
   Walking: require('./assets/images/Google.png'),
-  Cycling: require('./assets/images/Google.png'),
+  Cycling: require('./assets/images/Google.pnge'),
   // Add more tasks if needed
 };
 
