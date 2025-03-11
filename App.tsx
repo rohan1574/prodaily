@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {s as tw} from 'react-native-wind';
+import { s as tw } from 'react-native-wind';
 
 // Category Icons
 const categoryIcons: Record<string, any> = {
@@ -18,7 +18,6 @@ const categoryIcons: Record<string, any> = {
   Wellness: require('./assets/images/wellness.png'),
   Work: require('./assets/images/work.png'),
   Nutrition: require('./assets/images/nutrition.png'),
-  Nutritio: require('./assets/images/nutrition.png'),
 };
 
 // Task Data
@@ -39,28 +38,45 @@ const tasksData: Record<string, any> = {
   Wellness: {
     Meditation: require('./assets/images/Walking.png'),
     Journaling: require('./assets/images/Walking.png'),
-    Yoga: require('./assets/images/Yoga.png'),
+  },
+  Work: {
+    Task1: require('./assets/images/Walking.png'),
+    Task2: require('./assets/images/Walking.png'),
+  },
+  Nutrition: {
+    HealthyFood: require('./assets/images/Walking.png'),
+    DietPlan: require('./assets/images/Walking.png'),
   },
 };
 
 // List of categories
 const categories = Object.keys(categoryIcons);
 
+// Make Infinite Scroll Data (Repeat categories)
+const infiniteCategories = [...categories, ...categories, ...categories];
+
 const DailyTaskScreen = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0],
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0]);
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Handle scrolling and auto-select first visible category
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollX = event.nativeEvent.contentOffset.x;
-    const categoryWidth = 80; // Approximate width of each category item (adjust if needed)
-    const firstVisibleIndex = Math.round(scrollX / categoryWidth);
+    const categoryWidth = 80; // Approximate width of each category item
 
-    if (categories[firstVisibleIndex]) {
-      setSelectedCategory(categories[firstVisibleIndex]);
+    const firstVisibleIndex = Math.round(scrollX / categoryWidth) % categories.length;
+    setSelectedCategory(categories[firstVisibleIndex]);
+  };
+
+  // Infinite Scroll Effect
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollX = event.nativeEvent.contentOffset.x;
+    const categoryWidth = 80;
+    const totalWidth = categoryWidth * categories.length;
+
+    if (scrollX >= totalWidth) {
+      scrollViewRef.current?.scrollTo({ x: 0, animated: false });
     }
   };
 
@@ -78,8 +94,9 @@ const DailyTaskScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
+        onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={16}>
-        {categories.map((category, index) => (
+        {infiniteCategories.map((category, index) => (
           <TouchableOpacity
             key={index}
             style={tw`items-center mx-2`}
@@ -87,18 +104,12 @@ const DailyTaskScreen = () => {
             <View
               style={[
                 tw`w-16 h-16 rounded-full flex items-center justify-center border-2`,
-                selectedCategory === category
-                  ? tw`border-blue-500`
-                  : tw`border-gray-300`,
+                selectedCategory === category ? tw`border-blue-500` : tw`border-gray-300`,
               ]}>
               <Image source={categoryIcons[category]} style={tw`w-8 h-8`} />
             </View>
             <Text
-              style={tw`text-sm mt-1 ${
-                selectedCategory === category
-                  ? 'text-blue-500'
-                  : 'text-gray-600'
-              }`}>
+              style={tw`text-sm mt-1 ${selectedCategory === category ? 'text-blue-500' : 'text-gray-600'}`}>
               {category}
             </Text>
           </TouchableOpacity>
@@ -112,10 +123,7 @@ const DailyTaskScreen = () => {
             onPress={() => setExpandedTask(expandedTask === task ? null : task)}
             style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
             <View style={tw`flex-row items-center`}>
-              <Image
-                source={tasksData[selectedCategory][task]}
-                style={tw` mr-3`}
-              />
+              <Image source={tasksData[selectedCategory][task]} style={tw`mr-3`} />
               <Text style={tw`text-base font-semibold text-black`}>{task}</Text>
             </View>
             <Icon
@@ -127,11 +135,8 @@ const DailyTaskScreen = () => {
 
           {/* Expanded Task Options */}
           {expandedTask === task && (
-            <View
-              style={tw`bg-white p-4 mt-2 rounded-lg shadow-lg border border-gray-200`}>
-              <Text style={tw`text-black text-base mb-2`}>
-                Add to my Routine for
-              </Text>
+            <View style={tw`bg-white p-4 mt-2 rounded-lg shadow-lg border border-gray-200`}>
+              <Text style={tw`text-black text-base mb-2`}>Add to my Routine for</Text>
               <View style={tw`flex-row items-center`}>
                 <TextInput
                   style={tw`border border-gray-300 text-black rounded-md p-2 w-16 text-center`}
@@ -144,9 +149,7 @@ const DailyTaskScreen = () => {
                 </TouchableOpacity>
               </View>
 
-              <Text style={tw`text-black text-base mt-3 mb-2`}>
-                Set Daily Target
-              </Text>
+              <Text style={tw`text-black text-base mt-3 mb-2`}>Set Daily Target</Text>
               <View style={tw`flex-row items-center`}>
                 <TextInput
                   style={tw`border border-gray-300 text-black rounded-md p-2 w-16 text-center`}
@@ -160,9 +163,7 @@ const DailyTaskScreen = () => {
               </View>
 
               <TouchableOpacity style={tw`bg-blue-500 mt-4 py-3 rounded-md`}>
-                <Text style={tw`text-white text-center font-bold`}>
-                  Add to Routine
-                </Text>
+                <Text style={tw`text-white text-center font-bold`}>Add to Routine</Text>
               </TouchableOpacity>
             </View>
           )}
