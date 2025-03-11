@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text } from 'react-native';
-import { s as tw } from 'react-native-wind';
+import { s as tw } from 'react-native-wind'; 
 
 const LogoSplashScreen = () => {
   return (
