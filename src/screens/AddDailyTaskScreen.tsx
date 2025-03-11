@@ -150,7 +150,7 @@ const DailyTaskScreen = () => {
             <View
               style={tw`bg-white p-4 mt-2 rounded-lg shadow-lg border border-gray-200`}>
               <Text style={tw`text-black text-base mb-2`}>
-                Add to my Routine fo
+                Add to my Routine for
               </Text>
               <View style={tw`flex-row items-center`}>
                 <TextInput
