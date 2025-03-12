@@ -293,156 +293,168 @@ const DailyTaskScreen = () => {
   const [target, setTarget] = useState('30');
   const [oneTime, setOneTime] = useState('Weekly');
   return (
-    <ScrollView style={tw`flex-1 bg-red-50 p-4`}>
+    <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
-      <Text style={tw`text-xl font-bold text-black mb-1`}>Add Daily Task</Text>
-      <Text style={tw`text-sm text-gray-500 mb-4`}>
-        Add tasks to your daily routine to stay productive.
-      </Text>
+      <View style={tw`mb-2`}>
+        <Text style={tw`text-xl font-bold text-black`}>Add Daily Task</Text>
+        <Text style={tw`text-sm text-gray-500`}>
+          Add tasks to your daily routine to stay productive.
+        </Text>
+      </View>
 
-      {/* Horizontal Scrollable Categories */}
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        onMomentumScrollEnd={handleScrollEnd}
-        scrollEventThrottle={16}>
-        {infiniteCategories.map((category, index) => (
-          <TouchableOpacity
-            key={index}
-            style={tw`items-center mx-2`}
-            onPress={() => setSelectedCategory(category)}>
-            <View
-              style={[
-                tw`w-16 h-16 rounded-full flex items-center justify-center border-2`,
-                selectedCategory === category
-                  ? tw`border-blue-500`
-                  : tw`border-gray-300`,
-              ]}>
-              <Image source={categoryIcons[category]} style={tw`w-8 h-8`} />
-            </View>
-            <Text
-              style={tw`text-sm mt-1 ${
-                selectedCategory === category
-                  ? 'text-blue-500'
-                  : 'text-gray-600'
-              }`}>
-              {category}
-            </Text>
-          </TouchableOpacity>
+      {/* Horizontal Scrollable Categories (Fixed) */}
+      <View>
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          onMomentumScrollEnd={handleScrollEnd}
+          scrollEventThrottle={16}>
+          {infiniteCategories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={tw`items-center mx-2`}
+              onPress={() => setSelectedCategory(category)}>
+              <View
+                style={[
+                  tw`w-16 h-16 rounded-full flex items-center justify-center border-2`,
+                  selectedCategory === category
+                    ? tw`border-blue-500`
+                    : tw`border-gray-300`,
+                ]}>
+                <Image source={categoryIcons[category]} style={tw`w-8 h-8`} />
+              </View>
+              <Text
+                style={tw`text-sm mt-1 ${
+                  selectedCategory === category
+                    ? 'text-blue-500'
+                    : 'text-gray-600'
+                }`}>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Task List (Scrollable) */}
+      <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
+        {Object.keys(tasksData[selectedCategory] || {}).map((task, index) => (
+          <View key={index} style={tw`mb-2`}>
+            <TouchableOpacity
+              onPress={() =>
+                setExpandedTask(expandedTask === task ? null : task)
+              }
+              style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
+              <View style={tw`flex-row items-center`}>
+                <Image
+                  source={tasksData[selectedCategory][task]}
+                  style={tw`mr-3`}
+                />
+                <Text style={tw`text-base font-semibold text-black`}>
+                  {task}
+                </Text>
+              </View>
+              <Icon
+                name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
+                size={20}
+                color="#DFDFDF"
+              />
+            </TouchableOpacity>
+
+            {/* Expanded Task Options */}
+            {expandedTask === task && (
+              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
+                {/* Header */}
+                <View style={tw`flex-row items-center mb-4`}>
+                  <Icon name="bicycle" size={24} color="#3B82F6" />
+                  <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
+                    Cycling
+                  </Text>
+                </View>
+
+                {/* Routine Duration */}
+                <Text style={tw`text-gray-600 mb-2`}>
+                  Add to my Routine for
+                </Text>
+                <View style={tw`flex-row items-center mb-4`}>
+                  <TextInput
+                    value="365"
+                    keyboardType="numeric"
+                    style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
+                  />
+                  {['Day', 'Week', 'Month'].map(item => (
+                    <TouchableOpacity
+                      key={item}
+                      onPress={() => setDuration(item)}
+                      style={tw`ml-2 px-3 py-1 rounded-lg ${
+                        duration === item
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200'
+                      }`}>
+                      <Text
+                        style={tw`${
+                          duration === item ? 'text-white' : 'text-gray-700'
+                        }`}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {/* Daily Target */}
+                <View style={tw`flex-row items-center mb-4`}>
+                  <TouchableOpacity style={tw`mr-2`}>
+                    <Icon name="radio-button-on" size={20} color="#3B82F6" />
+                  </TouchableOpacity>
+                  <Text style={tw`text-gray-700 mr-2`}>Set Daily Target</Text>
+                  <TextInput
+                    value={target}
+                    onChangeText={setTarget}
+                    keyboardType="numeric"
+                    style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
+                  />
+                  <Text style={tw`text-gray-700 ml-2`}>Min</Text>
+                </View>
+
+                {/* One-Time Selection */}
+                <View style={tw`flex-row items-center mb-4`}>
+                  <TouchableOpacity style={tw`mr-2`}>
+                    <Icon name="radio-button-on" size={20} color="#3B82F6" />
+                  </TouchableOpacity>
+                  <Text style={tw`text-gray-700 mr-2`}>Add as a one-time</Text>
+                  {['Weekly', 'Monthly', 'Yearly'].map(item => (
+                    <TouchableOpacity
+                      key={item}
+                      onPress={() => setOneTime(item)}
+                      style={tw`px-1 py-1 rounded-lg ${
+                        oneTime === item
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200'
+                      }`}>
+                      <Text
+                        style={tw`${
+                          oneTime === item ? 'text-white' : 'text-gray-700'
+                        }`}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {/* Add to Routine Button */}
+                <TouchableOpacity style={tw`bg-blue-500 py-2 rounded-lg`}>
+                  <Text style={tw`text-white text-center font-semibold`}>
+                    Add to Routine
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         ))}
       </ScrollView>
-
-      {/* Tasks List Based on Selected Category */}
-      {Object.keys(tasksData[selectedCategory] || {}).map((task, index) => (
-        <View key={index} style={tw`mb-2`}>
-          <TouchableOpacity
-            onPress={() => setExpandedTask(expandedTask === task ? null : task)}
-            style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
-            <View style={tw`flex-row items-center`}>
-              <Image
-                source={tasksData[selectedCategory][task]}
-                style={tw`mr-3`}
-              />
-              <Text style={tw`text-base font-semibold text-black`}>{task}</Text>
-            </View>
-            <Icon
-              name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
-              size={20}
-              color="#DFDFDF"
-            />
-          </TouchableOpacity>
-
-          {/* Expanded Task Options */}
-          {expandedTask === task && (
-            <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
-              {/* Header */}
-              <View style={tw`flex-row items-center mb-4`}>
-                <Icon name="bicycle" size={24} color="#3B82F6" />
-                <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
-                  Cycling
-                </Text>
-              </View>
-
-              {/* Routine Duration */}
-              <Text style={tw`text-gray-600 mb-2`}>Add to my Routine for</Text>
-              <View style={tw`flex-row items-center mb-4`}>
-                <TextInput
-                  value="365"
-                  keyboardType="numeric"
-                  style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
-                />
-                {['Day', 'Week', 'Month'].map(item => (
-                  <TouchableOpacity
-                    key={item}
-                    onPress={() => setDuration(item)}
-                    style={tw`ml-2 px-3 py-1 rounded-lg ${
-                      duration === item
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200'
-                    }`}>
-                    <Text
-                      style={tw`${
-                        duration === item ? 'text-white' : 'text-gray-700'
-                      }`}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/* Daily Target */}
-              <View style={tw`flex-row items-center mb-4`}>
-                <TouchableOpacity style={tw`mr-2`}>
-                  <Icon name="radio-button-on" size={20} color="#3B82F6" />
-                </TouchableOpacity>
-                <Text style={tw`text-gray-700 mr-2`}>Set Daily Target</Text>
-                <TextInput
-                  value={target}
-                  onChangeText={setTarget}
-                  keyboardType="numeric"
-                  style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
-                />
-                <Text style={tw`text-gray-700 ml-2`}>Min</Text>
-              </View>
-
-              {/* One-Time Selection */}
-              <View style={tw`flex-row items-center mb-4`}>
-                <TouchableOpacity style={tw`mr-2`}>
-                  <Icon name="radio-button-on" size={20} color="#3B82F6" />
-                </TouchableOpacity>
-                <Text style={tw`text-gray-700 mr-2`}>Add as a one-time</Text>
-                {['Weekly', 'Monthly', 'Yearly'].map(item => (
-                  <TouchableOpacity
-                    key={item}
-                    onPress={() => setOneTime(item)}
-                    style={tw`px-1 py-1 rounded-lg ${
-                      oneTime === item
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200'
-                    }`}>
-                    <Text
-                      style={tw`${
-                        oneTime === item ? 'text-white' : 'text-gray-700'
-                      }`}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/* Add to Routine Button */}
-              <TouchableOpacity style={tw`bg-blue-500 py-2 rounded-lg`}>
-                <Text style={tw`text-white text-center font-semibold`}>
-                  Add to Routine
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      ))}
-    </ScrollView>
+    </View>
   );
 };
 
