@@ -289,7 +289,9 @@ const DailyTaskScreen = () => {
       scrollViewRef.current?.scrollTo({x: 0, animated: false});
     }
   };
-
+  const [duration, setDuration] = useState('Day');
+  const [target, setTarget] = useState('30');
+  const [oneTime, setOneTime] = useState('Weekly');
   return (
     <ScrollView style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
@@ -354,40 +356,85 @@ const DailyTaskScreen = () => {
 
           {/* Expanded Task Options */}
           {expandedTask === task && (
-            <View
-              style={tw`bg-white p-4 mt-2 rounded-lg shadow-lg border border-gray-200`}>
-              <Text style={tw`text-black text-base mb-2`}>
-                Add to my Routine for
-              </Text>
-              <View style={tw`flex-row items-center`}>
-                <TextInput
-                  style={tw`border border-gray-300 text-black rounded-md p-2 w-16 text-center`}
-                  defaultValue="365"
-                  keyboardType="numeric"
-                />
-                <Text style={tw`text-black mx-2`}>Day</Text>
-                <TouchableOpacity style={tw`bg-blue-500 px-3 py-2 rounded-md`}>
-                  <Text style={tw`text-white`}>Week</Text>
-                </TouchableOpacity>
+            <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
+              {/* Header */}
+              <View style={tw`flex-row items-center mb-4`}>
+                <Icon name="bicycle" size={24} color="#3B82F6" />
+                <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
+                  Cycling
+                </Text>
               </View>
 
-              <Text style={tw`text-black text-base mt-3 mb-2`}>
-                Set Daily Target
-              </Text>
-              <View style={tw`flex-row items-center`}>
+              {/* Routine Duration */}
+              <Text style={tw`text-gray-600 mb-2`}>Add to my Routine for</Text>
+              <View style={tw`flex-row items-center mb-4`}>
                 <TextInput
-                  style={tw`border border-gray-300 text-black rounded-md p-2 w-16 text-center`}
-                  defaultValue="60"
+                  value="365"
                   keyboardType="numeric"
+                  style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
                 />
-                <Text style={tw`text-black mx-2`}>Min</Text>
-                <TouchableOpacity style={tw`bg-blue-500 px-3 py-2 rounded-md`}>
-                  <Text style={tw`text-white`}>Set</Text>
-                </TouchableOpacity>
+                {['Day', 'Week', 'Month'].map(item => (
+                  <TouchableOpacity
+                    key={item}
+                    onPress={() => setDuration(item)}
+                    style={tw`ml-2 px-3 py-1 rounded-lg ${
+                      duration === item
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-200'
+                    }`}>
+                    <Text
+                      style={tw`${
+                        duration === item ? 'text-white' : 'text-gray-700'
+                      }`}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
 
-              <TouchableOpacity style={tw`bg-blue-500 mt-4 py-3 rounded-md`}>
-                <Text style={tw`text-white text-center font-bold`}>
+              {/* Daily Target */}
+              <View style={tw`flex-row items-center mb-4`}>
+                <TouchableOpacity style={tw`mr-2`}>
+                  <Icon name="radio-button-on" size={20} color="#3B82F6" />
+                </TouchableOpacity>
+                <Text style={tw`text-gray-700 mr-2`}>Set Daily Target</Text>
+                <TextInput
+                  value={target}
+                  onChangeText={setTarget}
+                  keyboardType="numeric"
+                  style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
+                />
+                <Text style={tw`text-gray-700 ml-2`}>Min</Text>
+              </View>
+
+              {/* One-Time Selection */}
+              <View style={tw`flex-row items-center mb-4`}>
+                <TouchableOpacity style={tw`mr-2`}>
+                  <Icon name="radio-button-on" size={20} color="#3B82F6" />
+                </TouchableOpacity>
+                <Text style={tw`text-gray-700 mr-2`}>Add as a one-time</Text>
+                {['Weekly', 'Monthly', 'Yearly'].map(item => (
+                  <TouchableOpacity
+                    key={item}
+                    onPress={() => setOneTime(item)}
+                    style={tw`px-1 py-1 rounded-lg ${
+                      oneTime === item
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-200'
+                    }`}>
+                    <Text
+                      style={tw`${
+                        oneTime === item ? 'text-white' : 'text-gray-700'
+                      }`}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Add to Routine Button */}
+              <TouchableOpacity style={tw`bg-blue-500 py-2 rounded-lg`}>
+                <Text style={tw`text-white text-center font-semibold`}>
                   Add to Routine
                 </Text>
               </TouchableOpacity>
