@@ -363,7 +363,7 @@ const DailyTaskScreen = () => {
               />
             </TouchableOpacity>
 
-            {/* Expanded Task Options */}
+            {/* Expanded Tasks Options */}
             {expandedTask === task && (
               <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
                 {/* Header */}
