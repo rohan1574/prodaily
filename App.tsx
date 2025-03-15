@@ -374,7 +374,7 @@ const DailyTaskScreen = () => {
                   </Text>
                 </View>
 
-                {/* Routine Duration */}
+                {/* Routin Duration */}
                 <Text style={tw`text-gray-600 mb-2`}>
                   Add to my Routine for
                 </Text>
