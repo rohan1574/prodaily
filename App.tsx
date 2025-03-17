@@ -8,6 +8,7 @@ import {
   TextInput,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -292,6 +293,7 @@ const DailyTaskScreen = () => {
   const [duration, setDuration] = useState('Day');
   const [target, setTarget] = useState('30');
   const [oneTime, setOneTime] = useState('Weekly');
+  const [isModalVisible, setModalVisible] = useState(false);
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
@@ -370,14 +372,12 @@ const DailyTaskScreen = () => {
                 <View style={tw`flex-row items-center mb-4`}>
                   <Icon name="bicycle" size={24} color="#3B82F6" />
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
-                    Cyclings
+                    Cycling
                   </Text>
                 </View>
 
                 {/* Routine Duration */}
-                <Text style={tw`text-gray-600 mb-2`}>
-                  Add to my Routine for
-                </Text>
+                <Text style={tw`text-gray-600 mb-2`}>Add spcefic for</Text>
                 <View style={tw`flex-row items-center mb-4`}>
                   <TextInput
                     value="365"
@@ -423,15 +423,16 @@ const DailyTaskScreen = () => {
                   <TouchableOpacity style={tw`mr-2`}>
                     <Icon name="radio-button-on" size={20} color="#3B82F6" />
                   </TouchableOpacity>
-                  <Text style={tw`text-gray-700 mr-2`}>Add as a one-time</Text>
+                  <Text style={tw`text-gray-700 mr-2`}>Add once a</Text>
                   {['Weekly', 'Monthly', 'Yearly'].map(item => (
                     <TouchableOpacity
                       key={item}
-                      onPress={() => setOneTime(item)}
-                      style={tw`px-1 py-1 rounded-lg ${
-                        oneTime === item
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
+                      onPress={() => {
+                        setOneTime(item);
+                        if (item === 'Weekly') setModalVisible(true); // Open modal if Weekly is selected
+                      }}
+                      style={tw`px-2 py-1 rounded-lg ${
+                        oneTime === item ? 'bg-blue-500' : 'bg-gray-200'
                       }`}>
                       <Text
                         style={tw`${
@@ -441,6 +442,26 @@ const DailyTaskScreen = () => {
                       </Text>
                     </TouchableOpacity>
                   ))}
+
+                  {/* Weekly Modal */}
+                  <Modal
+                    visible={isModalVisible}
+                    transparent
+                    animationType="slide">
+                    <View
+                      style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
+                      <View style={tw`bg-white p-6 rounded-lg`}>
+                        <Text style={tw`text-lg font-bold mb-4`}>
+                          Select Weekly Options
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => setModalVisible(false)}
+                          style={tw`bg-red-500 px-4 py-2 rounded-lg`}>
+                          <Text style={tw`text-white`}>Close</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </Modal>
                 </View>
 
                 {/* Add to Routine Button */}
