@@ -8,9 +8,11 @@ import {
   TextInput,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
+import DateSelector from "./DateSelector";
 
 // Category Icons
 const categoryIcons: Record<string, any> = {
@@ -292,6 +294,19 @@ const DailyTaskScreen = () => {
   const [duration, setDuration] = useState('Day');
   const [target, setTarget] = useState('30');
   const [oneTime, setOneTime] = useState('Weekly');
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [showNextDay, setShowNextDay] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Function to handle day selection
+  const toggleDaySelection = (day: string) => {
+    setSelectedDays(prevDays =>
+      prevDays.includes(day)
+        ? prevDays.filter(d => d !== day)
+        : [...prevDays, day],
+    );
+  };
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
@@ -363,21 +378,22 @@ const DailyTaskScreen = () => {
               />
             </TouchableOpacity>
 
-            {/* Expanded Task Options */}
+            {/* Expanded Tasks Options */}
             {expandedTask === task && (
               <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-4`}>
-                  <Icon name="bicycle" size={24} color="#3B82F6" />
+                <Image
+                    source={tasksData[selectedCategory][expandedTask]}
+                    style={tw`mr-3`}
+                  />
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
-                    Cycling
+                  {expandedTask}
                   </Text>
                 </View>
 
                 {/* Routine Duration */}
-                <Text style={tw`text-gray-600 mb-2`}>
-                  Add to my Routine for
-                </Text>
+                <Text style={tw`text-gray-600 mb-2`}>Add spcefic for</Text>
                 <View style={tw`flex-row items-center mb-4`}>
                   <TextInput
                     value="365"
@@ -423,15 +439,16 @@ const DailyTaskScreen = () => {
                   <TouchableOpacity style={tw`mr-2`}>
                     <Icon name="radio-button-on" size={20} color="#3B82F6" />
                   </TouchableOpacity>
-                  <Text style={tw`text-gray-700 mr-2`}>Add as a one-time</Text>
+                  <Text style={tw`text-gray-700 mr-2`}>Add once a</Text>
                   {['Weekly', 'Monthly', 'Yearly'].map(item => (
                     <TouchableOpacity
                       key={item}
-                      onPress={() => setOneTime(item)}
-                      style={tw`px-1 py-1 rounded-lg ${
-                        oneTime === item
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
+                      onPress={() => {
+                        setOneTime(item);
+                        if (item === 'Weekly') setModalVisible(true); // Open modal if Weekly is selected
+                      }}
+                      style={tw`px-2 py-1 rounded-lg ${
+                        oneTime === item ? 'bg-blue-500' : 'bg-gray-200'
                       }`}>
                       <Text
                         style={tw`${
@@ -441,6 +458,97 @@ const DailyTaskScreen = () => {
                       </Text>
                     </TouchableOpacity>
                   ))}
+                   {/* DateSelector Modal */}
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
+          <View style={tw`bg-white p-4 rounded-lg w-3/4`}>
+            <DateSelector />
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={tw`mt-4 bg-red-500 p-2 rounded-lg`}
+            >
+              <Text style={tw`text-white text-center`}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+                  {/* Weekly Modal */}
+                  <Modal
+                    transparent={true}
+                    visible={modalVisible}
+                    animationType="slide"
+                    onRequestClose={() => setModalVisible(false)}>
+                    <View
+                      style={tw`flex-1 justify-center items-center bg-black/50`}>
+                      <View style={tw`bg-gray-200 p-4 rounded-lg w-80`}>
+                        <Text
+                          style={tw`text-center text-gray-700 font-semibold mb-2`}>
+                          Select Days of the Week
+                        </Text>
+                        <View style={tw`flex-row justify-between mb-4`}>
+                          {days.map((day, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={() => toggleDaySelection(day)}
+                              style={tw`p-2 rounded-full ${
+                                selectedDays.includes(day)
+                                  ? 'bg-blue-500'
+                                  : 'bg-gray-300'
+                              }`}>
+                              <Text
+                                style={tw`${
+                                  selectedDays.includes(day)
+                                    ? 'text-white'
+                                    : 'text-gray-500'
+                                } font-semibold`}>
+                                {day}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+
+                        <TouchableOpacity
+                          onPress={() => setShowNextDay(!showNextDay)}
+                          style={tw`flex-row items-center mb-4`}>
+                          <View
+                            style={tw`w-5 h-5 border-2 rounded-full flex items-center justify-center ${
+                              showNextDay
+                                ? 'border-blue-500'
+                                : 'border-gray-400'
+                            }`}>
+                            {showNextDay && (
+                              <View
+                                style={tw`w-3 h-3 bg-blue-500 rounded-full`}
+                              />
+                            )}
+                          </View>
+                          <Text style={tw`ml-2 text-gray-700`}>
+                            Show next day too if not Completed
+                          </Text>
+                        </TouchableOpacity>
+
+                        <View style={tw`flex-row justify-between`}>
+                          <TouchableOpacity
+                            onPress={() => setModalVisible(false)}
+                            style={tw`bg-gray-500 px-4 py-2 rounded-lg`}>
+                            <Text style={tw`text-white font-semibold`}>
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              console.log('Selected Days:', selectedDays);
+                              setModalVisible(false);
+                            }}
+                            style={tw`bg-blue-500 px-4 py-2 rounded-lg`}>
+                            <Text style={tw`text-white font-semibold`}>
+                              Add Days
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  </Modal>
                 </View>
 
                 {/* Add to Routine Button */}
