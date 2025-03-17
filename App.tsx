@@ -382,9 +382,12 @@ const DailyTaskScreen = () => {
               <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-4`}>
-                  <Icon name="bicycle" size={24} color="#3B82F6" />
+                <Image
+                    source={tasksData[selectedCategory][expandedTask]}
+                    style={tw`mr-3`}
+                  />
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
-                    Cycling
+                  {expandedTask}
                   </Text>
                 </View>
 
