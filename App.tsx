@@ -370,7 +370,7 @@ const DailyTaskScreen = () => {
                 <View style={tw`flex-row items-center mb-4`}>
                   <Icon name="bicycle" size={24} color="#3B82F6" />
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
-                    Cycling
+                    Cyclings
                   </Text>
                 </View>
 
