@@ -293,7 +293,19 @@ const DailyTaskScreen = () => {
   const [duration, setDuration] = useState('Day');
   const [target, setTarget] = useState('30');
   const [oneTime, setOneTime] = useState('Weekly');
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [showNextDay, setShowNextDay] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Function to handle day selection
+  const toggleDaySelection = (day: string) => {
+    setSelectedDays(prevDays =>
+      prevDays.includes(day)
+        ? prevDays.filter(d => d !== day)
+        : [...prevDays, day],
+    );
+  };
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
@@ -445,20 +457,78 @@ const DailyTaskScreen = () => {
 
                   {/* Weekly Modal */}
                   <Modal
-                    visible={isModalVisible}
-                    transparent
-                    animationType="slide">
+                    transparent={true}
+                    visible={modalVisible}
+                    animationType="slide"
+                    onRequestClose={() => setModalVisible(false)}>
                     <View
-                      style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-                      <View style={tw`bg-white p-6 rounded-lg`}>
-                        <Text style={tw`text-lg font-bold mb-4`}>
-                          Select Weekly Options
+                      style={tw`flex-1 justify-center items-center bg-black/50`}>
+                      <View style={tw`bg-gray-200 p-4 rounded-lg w-80`}>
+                        <Text
+                          style={tw`text-center text-gray-700 font-semibold mb-2`}>
+                          Select Days of the Week
                         </Text>
+                        <View style={tw`flex-row justify-between mb-4`}>
+                          {days.map((day, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={() => toggleDaySelection(day)}
+                              style={tw`p-2 rounded-full ${
+                                selectedDays.includes(day)
+                                  ? 'bg-blue-500'
+                                  : 'bg-gray-300'
+                              }`}>
+                              <Text
+                                style={tw`${
+                                  selectedDays.includes(day)
+                                    ? 'text-white'
+                                    : 'text-gray-500'
+                                } font-semibold`}>
+                                {day}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+
                         <TouchableOpacity
-                          onPress={() => setModalVisible(false)}
-                          style={tw`bg-red-500 px-4 py-2 rounded-lg`}>
-                          <Text style={tw`text-white`}>Close</Text>
+                          onPress={() => setShowNextDay(!showNextDay)}
+                          style={tw`flex-row items-center mb-4`}>
+                          <View
+                            style={tw`w-5 h-5 border-2 rounded-full flex items-center justify-center ${
+                              showNextDay
+                                ? 'border-blue-500'
+                                : 'border-gray-400'
+                            }`}>
+                            {showNextDay && (
+                              <View
+                                style={tw`w-3 h-3 bg-blue-500 rounded-full`}
+                              />
+                            )}
+                          </View>
+                          <Text style={tw`ml-2 text-gray-700`}>
+                            Show next day too if not Completed
+                          </Text>
                         </TouchableOpacity>
+
+                        <View style={tw`flex-row justify-between`}>
+                          <TouchableOpacity
+                            onPress={() => setModalVisible(false)}
+                            style={tw`bg-gray-500 px-4 py-2 rounded-lg`}>
+                            <Text style={tw`text-white font-semibold`}>
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              console.log('Selected Days:', selectedDays);
+                              setModalVisible(false);
+                            }}
+                            style={tw`bg-blue-500 px-4 py-2 rounded-lg`}>
+                            <Text style={tw`text-white font-semibold`}>
+                              Add Days
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   </Modal>
