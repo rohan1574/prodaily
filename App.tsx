@@ -505,7 +505,7 @@ const DailyTaskScreen = () => {
                   <Icon
                     name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
                     size={24}
-                    color="#3B82F6" // Blue Color
+                    color="#3B82F" // Blue Color
                   />
                 </TouchableOpacity>
               </View>
