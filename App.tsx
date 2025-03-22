@@ -27,26 +27,33 @@ const initialTasks: Task[] = [
   { id: 9, title: 'Gratitude Practice', completed: true, image: require('./assets/images/Walking.png'), starred: false },
   { id: 10, title: 'Creative Writing/Blogging', time: '135 min', completed: true, image: require('./assets/images/Walking.png'), starred: false },
   { id: 11, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 12, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 13, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 14, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 15, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 16, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
 ];
 
 const TaskListScreen: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
-  // Toggle Completion Status
+  // Toggle Completion Status (Updated Sorting Logic)
   const toggleComplete = (id: number) => {
-    setTasks(prevTasks =>
-      prevTasks
-        .map(task => (task.id === id ? { ...task, completed: !task.completed } : task))
-        .sort((a, b) => Number(a.completed) - Number(b.completed)) // Completed tasks নিচে যাবে
-    );
+    setTasks(prevTasks => {
+      const updatedTasks = prevTasks.map(task =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      );
+
+      // Separate completed and non-completed tasks
+      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
+      const completedTasks = updatedTasks.filter(task => task.completed);
+
+      // Sort non-completed tasks → Starred tasks উপরে
+      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+
+      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
+      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+
+      return [...nonCompletedTasks, ...completedTasks];
+    });
   };
 
-  // Toggle Starred Status (Optimized)
+  // Toggle Starred Status (Updated Sorting Logic)
   const toggleStar = (id: number) => {
     setTasks(prevTasks => {
       const updatedTasks = prevTasks.map(task =>
@@ -57,8 +64,10 @@ const TaskListScreen: React.FC = () => {
       const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
       const completedTasks = updatedTasks.filter(task => task.completed);
 
-      // Sort starred tasks at the top of their respective sections
+      // Sort non-completed tasks → Starred tasks উপরে
       nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+
+      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
       completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
 
       return [...nonCompletedTasks, ...completedTasks];
