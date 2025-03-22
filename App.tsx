@@ -148,7 +148,7 @@ const TodaysTaskToDoScreen: React.FC = () => {
         {/* Floating Plus Button with White Layered Background */}
         <View style={tw`absolute bottom-6 -translate-x-1/2`}>
           <View
-            style={tw`w-14 h-1 bg-red-50 rounded-full absolute top-6 left-3 `}
+            style={tw`w-14 h-14 bg-red-50 rounded-full absolute top-6 left-3 `}
           />
           <TouchableOpacity>
             <Icon name="add-circle" size={80} color="blue" />
