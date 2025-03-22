@@ -1,137 +1,107 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { s as tw } from 'react-native-wind';
 
-// Define Task Type
-interface Task {
-  id: number;
-  title: string;
-  time?: string;
-  progress?: string;
-  image: any; // Consider using ImageSourcePropType
-  starred: boolean;
-  completed: boolean;
-}
-
-// Initial Task List
-const initialTasks: Task[] = [
-  { id: 1, title: 'Walking', time: '135 min', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 2, title: 'Skill Practice', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 3, title: 'Eyes on News', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 4, title: 'Course Watching', time: '135 min', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 5, title: 'Organizing Home', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 6, title: 'Gardening', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 7, title: 'Prayer', progress: '0 / 5', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 8, title: 'Walking', image: require('./assets/images/Walking.png'), starred: false, completed: false },
-  { id: 9, title: 'Gratitude Practice', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 10, title: 'Creative Writing/Blogging', time: '135 min', completed: true, image: require('./assets/images/Walking.png'), starred: false },
-  { id: 11, title: 'Feeding Pet', progress: '5 / 5', completed: true, image: require('./assets/images/Walking.png'), starred: false },
+const years = Array.from({ length: 26 }, (_, i) => 2025 + i);
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-const TaskListScreen: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+const tasks = [
+  { title: 'Walking', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Skill Practice', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Eyes on News', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Course Watching', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Gardening', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Prayer', image: require('./assets/images/Walking.png'), frequency: 'Monthly' },
+  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Yearly' },
+  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Specific' },
+];
 
-  // Toggle Completion Status (Updated Sorting Logic)
-  const toggleComplete = (id: number) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      );
+export default function CalendarScreen() {
+  const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedMonth, setSelectedMonth] = useState('December');
+  const [selectedDay, setSelectedDay] = useState(8); // default selected day
 
-      // Separate completed and non-completed tasks
-      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
-      const completedTasks = updatedTasks.filter(task => task.completed);
-
-      // Sort non-completed tasks → Starred tasks উপরে
-      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
-      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      return [...nonCompletedTasks, ...completedTasks];
-    });
+  const getDaysInMonth = (year: number, month: number): number => {
+    return new Date(year, month + 1, 0).getDate();
   };
+  
 
-  // Toggle Starred Status (Updated Sorting Logic)
-  const toggleStar = (id: number) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(task =>
-        task.id === id ? { ...task, starred: !task.starred } : task
-      );
-
-      // Separate completed and non-completed tasks
-      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
-      const completedTasks = updatedTasks.filter(task => task.completed);
-
-      // Sort non-completed tasks → Starred tasks উপরে
-      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
-      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      return [...nonCompletedTasks, ...completedTasks];
-    });
-  };
-
-  // Task Item Component
-  const TaskItem: React.FC<{ task: Task }> = ({ task }) => (
-    <View style={[tw`flex-row items-center p-2 border-b border-gray-200`, task.completed && tw`bg-green-100`]}>
-      <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-        <Icon name={task.completed ? "checkmark-circle" : "ellipse-outline"} size={24} color={task.completed ? "green" : "gray"} style={tw`mr-2`} />
-      </TouchableOpacity>
-      <Image source={task.image} style={tw`w-6 h-6 mr-2`} />
-      <Text style={tw`flex-1`}>{task.title}</Text>
-      {task.time && <Text style={tw`text-gray-500`}>{task.time}</Text>}
-      {task.progress && <Text style={tw`text-gray-500`}>{task.progress}</Text>}
-      <TouchableOpacity onPress={() => toggleStar(task.id)}>
-        <Icon name={task.starred ? "star" : "star-outline"} size={20} color={task.starred ? "gold" : "gray"} style={tw`ml-2`} />
-      </TouchableOpacity>
-    </View>
-  );
+  const daysInMonth = getDaysInMonth(selectedYear, months.indexOf(selectedMonth));
 
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
+    <View style={tw`flex-1 bg-white p-4 pt-10`}>
+      
       {/* Header */}
-      <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
-        <View>
-          <Text style={tw`text-white text-lg font-bold`}>Today</Text>
-          <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
-        </View>
-        <View style={tw`flex-row items-center`}>
-          <Image source={require('./assets/images/sun.png')} style={tw`w-10 h-10 rounded-full mr-3`} />
-          <View>
-            <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-            <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
-          </View>
-        </View>
+      <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>My Calendar</Text>
+      <Text style={tw`text-sm text-gray-500 mb-3`}>Your added tasks on the selected calendar day.</Text>
+
+      {/* Year and Month Dropdowns */}
+      <View style={tw`flex-row justify-between mb-4`}>
+        <Picker
+          selectedValue={selectedYear}
+          style={{ width: 150 }}
+          onValueChange={(itemValue) => setSelectedYear(itemValue)}
+        >
+          {years.map((year) => (
+            <Picker.Item key={year} label={year.toString()} value={year} />
+          ))}
+        </Picker>
+
+        <Picker
+          selectedValue={selectedMonth}
+          style={{ width: 150 }}
+          onValueChange={(itemValue) => setSelectedMonth(itemValue)}
+        >
+          {months.map((month) => (
+            <Picker.Item key={month} label={month} value={month} />
+          ))}
+        </Picker>
       </View>
 
-      {/* Task List */}
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <TaskItem task={item} />}
-        extraData={tasks} // Ensures re-render on state update
-      />
+      {/* Calendar */}
+      <View style={tw`flex-row flex-wrap justify-between mb-4`}>
+        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
+          <TouchableOpacity
+            key={day}
+            style={tw`w-10 h-10 rounded-full justify-center items-center mb-2 ${
+              selectedDay === day ? 'bg-blue-500' : ''
+            }`}
+            onPress={() => setSelectedDay(day)}
+          >
+            <Text style={tw`${selectedDay === day ? 'text-white' : 'text-gray-700'}`}>{day}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Tasks */}
+      <ScrollView style={tw`flex-1`}>
+        {tasks.map((task, index) => (
+          <View key={index} style={tw`flex-row items-center justify-between bg-gray-100 rounded-lg p-3 mb-2`}>
+            <View style={tw`flex-row items-center`}>
+              <Image source={task.image} style={tw`w-6 h-6 mr-3`} />
+              <Text style={tw`text-base text-gray-800`}>{task.title}</Text>
+            </View>
+            <Text style={tw`text-sm text-gray-500`}>{task.frequency}</Text>
+          </View>
+        ))}
+      </ScrollView>
 
       {/* Bottom Navigation */}
-      <BottomNav />
+      <View style={tw`absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex-row justify-around items-center h-14`}>
+        <Icon name="home-outline" size={24} color="#333" />
+        <Icon name="bar-chart-outline" size={24} color="#333" />
+        <TouchableOpacity style={tw`bg-blue-500 w-12 h-12 rounded-full justify-center items-center -mt-6`}>
+          <Icon name="add" size={28} color="#fff" />
+        </TouchableOpacity>
+        <Icon name="calendar-outline" size={24} color="#333" />
+        <Icon name="settings-outline" size={24} color="#333" />
+      </View>
     </View>
   );
-};
-
-// Bottom Navigation Component
-const BottomNav: React.FC = () => (
-  <View style={tw`flex-row justify-around bg-white p-3 shadow-md`}>
-    <Icon name="home-outline" size={24} color="#4A90E2" />
-    <Icon name="stats-chart-outline" size={24} color="#4A90E2" />
-    <TouchableOpacity style={tw`bg-blue-500 rounded-full p-3`}>
-      <Icon name="add" size={24} color="#fff" />
-    </TouchableOpacity>
-    <Icon name="calendar-outline" size={24} color="#4A90E2" />
-    <Icon name="settings-outline" size={24} color="#4A90E2" />
-  </View>
-);
-
-export default TaskListScreen;
+}
