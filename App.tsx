@@ -1,107 +1,164 @@
 import React, { useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { s as tw } from 'react-native-wind';
+import {s as tw} from 'react-native-wind';
 
-const years = Array.from({ length: 26 }, (_, i) => 2025 + i);
-const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-const tasks = [
-  { title: 'Walking', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Skill Practice', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Eyes on News', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Course Watching', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Gardening', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Prayer', image: require('./assets/images/Walking.png'), frequency: 'Monthly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Yearly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Specific' },
-];
-
-export default function CalendarScreen() {
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const [selectedMonth, setSelectedMonth] = useState('December');
-  const [selectedDay, setSelectedDay] = useState(8); // default selected day
-
-  const getDaysInMonth = (year: number, month: number): number => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-  
-
-  const daysInMonth = getDaysInMonth(selectedYear, months.indexOf(selectedMonth));
-
+const CircularProgress = ({progress = 0.75, size = 100}) => {
   return (
-    <View style={tw`flex-1 bg-white p-4 pt-10`}>
-      
-      {/* Header */}
-      <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>My Calendar</Text>
-      <Text style={tw`text-sm text-gray-500 mb-3`}>Your added tasks on the selected calendar day.</Text>
+    <View style={tw`items-center justify-center`}>
+      {/* Background Circle */}
+      <View
+        style={[
+          tw`absolute rounded-full border-4 border-gray-300`,
+          {width: size, height: size},
+        ]}
+      />
 
-      {/* Year and Month Dropdowns */}
-      <View style={tw`flex-row justify-between mb-4`}>
-        <Picker
-          selectedValue={selectedYear}
-          style={{ width: 150 }}
-          onValueChange={(itemValue) => setSelectedYear(itemValue)}
-        >
-          {years.map((year) => (
-            <Picker.Item key={year} label={year.toString()} value={year} />
-          ))}
-        </Picker>
+      {/* Foreground Progress */}
+      <View
+        style={[
+          tw`absolute rounded-full border-4 border-blue-500`,
+          {
+            width: size,
+            height: size,
+            borderLeftColor: 'transparent',
+            borderBottomColor: 'transparent',
+            transform: [{rotate: `${progress * 360}deg`}],
+          },
+        ]}
+      />
 
-        <Picker
-          selectedValue={selectedMonth}
-          style={{ width: 150 }}
-          onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-        >
-          {months.map((month) => (
-            <Picker.Item key={month} label={month} value={month} />
-          ))}
-        </Picker>
-      </View>
+      {/* Progress Text */}
+      <Text style={tw`absolute text-lg font-bold text-blue-500`}>
+        {Math.round(progress * 100)}%
+      </Text>
+    </View>
+  );
+};
 
-      {/* Calendar */}
-      <View style={tw`flex-row flex-wrap justify-between mb-4`}>
-        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
-          <TouchableOpacity
-            key={day}
-            style={tw`w-10 h-10 rounded-full justify-center items-center mb-2 ${
-              selectedDay === day ? 'bg-blue-500' : ''
-            }`}
-            onPress={() => setSelectedDay(day)}
-          >
-            <Text style={tw`${selectedDay === day ? 'text-white' : 'text-gray-700'}`}>{day}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+const MyStatisticsScreen = () => {
+    const [selectedTab, setSelectedTab] = useState('Monthly');
+  return (
+    <View style={tw`flex-1 bg-white`}>
+      <ScrollView contentContainerStyle={tw`p-4`}>
+        <Text style={tw`text-lg font-bold text-gray-800`}>My Statistics</Text>
+        <Text style={tw`text-gray-500 mb-4`}>
+          Your task progress and habit report
+        </Text>
 
-      {/* Tasks */}
-      <ScrollView style={tw`flex-1`}>
-        {tasks.map((task, index) => (
-          <View key={index} style={tw`flex-row items-center justify-between bg-gray-100 rounded-lg p-3 mb-2`}>
-            <View style={tw`flex-row items-center`}>
-              <Image source={task.image} style={tw`w-6 h-6 mr-3`} />
-              <Text style={tw`text-base text-gray-800`}>{task.title}</Text>
-            </View>
-            <Text style={tw`text-sm text-gray-500`}>{task.frequency}</Text>
+        {/* Top Statistics */}
+        <View style={tw`flex-row justify-between mb-4`}>
+          <View style={tw`bg-blue-500 p-4 rounded-lg w-1/2 mr-2`}>
+            <Text style={tw`text-white text-sm`}>All Time Completed</Text>
+            <Text style={tw`text-white text-2xl font-bold`}>17235</Text>
           </View>
-        ))}
+          <View style={tw`bg-blue-500 p-4 rounded-lg w-1/2 ml-2`}>
+            <Text style={tw`text-white text-sm`}>Daily Task Into Habit</Text>
+            <Text style={tw`text-white text-2xl font-bold`}>16/23</Text>
+          </View>
+        </View>
+
+        {/* Progress Circle */}
+        <View style={tw`items-center mb-4 top-20`}>
+          <CircularProgress progress={0.87} size={120} />
+        </View>
+
+        {/* Time Period Selection */}
+        <View
+          style={tw`flex-row justify-between bg-gray-100 p-2 rounded-lg mb-4 top-32`}>
+          {['Weekly', 'Monthly', 'Yearly'].map(tab => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setSelectedTab(tab)}
+              style={[
+                tw`px-4 py-2 rounded-lg`,
+                selectedTab === tab ? tw`bg-blue-500` : tw`bg-gray-200`,
+              ]}>
+              <Text
+                style={
+                  selectedTab === tab
+                    ? tw`text-white font-bold`
+                    : tw`text-gray-500`
+                }>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Last Month Section */}
+        <View style={tw`bg-white shadow-lg rounded-lg p-4 top-36`}>
+          <Text style={tw`text-gray-800 font-bold text-lg mb-2`}>
+            Last Month
+          </Text>
+          <View style={tw`flex-row items-center justify-between`}>
+            {/* Left: Circular Progress */}
+            <CircularProgress progress={0.6} size={60} />
+
+            {/* Middle: Task Completed */}
+            <View style={tw`ml-4`}>
+              <Text style={tw`text-gray-800 font-bold text-sm`}>
+                Task Completed
+              </Text>
+              <Text style={tw`text-gray-500 text-xs`}>418 of 610</Text>
+            </View>
+
+            {/* Right: Improvement Text & Button */}
+            <View style={tw`flex-1 ml-4`}>
+              <Text style={tw`text-gray-600 text-xs mb-2`}>
+                You improve a lot, To keep it up; Stay focus. Follow ExpandTimes
+              </Text>
+              <TouchableOpacity style={tw`bg-blue-100 px-4 py-2 rounded-lg`}>
+                <Text style={tw`text-blue-500 font-bold`}>Follow</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* Habits Summary */}
+        <View style={tw`p-4 bg-gray-100 rounded-lg top-40`}>
+          <Text style={tw`text-gray-600 mb-2`}>Habits Summary</Text>
+          <View style={tw`flex-row justify-between`}>
+            <View>
+              <Text style={tw`text-gray-800`}>Success Score</Text>
+              <Text style={tw`text-blue-500 text-lg font-bold`}>91%</Text>
+            </View>
+            <View>
+              <Text style={tw`text-gray-800`}>Completed</Text>
+              <Text style={tw`text-blue-500 text-lg font-bold`}>244</Text>
+            </View>
+            <View>
+              <Text style={tw`text-gray-800`}>Failed</Text>
+              <Text style={tw`text-blue-500 text-lg font-bold`}>2</Text>
+            </View>
+            <View>
+              <Text style={tw`text-gray-800`}>Best Streak Day</Text>
+              <Text style={tw`text-blue-500 text-lg font-bold`}>22</Text>
+            </View>
+          </View>
+        </View>
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={tw`absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex-row justify-around items-center h-14`}>
-        <Icon name="home-outline" size={24} color="#333" />
-        <Icon name="bar-chart-outline" size={24} color="#333" />
-        <TouchableOpacity style={tw`bg-blue-500 w-12 h-12 rounded-full justify-center items-center -mt-6`}>
-          <Icon name="add" size={28} color="#fff" />
+      <View style={tw`flex-row justify-between p-4 bg-white border-t`}>
+        <TouchableOpacity>
+          <Icon name="home-outline" size={28} color="gray" />
         </TouchableOpacity>
-        <Icon name="calendar-outline" size={24} color="#333" />
-        <Icon name="settings-outline" size={24} color="#333" />
+        <TouchableOpacity>
+          <Icon name="bar-chart-outline" size={28} color="blue" />
+        </TouchableOpacity>
+        <TouchableOpacity style={tw`bg-blue-500 p-2 rounded-full`}>
+          <Icon name="add" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="calendar-outline" size={28} color="gray" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="person-outline" size={28} color="gray" />
+        </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
+
+export default MyStatisticsScreen;
