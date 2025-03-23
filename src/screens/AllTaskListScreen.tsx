@@ -86,7 +86,7 @@ const TaskItem: React.FC<{ task: Task; onEdit: () => void; isSelected: boolean; 
   );
 };
 
-const TaskListScreen: React.FC = () => {
+const AllTaskListScreen: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
 
@@ -122,4 +122,4 @@ const TaskListScreen: React.FC = () => {
   );
 };
 
-export default TaskListScreen;
+export default AllTaskListScreen;

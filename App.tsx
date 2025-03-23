@@ -1,107 +1,114 @@
 import React, { useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { s as tw } from 'react-native-wind';
 
-const years = Array.from({ length: 26 }, (_, i) => 2025 + i);
-const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-const tasks = [
-  { title: 'Walking', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Skill Practice', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Eyes on News', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Course Watching', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Gardening', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Prayer', image: require('./assets/images/Walking.png'), frequency: 'Monthly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Yearly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Specific' },
-];
-
-export default function MyCalenderFutureTaskScreen() {
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const [selectedMonth, setSelectedMonth] = useState('December');
-  const [selectedDay, setSelectedDay] = useState(8); // default selected day
-
-  const getDaysInMonth = (year: number, month: number): number => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-  
-
-  const daysInMonth = getDaysInMonth(selectedYear, months.indexOf(selectedMonth));
+const ProfileManageScreen = () => {
+  const [showSignOut, setShowSignOut] = useState(false);
 
   return (
-    <View style={tw`flex-1 bg-white p-4 pt-10`}>
+    <View style={tw`flex-1 bg-gray-100`}>
+      {/* Fixed Header Section */}
+      <View style={tw`bg-blue-500 p-6 rounded-b-3xl items-center`}> 
+        <View style={tw`w-24 h-24 bg-gray-300 rounded-full mb-2`} />
+        <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
+        <Text style={tw`text-gray-200`}>mrrony@gmail.com</Text>
+        <TouchableOpacity style={tw`bg-white px-4 py-1 rounded-full mt-2`}>
+          <Text style={tw`text-blue-500 font-semibold`}>Try Premium</Text>
+        </TouchableOpacity>
+      </View>
       
-      {/* Header */}
-      <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>My Calendar</Text>
-      <Text style={tw`text-sm text-gray-500 mb-3`}>Your added tasks on the selected calendar day.</Text>
-
-      {/* Year and Month Dropdowns */}
-      <View style={tw`flex-row justify-between mb-4`}>
-        <Picker
-          selectedValue={selectedYear}
-          style={{ width: 150 }}
-          onValueChange={(itemValue) => setSelectedYear(itemValue)}
-        >
-          {years.map((year) => (
-            <Picker.Item key={year} label={year.toString()} value={year} />
-          ))}
-        </Picker>
-
-        <Picker
-          selectedValue={selectedMonth}
-          style={{ width: 150 }}
-          onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-        >
-          {months.map((month) => (
-            <Picker.Item key={month} label={month} value={month} />
-          ))}
-        </Picker>
+      {/* Fixed Stats Section */}
+      <View style={tw`flex-row justify-around bg-white p-4 mt-4 rounded-xl mx-4 shadow`}> 
+        <View style={tw`items-center`}>
+          <Text style={tw`text-xl font-bold`}>143</Text>
+          <Text style={tw`text-gray-600`}>Days</Text>
+        </View>
+        <View style={tw`items-center`}>
+          <Text style={tw`text-xl font-bold text-yellow-500`}>322</Text>
+          <Text style={tw`text-gray-600`}>Points</Text>
+        </View>
       </View>
 
-      {/* Calendar */}
-      <View style={tw`flex-row flex-wrap justify-between mb-4`}>
-        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
-          <TouchableOpacity
-            key={day}
-            style={tw`w-10 h-10 rounded-full justify-center items-center mb-2 ${
-              selectedDay === day ? 'bg-blue-500' : ''
-            }`}
-            onPress={() => setSelectedDay(day)}
-          >
-            <Text style={tw`${selectedDay === day ? 'text-white' : 'text-gray-700'}`}>{day}</Text>
+      {/* Scrollable Menu Options */}
+      <ScrollView style={tw`flex-1 mt-4 px-4`}>
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="home-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="star-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Get Premium</Text>
+        </TouchableOpacity>
+
+        {/* Account Section with Toggle */}
+        <TouchableOpacity onPress={() => setShowSignOut(!showSignOut)} style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="person-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Account</Text>
+        </TouchableOpacity>
+        {showSignOut && (
+          <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
+            <Text style={tw`text-gray-700 text-base text-center`}>Sign Out</Text>
           </TouchableOpacity>
-        ))}
-      </View>
+        )}
 
-      {/* Tasks */}
-      <ScrollView style={tw`flex-1`}>
-        {tasks.map((task, index) => (
-          <View key={index} style={tw`flex-row items-center justify-between bg-gray-100 rounded-lg p-3 mb-2`}>
-            <View style={tw`flex-row items-center`}>
-              <Image source={task.image} style={tw`w-6 h-6 mr-3`} />
-              <Text style={tw`text-base text-gray-800`}>{task.title}</Text>
-            </View>
-            <Text style={tw`text-sm text-gray-500`}>{task.frequency}</Text>
-          </View>
-        ))}
+        {/* Themes Section with Colors */}
+        <View style={tw`p-4 bg-white mb-2 rounded-xl shadow flex-row items-center`}>
+          <Icon name="color-palette-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base mr-4`}>Themes</Text>
+          {["blue", "black", "red", "green", "yellow", "pink"].map((color, index) => (
+            <View key={index} style={[tw`w-6 h-6 rounded-full mx-1`, { backgroundColor: color }]} />
+          ))}
+        </View>
+
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="bar-chart-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Statistics</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="calendar-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>My Calendar</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="clipboard-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Manage Tasks</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+          <Icon name="cloud-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Text style={tw`text-gray-700 text-base`}>Sync Data</Text>
+        </TouchableOpacity>
+
+        {/* Support Section */}
+        <View style={tw`bg-white p-4 rounded-xl shadow mt-4`}> 
+          <Text style={tw`text-gray-700 text-base font-bold mb-2`}>Support</Text>
+          <TouchableOpacity style={tw`flex-row items-center mb-2`}>
+            <Icon name="alert-circle-outline" size={24} color="gray" style={tw`mr-4`} />
+            <Text style={tw`text-gray-700 text-base`}>App Issue</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={tw`flex-row items-center mb-2`}>
+            <Icon name="chatbubble-outline" size={24} color="gray" style={tw`mr-4`} />
+            <Text style={tw`text-gray-700 text-base`}>Suggestion</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={tw`bg-blue-500 p-3 rounded-xl mt-2 items-center`}>
+            <Text style={tw`text-white font-bold`}>Contact Us</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={tw`absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex-row justify-around items-center h-14`}>
-        <Icon name="home-outline" size={24} color="#333" />
-        <Icon name="bar-chart-outline" size={24} color="#333" />
-        <TouchableOpacity style={tw`bg-blue-500 w-12 h-12 rounded-full justify-center items-center -mt-6`}>
-          <Icon name="add" size={28} color="#fff" />
-        </TouchableOpacity>
-        <Icon name="calendar-outline" size={24} color="#333" />
-        <Icon name="settings-outline" size={24} color="#333" />
+      {/* Bottom Navigation Bar */}
+      <View style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>  
+        <TouchableOpacity><Icon name="home-outline" size={28} color="gray" /></TouchableOpacity>
+        <TouchableOpacity><Icon name="bar-chart-outline" size={28} color="gray" /></TouchableOpacity>
+        <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}><Icon name="add" size={28} color="white" /></TouchableOpacity>
+        <TouchableOpacity><Icon name="calendar-outline" size={28} color="gray" /></TouchableOpacity>
+        <TouchableOpacity><Icon name="settings-outline" size={28} color="gray" /></TouchableOpacity>
       </View>
     </View>
   );
-}
+};
+
+export default ProfileManageScreen;

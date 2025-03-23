@@ -269,7 +269,7 @@ const categories = Object.keys(categoryIcons);
 // Make Infinite Scroll Data (Repeat categories)
 const infiniteCategories = [...categories, ...categories, ...categories];
 
-const DailyTaskScreen = () => {
+const AddDailyTaskScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0],
   );
@@ -519,4 +519,4 @@ const DailyTaskScreen = () => {
     </View>
   );
 };
-export default DailyTaskScreen;
+export default AddDailyTaskScreen;
