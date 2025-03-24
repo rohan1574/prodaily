@@ -1,43 +1,60 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
+import Svg, {Circle, Text as SvgText} from 'react-native-svg';
 
-const CircularProgress = ({progress = 0.75, size = 100}) => {
+const CircularProgress = ({percentage = 0, radius = 50, strokeWidth = 6}) => {
+  const size = radius * 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = (percentage / 100) * circumference;
+
   return (
-    <View style={tw`items-center justify-center`}>
-      {/* Background Circle */}
-      <View
-        style={[
-          tw`absolute rounded-full border-4 border-gray-300`,
-          {width: size, height: size},
-        ]}
-      />
+    <View style={tw`flex items-center justify-center`}>
+      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {/* Background Circle */}
+        <Circle
+          cx={radius}
+          cy={radius}
+          r={radius - strokeWidth / 2}
+          stroke="#D3E3FC"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
 
-      {/* Foreground Progress */}
-      <View
-        style={[
-          tw`absolute rounded-full border-4 border-blue-500`,
-          {
-            width: size,
-            height: size,
-            borderLeftColor: 'transparent',
-            borderBottomColor: 'transparent',
-            transform: [{rotate: `${progress * 360}deg`}],
-          },
-        ]}
-      />
+        {/* Progress Circle */}
+        <Circle
+          cx={radius}
+          cy={radius}
+          r={radius - strokeWidth / 2}
+          stroke="blue"
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference - progress}
+          strokeLinecap="round"
+          transform={`rotate(-90, ${radius}, ${radius})`} // Corrected rotation
+        />
 
-      {/* Progress Text */}
-      <Text style={tw`absolute text-lg font-bold text-blue-500`}>
-        {Math.round(progress * 100)}%
-      </Text>
+        {/* Percentage Text */}
+        <SvgText
+          x={radius}
+          y={radius}
+          textAnchor="middle"
+          dy="5"
+          fontSize="20"
+          fontWeight="bold"
+          fill="black">
+          {percentage}%
+        </SvgText>
+      </Svg>
     </View>
   );
 };
 
 const MyStatisticsScreen = () => {
-    const [selectedTab, setSelectedTab] = useState('Monthly');
+  const [selectedTab, setSelectedTab] = useState('Monthly');
+
   return (
     <View style={tw`flex-1 bg-white`}>
       <ScrollView contentContainerStyle={tw`p-4`}>
@@ -59,13 +76,12 @@ const MyStatisticsScreen = () => {
         </View>
 
         {/* Progress Circle */}
-        <View style={tw`items-center mb-4 top-20`}>
-          <CircularProgress progress={0.87} size={120} />
+        <View style={tw`items-center mt-6`}>
+          <CircularProgress percentage={87} />
         </View>
 
         {/* Time Period Selection */}
-        <View
-          style={tw`flex-row justify-between bg-gray-100 p-2 rounded-lg mb-4 top-32`}>
+        <View style={tw`flex-row justify-between bg-gray-100 p-2 rounded-lg mb-4 mt-8`}>
           {['Weekly', 'Monthly', 'Yearly'].map(tab => (
             <TouchableOpacity
               key={tab}
@@ -87,26 +103,22 @@ const MyStatisticsScreen = () => {
         </View>
 
         {/* Last Month Section */}
-        <View style={tw`bg-white shadow-lg rounded-lg p-4 top-36`}>
-          <Text style={tw`text-gray-800 font-bold text-lg mb-2`}>
-            Last Month
-          </Text>
+        <View style={tw`bg-white shadow-lg rounded-lg `}>
+          <Text style={tw`text-gray-800 font-bold text-lg mb-2`}>Last Month</Text>
           <View style={tw`flex-row items-center justify-between`}>
             {/* Left: Circular Progress */}
-            <CircularProgress progress={0.6} size={60} />
+            <CircularProgress percentage={60} />
 
             {/* Middle: Task Completed */}
             <View style={tw`ml-4`}>
-              <Text style={tw`text-gray-800 font-bold text-sm`}>
-                Task Completed
-              </Text>
+              <Text style={tw`text-gray-800 font-bold text-sm`}>Task Completed</Text>
               <Text style={tw`text-gray-500 text-xs`}>418 of 610</Text>
             </View>
 
             {/* Right: Improvement Text & Button */}
             <View style={tw`flex-1 ml-4`}>
               <Text style={tw`text-gray-600 text-xs mb-2`}>
-                You improve a lot, To keep it up; Stay focus. Follow ExpandTimes
+                You improved a lot! Keep it up; Stay focused.
               </Text>
               <TouchableOpacity style={tw`bg-blue-100 px-4 py-2 rounded-lg`}>
                 <Text style={tw`text-blue-500 font-bold`}>Follow</Text>
@@ -116,7 +128,7 @@ const MyStatisticsScreen = () => {
         </View>
 
         {/* Habits Summary */}
-        <View style={tw`p-4 bg-gray-100 rounded-lg top-40`}>
+        <View style={tw`p-4 bg-gray-100 rounded-lg `}>
           <Text style={tw`text-gray-600 mb-2`}>Habits Summary</Text>
           <View style={tw`flex-row justify-between`}>
             <View>
