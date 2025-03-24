@@ -129,7 +129,7 @@ const MyStatisticsScreen = () => {
 
         {/* Habits Summary */}
         <View style={tw`p-4 bg-gray-100 rounded-lg `}>
-          <Text style={tw`text-gray-600 mb-2`}>Habits Summary</Text>
+          <Text style={tw`text-gray-600 mb-2`}>Habit Summary</Text>
           <View style={tw`flex-row justify-between`}>
             <View>
               <Text style={tw`text-gray-800`}>Success Score</Text>
