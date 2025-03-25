@@ -10,20 +10,20 @@ interface Task {
 }
 
 const tasks: Task[] = [
-  { name: 'Walking', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Skill Practice', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Eyes on News', frequency: 'Yearly', icon: require('./assets/images/Walking.png') },
-  { name: 'Course Watching', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Organizing Home', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Gardening', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Prayer', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Walking', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Skill Practice', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Eyes on News', frequency: 'Yearly', icon: require('./assets/images/Walking.png') },
-  { name: 'Course Watching', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Organizing Home', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Gardening', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
-  { name: 'Prayer', frequency: 'Daily', icon: require('./assets/images/Walking.png') },
+  { name: 'Walking', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Skill Practice', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Eyes on News', frequency: 'Yearly', icon: require('../../assets/images/Walking.png') },
+  { name: 'Course Watching', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Organizing Home', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Gardening', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Prayer', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Walking', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Skill Practice', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Eyes on News', frequency: 'Yearly', icon: require('../../assets/images/Walking.png') },
+  { name: 'Course Watching', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Organizing Home', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Gardening', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
+  { name: 'Prayer', frequency: 'Daily', icon: require('../../assets/images/Walking.png') },
 ];
 
 const TaskItem: React.FC<{ task: Task; onEdit: () => void; isSelected: boolean; onFavorite: () => void; isFavorite: boolean }> = ({ task, onEdit, isSelected, onFavorite, isFavorite }) => {

@@ -11,15 +11,15 @@ const months = [
 ];
 
 const tasks = [
-  { title: 'Walking', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Skill Practice', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Eyes on News', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Course Watching', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Gardening', image: require('./assets/images/Walking.png'), frequency: 'Daily' },
-  { title: 'Prayer', image: require('./assets/images/Walking.png'), frequency: 'Monthly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Yearly' },
-  { title: 'Organizing Home', image: require('./assets/images/Walking.png'), frequency: 'Specific' },
+  { title: 'Walking', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Skill Practice', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Eyes on News', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Course Watching', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Organizing Home', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Gardening', image: require('../../assets/images/Walking.png'), frequency: 'Daily' },
+  { title: 'Prayer', image: require('../../assets/images/Walking.png'), frequency: 'Monthly' },
+  { title: 'Organizing Home', image: require('../../assets/images/Walking.png'), frequency: 'Yearly' },
+  { title: 'Organizing Home', image: require('../../assets/images/Walking.png'), frequency: 'Specific' },
 ];
 
 export default function MyCalenderFutureTaskScreen() {
