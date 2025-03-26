@@ -24,7 +24,7 @@ type RootStackParamList = {
 
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
-  'TodaysTaskToDoScree'
+  'TodaysTaskToDoScreen'
 >;
 interface Task {
   name: string;
