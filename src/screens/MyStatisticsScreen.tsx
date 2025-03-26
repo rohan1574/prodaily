@@ -3,7 +3,22 @@ import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 import Svg, {Circle, Text as SvgText} from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
 
+// Define the navigation type
+type RootStackParamList = {
+  TodaysTaskToDoScreen: undefined;
+  MyCalenderFutureTaskScreen: undefined;
+  MyStatisticsScreen: undefined;
+  ProfileManageScreen: undefined;
+  AddDailyTaskScreen: undefined;
+};
+
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'TodaysTaskToDoScreen'
+>;
 const CircularProgress = ({percentage = 0, radius = 50, strokeWidth = 6}) => {
   const size = radius * 2;
   const circumference = 2 * Math.PI * radius;
@@ -53,6 +68,7 @@ const CircularProgress = ({percentage = 0, radius = 50, strokeWidth = 6}) => {
 };
 
 const MyStatisticsScreen = () => {
+   const navigation = useNavigation<NavigationProp>();
   const [selectedTab, setSelectedTab] = useState('Monthly');
 
   return (
@@ -152,23 +168,49 @@ const MyStatisticsScreen = () => {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={tw`flex-row justify-between p-4 bg-white border-t`}>
-        <TouchableOpacity>
-          <Icon name="home-outline" size={28} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="bar-chart-outline" size={28} color="blue" />
-        </TouchableOpacity>
-        <TouchableOpacity style={tw`bg-blue-500 p-2 rounded-full`}>
-          <Icon name="add" size={28} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="calendar-outline" size={28} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="person-outline" size={28} color="gray" />
-        </TouchableOpacity>
-      </View>
+     <View
+             style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
+             <TouchableOpacity>
+               <Icon
+                 name="home-outline"
+                 size={28}
+                 color="gray"
+                 onPress={() => navigation.navigate('TodaysTaskToDoScreen')}
+               />
+             </TouchableOpacity>
+             <TouchableOpacity>
+               <Icon
+                 name="bar-chart-outline"
+                 size={28}
+                 color="gray"
+                 onPress={() => navigation.navigate('MyStatisticsScreen')}
+               />
+             </TouchableOpacity>
+             <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}>
+               <Icon
+                 name="add"
+                 size={28}
+                 color="white"
+                 onPress={() => navigation.navigate('AddDailyTaskScreen')}
+               />
+             </TouchableOpacity>
+             <TouchableOpacity>
+               <Icon
+                 name="calendar-outline"
+                 size={28}
+                 color="gray"
+                 onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}
+               />
+             </TouchableOpacity>
+             <TouchableOpacity>
+               <Icon
+                 name="settings-outline"
+                 size={28}
+                 color="gray"
+                 onPress={() => navigation.navigate('ProfileManageScreen')}
+               />
+             </TouchableOpacity>
+           </View>
     </View>
   );
 };
