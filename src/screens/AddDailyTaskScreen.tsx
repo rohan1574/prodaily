@@ -15,255 +15,22 @@ import {s as tw} from 'react-native-wind';
 import DateSelector from './DateSelector';
 import DatePicker from './DatePicker';
 import DayPicker from './DayPicker';
-// import DateSelector from '../prodaily/src/screens/DateSelector';
-// import DatePicker from '../prodaily/src/screens/DatePicker';
-// import DayPicker from '../prodaily/src/screens/DayPicker';
+import categoryIcons from '../data/categoryIcons';
+import tasksData from '../data/tasksData';
 
-// Category Icons
-const categoryIcons: Record<string, any> = {
-  Fitness: require('../../assets/images/fitness.png'),
-  Wellness: require('../../assets/images/wellness.png'),
-  Productivity: require('../../assets/images/work.png'),
-  Nutrition: require('../../assets/images/nutrition.png'),
-  Sleep: require('../../assets/images/nutrition.png'),
-  Growth: require('../../assets/images/nutrition.png'),
-  Household: require('../../assets/images/nutrition.png'),
-  Social: require('../../assets/images/nutrition.png'),
-  'Self-Care': require('../../assets/images/nutrition.png'),
-  Financials: require('../../assets/images/nutrition.png'),
-  Career: require('../../assets/images/nutrition.png'),
-  Tech: require('../../assets/images/nutrition.png'),
-  Academic: require('../../assets/images/nutrition.png'),
-  Spiritual: require('../../assets/images/nutrition.png'),
-  Pet: require('../../assets/images/nutrition.png'),
+import {useNavigation} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
+
+// Define the navigation type
+type RootStackParamList = {
+  TodaysTaskToDoScreen: undefined;
+  MyCalenderFutureTaskScreen: undefined;
+  MyStatisticsScreen: undefined;
+  ProfileManageScreen: undefined;
+  AddDailyTaskScreen: undefined;
 };
 
-// Task Data
-const tasksData: Record<string, any> = {
-  Fitness: {
-    Walking: require('../../assets/images/Walking.png'),
-    Running: require('../../assets/images/Running.png'),
-    Swimming: require('../../assets/images/Swimming.png'),
-    Cycling: require('../../assets/images/Cycling.png'),
-    Yoga: require('../../assets/images/Yoga.png'),
-    'Strength Workout': require('../../assets/images/StrengthWorkout.png'),
-    'Stretching Workout': require('../../assets/images/StretchingWorkout.png'),
-    'High Intensive Interval Trainning': require('../../assets/images/High.png'),
-    'Rope Jumping': require('../../assets/images/RopeJumping.png'),
-    'Dance Workout': require('../../assets/images/DanceWorkout.png'),
-    Others: require('../../assets/images/Others.png'),
-  },
-  Wellness: {
-    'Meditation 🧘‍♂️': require('../../assets/images/Walking.png'),
-    'Breathing Exercises 💨': require('../../assets/images/Walking.png'),
-    'Journaling 📝': require('../../assets/images/Walking.png'),
-    'Mindfulness 🙏': require('../../assets/images/Walking.png'),
-    'Gratitude Practice ❤️': require('../../assets/images/Walking.png'),
-    'Affirmations 💬': require('../../assets/images/Walking.png'),
-    'Visualization 🔮': require('../../assets/images/Walking.png'),
-    'Relaxation 😌': require('../../assets/images/Walking.png'),
-    'Nature Interaction 🌳': require('../../assets/images/Walking.png'),
-    'Laughing & Smiling 😄': require('../../assets/images/Walking.png'),
-    'Digital Detox 📴': require('../../assets/images/Walking.png'),
-    'Creative Outlets 🎨': require('../../assets/images/Walking.png'),
-    'Engaging in Fun Activities 🎉': require('../../assets/images/Walking.png'),
-    'Watching Comedies 📺': require('../../assets/images/Walking.png'),
-    'Barefoot Earth Touching': require('../../assets/images/Walking.png'),
-    'Other Wellness': require('../../assets/images/Walking.png'),
-  },
-
-  Productivity: {
-    'Regular Job/Duty': require('../../assets/images/Walking.png'),
-    'Task Management 📋': require('../../assets/images/Walking.png'),
-    'Pomodoro Technique ⏲️': require('../../assets/images/Walking.png'),
-    'Deep Work 🧑‍💻': require('../../assets/images/Walking.png'),
-    'Email Check 📧': require('../../assets/images/Walking.png'),
-    'Meetings & Calls 📞': require('../../assets/images/Walking.png'),
-    'Team Brainstorming 💡': require('../../assets/images/Walking.png'),
-    'Research & Analysis 🔍': require('../../assets/images/Walking.png'),
-    'Project Planning 📅': require('../../assets/images/Walking.png'),
-    'Writing & Documentation ✍️': require('../../assets/images/Walking.png'),
-    'Professional Communication 💻': require('../../assets/images/Walking.png'),
-    'Prototyping Concept 🎨': require('../../assets/images/Walking.png'),
-    'Reviewing Progress 📊': require('../../assets/images/Walking.png'),
-    'Skill Development 📚': require('../../assets/images/Walking.png'),
-    'Seeking Opportunities': require('../../assets/images/Walking.png'),
-    'Passive Income': require('../../assets/images/Walking.png'),
-    'Other Work': require('../../assets/images/Walking.png'),
-  },
-
-  Nutrition: {
-    'Breakfast 🍳': require('../../assets/images/Walking.png'),
-    'Lunch 🥗': require('../../assets/images/Walking.png'),
-    'Dinner 🍲': require('../../assets/images/Walking.png'),
-    'Snacks 🍿': require('../../assets/images/Walking.png'),
-    'Sufficient Drink Water 💧': require('../../assets/images/Walking.png'),
-    'Supplements/Vitamins 💊': require('../../assets/images/Walking.png'),
-    'Meal Prepping 🍴': require('../../assets/images/Walking.png'),
-    'Eating Fruits': require('../../assets/images/Walking.png'),
-    'Keep Vegetable': require('../../assets/images/Walking.png'),
-    'Avoiding Junk Food': require('../../assets/images/Walking.png'),
-    'Avoiding Fast Food': require('../../assets/images/Walking.png'),
-    'Avoiding Processed Food': require('../../assets/images/Walking.png'),
-    Fasting: require('../../assets/images/Walking.png'),
-    'Water Fasting': require('../../assets/images/Walking.png'),
-  },
-  Sleep: {
-    'Maintain Sleep Schedule 💤': require('../../assets/images/Walking.png'),
-    'Power Naps 😴': require('../../assets/images/Walking.png'),
-    'Healthy Sleep Practices 🛁': require('../../assets/images/Walking.png'),
-    'Sleep Tracking 🕒': require('../../assets/images/Walking.png'),
-    'Early to Bed': require('../../assets/images/Walking.png'),
-    'Early to Rise': require('../../assets/images/Walking.png'),
-    'Keep Device out of Bed': require('../../assets/images/Walking.png'),
-    'Making Room Dark': require('../../assets/images/Walking.png'),
-    'Noise Cancellation': require('../../assets/images/Walking.png'),
-  },
-  Growth: {
-    'Reading 📚': require('../../assets/images/Walking.png'),
-    'Courses 💻': require('../../assets/images/Walking.png'),
-    'Podcasts/Audiobooks 🎧': require('../../assets/images/Walking.png'),
-    'Language Learning 🗣️': require('../../assets/images/Walking.png'),
-    'Writing ✍️': require('../../assets/images/Walking.png'),
-    'Skill Practice 🖥️': require('../../assets/images/Walking.png'),
-    'Creative Writing/Blogging 📝': require('../../assets/images/Walking.png'),
-    'Financial Awareness 📈': require('../../assets/images/Walking.png'),
-    'Eyes on News': require('../../assets/images/Walking.png'),
-    'Tech Up to Date': require('../../assets/images/Walking.png'),
-  },
-  Household: {
-    'Cleaning 🧽': require('../../assets/images/Walking.png'),
-    'Laundry 🧺': require('../../assets/images/Walking.png'),
-    'Dishwashing 🍽️': require('../../assets/images/Walking.png'),
-    'Organizing Home 🧳': require('../../assets/images/Walking.png'),
-    'Grocery Shopping 🛒': require('../../assets/images/Walking.png'),
-    'Decluttering 🗑️': require('../../assets/images/Walking.png'),
-    'Making the Bed 🛏️': require('../../assets/images/Walking.png'),
-    'Cooking 🍳': require('../../assets/images/Walking.png'),
-    'Taking Out Trash 🚮': require('../../assets/images/Walking.png'),
-    'Gardening 🌿': require('../../assets/images/Walking.png'),
-    'Home Maintenance': require('../../assets/images/Walking.png'),
-    'Car Maintenance': require('../../assets/images/Walking.png'),
-    Shopping: require('../../assets/images/Walking.png'),
-  },
-  Social: {
-    'Family Time 👨‍👩‍👧‍👦': require('../../assets/images/Walking.png'),
-    'Friend Catch-ups 👯‍♂️': require('../../assets/images/Walking.png'),
-    'Partner Time 💕': require('../../assets/images/Walking.png'),
-    'Networking 🌐': require('../../assets/images/Walking.png'),
-    'Social Media Engagement 📱': require('../../assets/images/Walking.png'),
-    'Mentorship 👩‍🏫': require('../../assets/images/Walking.png'),
-    'Helping F&F 🤝': require('../../assets/images/Walking.png'),
-    'Calling F&F ☎️': require('../../assets/images/Walking.png'),
-    'Community Activities 🏘️': require('../../assets/images/Walking.png'),
-    'Quality Conversations 💬': require('../../assets/images/Walking.png'),
-    'Expressing Gratitude 🙏': require('../../assets/images/Walking.png'),
-    'Take Care Loved Ones ❤️': require('../../assets/images/Walking.png'),
-    'Celebrating Occasions 🎉': require('../../assets/images/Walking.png'),
-  },
-
-  // 'Self-Care': {
-  //   'Skincare 🧴': require('./assets/images/Walking.png'),
-  //   'Hair Care 💇‍♀️': require('./assets/images/Walking.png'),
-  //   'Nail Care 💅': require('./assets/images/Walking.png'),
-  //   'Bath/Shower 🚿': require('./assets/images/Walking.png'),
-  //   'Creative Expression 🎭': require('./assets/images/Walking.png'),
-  //   'Artistic Hobbies 🎶': require('./assets/images/Walking.png'),
-  //   'Relaxation Time ☕': require('./assets/images/Walking.png'),
-  //   'Deep Breathing 🌬️': require('./assets/images/Walking.png'),
-  //   Sunbathing: require('./assets/images/Walking.png'),
-  // },
-  // Financials: {
-  //   'Budgeting 💳': require('./assets/images/Walking.png'),
-  //   'Track Expenses 💸': require('./assets/images/Walking.png'),
-  //   'Saving 💵': require('./assets/images/Walking.png'),
-  //   'House Rent 🏠': require('./assets/images/Walking.png'),
-  //   'Investment Planning 📊': require('./assets/images/Walking.png'),
-  //   'Electricity Bill ⚡': require('./assets/images/Walking.png'),
-  //   'Internet Bill 🌐': require('./assets/images/Walking.png'),
-  //   'Video Streaming Bill 📺': require('./assets/images/Walking.png'),
-  //   'Academic Bill 📚': require('./assets/images/Walking.png'),
-  //   'Tax Return 🧾': require('./assets/images/Walking.png'),
-  //   'VAT Return 💼': require('./assets/images/Walking.png'),
-  //   'Gas Bill 🔥': require('./assets/images/Walking.png'),
-  //   'Insurance Installment 🏦': require('./assets/images/Walking.png'),
-  //   'Debt Installment 💰': require('./assets/images/Walking.png'),
-  //   'DPS Installment 📈': require('./assets/images/Walking.png'),
-  //   'Pension Installment 👵': require('./assets/images/Walking.png'),
-  //   'Telephone/Mobile Recharge 📞': require('./assets/images/Walking.png'),
-  //   'Maid Allowance 🧹': require('./assets/images/Walking.png'),
-  //   'Driver Salary 🚖': require('./assets/images/Walking.png'),
-  // },
-  // Career: {
-  //   'Skill Development 🧑‍🏫': require('./assets/images/Walking.png'),
-  //   'Networking 🌐': require('./assets/images/Walking.png'),
-  //   'Resume/CV Updates 📑': require('./assets/images/Walking.png'),
-  //   'Certifications & Trainings 🎓': require('./assets/images/Walking.png'),
-  //   'Portfolio Building 📂': require('./assets/images/Walking.png'),
-  //   'Public Speaking 🎙️': require('./assets/images/Walking.png'),
-  //   'Workshops & Seminars 🎤': require('./assets/images/Walking.png'),
-  //   'Leadership Development 👔': require('./assets/images/Walking.png'),
-  //   'Reading Industry News 📰': require('./assets/images/Walking.png'),
-  //   'Learning a New Tool 🖥️': require('./assets/images/Walking.png'),
-  //   'Time Management Practice ⏳': require('./assets/images/Walking.png'),
-  //   'Goal Setting & Planning 🎯': require('./assets/images/Walking.png'),
-  //   'Professional Mentorship 🤝': require('./assets/images/Walking.png'),
-  //   'Problem-Solving Exercises 🧩': require('./assets/images/Walking.png'),
-  //   'Job Applications 🏢': require('./assets/images/Walking.png'),
-  // },
-  // Tech: {
-  //   'Device Maintenance 📱': require('./assets/images/Walking.png'),
-  //   'File Organization 🗂️': require('./assets/images/Walking.png'),
-  //   'App Management 📲': require('./assets/images/Walking.png'),
-  //   'Password Management 🔑': require('./assets/images/Walking.png'),
-  //   'Data Backup 💾': require('./assets/images/Walking.png'),
-  //   'Security Checks (e.g., 2FA) 🔒': require('./assets/images/Walking.png'),
-  //   'Software Updates 🖥️': require('./assets/images/Walking.png'),
-  //   'Clearing Cache & Junk Files 🧹': require('./assets/images/Walking.png'),
-  //   'Managing Cloud Storage ☁️': require('./assets/images/Walking.png'),
-  //   'Checking Emails & Notifications 📩': require('./assets/images/Walking.png'),
-  //   'Tech Learning & Skill Improvement 🎓': require('./assets/images/Walking.png'),
-  //   'Troubleshooting Issues 🛠️': require('./assets/images/Walking.png'),
-  //   'Review Subscriptions 💳': require('./assets/images/Walking.png'),
-  //   'Optimizing Device Performance 🚀': require('./assets/images/Walking.png'),
-  //   'Unsubscribe Unwanted Emails 📬': require('./assets/images/Walking.png'),
-  // },
-  // Academic: {
-  //   'Class Attending': require('./assets/images/Walking.png'),
-  //   'Studying 📚': require('./assets/images/Walking.png'),
-  //   'Researching 🔍': require('./assets/images/Walking.png'),
-  //   'Writing Papers ✍️': require('./assets/images/Walking.png'),
-  //   'Group Study 👥': require('./assets/images/Walking.png'),
-  //   'Exams Preparation 📝': require('./assets/images/Walking.png'),
-  //   'Note-Taking 📝': require('./assets/images/Walking.png'),
-  //   'Self Learning 💻': require('./assets/images/Walking.png'),
-  //   'Model Test Taking': require('./assets/images/Walking.png'),
-  //   'Practical Project': require('./assets/images/Walking.png'),
-  // },
-  // Spiritual: {
-  //   'Prayer 🙏': require('./assets/images/Walking.png'),
-  //   'Reading Sacred Texts 📜': require('./assets/images/Walking.png'),
-  //   'Attending Religious Program ⛪': require('./assets/images/Walking.png'),
-  //   'Meditation 🧘‍♂️': require('./assets/images/Walking.png'),
-  //   'Fasting 🍽️': require('./assets/images/Walking.png'),
-  //   'Spiritual Journaling 📓': require('./assets/images/Walking.png'),
-  //   'Community Service/Charity 👐': require('./assets/images/Walking.png'),
-  //   'Donations/Charity ❤️': require('./assets/images/Walking.png'),
-  //   'Going Church/Mosque': require('./assets/images/Walking.png'),
-  //   'Learning Religions': require('./assets/images/Walking.png'),
-  //   'Watching Lectures': require('./assets/images/Walking.png'),
-  // },
-  // Pet: {
-  //   'Walking Pets 🐕': require('./assets/images/Walking.png'),
-  //   'Feeding Pets 🍖': require('./assets/images/Walking.png'),
-  //   'Grooming Pets ✂️': require('./assets/images/Walking.png'),
-  //   'Training Pets 🐕‍🦺': require('./assets/images/Walking.png'),
-  //   'Bathing Pets': require('./assets/images/Walking.png'),
-  //   'Vet Appointments 🏥': require('./assets/images/Walking.png'),
-  //   'Playtime 🐾': require('./assets/images/Walking.png'),
-  // },
-};
-
+type NavigationProp = StackNavigationProp<RootStackParamList, 'TodaysTaskToDoScreen'>;
 // List of categories
 const categories = Object.keys(categoryIcons);
 
@@ -271,7 +38,7 @@ const categories = Object.keys(categoryIcons);
 const infiniteCategories = [...categories, ...categories, ...categories];
 
 const AddDailyTaskScreen = () => {
-  
+  const navigation = useNavigation<NavigationProp>();
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0],
   );
@@ -336,7 +103,7 @@ const AddDailyTaskScreen = () => {
                     ? tw`border-blue-500`
                     : tw`border-gray-300`,
                 ]}>
-                <Image source={categoryIcons[category]} style={tw`w-8 h-8`} />
+                <Image source={categoryIcons['Fitness']} style={tw`w-8 h-8`} />
               </View>
               <Text
                 style={tw`text-sm mt-1 ${
@@ -363,7 +130,7 @@ const AddDailyTaskScreen = () => {
               <View style={tw`flex-row items-center`}>
                 <Image
                   source={tasksData[selectedCategory][task]}
-                  style={tw`mr-3`}
+                  style={tw`mr-3 w-8 h-8`} // Adjust the size of the image
                 />
                 <Text style={tw`text-base font-semibold text-black`}>
                   {task}
@@ -383,7 +150,7 @@ const AddDailyTaskScreen = () => {
                 <View style={tw`flex-row items-center mb-4`}>
                   <Image
                     source={tasksData[selectedCategory][expandedTask]}
-                    style={tw`mr-3`}
+                    style={tw`mr-3 w-8 h-8`} // Adjust the size of the image
                   />
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
                     {expandedTask}
@@ -391,7 +158,7 @@ const AddDailyTaskScreen = () => {
                 </View>
 
                 {/* Routine Duration */}
-                <Text style={tw`text-gray-600 mb-2`}>Add spcefic for</Text>
+                <Text style={tw`text-gray-600 mb-2`}>Add specific for</Text>
                 <View style={tw`flex-row items-center mb-4`}>
                   <TextInput
                     value="365"
@@ -458,7 +225,7 @@ const AddDailyTaskScreen = () => {
                       </Text>
                     </TouchableOpacity>
                   ))}
-                  {/* DayPicker Modal */}
+                  {/* Modal Views */}
                   <Modal
                     visible={selectedModal === 'weekly'}
                     animationType="slide"
@@ -470,7 +237,6 @@ const AddDailyTaskScreen = () => {
                       </View>
                     </View>
                   </Modal>
-                  {/* DatePicker Modal */}
                   <Modal
                     visible={selectedModal === 'monthly'}
                     animationType="slide"
@@ -482,7 +248,6 @@ const AddDailyTaskScreen = () => {
                       </View>
                     </View>
                   </Modal>
-                  {/* DateSelector Modal */}
                   <Modal
                     visible={selectedModal === 'yearly'}
                     animationType="slide"
@@ -502,6 +267,8 @@ const AddDailyTaskScreen = () => {
                     Add to Routine
                   </Text>
                 </TouchableOpacity>
+
+                {/* Toggle Button */}
                 <TouchableOpacity
                   onPress={() =>
                     setExpandedTask(expandedTask === task ? null : task)
@@ -518,22 +285,28 @@ const AddDailyTaskScreen = () => {
           </View>
         ))}
       </ScrollView>
+
       <View
         style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
         <TouchableOpacity>
-          <Icon name="home-outline" size={28} color="gray" />
+          <Icon name="home-outline" size={28} color="gray" onPress={() => navigation.navigate('TodaysTaskToDoScreen')}/>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Icon name="bar-chart-outline" size={28} color="gray" />
+          <Icon name="bar-chart-outline" size={28} color="gray" onPress={() => navigation.navigate('MyStatisticsScreen')}/>
         </TouchableOpacity>
         <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}>
-          <Icon name="add" size={28} color="white" />
+          <Icon name="add" size={28} color="white" onPress={() => navigation.navigate('AddDailyTaskScreen')}/>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Icon name="calendar-outline" size={28} color="gray" />
+          <Icon
+            name="calendar-outline"
+            size={28}
+            color="gray"
+            onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}
+          />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Icon name="settings-outline" size={28} color="gray" />
+          <Icon name="settings-outline" size={28} color="gray" onPress={() => navigation.navigate('ProfileManageScreen')} />
         </TouchableOpacity>
       </View>
     </View>

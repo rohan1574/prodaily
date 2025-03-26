@@ -2,7 +2,22 @@ import React, {useState} from 'react';
 import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
+import {useNavigation} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
 
+// Define the navigation type
+type RootStackParamList = {
+  TodaysTaskToDoScreen: undefined;
+  MyCalenderFutureTaskScreen: undefined;
+  MyStatisticsScreen: undefined;
+  ProfileManageScreen: undefined;
+  AddDailyTaskScreen: undefined;
+};
+
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'TodaysTaskToDoScreen'
+>;
 // Define Task Type
 interface Task {
   id: number;
@@ -20,21 +35,21 @@ const initialTasks: Task[] = [
     id: 1,
     title: 'Walking',
     time: '135 min',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
   {
     id: 2,
     title: 'Skill Practice',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
   {
     id: 3,
     title: 'Eyes on News',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
@@ -42,21 +57,21 @@ const initialTasks: Task[] = [
     id: 4,
     title: 'Course Watching',
     time: '135 min',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
   {
     id: 5,
     title: 'Organizing Home',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
   {
     id: 6,
     title: 'Gardening',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
@@ -64,14 +79,14 @@ const initialTasks: Task[] = [
     id: 7,
     title: 'Prayer',
     progress: '0 / 5',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
   {
     id: 8,
     title: 'Walking',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: false,
   },
@@ -79,7 +94,7 @@ const initialTasks: Task[] = [
     id: 9,
     title: 'Gratitude Practice',
     completed: true,
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
   },
   {
@@ -87,7 +102,7 @@ const initialTasks: Task[] = [
     title: 'Creative Writing/Blogging',
     time: '135 min',
     completed: true,
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
   },
   {
@@ -95,28 +110,28 @@ const initialTasks: Task[] = [
     title: 'Feeding Pet',
     progress: '5 / 5',
     completed: true,
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
   },
   {
     id: 12,
     title: 'Walking',
     time: '135 min',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: true,
   },
   {
     id: 13,
     title: 'Skill Practice',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: true,
   },
   {
     id: 14,
     title: 'Eyes on News',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: true,
   },
@@ -124,20 +139,21 @@ const initialTasks: Task[] = [
     id: 15,
     title: 'Course Watching',
     time: '135 min',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: true,
   },
   {
     id: 16,
     title: 'Organizing Home',
-    image: require('./assets/images/Walking.png'),
+    image: require('../../assets/images/Walking.png'),
     starred: false,
     completed: true,
   },
 ];
 
 const TodaysTaskToDoScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp>();
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
   // Toggle Completion Status (Updated Sorting Logic)
@@ -222,7 +238,7 @@ const TodaysTaskToDoScreen: React.FC = () => {
         </View>
         <View style={tw`flex-row items-center`}>
           <Image
-            source={require('./assets/images/sun.png')}
+            source={require('../../assets/images/sun.png')}
             style={tw`w-10 h-10 rounded-full mr-3`}
           />
           <View>
@@ -241,22 +257,52 @@ const TodaysTaskToDoScreen: React.FC = () => {
       />
 
       {/* Bottom Navigation */}
-      <BottomNav />
+
+      <View
+        style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
+        <TouchableOpacity>
+          <Icon
+            name="home-outline"
+            size={28}
+            color="gray"
+            onPress={() => navigation.navigate('TodaysTaskToDoScreen')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon
+            name="bar-chart-outline"
+            size={28}
+            color="gray"
+            onPress={() => navigation.navigate('MyStatisticsScreen')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}>
+          <Icon
+            name="add"
+            size={28}
+            color="white"
+            onPress={() => navigation.navigate('AddDailyTaskScreen')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon
+            name="calendar-outline"
+            size={28}
+            color="gray"
+            onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon
+            name="settings-outline"
+            size={28}
+            color="gray"
+            onPress={() => navigation.navigate('ProfileManageScreen')}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
-
-// Bottom Navigation Component
-const BottomNav: React.FC = () => (
-  <View style={tw`flex-row justify-around bg-white p-3 shadow-md`}>
-    <Icon name="home-outline" size={24} color="#4A90E2" />
-    <Icon name="stats-chart-outline" size={24} color="#4A90E2" />
-    <TouchableOpacity style={tw`bg-blue-500 rounded-full p-3`}>
-      <Icon name="add" size={24} color="#fff" />
-    </TouchableOpacity>
-    <Icon name="calendar-outline" size={24} color="#4A90E2" />
-    <Icon name="settings-outline" size={24} color="#4A90E2" />
-  </View>
-);
 
 export default TodaysTaskToDoScreen;
