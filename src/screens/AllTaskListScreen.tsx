@@ -272,7 +272,7 @@ const AllTaskListScreen: React.FC = () => {
           <Icon
             name="settings-outline"
             size={28}
-            color="gra"
+            color="gray"
             onPress={() => navigation.navigate('ProfileManageScreen')}
           />
         </TouchableOpacity>

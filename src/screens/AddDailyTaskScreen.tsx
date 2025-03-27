@@ -76,7 +76,7 @@ const AddDailyTaskScreen = () => {
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
       <View style={tw`mb-2`}>
-        <Text style={tw`text-xl font-bold text-black`}>Add Daily Task</Text>
+        <Text style={tw`text-xl font-bold text-black`}>Add Daily Tasks</Text>
         <Text style={tw`text-sm text-gray-500`}>
           Add tasks to your daily routine to stay productive.
         </Text>
