@@ -11,13 +11,17 @@ type Task = {
   dailyTarget: string;
   selectedDays: string[];
   selectedDates: number[];
-  selectedYears: string[];
+  selectedDate: number[];
+  selectedMonths: number[];
 };
 
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const navigation = useNavigation();
-
+  // month convert
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   // Load tasks from AsyncStorage
   useEffect(() => {
     const loadTasks = async () => {
@@ -80,7 +84,11 @@ const AllTaskListScreen = () => {
           {item.selectedDates ? item.selectedDates.join(', ') : 'None'}
         </Text>
         <Text style={tw`text-sm text-gray-600`}>
-          Selected Years:{item.selectedYears ? item.selectedYears.join(', ') : 'None' }
+          Selected Date:{item.selectedDate ? item.selectedDate.join(', ') : 'None' }
+          
+        </Text>
+        <Text style={tw`text-sm text-gray-600`}>
+          Selected Month:{item.selectedMonths ? item.selectedMonths.map(monthIndex => months[monthIndex - 1]).join(', ') : 'None' }
           
         </Text>
         

@@ -83,7 +83,8 @@ const AddDailyTaskScreen = () => {
   const [selectedDates, setSelectedDates] = useState<number[]>([]);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isDateSeletorVisible, setIsDateSeletorVisible] = useState(false);
-  const [selectedYears, setSelectedYears] = useState<number[]>([]); // Add this line
+  const [selectedDate, setSelectedDate] = useState<number[]>([]);
+  const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
   const handleWeeklyClick = () => {
     setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
   };
@@ -125,7 +126,8 @@ const AddDailyTaskScreen = () => {
         dailyTarget: isDailyTargetEnabled ? `${dailyTarget} ${targetType}` : '',
         selectedDays: selectedDays,
         selectedDates: selectedDates,
-        selectedYears:selectedYears,
+        selectedDate: selectedDate,
+        selectedMonths: selectedMonths,
         icon: categoryIcons[selectedCategory as Category],
       };
 
@@ -406,18 +408,35 @@ const AddDailyTaskScreen = () => {
                   {isDatePickerVisible && (
                     <DatePicker
                       selectedDates={selectedDates}
-                      onSelectDates={setSelectedDates}
+                      onSelectDates={setSelectedDate}
                       onCancel={() => setIsDatePickerVisible(false)}
                       onAddDay={() => setIsDatePickerVisible(false)}
                     />
                   )}
                 </View>
-                {/* Show DateSelector modal when isDateSelectorVisible is true */}
                 <View>
                   {isDateSeletorVisible && (
                     <DateSelector
-                      selectedYears={selectedYears}
-                      onSelectYears={setSelectedYears}
+                      selectedDate={selectedDate}
+                      selectedMonths={selectedMonths}
+                      onSelectDate={(date: number) => {
+                        // Add or remove the date from selectedDates
+                        setSelectedDate(
+                          prevDates =>
+                            prevDates.includes(date)
+                              ? prevDates.filter(d => d !== date) // Deselect if already selected
+                              : [...prevDates, date], // Select if not selected
+                        );
+                      }}
+                      onSelectMonth={(month: number) => {
+                        // Add or remove the month from selectedMonths
+                        setSelectedMonths(
+                          prevMonths =>
+                            prevMonths.includes(month)
+                              ? prevMonths.filter(m => m !== month) // Deselect if already selected
+                              : [...prevMonths, month], // Select if not selected
+                        );
+                      }}
                       onCancel={() => setIsDateSeletorVisible(false)}
                       onAddDay={() => setIsDateSeletorVisible(false)}
                     />
