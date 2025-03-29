@@ -71,6 +71,7 @@ const AddDailyTaskScreen = () => {
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
   const [specificForValue, setSpecificForValue] = useState('');
   const [dailyTarget, setDailyTarget] = useState('');
+  const [specTarget, setSpecTarget] = useState('Weekly');
   const [targetType, setTargetType] = useState<'Minutes' | 'Times'>('Minutes');
   const toggleSpecificFor = () =>
     setIsSpecificForEnabled(!isSpecificForEnabled);
@@ -85,6 +86,8 @@ const AddDailyTaskScreen = () => {
   const [isDateSeletorVisible, setIsDateSeletorVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<number[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
+  const [isOneTimeSelected, setIsOneTimeSelected] = useState(false);
+
   const handleWeeklyClick = () => {
     setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
   };
@@ -388,10 +391,59 @@ const AddDailyTaskScreen = () => {
                 </View>
 
                 {/* One-Time Selection */}
-                <Button title="Weekly" onPress={handleWeeklyClick} />
-                <Button title="Monthly" onPress={handleMonthlyClick} />
-                <Button title="Yearly" onPress={handleYearlyClick} />
+                <View style={tw`mb-4`}>
+                    <Text style={tw`text-lg font-semibold`}>One Time</Text>
+                    <TouchableOpacity
+                      onPress={() => setIsOneTimeSelected(!isOneTimeSelected)}
+                      style={tw`flex-row items-center`}>
+                      <Icon
+                        name={isOneTimeSelected ? 'radio-button-on' : 'radio-button-off'}
+                        size={20}
+                        color={isOneTimeSelected ? 'blue' : 'gray'}
+                      />
+                      <Text style={tw`ml-2 text-sm`}>One-Time Task</Text>
+                    </TouchableOpacity>
+                  </View>
 
+                  {/* Buttons */}
+                  <View style={tw`flex-row justify-between`}>
+                    <TouchableOpacity
+                      onPress={handleWeeklyClick}
+                      disabled={!isOneTimeSelected} // Disable Weekly button if One-Time is not selected
+                      style={[
+                        tw`py-3 px-5 rounded-lg`,
+                        !isOneTimeSelected
+                          ? tw`bg-gray-300`
+                          : tw`bg-blue-500`,
+                      ]}>
+                      <Text style={tw`text-white`}>Weekly</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={handleMonthlyClick}
+                      disabled={!isOneTimeSelected} // Disable Monthly button if One-Time is not selected
+                      style={[
+                        tw`py-3 px-5 rounded-lg`,
+                        !isOneTimeSelected
+                          ? tw`bg-gray-300`
+                          : tw`bg-blue-500`,
+                      ]}>
+                      <Text style={tw`text-white`}>Monthly</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={handleYearlyClick}
+                      disabled={!isOneTimeSelected} // Disable Yearly button if One-Time is not selected
+                      style={[
+                        tw`py-3 px-5 rounded-lg`,
+                        !isOneTimeSelected
+                          ? tw`bg-gray-300`
+                          : tw`bg-blue-500`,
+                      ]}>
+                      <Text style={tw`text-white`}>Yearly</Text>
+                    </TouchableOpacity>
+                  </View>
+                
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
                 <View>
                   {isDayPickerVisible && (
