@@ -67,13 +67,6 @@ const AddDailyTaskScreen = () => {
   );
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-
-  const [duration, setDuration] = useState('Day');
-  const [target, setTarget] = useState('30');
-  const [oneTime, setOneTime] = useState('Weekly');
-  const [selectedModal, setSelectedModal] = useState<
-    'weekly' | 'monthly' | 'yearly' | null
-  >(null);
   const [taskName, setTaskName] = useState('');
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
   const [specificForValue, setSpecificForValue] = useState('');
@@ -87,10 +80,20 @@ const AddDailyTaskScreen = () => {
   const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
   const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  
+  const [selectedDates, setSelectedDates] = useState<number[]>([]);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [isDateSeletorVisible, setIsDateSeletorVisible] = useState(false);
+  const [selectedYears, setSelectedYears] = useState<number[]>([]); // Add this line
   const handleWeeklyClick = () => {
     setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
   };
+  const handleMonthlyClick = () => {
+    setIsDatePickerVisible(true); // Show DatePicker modal when Monthly is clicked
+  };
+  const handleYearlyClick = () => {
+    setIsDateSeletorVisible(true); // Show DateSeletor modal when Monthly is clicked
+  };
+
   // Load saved tasks from AsyncStorage
   useEffect(() => {
     const loadTasks = async () => {
@@ -121,6 +124,8 @@ const AddDailyTaskScreen = () => {
           : '',
         dailyTarget: isDailyTargetEnabled ? `${dailyTarget} ${targetType}` : '',
         selectedDays: selectedDays,
+        selectedDates: selectedDates,
+        selectedYears:selectedYears,
         icon: categoryIcons[selectedCategory as Category],
       };
 
@@ -382,18 +387,43 @@ const AddDailyTaskScreen = () => {
 
                 {/* One-Time Selection */}
                 <Button title="Weekly" onPress={handleWeeklyClick} />
-                <Button title="Monthly" />
-                <Button title="Yearly" onPress={() => {}} />
+                <Button title="Monthly" onPress={handleMonthlyClick} />
+                <Button title="Yearly" onPress={handleYearlyClick} />
 
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
-                {isDayPickerVisible && (
-                  <DayPicker
-                    selectedDays={selectedDays}
-                    onSelectDays={setSelectedDays}
-                    onCancel={() => setIsDayPickerVisible(false)}
-                    onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
-                  />
-                )}        
+                <View>
+                  {isDayPickerVisible && (
+                    <DayPicker
+                      selectedDays={selectedDays}
+                      onSelectDays={setSelectedDays}
+                      onCancel={() => setIsDayPickerVisible(false)}
+                      onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
+                    />
+                  )}
+                </View>
+                {/* Show DatePicker modal when isDatePickerVisible is true */}
+                <View>
+                  {isDatePickerVisible && (
+                    <DatePicker
+                      selectedDates={selectedDates}
+                      onSelectDates={setSelectedDates}
+                      onCancel={() => setIsDatePickerVisible(false)}
+                      onAddDay={() => setIsDatePickerVisible(false)}
+                    />
+                  )}
+                </View>
+                {/* Show DateSelector modal when isDateSelectorVisible is true */}
+                <View>
+                  {isDateSeletorVisible && (
+                    <DateSelector
+                      selectedYears={selectedYears}
+                      onSelectYears={setSelectedYears}
+                      onCancel={() => setIsDateSeletorVisible(false)}
+                      onAddDay={() => setIsDateSeletorVisible(false)}
+                    />
+                  )}
+                </View>
+
                 {/* Add to Routine Button */}
                 <TouchableOpacity
                   onPress={saveTask}

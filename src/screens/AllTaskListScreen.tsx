@@ -1,15 +1,17 @@
 // AllTaskListScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, TouchableOpacity, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { s as tw } from 'react-native-wind';
-import { useNavigation } from '@react-navigation/native';
+import {s as tw} from 'react-native-wind';
+import {useNavigation} from '@react-navigation/native';
 
 type Task = {
   name: string;
   specificFor: string;
   dailyTarget: string;
   selectedDays: string[];
+  selectedDates: number[];
+  selectedYears: string[];
 };
 
 const AllTaskListScreen = () => {
@@ -49,9 +51,9 @@ const AllTaskListScreen = () => {
       'Delete Task',
       `Are you sure you want to delete the task: ${taskName}?`,
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', onPress: () => deleteTask(taskName) },
-      ]
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Delete', onPress: () => deleteTask(taskName)},
+      ],
     );
   };
 
@@ -63,28 +65,33 @@ const AllTaskListScreen = () => {
   // Edit task
 
   // Render task item
-  const renderItem = ({ item }: { item: Task }) => (
+  const renderItem = ({item}: {item: Task}) => (
     <View style={tw`flex-row items-center bg-gray-100 p-3 mb-2 rounded-lg`}>
       <View>
         <Text style={tw`text-base font-semibold text-black`}>{item.name}</Text>
         <Text style={tw`text-sm text-gray-600`}>{item.specificFor}</Text>
         <Text style={tw`text-sm text-gray-600`}>{item.dailyTarget}</Text>
         <Text style={tw`text-sm text-gray-600`}>
-  Selected Days: {item.selectedDays ? item.selectedDays.join(', ') : 'None'}
-</Text>
-
+          Selected Days:{' '}
+          {item.selectedDays ? item.selectedDays.join(', ') : 'None'}
+        </Text>
+        <Text style={tw`text-sm text-gray-600`}>
+          Selected Dates:{' '}
+          {item.selectedDates ? item.selectedDates.join(', ') : 'None'}
+        </Text>
+        <Text style={tw`text-sm text-gray-600`}>
+          Selected Years:{item.selectedYears ? item.selectedYears.join(', ') : 'None' }
+          
+        </Text>
+        
       </View>
       <View style={tw`flex-row space-x-2`}>
-        <TouchableOpacity
-          style={tw`bg-yellow-500 px-4 py-2 rounded-lg`}
-          
-        >
+        <TouchableOpacity style={tw`bg-yellow-500 px-4 py-2 rounded-lg`}>
           <Text style={tw`text-white`}>Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={tw`bg-red-500 px-4 py-2 rounded-lg`}
-          onPress={() => handleDeleteTask(item.name)}
-        >
+          onPress={() => handleDeleteTask(item.name)}>
           <Text style={tw`text-white`}>Delete</Text>
         </TouchableOpacity>
       </View>
