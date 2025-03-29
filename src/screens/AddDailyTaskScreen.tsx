@@ -382,7 +382,7 @@ const AddDailyTaskScreen = () => {
 
                 {/* One-Time Selection */}
                 <Button title="Weekly" onPress={handleWeeklyClick} />
-                <Button title="Monthly" onPress={handleWeeklyClick}/>
+                <Button title="Monthly" />
                 <Button title="Yearly" onPress={() => {}} />
 
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
@@ -408,7 +408,7 @@ const AddDailyTaskScreen = () => {
                   onPress={() =>
                     setExpandedTask(expandedTask === task ? null : task)
                   }
-                  style={tw`p-3 rounded-lg `}>
+                  style={tw`p-3 rounded-lg`}>
                   <Icon
                     name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
                     size={24}
