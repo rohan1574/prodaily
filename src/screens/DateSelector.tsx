@@ -25,8 +25,14 @@ const months = [
   'November',
   'December',
 ];
+interface DateSelectorProps {
+  selectedDays: string[];
+  onSelectDays: React.Dispatch<React.SetStateAction<string[]>>;
+  onCancel: () => void;
+  onAddDay: () => void;
+}
 
-const DateSelector: React.FC<{onCancel: () => void}> = ({onCancel}) => {
+const DateSelector: React.FC<DateSelectorProps> = ({ selectedDays, onSelectDays, onCancel, onAddDay }) => {
   const [selectedDates, setSelectedDates] = useState<string[]>([
     'January 1',
     'February 28',

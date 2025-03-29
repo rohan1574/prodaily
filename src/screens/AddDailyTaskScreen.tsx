@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,10 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Modal,
+  Alert,
+  Button,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 import DateSelector from './DateSelector';
@@ -17,9 +20,9 @@ import DatePicker from './DatePicker';
 import DayPicker from './DayPicker';
 import categoryIcons from '../data/categoryIcons';
 import tasksData from '../data/tasksData';
-
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
+import BottomNavigation from './BottomNavigation';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -28,11 +31,31 @@ type RootStackParamList = {
   MyStatisticsScreen: undefined;
   ProfileManageScreen: undefined;
   AddDailyTaskScreen: undefined;
+  AllTaskListScreen: undefined;
 };
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'TodaysTaskToDoScreen'>;
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'TodaysTaskToDoScreen'
+>;
 // List of categories
-const categories = Object.keys(categoryIcons);
+type Category =
+  | 'Fitness'
+  | 'Wellness'
+  | 'Productivity'
+  | 'Nutrition'
+  | 'Sleep'
+  | 'Growth'
+  | 'Household'
+  | 'Social'
+  | 'Self-Care'
+  | 'Financials'
+  | 'Career'
+  | 'Tech'
+  | 'Academic'
+  | 'Spiritual'
+  | 'Pet';
+
+const categories = Object.keys(categoryIcons) as Category[];
 
 // Make Infinite Scroll Data (Repeat categories)
 const infiniteCategories = [...categories, ...categories, ...categories];
@@ -44,6 +67,77 @@ const AddDailyTaskScreen = () => {
   );
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const [duration, setDuration] = useState('Day');
+  const [target, setTarget] = useState('30');
+  const [oneTime, setOneTime] = useState('Weekly');
+  const [selectedModal, setSelectedModal] = useState<
+    'weekly' | 'monthly' | 'yearly' | null
+  >(null);
+  const [taskName, setTaskName] = useState('');
+  const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
+  const [specificForValue, setSpecificForValue] = useState('');
+  const [dailyTarget, setDailyTarget] = useState('');
+  const [targetType, setTargetType] = useState<'Minutes' | 'Times'>('Minutes');
+  const toggleSpecificFor = () =>
+    setIsSpecificForEnabled(!isSpecificForEnabled);
+  const toggleDailyTarget = () =>
+    setIsDailyTargetEnabled(!isDailyTargetEnabled);
+  const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
+  const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
+  const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  
+  const handleWeeklyClick = () => {
+    setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
+  };
+  // Load saved tasks from AsyncStorage
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const storedTasks = await AsyncStorage.getItem('tasks');
+        if (storedTasks) {
+          console.log('Stored Tasks:', JSON.parse(storedTasks));
+        }
+      } catch (error) {
+        console.error('Error loading tasks:', error);
+      }
+    };
+    loadTasks();
+  }, []);
+
+  // AsyncStorage-এ টাস্ক সংরক্ষণ করা
+  const saveTask = async () => {
+    if (
+      !isSpecificForEnabled ||
+      (isSpecificForEnabled && specificForValue) ||
+      !isDailyTargetEnabled ||
+      (isDailyTargetEnabled && dailyTarget)
+    ) {
+      const newTask = {
+        name: expandedTask,
+        specificFor: isSpecificForEnabled
+          ? `${specificForValue} ${specificFor}`
+          : '',
+        dailyTarget: isDailyTargetEnabled ? `${dailyTarget} ${targetType}` : '',
+        selectedDays: selectedDays,
+        icon: categoryIcons[selectedCategory as Category],
+      };
+
+      try {
+        const existingTasks = await AsyncStorage.getItem('tasks');
+        const tasksArray = existingTasks ? JSON.parse(existingTasks) : [];
+        tasksArray.push(newTask);
+        await AsyncStorage.setItem('tasks', JSON.stringify(tasksArray));
+        Alert.alert('Success', 'Task added successfully!');
+        navigation.navigate('AllTaskListScreen');
+      } catch (error) {
+        console.error('Error saving task:', error);
+      }
+    } else {
+      Alert.alert('Error', 'Please fill at least one field.');
+    }
+  };
 
   // Handle scrolling and auto-select first visible category
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -65,18 +159,12 @@ const AddDailyTaskScreen = () => {
       scrollViewRef.current?.scrollTo({x: 0, animated: false});
     }
   };
-  const [duration, setDuration] = useState('Day');
-  const [target, setTarget] = useState('30');
-  const [oneTime, setOneTime] = useState('Weekly');
-  const [selectedModal, setSelectedModal] = useState<
-    'weekly' | 'monthly' | 'yearly' | null
-  >(null);
 
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
       <View style={tw`mb-2`}>
-        <Text style={tw`text-xl font-bold text-black`}>Add Daily Tasks</Text>
+        <Text style={tw`text-xl font-bold text-black`}>Add Daily Task</Text>
         <Text style={tw`text-sm text-gray-500`}>
           Add tasks to your daily routine to stay productive.
         </Text>
@@ -103,7 +191,10 @@ const AddDailyTaskScreen = () => {
                     ? tw`border-blue-500`
                     : tw`border-gray-300`,
                 ]}>
-                <Image source={categoryIcons['Fitness']} style={tw`w-8 h-8`} />
+                <Image
+                  source={categoryIcons[category]}
+                  style={tw`w-8 h-8`} // Updated to dynamically select category
+                />
               </View>
               <Text
                 style={tw`text-sm mt-1 ${
@@ -123,9 +214,10 @@ const AddDailyTaskScreen = () => {
         {Object.keys(tasksData[selectedCategory] || {}).map((task, index) => (
           <View key={index} style={tw`mb-2`}>
             <TouchableOpacity
-              onPress={() =>
-                setExpandedTask(expandedTask === task ? null : task)
-              }
+              onPress={() => {
+                setExpandedTask(expandedTask === task ? null : task);
+                setTaskName(task); // Set task name when selecting a task
+              }}
               style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
               <View style={tw`flex-row items-center`}>
                 <Image
@@ -157,114 +249,157 @@ const AddDailyTaskScreen = () => {
                   </Text>
                 </View>
 
-                {/* Routine Duration */}
-                <Text style={tw`text-gray-600 mb-2`}>Add specific for</Text>
-                <View style={tw`flex-row items-center mb-4`}>
-                  <TextInput
-                    value="365"
-                    keyboardType="numeric"
-                    style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
-                  />
-                  {['Day', 'Week', 'Month'].map(item => (
+                {/* Add Specific For */}
+                <View style={tw`mb-6`}>
+                  <View style={tw`flex-row items-center mb-4`}>
+                    <TouchableOpacity onPress={toggleSpecificFor}>
+                      <Icon
+                        name={
+                          isSpecificForEnabled
+                            ? 'radio-button-on'
+                            : 'radio-button-off'
+                        }
+                        size={16}
+                        color="#3B82F6"
+                      />
+                    </TouchableOpacity>
+                    <Text style={tw`text-xs font-semibold`}>
+                      Add specific for:
+                    </Text>
+                    <TextInput
+                      style={tw`border p-2 rounded w-8 text-xs mt-2`}
+                      keyboardType="numeric"
+                      placeholder="00"
+                      value={specificForValue}
+                      onChangeText={setSpecificForValue}
+                      editable={isSpecificForEnabled} // ✅ Radio Button অন হলে ইনপুট হবে
+                    />
+
                     <TouchableOpacity
-                      key={item}
-                      onPress={() => setDuration(item)}
-                      style={tw`ml-2 px-3 py-1 rounded-lg ${
-                        duration === item
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
-                      }`}>
+                      style={tw` py-2 mx-1 rounded ${
+                        specificFor === 'Days' ? 'bg-blue-500' : 'bg-gray-300'
+                      }`}
+                      onPress={() => setSpecificFor('Days')}>
                       <Text
-                        style={tw`${
-                          duration === item ? 'text-white' : 'text-gray-700'
-                        }`}>
-                        {item}
+                        style={
+                          specificFor === 'Days'
+                            ? tw`text-white`
+                            : tw`text-gray-500`
+                        }>
+                        Days
                       </Text>
                     </TouchableOpacity>
-                  ))}
+
+                    <TouchableOpacity
+                      style={tw`px-2 py-2 rounded ${
+                        specificFor === 'Weeks' ? 'bg-blue-500' : 'bg-gray-300'
+                      }`}
+                      onPress={() => setSpecificFor('Weeks')}>
+                      <Text
+                        style={
+                          specificFor === 'Weeks'
+                            ? tw`text-white`
+                            : tw`text-gray-500`
+                        }>
+                        Weeks
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={tw`px-2 py-2 rounded ${
+                        specificFor === 'Months' ? 'bg-blue-500' : 'bg-gray-300'
+                      }`}
+                      onPress={() => setSpecificFor('Months')}>
+                      <Text
+                        style={
+                          specificFor === 'Months'
+                            ? tw`text-white`
+                            : tw`text-gray-500`
+                        }>
+                        Months
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
-                {/* Daily Target */}
-                <View style={tw`flex-row items-center mb-4`}>
-                  <TouchableOpacity style={tw`mr-2`}>
-                    <Icon name="radio-button-on" size={20} color="#3B82F6" />
-                  </TouchableOpacity>
-                  <Text style={tw`text-gray-700 mr-2`}>Set Daily Target</Text>
-                  <TextInput
-                    value={target}
-                    onChangeText={setTarget}
-                    keyboardType="numeric"
-                    style={tw`border border-gray-300 rounded-lg px-2 w-16 text-center`}
-                  />
-                  <Text style={tw`text-gray-700 ml-2`}>Min</Text>
+                {/* Set Daily Target */}
+                <View style={tw`mb-6`}>
+                  <View style={tw`flex-row items-center mb-4`}>
+                    <TouchableOpacity onPress={toggleDailyTarget}>
+                      <Icon
+                        name={
+                          isDailyTargetEnabled
+                            ? 'radio-button-on'
+                            : 'radio-button-off'
+                        }
+                        size={16}
+                        color="#3B82F6"
+                      />
+                    </TouchableOpacity>
+                    <Text style={tw`text-xs font-semibold`}>
+                      Set Daily Target:
+                    </Text>
+                    <TextInput
+                      style={tw`border p-2 rounded w-8 text-xs mt-2`}
+                      keyboardType="numeric"
+                      placeholder="00"
+                      value={dailyTarget}
+                      onChangeText={setDailyTarget}
+                      editable={isDailyTargetEnabled} // ✅ Radio Button অন হলে ইনপুট হবে
+                    />
+                    <View style={tw`flex-row mt-2`}>
+                      <TouchableOpacity
+                        style={tw`px-4 py-2 mx-1 rounded ${
+                          targetType === 'Minutes'
+                            ? 'bg-blue-500'
+                            : 'bg-gray-300'
+                        }`}
+                        onPress={() => setTargetType('Minutes')}>
+                        <Text
+                          style={tw`${
+                            targetType === 'Minutes'
+                              ? 'text-white'
+                              : 'text-black'
+                          }`}>
+                          Minutes
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={tw`px-4 py-2 mx-1 rounded ${
+                          targetType === 'Times' ? 'bg-blue-500' : 'bg-gray-300'
+                        }`}
+                        onPress={() => setTargetType('Times')}>
+                        <Text
+                          style={tw`${
+                            targetType === 'Times' ? 'text-white' : 'text-black'
+                          }`}>
+                          Times
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
 
                 {/* One-Time Selection */}
-                <View style={tw`flex-row items-center mb-4`}>
-                  <TouchableOpacity style={tw`mr-2`}>
-                    <Icon name="radio-button-on" size={20} color="#3B82F6" />
-                  </TouchableOpacity>
-                  <Text style={tw`text-gray-700 mr-2`}>Add once a</Text>
-                  {['Weekly', 'Monthly', 'Yearly'].map(item => (
-                    <TouchableOpacity
-                      key={item}
-                      onPress={() => {
-                        setOneTime(item);
-                        if (item === 'Weekly') setSelectedModal('weekly');
-                        if (item === 'Monthly') setSelectedModal('monthly');
-                        if (item === 'Yearly') setSelectedModal('yearly');
-                      }}
-                      style={tw`px-2 py-1 rounded-lg ${
-                        oneTime === item ? 'bg-blue-500' : 'bg-gray-200'
-                      }`}>
-                      <Text
-                        style={tw`${
-                          oneTime === item ? 'text-white' : 'text-gray-700'
-                        }`}>
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                  {/* Modal Views */}
-                  <Modal
-                    visible={selectedModal === 'weekly'}
-                    animationType="slide"
-                    transparent={true}>
-                    <View
-                      style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-                      <View style={tw`bg-white p-4 rounded-lg w-3/4`}>
-                        <DayPicker onCancel={() => setSelectedModal(null)} />
-                      </View>
-                    </View>
-                  </Modal>
-                  <Modal
-                    visible={selectedModal === 'monthly'}
-                    animationType="slide"
-                    transparent={true}>
-                    <View
-                      style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-                      <View style={tw`bg-white p-4 rounded-lg w-3/4`}>
-                        <DatePicker onCancel={() => setSelectedModal(null)} />
-                      </View>
-                    </View>
-                  </Modal>
-                  <Modal
-                    visible={selectedModal === 'yearly'}
-                    animationType="slide"
-                    transparent={true}>
-                    <View
-                      style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-                      <View style={tw`bg-white p-4 rounded-lg w-3/4`}>
-                        <DateSelector onCancel={() => setSelectedModal(null)} />
-                      </View>
-                    </View>
-                  </Modal>
-                </View>
+                <Button title="Weekly" onPress={handleWeeklyClick} />
+                <Button title="Monthly" onPress={handleWeeklyClick}/>
+                <Button title="Yearly" onPress={() => {}} />
 
+                {/* Show DayPicker modal when isDayPickerVisible is true */}
+                {isDayPickerVisible && (
+                  <DayPicker
+                    selectedDays={selectedDays}
+                    onSelectDays={setSelectedDays}
+                    onCancel={() => setIsDayPickerVisible(false)}
+                    onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
+                  />
+                )}        
                 {/* Add to Routine Button */}
-                <TouchableOpacity style={tw`bg-blue-500 py-2 rounded-lg`}>
+                <TouchableOpacity
+                  onPress={saveTask}
+                  style={tw`bg-blue-500 py-2 rounded-lg`}>
                   <Text style={tw`text-white text-center font-semibold`}>
-                    Add to Routine
+                    Add to Daily Routine
                   </Text>
                 </TouchableOpacity>
 
@@ -273,7 +408,7 @@ const AddDailyTaskScreen = () => {
                   onPress={() =>
                     setExpandedTask(expandedTask === task ? null : task)
                   }
-                  style={tw`p-3 rounded-lg`}>
+                  style={tw`p-3 rounded-lg `}>
                   <Icon
                     name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
                     size={24}
@@ -285,31 +420,10 @@ const AddDailyTaskScreen = () => {
           </View>
         ))}
       </ScrollView>
-
-      <View
-        style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
-        <TouchableOpacity>
-          <Icon name="home-outline" size={28} color="gray" onPress={() => navigation.navigate('TodaysTaskToDoScreen')}/>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="bar-chart-outline" size={28} color="gray" onPress={() => navigation.navigate('MyStatisticsScreen')}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}>
-          <Icon name="add" size={28} color="white" onPress={() => navigation.navigate('AddDailyTaskScreen')}/>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon
-            name="calendar-outline"
-            size={28}
-            color="gray"
-            onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="settings-outline" size={28} color="gray" onPress={() => navigation.navigate('ProfileManageScreen')} />
-        </TouchableOpacity>
-      </View>
+      {/* bottom navigation */}
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };
+
 export default AddDailyTaskScreen;
