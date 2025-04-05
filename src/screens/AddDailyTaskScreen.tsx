@@ -140,7 +140,7 @@ const AddDailyTaskScreen = () => {
         tasksArray.push(newTask);
         await AsyncStorage.setItem('tasks', JSON.stringify(tasksArray));
         Alert.alert('Success', 'Task added successfully!');
-        navigation.navigate('AllTaskListScreen');
+        navigation.navigate('MyCalenderFutureTaskScreen');
       } catch (error) {
         console.error('Error saving task:', error);
       }
