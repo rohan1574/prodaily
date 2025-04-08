@@ -126,7 +126,7 @@ const MyCalenderFutureTaskScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-xl font-bold text-black`}>My Calender</Text>
+      <Text style={tw`text-xl font-bold text-black`}>My Calenders</Text>
 
       {/* Year and Month Dropdowns */}
       <View style={tw`flex-row justify-between mb-4`}>
