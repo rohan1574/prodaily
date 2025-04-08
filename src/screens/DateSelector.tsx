@@ -1,72 +1,116 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Modal, FlatList} from 'react-native';
+import {s as tw} from 'react-native-wind';
 
-interface DateSelectorProps {
-  selectedDate: number[]; // Array of selected days
-  selectedMonths: number[]; // Array of selected months
-  onSelectDate: (date: number) => void; // Function that expects a single date
-  onSelectMonth: (month: number) => void; // Function that expects a single month
+type DateSelectorProps = {
+  selectedDates: number[];
+  selectedMonths: string[]; // Change to string to store month names
+  onSelectDate: (date: number) => void;
+  onSelectMonth: (month: string) => void; // Now passing month name instead of index
   onCancel: () => void;
   onAddDay: () => void;
-}
+};
 
-const months = [
-  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+const Days = Array.from({length: 31}, (_, index) => index + 1);
+const Months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 const DateSelector: React.FC<DateSelectorProps> = ({
-  selectedDate,
+  selectedDates,
   selectedMonths,
   onSelectDate,
   onSelectMonth,
   onCancel,
   onAddDay,
 }) => {
+  const toggleDaySelection = (day: number) => {
+    // Only select the clicked day and remove any previously selected one
+    onSelectDate(day);
+  };
+
+  const toggleMonthSelection = (month: string) => {
+    // Only select the clicked month and remove any previously selected one
+    onSelectMonth(month);
+  };
+
   return (
-    <View style={{ padding: 20, backgroundColor: '#fff' }}>
-      <Text>Select Dates</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-          <TouchableOpacity
-            key={day}
-            style={{
-              padding: 10,
-              backgroundColor: selectedDate.includes(day) ? 'blue' : 'gray',
-              margin: 5,
-              borderRadius: 5,
-            }}
-            onPress={() => onSelectDate(day)}>
-            <Text style={{ color: '#fff' }}>{day}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+    <Modal transparent={true} visible={true}>
+      <View
+        style={tw`flex-1 justify-center items-center bg-gray-500 bg-opacity-50`}>
+        <View style={tw`bg-white p-4 rounded-lg w-80`}>
+          <Text style={tw`text-lg font-bold mb-4`}>Select Dates (1-31)</Text>
+          <FlatList
+            data={Days}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => toggleDaySelection(item)}
+                style={[
+                  tw`py-2 px-4 rounded-md mb-2`,
+                  selectedDates.includes(item)
+                    ? tw`bg-blue-500`
+                    : tw`bg-gray-200`,
+                ]}
+                accessibilityLabel={`Select day ${item}`}
+                accessibilityRole="button">
+                <Text style={tw`text-center`}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.toString()}
+            numColumns={5}
+          />
 
-      <Text>Select Months</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {months.map((month, index) => (
-          <TouchableOpacity
-            key={index}
-            style={{
-              padding: 10,
-              backgroundColor: selectedMonths.includes(index + 1) ? 'blue' : 'gray', // +1 because months are 1-based
-              margin: 5,
-              borderRadius: 5,
-            }}
-            onPress={() => onSelectMonth(index + 1)}>
-            <Text style={{ color: '#fff' }}>{month}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+          <Text style={tw`text-lg font-bold mt-4 mb-4`}>Select Months</Text>
+          <FlatList
+            data={Months}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => toggleMonthSelection(item)}
+                style={[
+                  tw`py-2 px-4 rounded-md mb-2`,
+                  selectedMonths.includes(item)
+                    ? tw`bg-blue-500`
+                    : tw`bg-gray-200`,
+                ]}
+                accessibilityLabel={`Select month ${item}`}
+                accessibilityRole="button">
+                <Text style={tw`text-center`}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item}
+            numColumns={3}
+          />
 
-      <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TouchableOpacity onPress={onCancel}>
-          <Text>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onAddDay}>
-          <Text>Add Date</Text>
-        </TouchableOpacity>
+          <View style={tw`flex-row justify-between mt-4`}>
+            <TouchableOpacity
+              onPress={onCancel}
+              style={tw`bg-gray-300 px-4 py-2 rounded-md`}
+              accessibilityLabel="Cancel selection"
+              accessibilityRole="button">
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onAddDay}
+              style={tw`bg-blue-500 px-4 py-2 rounded-md`}
+              accessibilityLabel="Add selected dates and months"
+              accessibilityRole="button">
+              <Text style={tw`text-white`}>Add Day</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </Modal>
   );
 };
 

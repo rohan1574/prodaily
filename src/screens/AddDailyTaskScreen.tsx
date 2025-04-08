@@ -67,7 +67,7 @@ const AddDailyTaskScreen = () => {
   );
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-  const [taskName, setTaskName] = useState('');
+  const [task, setTaskName] = useState('');
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
   const [specificForValue, setSpecificForValue] = useState('');
   const [dailyTarget, setDailyTarget] = useState('');
@@ -85,8 +85,9 @@ const AddDailyTaskScreen = () => {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isDateSeletorVisible, setIsDateSeletorVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<number[]>([]);
-  const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
-  const [isOneTimeSelected, setIsOneTimeSelected] = useState(false);
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
 
   const handleWeeklyClick = () => {
     setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
@@ -97,55 +98,94 @@ const AddDailyTaskScreen = () => {
   const handleYearlyClick = () => {
     setIsDateSeletorVisible(true); // Show DateSeletor modal when Monthly is clicked
   };
+  // Functions with logic to prevent both being selected
+  const handleToggleSpecificFor = () => {
+    if (isSpecificDayOnSelected) {
+      Alert.alert(
+        'Error',
+        'You cannot select "Add Specific For" while "Add Specific Day On" is selected.',
+      );
+      return;
+    }
+    setIsSpecificForEnabled(!isSpecificForEnabled);
+  };
 
-  // Load saved tasks from AsyncStorage
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const storedTasks = await AsyncStorage.getItem('tasks');
-        if (storedTasks) {
-          console.log('Stored Tasks:', JSON.parse(storedTasks));
-        }
-      } catch (error) {
-        console.error('Error loading tasks:', error);
-      }
+  const toggleSpecificDayOn = () => {
+    if (isSpecificForEnabled) {
+      Alert.alert(
+        'Error',
+        'You cannot select "Add Specific Day On" while "Add Specific For" is selected.',
+      );
+      return;
+    }
+    setIsSpecificDayOnSelected(!isSpecificDayOnSelected);
+  };
+  const handleSaveTask = async () => {
+    const currentDate = new Date();
+    let endDate = new Date(currentDate);
+
+    // Initialize task data object
+    const taskData: any = {
+      id: `${Date.now()}`, // Unique task id
+      dailyTarget,
+      selectedDays: [], // For specific days selection
+      selectedDates: selectedDates, // For specific dates selection
+      selectedYears: selectedYears,
+      selectedMonths: selectedMonths, // For specific years selection
+      targetType: targetType || 'Daily', // Default is Daily if no target type selected
+      startDate: currentDate.toISOString(),
+      endDate: null,
+      specificFor, // Type of specific duration (Days, Weeks, Months)
+      specificForValue, // Value for duration (e.g., 5 days, 5 weeks, 5 months)
     };
-    loadTasks();
-  }, []);
 
-  // AsyncStorage-এ টাস্ক সংরক্ষণ করা
-  const saveTask = async () => {
-    if (
-      !isSpecificForEnabled ||
-      (isSpecificForEnabled && specificForValue) ||
-      !isDailyTargetEnabled ||
-      (isDailyTargetEnabled && dailyTarget)
-    ) {
-      const newTask = {
-        name: expandedTask,
-        specificFor: isSpecificForEnabled
-          ? `${specificForValue} ${specificFor}`
-          : '',
-        dailyTarget: isDailyTargetEnabled ? `${dailyTarget} ${targetType}` : '',
-        selectedDays: selectedDays,
-        selectedDates: selectedDates,
-        selectedDate: selectedDate,
-        selectedMonths: selectedMonths,
-        icon: categoryIcons[selectedCategory as Category],
-      };
-
-      try {
-        const existingTasks = await AsyncStorage.getItem('tasks');
-        const tasksArray = existingTasks ? JSON.parse(existingTasks) : [];
-        tasksArray.push(newTask);
-        await AsyncStorage.setItem('tasks', JSON.stringify(tasksArray));
-        Alert.alert('Success', 'Task added successfully!');
-        navigation.navigate('MyCalenderFutureTaskScreen');
-      } catch (error) {
-        console.error('Error saving task:', error);
+    // Handle "Add Specific For" (Days, Weeks, Months)
+    if (specificForValue && specificForValue !== '') {
+      const timeValue = parseInt(specificForValue, 10); // Ensure the value is an integer
+      if (specificFor === 'Days') {
+        endDate.setDate(currentDate.getDate() + timeValue); // Add days
+      } else if (specificFor === 'Weeks') {
+        endDate.setDate(currentDate.getDate() + timeValue * 7); // Add weeks
+      } else if (specificFor === 'Months') {
+        endDate.setMonth(currentDate.getMonth() + timeValue); // Add months
       }
-    } else {
-      Alert.alert('Error', 'Please fill at least one field.');
+      taskData.endDate = endDate.toISOString(); // Set end date
+    }
+
+    // Handle "Set Daily Target"
+    if (isDailyTargetEnabled && dailyTarget) {
+      taskData.dailyTarget = dailyTarget; // Save daily target if enabled
+    }
+
+    // Handle "Add Specific Day On" (Weekly, Monthly, Yearly)
+    if (isSpecificDayOnSelected) {
+      if (specTarget === 'Weekly') {
+        taskData.selectedDays = selectedDays; // Store selected days of the week
+      } else if (specTarget === 'Monthly') {
+        taskData.selectedDates = selectedDates; // Store selected dates of the month
+      } else if (specTarget === 'Yearly') {
+        taskData.selectedYears = selectedYears; // Store selected dates for each year
+      }
+    }
+
+    // If no target type selected, default to Daily
+    if (!targetType) {
+      taskData.targetType = 'Daily';
+      taskData.endDate = null; // If daily target, set no end date
+    }
+
+    // Save the task to AsyncStorage
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      const taskList = storedTasks ? JSON.parse(storedTasks) : []; // Parse existing tasks
+
+      taskList.push(taskData); // Add new task to the list
+      await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
+
+      // Navigate to MyCalenderFutureTaskScreen after saving
+      navigation.navigate('MyCalenderFutureTaskScreen');
+    } catch (error) {
+      console.error('Error saving task:', error); // Handle any errors
     }
   };
 
@@ -262,7 +302,7 @@ const AddDailyTaskScreen = () => {
                 {/* Add Specific For */}
                 <View style={tw`mb-6`}>
                   <View style={tw`flex-row items-center mb-4`}>
-                    <TouchableOpacity onPress={toggleSpecificFor}>
+                    <TouchableOpacity onPress={handleToggleSpecificFor}>
                       <Icon
                         name={
                           isSpecificForEnabled
@@ -273,20 +313,21 @@ const AddDailyTaskScreen = () => {
                         color="#3B82F6"
                       />
                     </TouchableOpacity>
-                    <Text style={tw`text-xs font-semibold`}>
+                    <Text style={tw`text-xs font-semibold ml-1`}>
                       Add specific for:
                     </Text>
+
                     <TextInput
-                      style={tw`border p-2 rounded w-8 text-xs mt-2`}
+                      style={tw`border p-2 rounded w-8 text-xs ml-2`}
                       keyboardType="numeric"
                       placeholder="00"
                       value={specificForValue}
                       onChangeText={setSpecificForValue}
-                      editable={isSpecificForEnabled} // ✅ Radio Button অন হলে ইনপুট হবে
+                      editable={isSpecificForEnabled}
                     />
 
                     <TouchableOpacity
-                      style={tw` py-2 mx-1 rounded ${
+                      style={tw`py-2 px-2 mx-1 rounded ${
                         specificFor === 'Days' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Days')}>
@@ -301,7 +342,7 @@ const AddDailyTaskScreen = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                      style={tw`px-2 py-2 rounded ${
+                      style={tw`py-2 px-2 mx-1 rounded ${
                         specificFor === 'Weeks' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Weeks')}>
@@ -316,7 +357,7 @@ const AddDailyTaskScreen = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                      style={tw`px-2 py-2 rounded ${
+                      style={tw`py-2 px-2 mx-1 rounded ${
                         specificFor === 'Months' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Months')}>
@@ -347,7 +388,7 @@ const AddDailyTaskScreen = () => {
                       />
                     </TouchableOpacity>
                     <Text style={tw`text-xs font-semibold`}>
-                      Set Daily Target:
+                      Set Daily Target for
                     </Text>
                     <TextInput
                       style={tw`border p-2 rounded w-8 text-xs mt-2`}
@@ -355,7 +396,7 @@ const AddDailyTaskScreen = () => {
                       placeholder="00"
                       value={dailyTarget}
                       onChangeText={setDailyTarget}
-                      editable={isDailyTargetEnabled} // ✅ Radio Button অন হলে ইনপুট হবে
+                      editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
                     <View style={tw`flex-row mt-2`}>
                       <TouchableOpacity
@@ -390,114 +431,109 @@ const AddDailyTaskScreen = () => {
                   </View>
                 </View>
 
-                {/* One-Time Selection */}
+                {/* Add Specific Day On */}
                 <View style={tw`mb-4`}>
-                    <Text style={tw`text-lg font-semibold`}>One Time</Text>
-                    <TouchableOpacity
-                      onPress={() => setIsOneTimeSelected(!isOneTimeSelected)}
-                      style={tw`flex-row items-center`}>
-                      <Icon
-                        name={isOneTimeSelected ? 'radio-button-on' : 'radio-button-off'}
-                        size={20}
-                        color={isOneTimeSelected ? 'blue' : 'gray'}
-                      />
-                      <Text style={tw`ml-2 text-sm`}>One-Time Task</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity
+                    onPress={toggleSpecificDayOn}
+                    style={tw`flex-row items-center`}>
+                    <Icon
+                      name={
+                        isSpecificDayOnSelected
+                          ? 'radio-button-on'
+                          : 'radio-button-off'
+                      }
+                      size={20}
+                      color={isSpecificDayOnSelected ? 'blue' : 'gray'}
+                    />
+                    <Text style={tw`ml-2 text-sm`}>Add Specific day on</Text>
+                  </TouchableOpacity>
+                </View>
 
-                  {/* Buttons */}
-                  <View style={tw`flex-row justify-between`}>
-                    <TouchableOpacity
-                      onPress={handleWeeklyClick}
-                      disabled={!isOneTimeSelected} // Disable Weekly button if One-Time is not selected
-                      style={[
-                        tw`py-3 px-5 rounded-lg`,
-                        !isOneTimeSelected
-                          ? tw`bg-gray-300`
-                          : tw`bg-blue-500`,
-                      ]}>
-                      <Text style={tw`text-white`}>Weekly</Text>
-                    </TouchableOpacity>
+                {/* Buttons */}
+                <View style={tw`flex-row justify-between`}>
+                  <TouchableOpacity
+                    onPress={handleWeeklyClick}
+                    disabled={!isSpecificDayOnSelected}
+                    style={[
+                      tw`py-3 px-5 rounded-lg`,
+                      !isSpecificDayOnSelected
+                        ? tw`bg-gray-300`
+                        : tw`bg-blue-500`,
+                    ]}>
+                    <Text style={tw`text-white`}>Weekly</Text>
+                  </TouchableOpacity>
 
-                    <TouchableOpacity
-                      onPress={handleMonthlyClick}
-                      disabled={!isOneTimeSelected} // Disable Monthly button if One-Time is not selected
-                      style={[
-                        tw`py-3 px-5 rounded-lg`,
-                        !isOneTimeSelected
-                          ? tw`bg-gray-300`
-                          : tw`bg-blue-500`,
-                      ]}>
-                      <Text style={tw`text-white`}>Monthly</Text>
-                    </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleMonthlyClick}
+                    disabled={!isSpecificDayOnSelected}
+                    style={[
+                      tw`py-3 px-5 rounded-lg`,
+                      !isSpecificDayOnSelected
+                        ? tw`bg-gray-300`
+                        : tw`bg-blue-500`,
+                    ]}>
+                    <Text style={tw`text-white`}>Monthly</Text>
+                  </TouchableOpacity>
 
-                    <TouchableOpacity
-                      onPress={handleYearlyClick}
-                      disabled={!isOneTimeSelected} // Disable Yearly button if One-Time is not selected
-                      style={[
-                        tw`py-3 px-5 rounded-lg`,
-                        !isOneTimeSelected
-                          ? tw`bg-gray-300`
-                          : tw`bg-blue-500`,
-                      ]}>
-                      <Text style={tw`text-white`}>Yearly</Text>
-                    </TouchableOpacity>
-                  </View>
-                
+                  <TouchableOpacity
+                    onPress={handleYearlyClick}
+                    disabled={!isSpecificDayOnSelected}
+                    style={[
+                      tw`py-3 px-5 rounded-lg`,
+                      !isSpecificDayOnSelected
+                        ? tw`bg-gray-300`
+                        : tw`bg-blue-500`,
+                    ]}>
+                    <Text style={tw`text-white`}>Yearly</Text>
+                  </TouchableOpacity>
+                </View>
+
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
-                <View>
-                  {isDayPickerVisible && (
-                    <DayPicker
-                      selectedDays={selectedDays}
-                      onSelectDays={setSelectedDays}
-                      onCancel={() => setIsDayPickerVisible(false)}
-                      onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
-                    />
-                  )}
-                </View>
+                {isDayPickerVisible && (
+                  <DayPicker
+                    selectedDays={selectedDays}
+                    onSelectDays={setSelectedDays}
+                    onCancel={() => setIsDayPickerVisible(false)}
+                    onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
+                  />
+                )}
+
                 {/* Show DatePicker modal when isDatePickerVisible is true */}
-                <View>
-                  {isDatePickerVisible && (
-                    <DatePicker
-                      selectedDates={selectedDates}
-                      onSelectDates={setSelectedDate}
-                      onCancel={() => setIsDatePickerVisible(false)}
-                      onAddDay={() => setIsDatePickerVisible(false)}
-                    />
-                  )}
-                </View>
-                <View>
-                  {isDateSeletorVisible && (
-                    <DateSelector
-                      selectedDate={selectedDate}
-                      selectedMonths={selectedMonths}
-                      onSelectDate={(date: number) => {
-                        // Add or remove the date from selectedDates
-                        setSelectedDate(
-                          prevDates =>
-                            prevDates.includes(date)
-                              ? prevDates.filter(d => d !== date) // Deselect if already selected
-                              : [...prevDates, date], // Select if not selected
-                        );
-                      }}
-                      onSelectMonth={(month: number) => {
-                        // Add or remove the month from selectedMonths
-                        setSelectedMonths(
-                          prevMonths =>
-                            prevMonths.includes(month)
-                              ? prevMonths.filter(m => m !== month) // Deselect if already selected
-                              : [...prevMonths, month], // Select if not selected
-                        );
-                      }}
-                      onCancel={() => setIsDateSeletorVisible(false)}
-                      onAddDay={() => setIsDateSeletorVisible(false)}
-                    />
-                  )}
-                </View>
+                {isDatePickerVisible && (
+                  <DatePicker
+                    selectedDates={selectedDates}
+                    onSelectDates={setSelectedDates}
+                    onCancel={() => setIsDatePickerVisible(false)}
+                    onAddDay={() => setIsDatePickerVisible(false)} // Close modal on Add Day
+                  />
+                )}
+
+                {/* Show DateSelector modal when isDateSelectorVisible is true */}
+
+                {isDateSeletorVisible && (
+                  <DateSelector
+                    selectedDates={selectedDates}
+                    selectedMonths={selectedMonths}
+                    onSelectDate={(date: number) => {
+                      // Only allow one date to be selected
+                      setSelectedDates([date]);
+                    }}
+                    onSelectMonth={(month: string) => {
+                      // Only allow one month to be selected
+                      setSelectedMonths([month]);
+                    }}
+                    onCancel={() => setIsDateSeletorVisible(false)} // Close the modal without saving
+                    onAddDay={() => {
+                      // Close the modal after saving the selected dates and months
+                      setIsDateSeletorVisible(false);
+                      // Optionally, you can also add additional logic here to save the selected values elsewhere if needed
+                    }}
+                  />
+                )}
 
                 {/* Add to Routine Button */}
                 <TouchableOpacity
-                  onPress={saveTask}
+                  onPress={handleSaveTask}
                   style={tw`bg-blue-500 py-2 rounded-lg`}>
                   <Text style={tw`text-white text-center font-semibold`}>
                     Add to Daily Routine
