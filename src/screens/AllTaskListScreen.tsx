@@ -70,6 +70,31 @@ const AllTaskListScreen = () => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
+          if (task.selectedDate?.length > 0) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endDate = new Date();
+            endDate.setDate(today.getDate() + 29); // আজ থেকে ৩০ দিন পর্যন্ত
+          
+            const matchingDates: Date[] = [];
+          
+            for (let i = 0; i < 30; i++) {
+              const current = new Date();
+              current.setDate(today.getDate() + i);
+              current.setHours(0, 0, 0, 0);
+              const dayOfMonth = current.getDate();
+          
+              if (task.selectedDate.includes(dayOfMonth)) {
+                matchingDates.push(current);
+              }
+            }
+          
+            return matchingDates.some((taskDate: Date) => {
+              return taskDate >= startOfWeek && taskDate <= endOfWeek;
+            });
+          }
+          
+          
           return false;
         });
 
