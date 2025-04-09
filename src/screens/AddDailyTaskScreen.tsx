@@ -67,7 +67,6 @@ const AddDailyTaskScreen = () => {
   );
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-  const [task, setTaskName] = useState('');
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
   const [specificForValue, setSpecificForValue] = useState('');
   const [dailyTarget, setDailyTarget] = useState('');
@@ -80,6 +79,7 @@ const AddDailyTaskScreen = () => {
   const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
   const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
   const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<string[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [selectedDates, setSelectedDates] = useState<number[]>([]);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
@@ -92,6 +92,7 @@ const AddDailyTaskScreen = () => {
     null,
   );
   const [dayOnError, setDayOnError] = useState<string | null>(null);
+  const [taskName, setTaskName] = useState('');
 
   const handleWeeklyClick = () => {
     setSelectedDayOnType('weekly');
@@ -142,10 +143,13 @@ const AddDailyTaskScreen = () => {
   const handleSaveTask = async () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
-
+    const icon = tasksData[selectedCategory][taskName]; 
     // Initialize task data object
     const taskData: any = {
       id: `${Date.now()}`, // Unique task id
+      name: taskName,
+    icon: icon, // Saving the image source here
+    category: selectedCategory,
       dailyTarget,
       selectedDays: [], // For specific days selection
       selectedDate: selectedDate, // For specific dates selection
@@ -202,8 +206,8 @@ const AddDailyTaskScreen = () => {
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
 
-      // Navigate to MyCalenderFutureTaskScreen after saving
-      navigation.navigate('MyCalenderFutureTaskScreen');
+      // Navigate to AllTaskListScreen after saving
+      navigation.navigate('AllTaskListScreen');
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }

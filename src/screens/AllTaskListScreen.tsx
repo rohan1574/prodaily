@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
-import {s as tw} from 'react-native-wind';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import { s as tw } from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AllTaskListScreen = () => {
@@ -12,20 +12,67 @@ const AllTaskListScreen = () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
         const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-        const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 for proper date comparison
 
-        // Filter tasks where endDate is after the current date
+        const currentDate = new Date();
+        const startOfWeek = new Date(currentDate); // Start of the week (today)
+        const endOfWeek = new Date(currentDate); // End of the week (Sunday)
+
+        // Set the start date to today at 00:00:00
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        // Set the end date to Sunday of the current week at 23:59:59
+        endOfWeek.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Set it to Sunday
+        endOfWeek.setHours(23, 59, 59, 999); // Set to the last moment of Sunday
+
+        console.log('Start Date:', startOfWeek);
+        console.log('End Date:', endOfWeek);
+
+        // Filter tasks that have specific days (weekly tasks) within this week range
         const filteredTasks = taskList.filter((task: any) => {
           if (task.endDate) {
             const taskEndDate = new Date(task.endDate);
             taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
             return taskEndDate >= currentDate;
           }
-          return true; // Include tasks with no endDate
+          if (task.selectedDays && task.selectedDays.length > 0) {
+            const taskDates = task.selectedDays.map((day: string) => {
+              const taskDate = new Date(currentDate);
+              let dayOffset = taskDate.getDay();
+              switch (day) {
+                case 'Sun':
+                  dayOffset = 0;
+                  break;
+                case 'Mon':
+                  dayOffset = 1;
+                  break;
+                case 'Tue':
+                  dayOffset = 2;
+                  break;
+                case 'Wed':
+                  dayOffset = 3;
+                  break;
+                case 'Thu':
+                  dayOffset = 4;
+                  break;
+                case 'Fri':
+                  dayOffset = 5;
+                  break;
+                case 'Sat':
+                  dayOffset = 6;
+                  break;
+              }
+
+              const targetDate = new Date(taskDate.setDate(taskDate.getDate() + (dayOffset - taskDate.getDay())));
+              return targetDate;
+            });
+
+            return taskDates.some((taskDate: Date) => {
+              return taskDate >= startOfWeek && taskDate <= endOfWeek;
+            });
+          }
+          return false;
         });
 
-        console.log(filteredTasks); // Log the tasks to verify the filtering
         setTasks(filteredTasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -35,14 +82,14 @@ const AllTaskListScreen = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, []); // Trigger on initial load
 
   const handleDelete = async (id: string) => {
     Alert.alert(
       'Delete Task',
       'Are you sure you want to delete this task?',
       [
-        {text: 'Cancel', style: 'cancel'},
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           style: 'destructive',
@@ -61,7 +108,7 @@ const AllTaskListScreen = () => {
           },
         },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
