@@ -93,6 +93,38 @@ const AllTaskListScreen = () => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
+          if (
+            task.selectedDates?.length > 0 &&
+            task.selectedMonths?.length > 0
+          ) {
+            const today = new Date();
+            const endDate = new Date();
+            endDate.setFullYear(today.getFullYear() + 1); // ১ বছর পর্যন্ত
+          
+            const yearlyMatchingDates: Date[] = [];
+          
+            for (
+              let d = new Date(today);
+              d <= endDate;
+              d.setDate(d.getDate() + 1)
+            ) {
+              const day = d.getDate(); // 1 - 31
+              const monthName = d.toLocaleString('default', { month: 'long' }); // January - December
+          
+              if (
+                task.selectedDates.includes(day) &&
+                task.selectedMonths.includes(monthName)
+              ) {
+                const dateMatch = new Date(d);
+                dateMatch.setHours(0, 0, 0, 0);
+                yearlyMatchingDates.push(dateMatch);
+              }
+            }
+          
+            return yearlyMatchingDates.some((taskDate: Date) => {
+              return taskDate >= startOfWeek && taskDate <= endOfWeek;
+            });
+          }
           
           
           return false;
