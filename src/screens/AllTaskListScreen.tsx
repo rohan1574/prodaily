@@ -105,10 +105,10 @@ const AllTaskListScreen = () => {
                 )}
 
                 {/* Add Specific Day On (Monthly) */}
-                {task.selectedDates?.length > 0 && (
+                {task.selectedDate?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
                     Add Specific Day On (Monthly):{' '}
-                    {task.selectedDates.join(', ')}
+                    {task.selectedDate.join(', ')}
                   </Text>
                 )}
 

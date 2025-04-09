@@ -88,16 +88,35 @@ const AddDailyTaskScreen = () => {
   const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
+  const [selectedDayOnType, setSelectedDayOnType] = useState<string | null>(
+    null,
+  );
+  const [dayOnError, setDayOnError] = useState<string | null>(null);
 
   const handleWeeklyClick = () => {
-    setIsDayPickerVisible(true); // Show DayPicker modal when Weekly is clicked
+    setSelectedDayOnType('weekly');
+    setDayOnError(null);
+    setIsDayPickerVisible(true);
+    setSelectedDates([]); // Reset other selections
+    setSelectedMonths([]);
   };
+
   const handleMonthlyClick = () => {
-    setIsDatePickerVisible(true); // Show DatePicker modal when Monthly is clicked
+    setSelectedDayOnType('monthly');
+    setDayOnError(null);
+    setIsDatePickerVisible(true);
+    setSelectedDays([]); // Reset other selections
+    setSelectedMonths([]);
   };
+
   const handleYearlyClick = () => {
-    setIsDateSeletorVisible(true); // Show DateSeletor modal when Monthly is clicked
+    setSelectedDayOnType('yearly');
+    setDayOnError(null);
+    setIsDateSeletorVisible(true);
+    setSelectedDays([]);
+    setSelectedDates([]); // Reset other selections
   };
+
   // Functions with logic to prevent both being selected
   const handleToggleSpecificFor = () => {
     if (isSpecificDayOnSelected) {
@@ -129,6 +148,7 @@ const AddDailyTaskScreen = () => {
       id: `${Date.now()}`, // Unique task id
       dailyTarget,
       selectedDays: [], // For specific days selection
+      selectedDate: selectedDate, // For specific dates selection
       selectedDates: selectedDates, // For specific dates selection
       selectedYears: selectedYears,
       selectedMonths: selectedMonths, // For specific years selection
@@ -451,6 +471,7 @@ const AddDailyTaskScreen = () => {
 
                 {/* Buttons */}
                 <View style={tw`flex-row justify-between`}>
+                  {/* Weekly Button */}
                   <TouchableOpacity
                     onPress={handleWeeklyClick}
                     disabled={!isSpecificDayOnSelected}
@@ -458,11 +479,14 @@ const AddDailyTaskScreen = () => {
                       tw`py-3 px-5 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
+                        : selectedDayOnType === 'weekly'
+                        ? tw`bg-green-600`
                         : tw`bg-blue-500`,
                     ]}>
                     <Text style={tw`text-white`}>Weekly</Text>
                   </TouchableOpacity>
 
+                  {/* Monthly Button */}
                   <TouchableOpacity
                     onPress={handleMonthlyClick}
                     disabled={!isSpecificDayOnSelected}
@@ -470,11 +494,14 @@ const AddDailyTaskScreen = () => {
                       tw`py-3 px-5 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
+                        : selectedDayOnType === 'monthly'
+                        ? tw`bg-green-600`
                         : tw`bg-blue-500`,
                     ]}>
                     <Text style={tw`text-white`}>Monthly</Text>
                   </TouchableOpacity>
 
+                  {/* Yearly Button */}
                   <TouchableOpacity
                     onPress={handleYearlyClick}
                     disabled={!isSpecificDayOnSelected}
@@ -482,6 +509,8 @@ const AddDailyTaskScreen = () => {
                       tw`py-3 px-5 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
+                        : selectedDayOnType === 'yearly'
+                        ? tw`bg-green-600`
                         : tw`bg-blue-500`,
                     ]}>
                     <Text style={tw`text-white`}>Yearly</Text>
@@ -501,8 +530,8 @@ const AddDailyTaskScreen = () => {
                 {/* Show DatePicker modal when isDatePickerVisible is true */}
                 {isDatePickerVisible && (
                   <DatePicker
-                    selectedDates={selectedDates}
-                    onSelectDates={setSelectedDates}
+                    selectedDate={selectedDate}
+                    onSelectDate={setSelectedDate}
                     onCancel={() => setIsDatePickerVisible(false)}
                     onAddDay={() => setIsDatePickerVisible(false)} // Close modal on Add Day
                   />

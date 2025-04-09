@@ -3,23 +3,23 @@ import { View, Text, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { s as tw } from 'react-native-wind';
 
 type DatePickerProps = {
-  selectedDates: number[];
-  onSelectDates: (dates: number[]) => void;
+  selectedDate: number[];
+  onSelectDate: (dates: number[]) => void;
   onCancel: () => void;
   onAddDay: () => void;
 };
 
 const DatePicker: React.FC<DatePickerProps> = ({
-  selectedDates,
-  onSelectDates,
+  selectedDate,
+  onSelectDate,
   onCancel,
   onAddDay,
 }) => {
   const toggleDateSelection = (date: number) => {
-    const updatedSelectedDates = selectedDates.includes(date)
-      ? selectedDates.filter(d => d !== date)
-      : [...selectedDates, date];
-    onSelectDates(updatedSelectedDates);
+    const updatedSelectedDates = selectedDate.includes(date)
+      ? selectedDate.filter(d => d !== date)
+      : [...selectedDate, date];
+    onSelectDate(updatedSelectedDates);
   };
 
   return (
@@ -34,7 +34,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 onPress={() => toggleDateSelection(item)}
                 style={[
                   tw`py-2 px-4 rounded-md mb-2`,
-                  selectedDates.includes(item) ? tw`bg-blue-500` : tw`bg-gray-200`,
+                  selectedDate.includes(item) ? tw`bg-blue-500` : tw`bg-gray-200`,
                 ]}>
                 <Text style={tw`text-center`}>{item}</Text>
               </TouchableOpacity>
