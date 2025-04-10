@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { s as tw } from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,13 +33,26 @@ const AllTaskListScreen = () => {
         console.log('Start Date:', startOfWeek);
         console.log('End Date:', endOfWeek);
 
-        // Filter tasks that have specific days (weekly tasks) within this week range
+        // 🟢 যদি ইউজার কোনো schedule টাইপ সিলেক্ট না করে — মানে এটা Daily Routine
         const filteredTasks = taskList.filter((task: any) => {
+          const isDailyRoutineTask =
+            (!task.scheduleType || task.scheduleType === '') &&
+            !task.endDate &&
+            (!task.selectedDays || task.selectedDays.length === 0) &&
+            (!task.selectedDate || task.selectedDate.length === 0) &&
+            (!task.selectedDates || task.selectedDates.length === 0) &&
+            (!task.selectedMonths || task.selectedMonths.length === 0);
+
+          if (isDailyRoutineTask) {
+            return true; // Show every day
+          }
+
           if (task.endDate) {
             const taskEndDate = new Date(task.endDate);
             taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
             return taskEndDate >= currentDate;
           }
+
           if (task.selectedDays && task.selectedDays.length > 0) {
             const taskDates = task.selectedDays.map((day: string) => {
               const taskDate = new Date(currentDate);
@@ -62,7 +81,11 @@ const AllTaskListScreen = () => {
                   break;
               }
 
-              const targetDate = new Date(taskDate.setDate(taskDate.getDate() + (dayOffset - taskDate.getDay())));
+              const targetDate = new Date(
+                taskDate.setDate(
+                  taskDate.getDate() + (dayOffset - taskDate.getDay()),
+                ),
+              );
               return targetDate;
             });
 
@@ -70,39 +93,41 @@ const AllTaskListScreen = () => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
+
           if (task.selectedDate?.length > 0) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const endDate = new Date();
-            endDate.setDate(today.getDate() + 29); // আজ থেকে ৩০ দিন পর্যন্ত
-          
+            endDate.setDate(today.getDate() + 29); // Today to next 30 days
+
             const matchingDates: Date[] = [];
-          
+
             for (let i = 0; i < 30; i++) {
               const current = new Date();
               current.setDate(today.getDate() + i);
               current.setHours(0, 0, 0, 0);
               const dayOfMonth = current.getDate();
-          
+
               if (task.selectedDate.includes(dayOfMonth)) {
                 matchingDates.push(current);
               }
             }
-          
+
             return matchingDates.some((taskDate: Date) => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
+
           if (
             task.selectedDates?.length > 0 &&
             task.selectedMonths?.length > 0
           ) {
             const today = new Date();
             const endDate = new Date();
-            endDate.setFullYear(today.getFullYear() + 1); // ১ বছর পর্যন্ত
-          
+            endDate.setFullYear(today.getFullYear() + 1); // 1 year ahead
+
             const yearlyMatchingDates: Date[] = [];
-          
+
             for (
               let d = new Date(today);
               d <= endDate;
@@ -110,7 +135,7 @@ const AllTaskListScreen = () => {
             ) {
               const day = d.getDate(); // 1 - 31
               const monthName = d.toLocaleString('default', { month: 'long' }); // January - December
-          
+
               if (
                 task.selectedDates.includes(day) &&
                 task.selectedMonths.includes(monthName)
@@ -120,13 +145,12 @@ const AllTaskListScreen = () => {
                 yearlyMatchingDates.push(dateMatch);
               }
             }
-          
+
             return yearlyMatchingDates.some((taskDate: Date) => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
-          
-          
+
           return false;
         });
 
@@ -171,7 +195,7 @@ const AllTaskListScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-2xl font-semibold mb-4`}>Alls Tasks</Text>
+      <Text style={tw`text-2xl font-semibold mb-4`}>All Tasks</Text>
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text> // Show loading text
       ) : (
@@ -183,9 +207,18 @@ const AllTaskListScreen = () => {
           ) : (
             tasks.map((task: any) => (
               <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                <Text style={tw`text-lg font-bold mb-1`}>
-                  Task ID: {task.id}
-                </Text>
+                <Text style={tw`text-lg font-bold mb-1`}>Task ID: {task.id}</Text>
+                {(!task.scheduleType || task.scheduleType === '') &&
+                  !task.endDate &&
+                  (!task.selectedDays || task.selectedDays.length === 0) &&
+                  (!task.selectedDate || task.selectedDate.length === 0) &&
+                  (!task.selectedDates || task.selectedDates.length === 0) &&
+                  (!task.selectedMonths || task.selectedMonths.length === 0) && (
+                    <Text style={tw`text-sm text-green-700 mb-1`}>
+                      🔁 This task is part of your Daily Routine
+                    </Text>
+                  )}
+
                 <Text style={tw`text-sm text-gray-600 mb-1`}>
                   Set Daily Target: {task.dailyTarget || 'N/A'}
                 </Text>
@@ -222,7 +255,8 @@ const AllTaskListScreen = () => {
                   task.selectedMonths &&
                   task.selectedMonths.length > 0 && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Selected Dates: {task.selectedDates.join(', ')}, {task.selectedMonths.join(', ')}
+                      Selected Dates: {task.selectedDates.join(', ')},{' '}
+                      {task.selectedMonths.join(', ')}
                     </Text>
                   )}
 
