@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import { s as tw } from 'react-native-wind';
+import React, {useEffect, useState} from 'react';
+import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BottomNavigation from './BottomNavigation';
 
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -46,13 +41,13 @@ const AllTaskListScreen = () => {
           if (isDailyRoutineTask) {
             return true; // Show every day
           }
-
+          // day
           if (task.endDate) {
             const taskEndDate = new Date(task.endDate);
             taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
             return taskEndDate >= currentDate;
           }
-
+          // week
           if (task.selectedDays && task.selectedDays.length > 0) {
             const taskDates = task.selectedDays.map((day: string) => {
               const taskDate = new Date(currentDate);
@@ -93,7 +88,7 @@ const AllTaskListScreen = () => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
-
+          // month
           if (task.selectedDate?.length > 0) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -117,7 +112,7 @@ const AllTaskListScreen = () => {
               return taskDate >= startOfWeek && taskDate <= endOfWeek;
             });
           }
-
+          // year
           if (
             task.selectedDates?.length > 0 &&
             task.selectedMonths?.length > 0
@@ -134,7 +129,7 @@ const AllTaskListScreen = () => {
               d.setDate(d.getDate() + 1)
             ) {
               const day = d.getDate(); // 1 - 31
-              const monthName = d.toLocaleString('default', { month: 'long' }); // January - December
+              const monthName = d.toLocaleString('default', {month: 'long'}); // January - December
 
               if (
                 task.selectedDates.includes(day) &&
@@ -170,7 +165,7 @@ const AllTaskListScreen = () => {
       'Delete Task',
       'Are you sure you want to delete this task?',
       [
-        { text: 'Cancel', style: 'cancel' },
+        {text: 'Cancel', style: 'cancel'},
         {
           text: 'Delete',
           style: 'destructive',
@@ -189,7 +184,7 @@ const AllTaskListScreen = () => {
           },
         },
       ],
-      { cancelable: true },
+      {cancelable: true},
     );
   };
 
@@ -207,13 +202,16 @@ const AllTaskListScreen = () => {
           ) : (
             tasks.map((task: any) => (
               <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                <Text style={tw`text-lg font-bold mb-1`}>Task ID: {task.id}</Text>
+                <Text style={tw`text-lg font-bold mb-1`}>
+                  Task ID: {task.id}
+                </Text>
                 {(!task.scheduleType || task.scheduleType === '') &&
                   !task.endDate &&
                   (!task.selectedDays || task.selectedDays.length === 0) &&
                   (!task.selectedDate || task.selectedDate.length === 0) &&
                   (!task.selectedDates || task.selectedDates.length === 0) &&
-                  (!task.selectedMonths || task.selectedMonths.length === 0) && (
+                  (!task.selectedMonths ||
+                    task.selectedMonths.length === 0) && (
                     <Text style={tw`text-sm text-green-700 mb-1`}>
                       🔁 This task is part of your Daily Routine
                     </Text>
@@ -273,6 +271,8 @@ const AllTaskListScreen = () => {
           )}
         </ScrollView>
       )}
+      {/* bottom navigation */}
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };
