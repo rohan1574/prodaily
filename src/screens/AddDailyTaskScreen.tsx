@@ -8,9 +8,7 @@ import {
   TextInput,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Modal,
   Alert,
-  Button,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -143,13 +141,13 @@ const AddDailyTaskScreen = () => {
   const handleSaveTask = async () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
-    const icon = tasksData[selectedCategory][taskName]; 
+    const icon = tasksData[selectedCategory][taskName];
     // Initialize task data object
     const taskData: any = {
       id: `${Date.now()}`, // Unique task id
       name: taskName,
-    icon: icon, // Saving the image source here
-    category: selectedCategory,
+      icon: icon, // Saving the image source here
+      category: selectedCategory,
       dailyTarget,
       selectedDays: [], // For specific days selection
       selectedDate: selectedDate, // For specific dates selection
