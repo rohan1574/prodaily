@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,8 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {s as tw} from 'react-native-wind';
+import { Picker } from '@react-native-picker/picker';
+import { s as tw } from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 
@@ -17,12 +17,8 @@ const MyCalenderFutureTaskScreen = () => {
   const [allTasks, setAllTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [selectedYear, setSelectedYear] = useState<number>(
-    new Date().getFullYear(),
-  );
-  const [selectedMonth, setSelectedMonth] = useState<number>(
-    new Date().getMonth(),
-  );
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
   const monthNames = [
@@ -39,6 +35,8 @@ const MyCalenderFutureTaskScreen = () => {
     'November',
     'December',
   ];
+
+  const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -79,7 +77,7 @@ const MyCalenderFutureTaskScreen = () => {
 
   const handleDelete = async (id: string) => {
     Alert.alert('Delete Task', 'Are you sure you want to delete this task?', [
-      {text: 'Cancel', style: 'cancel'},
+      { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
         style: 'destructive',
@@ -129,46 +127,49 @@ const MyCalenderFutureTaskScreen = () => {
         </View>
       </View>
 
+      {/* Weekdays */}
+      <View style={tw`flex-row mb-4 justify-between`}>
+        {weekDays.map((day, index) => (
+          <View key={index} style={[tw``,{width:48}]}>
+            <Text style={tw`text-center font-semibold text-sm`}>{day}</Text>
+          </View>
+        ))}
+      </View>
+
       {/* Calendar Dates */}
-      <View style={tw`flex-row flex-wrap mb-4`}>
-        {[...Array(getDaysInMonth(selectedYear, selectedMonth)).keys()].map(
-          day => {
-            const dateNum = day + 1;
-            const isSelected = selectedDate === dateNum;
-            return (
-              <Pressable
-                key={dateNum}
-                onPress={() =>
-                  setSelectedDate(prev =>
-                    prev === dateNum ? null : dateNum,
-                  )
-                }
-                style={tw`w-[12.5%] h-10 justify-center items-center m-1 rounded-full ${
-                  isSelected ? 'bg-blue-500' : 'bg-gray-200'
-                }`}>
-                <Text style={tw`${isSelected ? 'text-white' : 'text-black'}`}>
-                  {dateNum}
-                </Text>
-              </Pressable>
-            );
-          },
-        )}
+      <View style={tw`flex-row flex-wrap `}>
+        {[...Array(getDaysInMonth(selectedYear, selectedMonth)).keys()].map(day => {
+          const dateNum = day + 1;
+          const date = new Date(selectedYear, selectedMonth, dateNum);
+          const dayOfWeek = date.getDay(); // Get the weekday (0-6) for the current date
+          const isSelected = selectedDate === dateNum;
+          return (
+            <Pressable
+              key={dateNum}
+              onPress={() =>
+                setSelectedDate(prev => (prev === dateNum ? null : dateNum))
+              }
+              style={[tw` h-12 mr-2 mb-2 justify-center items-center  rounded-full ${
+                isSelected ? 'bg-blue-500' : 'bg-gray-200'
+              }`,{width:44,left:16}]}>
+              <Text style={tw`${isSelected ? 'text-white' : 'text-black'}`}>
+                {dateNum}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
 
       {/* Task List */}
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
       ) : tasks.length === 0 ? (
-        <Text style={tw`text-center text-gray-500`}>
-          No tasks available for this date.
-        </Text>
+        <Text style={tw`text-center text-gray-500`}>No tasks available for this date.</Text>
       ) : (
         <ScrollView contentContainerStyle={tw`pb-10`}>
           {tasks.map((task: any) => (
             <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-              <Text style={tw`text-lg font-bold mb-1`}>
-                Task ID: {task.id}
-              </Text>
+              <Text style={tw`text-lg font-bold mb-1`}>Task ID: {task.id}</Text>
 
               {(!task.scheduleType || task.scheduleType === '') &&
                 !task.endDate &&
@@ -190,9 +191,7 @@ const MyCalenderFutureTaskScreen = () => {
                   Add Specific For: {task.specificForValue} {task.specificFor}
                 </Text>
               ) : (
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Add Specific For: N/A
-                </Text>
+                <Text style={tw`text-sm text-gray-600 mb-1`}>Add Specific For: N/A</Text>
               )}
 
               {task.selectedDays?.length > 0 && (
@@ -207,22 +206,16 @@ const MyCalenderFutureTaskScreen = () => {
                 </Text>
               )}
 
-              {task.selectedDates &&
-                task.selectedDates.length > 0 &&
-                task.selectedMonths &&
-                task.selectedMonths.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Selected Dates: {task.selectedDates.join(', ')},{' '}
-                    {task.selectedMonths.join(', ')}
-                  </Text>
-                )}
+              {task.selectedDates && task.selectedDates.length > 0 && task.selectedMonths && task.selectedMonths.length > 0 && (
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Selected Dates: {task.selectedDates.join(', ')}, {task.selectedMonths.join(', ')}
+                </Text>
+              )}
 
               <TouchableOpacity
                 onPress={() => handleDelete(task.id)}
                 style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
-                <Text style={tw`text-white text-center font-semibold`}>
-                  Delete
-                </Text>
+                <Text style={tw`text-white text-center font-semibold`}>Delete</Text>
               </TouchableOpacity>
             </View>
           ))}
