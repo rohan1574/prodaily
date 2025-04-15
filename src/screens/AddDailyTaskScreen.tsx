@@ -204,8 +204,6 @@ const AddDailyTaskScreen = () => {
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
 
-      // Navigate to AllTaskListScreen after saving
-      navigation.navigate('AllTaskListScreen');
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }

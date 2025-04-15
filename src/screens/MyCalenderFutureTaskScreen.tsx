@@ -22,18 +22,8 @@ const MyCalenderFutureTaskScreen = () => {
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
   const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December',
   ];
 
   const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -59,20 +49,86 @@ const MyCalenderFutureTaskScreen = () => {
     fetchTasks();
   }, []);
 
+
   useEffect(() => {
-    if (selectedDate !== null) {
-      const filtered = allTasks.filter((task: any) => {
-        const taskDate = new Date(task.startDate); // Replace with your date field
-        return (
-          taskDate.getFullYear() === selectedYear &&
-          taskDate.getMonth() === selectedMonth &&
-          taskDate.getDate() === selectedDate
-        );
-      });
-      setTasks(filtered);
-    } else {
-      setTasks(allTasks);
-    }
+    const filteredTasks = allTasks.filter(task => {
+      const selected = new Date(selectedYear, selectedMonth, selectedDate || 1);
+      const startDate = new Date(task.startDate);
+      const endDate = task.endDate ? new Date(task.endDate) : null;
+
+      if (selectedDate === null) return true;
+
+      const selectedY = selected.getFullYear();
+      const selectedM = selected.getMonth();
+      const selectedD = selected.getDate();
+      const selectedDayOfWeek = selected.getDay(); // 0-6 (Sunday to Saturday)
+
+      const isInRange = !endDate || (selected >= startDate && selected <= endDate);
+      const scheduleType = task.scheduleType;
+
+      if (!scheduleType || scheduleType === '') {
+        return selected >= startDate && isInRange;
+      }
+
+      if (scheduleType === 'Everyday') {
+        return selected >= startDate && isInRange;
+      }
+
+      if (scheduleType === 'Add Specific For') {
+        const unit = task.specificFor;
+        const value = parseInt(task.specificForValue, 10);
+        if (!unit || !value) return false;
+
+        let end = new Date(startDate);
+        if (unit === 'days') end.setDate(startDate.getDate() + value);
+        if (unit === 'weeks') end.setDate(startDate.getDate() + value * 7);
+        if (unit === 'months') end.setMonth(startDate.getMonth() + value);
+        return selected >= startDate && selected <= end;
+      }
+
+      if (scheduleType === 'Add Specific Day On') {
+        const frequency = task.repetition;
+
+        if (frequency === 'weekly') {
+          const oneWeekEnd = new Date(startDate);
+          oneWeekEnd.setDate(startDate.getDate() + 6); // 7 দিন পর্যন্ত
+
+          return (
+            selected >= startDate &&
+            selected <= oneWeekEnd &&
+            task.selectedDays?.includes(weekDays[selectedDayOfWeek])
+          );
+        }
+
+        if (frequency === 'monthly') {
+          const isSameMonth =
+            selected.getFullYear() === startDate.getFullYear() &&
+            selected.getMonth() === startDate.getMonth();
+
+          return (
+            isSameMonth &&
+            selected >= startDate &&
+            task.selectedDate?.includes(selectedD)
+          );
+        }
+
+        if (frequency === 'yearly') {
+          const isSameYear =
+            selected.getFullYear() === startDate.getFullYear();
+
+          return (
+            isSameYear &&
+            selected >= startDate &&
+            task.selectedDates?.includes(selectedD) &&
+            task.selectedMonths?.includes(monthNames[selectedM])
+          );
+        }
+      }
+
+      return false;
+    });
+
+    setTasks(filteredTasks);
   }, [selectedDate, selectedMonth, selectedYear, allTasks]);
 
   const handleDelete = async (id: string) => {
@@ -137,7 +193,7 @@ const MyCalenderFutureTaskScreen = () => {
       </View>
 
       {/* Calendar Dates */}
-      <View style={tw`flex-row flex-wrap `}>
+      <View style={tw`flex-row flex-wrap`}>
         {[...Array(getDaysInMonth(selectedYear, selectedMonth)).keys()].map(day => {
           const dateNum = day + 1;
           const date = new Date(selectedYear, selectedMonth, dateNum);
@@ -149,9 +205,7 @@ const MyCalenderFutureTaskScreen = () => {
               onPress={() =>
                 setSelectedDate(prev => (prev === dateNum ? null : dateNum))
               }
-              style={[tw` h-12 mr-2 mb-2 justify-center items-center  rounded-full ${
-                isSelected ? 'bg-blue-500' : 'bg-gray-200'
-              }`,{width:44,left:16}]}>
+              style={[tw` h-12 mr-2 mb-2 justify-center items-center rounded-full ${isSelected ? 'bg-blue-500' : 'bg-gray-200'}`,{width:44,left:16}]}>
               <Text style={tw`${isSelected ? 'text-white' : 'text-black'}`}>
                 {dateNum}
               </Text>
