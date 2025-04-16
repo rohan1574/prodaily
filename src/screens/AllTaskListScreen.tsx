@@ -3,10 +3,30 @@ import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // To handle loading state
+  //  star
+  const toggleStar = async (taskId: string) => {
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+
+      const updatedList = taskList.map((task: any) => {
+        if (task.id === taskId) {
+          return {...task, isStarred: !task.isStarred};
+        }
+        return task;
+      });
+
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+      setTasks(updatedList); // Update UI
+    } catch (error) {
+      console.error('Error toggling star:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -206,6 +226,17 @@ const AllTaskListScreen = () => {
                 <Text style={tw`text-lg font-bold mb-1`}>
                   Task ID: {task.id}
                 </Text>
+                {/* star icon */}
+                <TouchableOpacity
+                  onPress={() => toggleStar(task.id)}
+                  style={tw`absolute top-3 right-3`}>
+                  <Icon
+                    name={task.isStarred ? 'star' : 'star-outline'}
+                    size={24}
+                    color={task.isStarred ? 'gold' : 'gray'}
+                  />
+                </TouchableOpacity>
+
                 {(!task.scheduleType || task.scheduleType === '') &&
                   !task.endDate &&
                   (!task.selectedDays || task.selectedDays.length === 0) &&

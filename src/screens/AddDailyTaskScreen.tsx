@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -91,6 +91,8 @@ const AddDailyTaskScreen = () => {
   );
   const [dayOnError, setDayOnError] = useState<string | null>(null);
   const [taskName, setTaskName] = useState('');
+  const [isStarred, setIsStarred] = useState(false);
+
 
   const handleWeeklyClick = () => {
     setSelectedDayOnType('weekly');
@@ -147,6 +149,7 @@ const AddDailyTaskScreen = () => {
       id: `${Date.now()}`, // Unique task id
       name: taskName,
       icon: icon, // Saving the image source here
+      isStarred: isStarred, // ⭐️ এখানে যুক্ত করো
       category: selectedCategory,
       dailyTarget,
       selectedDays: [], // For specific days selection
@@ -203,7 +206,6 @@ const AddDailyTaskScreen = () => {
 
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
-
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }
@@ -317,6 +319,15 @@ const AddDailyTaskScreen = () => {
                   <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
                     {expandedTask}
                   </Text>
+                  {/* star icon */}
+                  <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
+                    <Icon
+                      name={isStarred ? 'star' : 'star-outline'}
+                      size={24}
+                      color={isStarred ? 'gold' : 'gray'}
+                      style={tw`mr-2`}
+                    />
+                  </TouchableOpacity>
                 </View>
 
                 {/* Add Specific For */}
