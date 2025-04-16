@@ -11,7 +11,7 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 
-const AllTaskListScreen = () => {
+const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // To handle loading state
  
@@ -235,4 +235,4 @@ const AllTaskListScreen = () => {
   );
 };
 
-export default AllTaskListScreen;
+export default TodaysTaskToDoScreen;

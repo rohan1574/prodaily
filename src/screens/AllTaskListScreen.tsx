@@ -129,7 +129,8 @@ const AllTaskListScreen = () => {
               d.setDate(d.getDate() + 1)
             ) {
               const day = d.getDate(); // 1 - 31
-              const monthName = d.toLocaleString('default', {month: 'long'}); // January - December
+              const monthName = d.toLocaleString('default', {month: 'short'}); // 'Apr'
+              // January - December
 
               if (
                 task.selectedDates.includes(day) &&

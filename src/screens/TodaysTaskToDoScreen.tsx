@@ -1,189 +1,236 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
+  ScrollView,
   TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
+  Alert,
+  Image,
 } from 'react-native';
+import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { s as tw } from 'react-native-wind';
 import BottomNavigation from './BottomNavigation';
 
-interface Task {
-  id: string;
-  name: string;
-  icon: any;
-  category: string;
-  dailyTarget?: string;
-  selectedDays?: string[];
-  selectedDates?: number[];
-  selectedYears?: { month: number; date: number }[];
-  targetType?: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
-  startDate: string;
-  endDate?: string | null;
-  specificFor?: 'Days' | 'Weeks' | 'Months';
-  specificForValue?: string;
-  starred?: boolean;
-  completed?: boolean;
-}
-
-const TodaysTaskToDoScreen: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
+const TodaysTaskToDoScreen = () => {
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
+ 
   useEffect(() => {
-    const loadTasks = async () => {
+    const fetchTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
-        const parsedTasks: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
+        const taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
-        const today = new Date();
-        const todayDate = today.getDate();
-        const todayMonth = today.getMonth() + 1; // Months are 0-indexed
-        const todayDay = today.toLocaleDateString('en-US', { weekday: 'long' });
+        const currentDate = new Date();
+        const startOfWeek = new Date(currentDate); // Start of the week (today)
+        const endOfWeek = new Date(currentDate); // End of the week (Sunday)
 
-        const filteredTasks = parsedTasks.filter((task) => {
-          const startDate = new Date(task.startDate);
-          const endDate = task.endDate ? new Date(task.endDate) : null;
+        // Set the start date to today at 00:00:00
+        startOfWeek.setHours(0, 0, 0, 0);
 
-          // Check if today is within startDate and endDate
-          const isWithinDateRange =
-            (!endDate && today >= startDate) ||
-            (endDate && today >= startDate && today <= endDate);
+        // Set the end date to Sunday of the current week at 23:59:59
+        endOfWeek.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Set it to Sunday
+        endOfWeek.setHours(23, 59, 59, 999); // Set to the last moment of Sunday
 
-          if (task.specificFor && task.specificForValue) {
-            return isWithinDateRange;
+        console.log('Start Date:', startOfWeek);
+        console.log('End Date:', endOfWeek);
+
+        // 🟢 যদি ইউজার কোনো schedule টাইপ সিলেক্ট না করে — মানে এটা Daily Routine
+        const filteredTasks = taskList.filter((task: any) => {
+          const isDailyRoutineTask =
+            (!task.scheduleType || task.scheduleType === '') &&
+            !task.endDate &&
+            (!task.selectedDays || task.selectedDays.length === 0) &&
+            (!task.selectedDate || task.selectedDate.length === 0) &&
+            (!task.selectedDates || task.selectedDates.length === 0) &&
+            (!task.selectedMonths || task.selectedMonths.length === 0);
+
+          if (isDailyRoutineTask) {
+            return true; // Show every day
+          }
+          // day
+          if (task.endDate) {
+            const taskEndDate = new Date(task.endDate);
+            taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
+            return taskEndDate >= currentDate;
+          }
+          // week
+          if (task.selectedDays && task.selectedDays.length > 0) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0); // Remove time
+
+            const todayName = today.toLocaleDateString('en-US', {
+              weekday: 'short',
+            }); // 'Sun', 'Mon', etc.
+
+            // যদি আজকের দিন selectedDays-এ থাকে, তাহলে দেখাও
+            return task.selectedDays.includes(todayName);
           }
 
-          if (task.targetType === 'Weekly' && task.selectedDays) {
-            return isWithinDateRange && task.selectedDays.includes(todayDay);
+          // month
+          if (task.selectedDate?.length > 0) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0);
+
+            const todayDate = today.getDate(); // 1 - 31
+
+            return task.selectedDate.includes(todayDate);
           }
 
-          if (task.targetType === 'Monthly' && task.selectedDates) {
-            return isWithinDateRange && task.selectedDates.includes(todayDate);
-          }
-
+          // year
           if (
-            task.targetType === 'Yearly' &&
-            task.selectedYears &&
-            task.selectedYears.some(
-              (d) => d.month === todayMonth && d.date === todayDate
-            )
+            task.selectedDates?.length > 0 &&
+            task.selectedMonths?.length > 0
           ) {
-            return isWithinDateRange;
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0);
+
+            const todayDay = today.getDate(); // eg: 4
+            const todayMonth = today.toLocaleString('default', {month: 'short'}); // eg: 'Apr'
+
+            return (
+              task.selectedDates.includes(todayDay) &&
+              task.selectedMonths.includes(todayMonth)
+            );
           }
 
-          // Default to showing daily tasks if in range
-          return task.targetType === 'Daily' && today >= startDate;
+          return false;
         });
 
         setTasks(filteredTasks);
       } catch (error) {
-        console.error('Error loading tasks:', error);
+        console.error('Error fetching tasks:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false after fetch is complete
       }
     };
 
-    loadTasks();
-  }, []);
+    fetchTasks();
+  }, []); // Trigger on initial load
 
-  const toggleComplete = (id: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+  const handleDelete = async (id: string) => {
+    Alert.alert(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const storedTasks = await AsyncStorage.getItem('tasks');
+              const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+              const updatedList = taskList.filter(
+                (task: any) => task.id !== id,
+              );
+              await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+              setTasks(updatedList);
+            } catch (error) {
+              console.error('Error deleting task:', error);
+            }
+          },
+        },
+      ],
+      {cancelable: true},
     );
   };
-
-  const toggleStar = (id: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, starred: !task.starred } : task
-      )
-    );
-  };
-
-  const TaskItem: React.FC<{ task: Task }> = ({ task }) => (
-    <View
-      style={[
-        tw`flex-row items-center p-2 border-b border-gray-200`,
-        task.completed && tw`bg-green-100`,
-      ]}
-    >
-      <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-        <Icon
-          name={task.completed ? 'checkmark-circle' : 'ellipse-outline'}
-          size={24}
-          color={task.completed ? 'green' : 'gray'}
-          style={tw`mr-2`}
-        />
-      </TouchableOpacity>
-      <Image source={task.icon} style={tw`w-6 h-6 mr-2`} />
-      <Text style={tw`flex-1`}>{task.name}</Text>
-      <TouchableOpacity onPress={() => toggleStar(task.id)}>
-        <Icon
-          name={task.starred ? 'star' : 'star-outline'}
-          size={20}
-          color={task.starred ? 'gold' : 'gray'}
-          style={tw`ml-2`}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-
-  if (loading) {
-    return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
-      {/* Header */}
-      <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
-        <View>
-          <Text style={tw`text-white text-lg font-bold`}>Today</Text>
-          <Text style={tw`text-white text-sm`}>
-            {new Date().toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              weekday: 'long',
-            })}
-          </Text>
-        </View>
-        <View style={tw`flex-row items-center`}>
-          <Image
-            source={require('../../assets/images/sun.png')}
-            style={tw`w-10 h-10 rounded-full mr-3`}
-          />
-          <View>
-            <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-            <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Task List */}
-      {tasks.length === 0 ? (
-        <View style={tw`flex-1 justify-center items-center`}>
-          <Text style={tw`text-gray-500 text-lg`}>No tasks for today</Text>
-        </View>
+    <View style={tw`flex-1 bg-white p-4`}>
+      <Text style={tw`text-2xl font-semibold mb-4`}>All Tasks</Text>
+      {loading ? (
+        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text> // Show loading text
       ) : (
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <TaskItem task={item} />}
-        />
-      )}
+        <ScrollView contentContainerStyle={tw`pb-10`}>
+          {tasks.length === 0 ? (
+            <Text style={tw`text-center text-gray-500`}>
+              No tasks available for the selected date range.
+            </Text>
+          ) : (
+            tasks.map((task: any) => (
+              <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+                <Text style={tw`text-lg font-bold mb-1`}>
+                  Task ID: {task.id}
+                </Text>
+                {/* Task Icon */}
+                <View style={tw`flex-row items-center mb-2`}>
+                  {task.icon && (
+                    <Image
+                      source={task.icon} // Assuming `task.icon` is an image source or URI
+                      style={tw`w-10 h-10 mr-4`} // Style it as needed
+                    />
+                  )}
+                  <Text style={tw`text-lg font-bold`}>{task.name}</Text>
+                </View>
+                {(!task.scheduleType || task.scheduleType === '') &&
+                  !task.endDate &&
+                  (!task.selectedDays || task.selectedDays.length === 0) &&
+                  (!task.selectedDate || task.selectedDate.length === 0) &&
+                  (!task.selectedDates || task.selectedDates.length === 0) &&
+                  (!task.selectedMonths ||
+                    task.selectedMonths.length === 0) && (
+                    <Text style={tw`text-sm text-green-700 mb-1`}>
+                      🔁 This task is part of your Daily Routine
+                    </Text>
+                  )}
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Set Daily Target: {task.dailyTarget || 'N/A'}
+                </Text>
+
+                {/* Add Specific For */}
+                {task.specificFor && task.specificForValue ? (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific For: {task.specificForValue} {task.specificFor}
+                  </Text>
+                ) : (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific For: N/A
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Weekly) */}
+                {task.selectedDays?.length > 0 && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific Day On (Weekly): {task.selectedDays.join(', ')}
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Monthly) */}
+                {task.selectedDate?.length > 0 && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific Day On (Monthly):{' '}
+                    {task.selectedDate.join(', ')}
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Yearly) */}
+                {task.selectedDates &&
+                  task.selectedDates.length > 0 &&
+                  task.selectedMonths &&
+                  task.selectedMonths.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Selected Dates: {task.selectedDates.join(', ')},{' '}
+                      {task.selectedMonths.join(', ')}
+                    </Text>
+                  )}
+
+                {/* Delete Button */}
+                <TouchableOpacity
+                  onPress={() => handleDelete(task.id)}
+                  style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
+                  <Text style={tw`text-white text-center font-semibold`}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      )}
+      {/* bottom navigation */}
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };
