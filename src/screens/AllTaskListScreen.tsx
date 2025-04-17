@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput,
+} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
@@ -8,6 +16,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // To handle loading state
+  const [editingTask, setEditingTask] = useState<any | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   //  star
   const toggleStar = async (taskId: string) => {
     try {
@@ -208,6 +218,27 @@ const AllTaskListScreen = () => {
       {cancelable: true},
     );
   };
+  const openUpdateModal = (task: any) => {
+    setEditingTask({...task}); // clone task
+    setModalVisible(true);
+  };
+
+  const handleUpdateTask = async () => {
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+
+      const updatedList = taskList.map((task: any) =>
+        task.id === editingTask.id ? editingTask : task,
+      );
+
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+      setTasks(updatedList);
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
@@ -298,11 +329,198 @@ const AllTaskListScreen = () => {
                     Delete
                   </Text>
                 </TouchableOpacity>
+                {/* update */}
+                <TouchableOpacity
+                  onPress={() => openUpdateModal(task)}
+                  style={tw`bg-blue-500 mt-3 py-2 rounded-lg`}>
+                  <Text style={tw`text-white text-center font-semibold`}>
+                    Update
+                  </Text>
+                </TouchableOpacity>
               </View>
             ))
           )}
         </ScrollView>
       )}
+      {/* Update Modal */}
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={tw`flex-1 bg-white p-6`}>
+          <Text style={tw`text-xl font-bold mb-4`}>Update Task</Text>
+
+          {/* Daily Target */}
+          <TextInput
+            placeholder="Daily Target"
+            value={editingTask?.dailyTarget}
+            onChangeText={text =>
+              setEditingTask({...editingTask, dailyTarget: text})
+            }
+            style={tw`border p-2 mb-3 rounded`}
+          />
+
+          {/* Add Specific For Value */}
+          <Text style={tw`text-base font-semibold mb-1`}>
+            Add Specific For:
+          </Text>
+          <View style={tw`flex-row mb-2`}>
+            {['days', 'weeks', 'months'].map(type => (
+              <TouchableOpacity
+                key={type}
+                onPress={() =>
+                  setEditingTask({...editingTask, specificFor: type})
+                }
+                style={tw`mr-2 px-3 py-1 rounded-full ${
+                  editingTask?.specificFor === type
+                    ? 'bg-blue-500'
+                    : 'bg-gray-300'
+                }`}>
+                <Text
+                  style={tw`text-sm ${
+                    editingTask?.specificFor === type
+                      ? 'text-white'
+                      : 'text-black'
+                  }`}>
+                  {type}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TextInput
+            placeholder="Enter number"
+            keyboardType="numeric"
+            value={
+              editingTask?.specificForValue
+                ? editingTask.specificForValue.toString()
+                : ''
+            }
+            onChangeText={text =>
+              setEditingTask({
+                ...editingTask,
+                specificForValue: parseInt(text) || '',
+              })
+            }
+            style={tw`border p-2 mb-4 rounded`}
+          />
+          {/* Add Specific Day On Value */}
+          {/* Add Specific Day On (Weekly) */}
+          <View style={tw`flex-row mb-2`}>
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
+              (day: string) => (
+                <TouchableOpacity
+                  key={day}
+                  onPress={() => {
+                    const updatedDays = editingTask?.selectedDays?.includes(day)
+                      ? editingTask.selectedDays.filter(
+                          (selectedDay: string) => selectedDay !== day,
+                        )
+                      : [...(editingTask?.selectedDays || []), day];
+                    setEditingTask({...editingTask, selectedDays: updatedDays});
+                  }}
+                  style={tw`mr-2 px-3 py-1 rounded-full ${
+                    editingTask?.selectedDays?.includes(day)
+                      ? 'bg-blue-500'
+                      : 'bg-gray-300'
+                  }`}>
+                  <Text
+                    style={tw`text-sm ${
+                      editingTask?.selectedDays?.includes(day)
+                        ? 'text-white'
+                        : 'text-black'
+                    }`}>
+                    {day}
+                  </Text>
+                </TouchableOpacity>
+              ),
+            )}
+          </View>
+
+          {/* Add Specific Day On (Monthly) */}
+          <TextInput
+            placeholder="Select Dates (e.g. 1, 15, 20)"
+            value={editingTask?.selectedDate?.join(', ') || ''}
+            onChangeText={text => {
+              const dates = text
+                .split(',')
+                .map(date => parseInt(date.trim(), 10));
+              setEditingTask({...editingTask, selectedDate: dates});
+            }}
+            style={tw`border p-2 mb-4 rounded`}
+          />
+
+          {/* Add Specific Day On (Yearly) */}
+          <TextInput
+            placeholder="Select Dates (e.g. 1, 15)"
+            value={editingTask?.selectedDates?.join(', ') || ''}
+            onChangeText={text => {
+              const dates = text
+                .split(',')
+                .map(date => parseInt(date.trim(), 10));
+              setEditingTask({...editingTask, selectedDates: dates});
+            }}
+            style={tw`border p-2 mb-4 rounded`}
+          />
+          <View style={tw`flex-row mb-2`}>
+            {[
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
+              'Sep',
+              'Oct',
+              'Nov',
+              'Dec',
+            ].map((month: string) => (
+              <TouchableOpacity
+                key={month}
+                onPress={() => {
+                  const updatedMonths = editingTask?.selectedMonths?.includes(
+                    month,
+                  )
+                    ? editingTask.selectedMonths.filter(
+                        (selectedMonth: string) => selectedMonth !== month,
+                      )
+                    : [...(editingTask?.selectedMonths || []), month];
+                  setEditingTask({
+                    ...editingTask,
+                    selectedMonths: updatedMonths,
+                  });
+                }}
+                style={tw`mr-2 px-3 py-1 rounded-full ${
+                  editingTask?.selectedMonths?.includes(month)
+                    ? 'bg-blue-500'
+                    : 'bg-gray-300'
+                }`}>
+                <Text
+                  style={tw`text-sm ${
+                    editingTask?.selectedMonths?.includes(month)
+                      ? 'text-white'
+                      : 'text-black'
+                  }`}>
+                  {month}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Save & Cancel */}
+          <TouchableOpacity
+            onPress={handleUpdateTask}
+            style={tw`bg-green-500 py-2 rounded-lg mb-3`}>
+            <Text style={tw`text-white text-center font-semibold`}>Save</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            style={tw`bg-gray-300 py-2 rounded-lg`}>
+            <Text style={tw`text-center`}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       {/* bottom navigation */}
       <BottomNavigation></BottomNavigation>
     </View>
