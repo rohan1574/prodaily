@@ -576,7 +576,7 @@ const AddDailyTaskScreen = () => {
                   onPress={handleSaveTask}
                   style={tw`bg-blue-500 py-2 rounded-lg`}>
                   <Text style={tw`text-white text-center font-semibold`}>
-                    Add to Daily Routines
+                    Add to Daily Routine
                   </Text>
                 </TouchableOpacity>
 
