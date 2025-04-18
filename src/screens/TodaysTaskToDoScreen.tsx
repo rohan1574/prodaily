@@ -10,11 +10,50 @@ import {
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // To handle loading state
- 
+  // Toggle Completion Status (Updated Sorting Logic)
+  const toggleComplete = (id: number) => {
+    setTasks(prevTasks => {
+      const updatedTasks = prevTasks.map(task =>
+        task.id === id ? {...task, completed: !task.completed} : task,
+      );
+
+      // Separate completed and non-completed tasks
+      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
+      const completedTasks = updatedTasks.filter(task => task.completed);
+
+      // Sort non-completed tasks → Starred tasks উপরে
+      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+
+      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
+      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+
+      return [...nonCompletedTasks, ...completedTasks];
+    });
+  };
+  // Toggle Starred Status (Updated Sorting Logic)
+  const toggleStar = async (taskId: string) => {
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+
+      const updatedList = taskList.map((task: any) => {
+        if (task.id === taskId) {
+          return {...task, isStarred: !task.isStarred};
+        }
+        return task;
+      });
+
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+      setTasks(updatedList); // Update UI
+    } catch (error) {
+      console.error('Error toggling star:', error);
+    }
+  };
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -86,7 +125,7 @@ const TodaysTaskToDoScreen = () => {
             today.setHours(0, 0, 0, 0);
 
             const todayDay = today.getDate(); // eg: 4
-            const todayMonth = today.toLocaleString('default', {month: 'short'}); // eg: 'Apr'
+            const todayMonth = today.toLocaleString('default', {month: 'long'}); // eg: 'April'
 
             return (
               task.selectedDates.includes(todayDay) &&
@@ -150,6 +189,25 @@ const TodaysTaskToDoScreen = () => {
           ) : (
             tasks.map((task: any) => (
               <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+                <TouchableOpacity onPress={() => toggleComplete(task.id)}>
+                  <Icon
+                    name={
+                      task.completed ? 'checkmark-circle' : 'ellipse-outline'
+                    }
+                    size={24}
+                    color={task.completed ? 'green' : 'gray'}
+                    style={tw`mr-2`}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => toggleStar(task.id)}
+                  style={tw`absolute top-3 right-3`}>
+                  <Icon
+                    name={task.isStarred ? 'star' : 'star-outline'}
+                    size={24}
+                    color={task.isStarred ? 'gold' : 'gray'}
+                  />
+                </TouchableOpacity>
                 <Text style={tw`text-lg font-bold mb-1`}>
                   Task ID: {task.id}
                 </Text>
