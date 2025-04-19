@@ -125,7 +125,7 @@ const TodaysTaskToDoScreen = () => {
             today.setHours(0, 0, 0, 0);
 
             const todayDay = today.getDate(); // eg: 4
-            const todayMonth = today.toLocaleString('default', {month: 'long'}); // eg: 'April'
+            const todayMonth = today.toLocaleString('default', {month: 'short'}); // eg: 'April'
 
             return (
               task.selectedDates.includes(todayDay) &&

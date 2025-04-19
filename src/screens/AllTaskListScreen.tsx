@@ -77,11 +77,13 @@ const AllTaskListScreen = () => {
             taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
             return taskEndDate >= currentDate;
           }
-          // week
+          // Week logic
           if (task.selectedDays && task.selectedDays.length > 0) {
             const taskDates = task.selectedDays.map((day: string) => {
-              const taskDate = new Date(currentDate);
+              const taskDate = new Date(currentDate); // Use current date as reference
               let dayOffset = taskDate.getDay();
+
+              // Map the day names to corresponding offsets
               switch (day) {
                 case 'Sun':
                   dayOffset = 0;
@@ -106,27 +108,37 @@ const AllTaskListScreen = () => {
                   break;
               }
 
+              // Find the next date for the selected day (this will repeat indefinitely)
               const targetDate = new Date(
                 taskDate.setDate(
                   taskDate.getDate() + (dayOffset - taskDate.getDay()),
                 ),
               );
+
+              // Adjust targetDate to always show from today onward
+              if (targetDate < new Date()) {
+                targetDate.setDate(targetDate.getDate() + 7); // If the target date is in the past, show it for the next week
+              }
+
               return targetDate;
             });
 
+            // Check if any task date is today or in the future (to show indefinitely from today onwards)
             return taskDates.some((taskDate: Date) => {
-              return taskDate >= startOfWeek && taskDate <= endOfWeek;
+              const today = new Date();
+              today.setHours(0, 0, 0, 0); // Reset the time to midnight to compare only the date
+              return taskDate >= today; // Task is shown if it's today or in the future
             });
           }
+
           // month
           if (task.selectedDate?.length > 0) {
             const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const endDate = new Date();
-            endDate.setDate(today.getDate() + 29); // Today to next 30 days
+            today.setHours(0, 0, 0, 0); // Set the time to midnight
 
             const matchingDates: Date[] = [];
 
+            // Loop through the next 30 days and find the matching dates
             for (let i = 0; i < 30; i++) {
               const current = new Date();
               current.setDate(today.getDate() + i);
@@ -138,44 +150,48 @@ const AllTaskListScreen = () => {
               }
             }
 
+            // Show tasks from today onwards indefinitely, regardless of the selected date
             return matchingDates.some((taskDate: Date) => {
-              return taskDate >= startOfWeek && taskDate <= endOfWeek;
+              return taskDate >= today; // Show tasks from today onwards indefinitely
             });
           }
-          // year
-          if (
-            task.selectedDates?.length > 0 &&
-            task.selectedMonths?.length > 0
-          ) {
-            const today = new Date();
-            const endDate = new Date();
-            endDate.setFullYear(today.getFullYear() + 1); // 1 year ahead
 
-            const yearlyMatchingDates: Date[] = [];
+        // year
+if (
+  task.selectedDates?.length > 0 &&
+  task.selectedMonths?.length > 0
+) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // Set the time to midnight
 
-            for (
-              let d = new Date(today);
-              d <= endDate;
-              d.setDate(d.getDate() + 1)
-            ) {
-              const day = d.getDate(); // 1 - 31
-              const monthName = d.toLocaleString('default', {month: 'short'}); // 'Apr'
-              // January - December
+  const yearlyMatchingDates: Date[] = [];
 
-              if (
-                task.selectedDates.includes(day) &&
-                task.selectedMonths.includes(monthName)
-              ) {
-                const dateMatch = new Date(d);
-                dateMatch.setHours(0, 0, 0, 0);
-                yearlyMatchingDates.push(dateMatch);
-              }
-            }
+  // Loop through the entire year from today onward
+  for (
+    let d = new Date(today);
+    d.getFullYear() === today.getFullYear() || d.getFullYear() === today.getFullYear() + 1;
+    d.setDate(d.getDate() + 1)
+  ) {
+    const day = d.getDate(); // 1 - 31
+    const monthName = d.toLocaleString('default', { month: 'short' }); // 'Jan', 'Feb', etc.
 
-            return yearlyMatchingDates.some((taskDate: Date) => {
-              return taskDate >= startOfWeek && taskDate <= endOfWeek;
-            });
-          }
+    // If the selected day and month match the current date
+    if (
+      task.selectedDates.includes(day) &&
+      task.selectedMonths.includes(monthName)
+    ) {
+      const dateMatch = new Date(d);
+      dateMatch.setHours(0, 0, 0, 0); // Set to midnight
+      yearlyMatchingDates.push(dateMatch);
+    }
+  }
+
+  // Show tasks from today onwards indefinitely
+  return yearlyMatchingDates.some((taskDate: Date) => {
+    return taskDate >= today; // Show from today onwards indefinitely
+  });
+}
+
 
           return false;
         });
