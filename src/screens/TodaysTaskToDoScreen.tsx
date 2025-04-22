@@ -17,10 +17,18 @@ interface Task {
   completed: boolean;
   name: string;
 
+  // Existing properties
   dailyTarget?: string;
   specificFor?: string;
   specificForValue?: string;
-  // Add other properties you use
+
+  // নতুন প্রপার্টি যোগ করুন
+  scheduleType?: string; // 'daily', 'weekly', 'monthly', 'yearly' ইত্যাদি
+  endDate?: string; // তারিখ স্ট্রিং হিসেবে (যেমন: '2024-05-30')
+  selectedDays?: string[]; // সাপ্তাহিক দিনের নাম (যেমন: ['Monday', 'Friday'])
+  selectedDate?: number[]; // মাসিক তারিখ (যেমন: [5, 15, 25])
+  selectedDates?: number[]; // বার্ষিক তারিখ (যেমন: [15]
+  selectedMonths?: string[]; // বার্ষিক মাস (যেমন: ['January', 'December'])
 }
 const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -38,15 +46,17 @@ const TodaysTaskToDoScreen = () => {
   // Toggle completion with sorting and persistence
   const filterTasksForToday = (taskList: Task[]): Task[] => {
     const currentDate = new Date();
-    
+
     return taskList.filter((task: Task) => {
       // Daily Routine টাস্ক (কোনো সিডিউল না থাকলে)
-      if (!task.scheduleType && 
-          !task.endDate &&
-          !task.selectedDays?.length &&
-          !task.selectedDate?.length &&
-          !task.selectedDates?.length &&
-          !task.selectedMonths?.length) {
+      if (
+        !task.scheduleType &&
+        !task.endDate &&
+        !task.selectedDays?.length &&
+        !task.selectedDate?.length &&
+        !task.selectedDates?.length &&
+        !task.selectedMonths?.length
+      ) {
         return true;
       }
 
@@ -56,28 +66,34 @@ const TodaysTaskToDoScreen = () => {
         return taskEndDate >= currentDate;
       }
 
-      // সাপ্তাহিক টাস্ক
-      if (task.selectedDays?.length > 0) {
-        const todayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-        return task.selectedDays.includes(todayName);
+      // সাপ্তাহিক টাস্ক চেক
+      if ((task.selectedDays?.length ?? 0) > 0) {
+        const todayName = currentDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+        });
+        return task.selectedDays?.includes(todayName) ?? false; // Optional Chaining + Nullish Coalescing
       }
 
-      // মাসিক টাস্ক
-      if (task.selectedDate?.length > 0) {
+      // মাসিক টাস্ক চেক
+      if ((task.selectedDate?.length ?? 0) > 0) {
         const todayDate = currentDate.getDate();
-        return task.selectedDate.includes(todayDate);
+        return task.selectedDate?.includes(todayDate) ?? false;
       }
 
-      // বার্ষিক টাস্ক
-      if (task.selectedDates?.length > 0 && task.selectedMonths?.length > 0) {
+      // বার্ষিক টাস্কের জন্য সংশোধিত কোড
+      if (
+        (task.selectedDates?.length ?? 0) > 0 &&
+        (task.selectedMonths?.length ?? 0) > 0
+      ) {
         const todayDay = currentDate.getDate();
-        const todayMonth = currentDate.toLocaleString('default', { month: 'short' });
+        const todayMonth = currentDate.toLocaleString('default', {
+          month: 'short',
+        });
         return (
-          task.selectedDates.includes(todayDay) &&
-          task.selectedMonths.includes(todayMonth)
+          (task.selectedDates?.includes(todayDay) ?? false) &&
+          (task.selectedMonths?.includes(todayMonth) ?? false)
         );
       }
-
       return false;
     });
   };
@@ -88,8 +104,8 @@ const TodaysTaskToDoScreen = () => {
       const storedTasks = await AsyncStorage.getItem('tasks');
       let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-      taskList = taskList.map(task => 
-        task.id === id ? { ...task, completed: !task.completed } : task
+      taskList = taskList.map(task =>
+        task.id === id ? {...task, completed: !task.completed} : task,
       );
 
       const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
@@ -105,8 +121,8 @@ const TodaysTaskToDoScreen = () => {
       const storedTasks = await AsyncStorage.getItem('tasks');
       let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-      taskList = taskList.map(task => 
-        task.id === taskId ? { ...task, isStarred: !task.isStarred } : task
+      taskList = taskList.map(task =>
+        task.id === taskId ? {...task, isStarred: !task.isStarred} : task,
       );
 
       const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
