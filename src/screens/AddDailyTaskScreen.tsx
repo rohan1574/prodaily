@@ -21,6 +21,7 @@ import tasksData from '../data/tasksData';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
+import { Modal } from 'react-native';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -92,8 +93,7 @@ const AddDailyTaskScreen = () => {
   const [dayOnError, setDayOnError] = useState<string | null>(null);
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
-
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const handleWeeklyClick = () => {
     setSelectedDayOnType('weekly');
     setDayOnError(null);
@@ -206,6 +206,8 @@ const AddDailyTaskScreen = () => {
 
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
+       // Show success modal after save
+    setShowSuccessModal(true);
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }
@@ -329,7 +331,6 @@ const AddDailyTaskScreen = () => {
                     />
                   </TouchableOpacity>
                 </View>
-
                 {/* Add Specific For */}
                 <View style={tw`mb-6`}>
                   <View style={tw`flex-row items-center mb-4`}>
@@ -403,7 +404,6 @@ const AddDailyTaskScreen = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-
                 {/* Set Daily Target */}
                 <View style={tw`mb-6`}>
                   <View style={tw`flex-row items-center mb-4`}>
@@ -461,7 +461,6 @@ const AddDailyTaskScreen = () => {
                     </View>
                   </View>
                 </View>
-
                 {/* Add Specific Day On */}
                 <View style={tw`mb-4`}>
                   <TouchableOpacity
@@ -479,7 +478,6 @@ const AddDailyTaskScreen = () => {
                     <Text style={tw`ml-2 text-sm`}>Add Specific day on</Text>
                   </TouchableOpacity>
                 </View>
-
                 {/* Buttons */}
                 <View style={tw`flex-row justify-between`}>
                   {/* Weekly Button */}
@@ -527,7 +525,6 @@ const AddDailyTaskScreen = () => {
                     <Text style={tw`text-white`}>Yearly</Text>
                   </TouchableOpacity>
                 </View>
-
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
                 {isDayPickerVisible && (
                   <DayPicker
@@ -537,7 +534,6 @@ const AddDailyTaskScreen = () => {
                     onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
                   />
                 )}
-
                 {/* Show DatePicker modal when isDatePickerVisible is true */}
                 {isDatePickerVisible && (
                   <DatePicker
@@ -547,9 +543,7 @@ const AddDailyTaskScreen = () => {
                     onAddDay={() => setIsDatePickerVisible(false)} // Close modal on Add Day
                   />
                 )}
-
                 {/* Show DateSelector modal when isDateSelectorVisible is true */}
-
                 {isDateSeletorVisible && (
                   <DateSelector
                     selectedDates={selectedDates}
@@ -570,7 +564,6 @@ const AddDailyTaskScreen = () => {
                     }}
                   />
                 )}
-
                 {/* Add to Routine Button */}
                 <TouchableOpacity
                   onPress={handleSaveTask}
@@ -579,7 +572,40 @@ const AddDailyTaskScreen = () => {
                     Add to Daily Routine
                   </Text>
                 </TouchableOpacity>
+                {/* modal */}
+                <Modal
+                  visible={showSuccessModal}
+                  transparent={true}
+                  animationType="fade"
+                  onRequestClose={() => setShowSuccessModal(false)}>
+                  <View
+                    style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+                    <View style={tw`bg-indigo-100 p-6 rounded-xl`}> 
+                      <View style={tw`items-center mb-4`}>
+                        <Icon
+                          name="checkmark-circle"
+                          size={50}
+                          color="#4BB543"
+                          style={tw`mb-2`}
+                        />
+                        <Text style={tw`text-purple-800 font-bold text-2xl`}>
+                          Task Added!
+                        </Text>
+                        <Text style={tw`text-gray-600 text-center mt-2`}>
+                          Your task has been successfully added to daily routine
+                        </Text>
+                      </View>
 
+                      <TouchableOpacity
+                        onPress={() => setShowSuccessModal(false)}
+                        style={tw`bg-blue-500 py-3 rounded-lg`}>
+                        <Text style={tw`text-white text-center font-semibold`}>
+                          OK
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
                 {/* Toggle Button */}
                 <TouchableOpacity
                   onPress={() =>
