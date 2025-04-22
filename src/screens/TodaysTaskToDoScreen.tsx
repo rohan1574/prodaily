@@ -36,136 +36,104 @@ const TodaysTaskToDoScreen = () => {
   };
 
   // Toggle completion with sorting and persistence
+  const filterTasksForToday = (taskList: Task[]): Task[] => {
+    const currentDate = new Date();
+    
+    return taskList.filter((task: Task) => {
+      // Daily Routine টাস্ক (কোনো সিডিউল না থাকলে)
+      if (!task.scheduleType && 
+          !task.endDate &&
+          !task.selectedDays?.length &&
+          !task.selectedDate?.length &&
+          !task.selectedDates?.length &&
+          !task.selectedMonths?.length) {
+        return true;
+      }
+
+      // দিনভিত্তিক টাস্ক (endDate পর্যন্ত)
+      if (task.endDate) {
+        const taskEndDate = new Date(task.endDate);
+        return taskEndDate >= currentDate;
+      }
+
+      // সাপ্তাহিক টাস্ক
+      if (task.selectedDays?.length > 0) {
+        const todayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+        return task.selectedDays.includes(todayName);
+      }
+
+      // মাসিক টাস্ক
+      if (task.selectedDate?.length > 0) {
+        const todayDate = currentDate.getDate();
+        return task.selectedDate.includes(todayDate);
+      }
+
+      // বার্ষিক টাস্ক
+      if (task.selectedDates?.length > 0 && task.selectedMonths?.length > 0) {
+        const todayDay = currentDate.getDate();
+        const todayMonth = currentDate.toLocaleString('default', { month: 'short' });
+        return (
+          task.selectedDates.includes(todayDay) &&
+          task.selectedMonths.includes(todayMonth)
+        );
+      }
+
+      return false;
+    });
+  };
+
+  // টগল ফাংশনগুলিতে ফিল্টারিং যোগ করুন
   const toggleComplete = async (id: string) => {
     try {
       const storedTasks = await AsyncStorage.getItem('tasks');
       let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-      taskList = taskList.map((task: Task) =>
-        task.id === id ? {...task, completed: !task.completed} : task,
+      taskList = taskList.map(task => 
+        task.id === id ? { ...task, completed: !task.completed } : task
       );
 
-      const sortedTasks = sortTasks(taskList);
-      await AsyncStorage.setItem('tasks', JSON.stringify(sortedTasks));
-      setTasks(sortedTasks);
+      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
+      await AsyncStorage.setItem('tasks', JSON.stringify(taskList));
+      setTasks(sortedAndFiltered); // শুধুমাত্র ফিল্টার্ড টাস্ক সেট করুন
     } catch (error) {
       console.error('Error toggling completion:', error);
     }
   };
 
-  // Toggle star with sorting and persistence
   const toggleStar = async (taskId: string) => {
     try {
       const storedTasks = await AsyncStorage.getItem('tasks');
       let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-      // সংশোধিত লাইন - টাইপ যোগ করুন
-      taskList = taskList.map((task: Task) =>
-        task.id === taskId ? {...task, isStarred: !task.isStarred} : task,
+      taskList = taskList.map(task => 
+        task.id === taskId ? { ...task, isStarred: !task.isStarred } : task
       );
 
-      const sortedTasks = sortTasks(taskList);
-      await AsyncStorage.setItem('tasks', JSON.stringify(sortedTasks));
-      setTasks(sortedTasks);
+      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
+      await AsyncStorage.setItem('tasks', JSON.stringify(taskList));
+      setTasks(sortedAndFiltered); // শুধুমাত্র ফিল্টার্ড টাস্ক সেট করুন
     } catch (error) {
       console.error('Error toggling star:', error);
     }
   };
 
-  // Fetch and sort tasks
+  // প্রথম লোডে এবং তারিখ পরিবর্তনে ফিল্টার প্রয়োগ
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchAndFilterTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
         const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-
-        const currentDate = new Date();
-        const startOfWeek = new Date(currentDate); // Start of the week (today)
-        const endOfWeek = new Date(currentDate); // End of the week (Sunday)
-
-        // Set the start date to today at 00:00:00
-        startOfWeek.setHours(0, 0, 0, 0);
-
-        // Set the end date to Sunday of the current week at 23:59:59
-        endOfWeek.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Set it to Sunday
-        endOfWeek.setHours(23, 59, 59, 999); // Set to the last moment of Sunday
-
-        console.log('Start Date:', startOfWeek);
-        console.log('End Date:', endOfWeek);
-
-        // 🟢 যদি ইউজার কোনো schedule টাইপ সিলেক্ট না করে — মানে এটা Daily Routine
-        const filteredTasks = taskList.filter((task: any) => {
-          const isDailyRoutineTask =
-            (!task.scheduleType || task.scheduleType === '') &&
-            !task.endDate &&
-            (!task.selectedDays || task.selectedDays.length === 0) &&
-            (!task.selectedDate || task.selectedDate.length === 0) &&
-            (!task.selectedDates || task.selectedDates.length === 0) &&
-            (!task.selectedMonths || task.selectedMonths.length === 0);
-
-          if (isDailyRoutineTask) {
-            return true; // Show every day
-          }
-          // day
-          if (task.endDate) {
-            const taskEndDate = new Date(task.endDate);
-            taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
-            return taskEndDate >= currentDate;
-          }
-          // week
-          if (task.selectedDays && task.selectedDays.length > 0) {
-            const today = new Date(currentDate);
-            today.setHours(0, 0, 0, 0); // Remove time
-
-            const todayName = today.toLocaleDateString('en-US', {
-              weekday: 'short',
-            }); // 'Sun', 'Mon', etc.
-
-            // যদি আজকের দিন selectedDays-এ থাকে, তাহলে দেখাও
-            return task.selectedDays.includes(todayName);
-          }
-
-          // month
-          if (task.selectedDate?.length > 0) {
-            const today = new Date(currentDate);
-            today.setHours(0, 0, 0, 0);
-
-            const todayDate = today.getDate(); // 1 - 31
-
-            return task.selectedDate.includes(todayDate);
-          }
-
-          // year
-          if (
-            task.selectedDates?.length > 0 &&
-            task.selectedMonths?.length > 0
-          ) {
-            const today = new Date(currentDate);
-            today.setHours(0, 0, 0, 0);
-
-            const todayDay = today.getDate(); // eg: 4
-            const todayMonth = today.toLocaleString('default', {month: 'short'}); // eg: 'April'
-
-            return (
-              task.selectedDates.includes(todayDay) &&
-              task.selectedMonths.includes(todayMonth)
-            );
-          }
-
-          return false;
-        });
-
-        setTasks(filteredTasks);
+        const filtered = filterTasksForToday(taskList);
+        setTasks(sortTasks(filtered));
       } catch (error) {
         console.error('Error fetching tasks:', error);
       } finally {
-        setLoading(false); // Set loading to false after fetch is complete
+        setLoading(false);
       }
     };
 
-    fetchTasks();
-  }, []); // Trigger on initial load
-
+    fetchAndFilterTasks();
+  }, []);
   // Delete task handler
   const handleDelete = async (id: string) => {
     Alert.alert(
