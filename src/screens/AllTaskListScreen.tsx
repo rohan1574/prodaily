@@ -67,17 +67,17 @@ const AllTaskListScreen = () => {
             (!task.selectedDate || task.selectedDate.length === 0) &&
             (!task.selectedDates || task.selectedDates.length === 0) &&
             (!task.selectedMonths || task.selectedMonths.length === 0);
-
+          // add daily
           if (isDailyRoutineTask) {
             return true; // Show every day
           }
-          // day
+          // Add Specific For
           if (task.endDate) {
             const taskEndDate = new Date(task.endDate);
             taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
             return taskEndDate >= currentDate;
           }
-          // Week logic
+          // Add Specific Day On (Weekly)
           if (task.selectedDays && task.selectedDays.length > 0) {
             const taskDates = task.selectedDays.map((day: string) => {
               const taskDate = new Date(currentDate); // Use current date as reference
@@ -131,7 +131,7 @@ const AllTaskListScreen = () => {
             });
           }
 
-          // month
+          // Add Specific Day On (Monthly)
           if (task.selectedDate?.length > 0) {
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Set the time to midnight
@@ -156,42 +156,42 @@ const AllTaskListScreen = () => {
             });
           }
 
-        // year
-if (
-  task.selectedDates?.length > 0 &&
-  task.selectedMonths?.length > 0
-) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);  // Set the time to midnight
+          // Add Specific Day On (Yearly)
+          if (
+            task.selectedDates?.length > 0 &&
+            task.selectedMonths?.length > 0
+          ) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set the time to midnight
 
-  const yearlyMatchingDates: Date[] = [];
+            const yearlyMatchingDates: Date[] = [];
 
-  // Loop through the entire year from today onward
-  for (
-    let d = new Date(today);
-    d.getFullYear() === today.getFullYear() || d.getFullYear() === today.getFullYear() + 1;
-    d.setDate(d.getDate() + 1)
-  ) {
-    const day = d.getDate(); // 1 - 31
-    const monthName = d.toLocaleString('default', { month: 'short' }); // 'Jan', 'Feb', etc.
+            // Loop through the entire year from today onward
+            for (
+              let d = new Date(today);
+              d.getFullYear() === today.getFullYear() ||
+              d.getFullYear() === today.getFullYear() + 1;
+              d.setDate(d.getDate() + 1)
+            ) {
+              const day = d.getDate(); // 1 - 31
+              const monthName = d.toLocaleString('default', {month: 'short'}); // 'Jan', 'Feb', etc.
 
-    // If the selected day and month match the current date
-    if (
-      task.selectedDates.includes(day) &&
-      task.selectedMonths.includes(monthName)
-    ) {
-      const dateMatch = new Date(d);
-      dateMatch.setHours(0, 0, 0, 0); // Set to midnight
-      yearlyMatchingDates.push(dateMatch);
-    }
-  }
+              // If the selected day and month match the current date
+              if (
+                task.selectedDates.includes(day) &&
+                task.selectedMonths.includes(monthName)
+              ) {
+                const dateMatch = new Date(d);
+                dateMatch.setHours(0, 0, 0, 0); // Set to midnight
+                yearlyMatchingDates.push(dateMatch);
+              }
+            }
 
-  // Show tasks from today onwards indefinitely
-  return yearlyMatchingDates.some((taskDate: Date) => {
-    return taskDate >= today; // Show from today onwards indefinitely
-  });
-}
-
+            // Show tasks from today onwards indefinitely
+            return yearlyMatchingDates.some((taskDate: Date) => {
+              return taskDate >= today; // Show from today onwards indefinitely
+            });
+          }
 
           return false;
         });

@@ -1,149 +1,20 @@
-import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import {s as tw} from 'react-native-wind';
-import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-
-
-// Define Task Type
-interface Task {
-  id: number;
-  title: string;
-  time?: string;
-  progress?: string;
-  image: any; // Consider using ImageSourcePropType
-  starred: boolean;
-  completed: boolean;
-}
-
-// Initial Task List
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Walking',
-    time: '135 min',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 2,
-    title: 'Skill Practice',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 3,
-    title: 'Eyes on News',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 4,
-    title: 'Course Watching',
-    time: '135 min',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 5,
-    title: 'Organizing Home',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 6,
-    title: 'Gardening',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 7,
-    title: 'Prayer',
-    progress: '0 / 5',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 8,
-    title: 'Walking',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: false,
-  },
-  {
-    id: 9,
-    title: 'Gratitude Practice',
-    completed: true,
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-  },
-  {
-    id: 10,
-    title: 'Creative Writing/Blogging',
-    time: '135 min',
-    completed: true,
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-  },
-  {
-    id: 11,
-    title: 'Feeding Pet',
-    progress: '5 / 5',
-    completed: true,
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-  },
-  {
-    id: 12,
-    title: 'Walking',
-    time: '135 min',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: true,
-  },
-  {
-    id: 13,
-    title: 'Skill Practice',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: true,
-  },
-  {
-    id: 14,
-    title: 'Eyes on News',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: true,
-  },
-  {
-    id: 15,
-    title: 'Course Watching',
-    time: '135 min',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: true,
-  },
-  {
-    id: 16,
-    title: 'Organizing Home',
-    image: require('../../assets/images/Walking.png'),
-    starred: false,
-    completed: true,
-  },
-];
-
-const TodaysTaskToDoScreen: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
+const TodaysTaskToDoScreen = () => {
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
   // Toggle Completion Status (Updated Sorting Logic)
   const toggleComplete = (id: number) => {
     setTasks(prevTasks => {
@@ -164,88 +35,260 @@ const TodaysTaskToDoScreen: React.FC = () => {
       return [...nonCompletedTasks, ...completedTasks];
     });
   };
-
   // Toggle Starred Status (Updated Sorting Logic)
-  const toggleStar = (id: number) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(task =>
-        task.id === id ? {...task, starred: !task.starred} : task,
-      );
+  const toggleStar = async (taskId: string) => {
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
-      // Separate completed and non-completed tasks
-      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
-      const completedTasks = updatedTasks.filter(task => task.completed);
+      const updatedList = taskList.map((task: any) => {
+        if (task.id === taskId) {
+          return {...task, isStarred: !task.isStarred};
+        }
+        return task;
+      });
 
-      // Sort non-completed tasks → Starred tasks উপরে
-      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+      setTasks(updatedList); // Update UI
+    } catch (error) {
+      console.error('Error toggling star:', error);
+    }
+  };
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const storedTasks = await AsyncStorage.getItem('tasks');
+        const taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
-      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
-      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
+        const currentDate = new Date();
+        const startOfWeek = new Date(currentDate); // Start of the week (today)
+        const endOfWeek = new Date(currentDate); // End of the week (Sunday)
 
-      return [...nonCompletedTasks, ...completedTasks];
-    });
+        // Set the start date to today at 00:00:00
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        // Set the end date to Sunday of the current week at 23:59:59
+        endOfWeek.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Set it to Sunday
+        endOfWeek.setHours(23, 59, 59, 999); // Set to the last moment of Sunday
+
+        console.log('Start Date:', startOfWeek);
+        console.log('End Date:', endOfWeek);
+
+        // 🟢 যদি ইউজার কোনো schedule টাইপ সিলেক্ট না করে — মানে এটা Daily Routine
+        const filteredTasks = taskList.filter((task: any) => {
+          const isDailyRoutineTask =
+            (!task.scheduleType || task.scheduleType === '') &&
+            !task.endDate &&
+            (!task.selectedDays || task.selectedDays.length === 0) &&
+            (!task.selectedDate || task.selectedDate.length === 0) &&
+            (!task.selectedDates || task.selectedDates.length === 0) &&
+            (!task.selectedMonths || task.selectedMonths.length === 0);
+
+          if (isDailyRoutineTask) {
+            return true; // Show every day
+          }
+          // day
+          if (task.endDate) {
+            const taskEndDate = new Date(task.endDate);
+            taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
+            return taskEndDate >= currentDate;
+          }
+          // week
+          if (task.selectedDays && task.selectedDays.length > 0) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0); // Remove time
+
+            const todayName = today.toLocaleDateString('en-US', {
+              weekday: 'short',
+            }); // 'Sun', 'Mon', etc.
+
+            // যদি আজকের দিন selectedDays-এ থাকে, তাহলে দেখাও
+            return task.selectedDays.includes(todayName);
+          }
+
+          // month
+          if (task.selectedDate?.length > 0) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0);
+
+            const todayDate = today.getDate(); // 1 - 31
+
+            return task.selectedDate.includes(todayDate);
+          }
+
+          // year
+          if (
+            task.selectedDates?.length > 0 &&
+            task.selectedMonths?.length > 0
+          ) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0);
+
+            const todayDay = today.getDate(); // eg: 4
+            const todayMonth = today.toLocaleString('default', {month: 'short'}); // eg: 'April'
+
+            return (
+              task.selectedDates.includes(todayDay) &&
+              task.selectedMonths.includes(todayMonth)
+            );
+          }
+
+          return false;
+        });
+
+        setTasks(filteredTasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetch is complete
+      }
+    };
+
+    fetchTasks();
+  }, []); // Trigger on initial load
+
+  const handleDelete = async (id: string) => {
+    Alert.alert(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const storedTasks = await AsyncStorage.getItem('tasks');
+              const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+              const updatedList = taskList.filter(
+                (task: any) => task.id !== id,
+              );
+              await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
+              setTasks(updatedList);
+            } catch (error) {
+              console.error('Error deleting task:', error);
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
-  // Task Item Component
-  const TaskItem: React.FC<{task: Task}> = ({task}) => (
-    <View
-      style={[
-        tw`flex-row items-center p-2 border-b border-gray-200`,
-        task.completed && tw`bg-green-100`,
-      ]}>
-      <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-        <Icon
-          name={task.completed ? 'checkmark-circle' : 'ellipse-outline'}
-          size={24}
-          color={task.completed ? 'green' : 'gray'}
-          style={tw`mr-2`}
-        />
-      </TouchableOpacity>
-      <Image source={task.image} style={tw`w-6 h-6 mr-2`} />
-      <Text style={tw`flex-1`}>{task.title}</Text>
-      {task.time && <Text style={tw`text-gray-500`}>{task.time}</Text>}
-      {task.progress && <Text style={tw`text-gray-500`}>{task.progress}</Text>}
-      <TouchableOpacity onPress={() => toggleStar(task.id)}>
-        <Icon
-          name={task.starred ? 'star' : 'star-outline'}
-          size={20}
-          color={task.starred ? 'gold' : 'gray'}
-          style={tw`ml-2`}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
-      {/* Header */}
-      <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
-        <View>
-          <Text style={tw`text-white text-lg font-bold`}>Today</Text>
-          <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
-        </View>
-        <View style={tw`flex-row items-center`}>
-          <Image
-            source={require('../../assets/images/sun.png')}
-            style={tw`w-10 h-10 rounded-full mr-3`}
-          />
-          <View>
-            <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-            <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
-          </View>
-        </View>
-      </View>
+    <View style={tw`flex-1 bg-white p-4`}>
+      <Text style={tw`text-2xl font-semibold mb-4`}>All Tasks</Text>
+      {loading ? (
+        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text> // Show loading text
+      ) : (
+        <ScrollView contentContainerStyle={tw`pb-10`}>
+          {tasks.length === 0 ? (
+            <Text style={tw`text-center text-gray-500`}>
+              No tasks available for the selected date range.
+            </Text>
+          ) : (
+            tasks.map((task: any) => (
+              <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+                <TouchableOpacity onPress={() => toggleComplete(task.id)}>
+                  <Icon
+                    name={
+                      task.completed ? 'checkmark-circle' : 'ellipse-outline'
+                    }
+                    size={24}
+                    color={task.completed ? 'green' : 'gray'}
+                    style={tw`mr-2`}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => toggleStar(task.id)}
+                  style={tw`absolute top-3 right-3`}>
+                  <Icon
+                    name={task.isStarred ? 'star' : 'star-outline'}
+                    size={24}
+                    color={task.isStarred ? 'gold' : 'gray'}
+                  />
+                </TouchableOpacity>
+                <Text style={tw`text-lg font-bold mb-1`}>
+                  Task ID: {task.id}
+                </Text>
+                {/* Task Icon */}
+                <View style={tw`flex-row items-center mb-2`}>
+                  {task.icon && (
+                    <Image
+                      source={task.icon} // Assuming `task.icon` is an image source or URI
+                      style={tw`w-10 h-10 mr-4`} // Style it as needed
+                    />
+                  )}
+                  <Text style={tw`text-lg font-bold`}>{task.name}</Text>
+                </View>
+                {(!task.scheduleType || task.scheduleType === '') &&
+                  !task.endDate &&
+                  (!task.selectedDays || task.selectedDays.length === 0) &&
+                  (!task.selectedDate || task.selectedDate.length === 0) &&
+                  (!task.selectedDates || task.selectedDates.length === 0) &&
+                  (!task.selectedMonths ||
+                    task.selectedMonths.length === 0) && (
+                    <Text style={tw`text-sm text-green-700 mb-1`}>
+                      🔁 This task is part of your Daily Routine
+                    </Text>
+                  )}
 
-      {/* Task List */}
-      <FlatList
-        data={tasks}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => <TaskItem task={item} />}
-        extraData={tasks} // Ensures re-render on state update
-      />
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Set Daily Target: {task.dailyTarget || 'N/A'}
+                </Text>
 
-      {/* Bottom Navigation */}
-     <BottomNavigation></BottomNavigation>
+                {/* Add Specific For */}
+                {task.specificFor && task.specificForValue ? (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific For: {task.specificForValue} {task.specificFor}
+                  </Text>
+                ) : (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific For: N/A
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Weekly) */}
+                {task.selectedDays?.length > 0 && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific Day On (Weekly): {task.selectedDays.join(', ')}
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Monthly) */}
+                {task.selectedDate?.length > 0 && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Add Specific Day On (Monthly):{' '}
+                    {task.selectedDate.join(', ')}
+                  </Text>
+                )}
+
+                {/* Add Specific Day On (Yearly) */}
+                {task.selectedDates &&
+                  task.selectedDates.length > 0 &&
+                  task.selectedMonths &&
+                  task.selectedMonths.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Selected Dates: {task.selectedDates.join(', ')},{' '}
+                      {task.selectedMonths.join(', ')}
+                    </Text>
+                  )}
+
+                {/* Delete Button */}
+                <TouchableOpacity
+                  onPress={() => handleDelete(task.id)}
+                  style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
+                  <Text style={tw`text-white text-center font-semibold`}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      )}
+      {/* bottom navigation */}
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };

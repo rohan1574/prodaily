@@ -11,49 +11,68 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+interface Task {
+  id: string;
+  isStarred: boolean;
+  completed: boolean;
+  name: string;
 
+  dailyTarget?: string;
+  specificFor?: string;
+  specificForValue?: string;
+  // Add other properties you use
+}
 const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
-  // Toggle Completion Status (Updated Sorting Logic)
-  const toggleComplete = (id: number) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(task =>
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Sorting helper function
+  const sortTasks = (tasks: any[]) => {
+    const group1 = tasks.filter(task => task.isStarred && !task.completed);
+    const group2 = tasks.filter(task => !task.isStarred && !task.completed);
+    const group3 = tasks.filter(task => task.isStarred && task.completed);
+    const group4 = tasks.filter(task => !task.isStarred && task.completed);
+    return [...group1, ...group2, ...group3, ...group4];
+  };
+
+  // Toggle completion with sorting and persistence
+  const toggleComplete = async (id: string) => {
+    try {
+      const storedTasks = await AsyncStorage.getItem('tasks');
+      let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
+
+      taskList = taskList.map((task: Task) =>
         task.id === id ? {...task, completed: !task.completed} : task,
       );
 
-      // Separate completed and non-completed tasks
-      const nonCompletedTasks = updatedTasks.filter(task => !task.completed);
-      const completedTasks = updatedTasks.filter(task => task.completed);
-
-      // Sort non-completed tasks → Starred tasks উপরে
-      nonCompletedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      // Sort completed tasks → Starred tasks উপরে কিন্তু সব Completed tasks নিচে থাকবে
-      completedTasks.sort((a, b) => Number(b.starred) - Number(a.starred));
-
-      return [...nonCompletedTasks, ...completedTasks];
-    });
+      const sortedTasks = sortTasks(taskList);
+      await AsyncStorage.setItem('tasks', JSON.stringify(sortedTasks));
+      setTasks(sortedTasks);
+    } catch (error) {
+      console.error('Error toggling completion:', error);
+    }
   };
-  // Toggle Starred Status (Updated Sorting Logic)
+
+  // Toggle star with sorting and persistence
   const toggleStar = async (taskId: string) => {
     try {
       const storedTasks = await AsyncStorage.getItem('tasks');
-      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+      let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-      const updatedList = taskList.map((task: any) => {
-        if (task.id === taskId) {
-          return {...task, isStarred: !task.isStarred};
-        }
-        return task;
-      });
+      // সংশোধিত লাইন - টাইপ যোগ করুন
+      taskList = taskList.map((task: Task) =>
+        task.id === taskId ? {...task, isStarred: !task.isStarred} : task,
+      );
 
-      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-      setTasks(updatedList); // Update UI
+      const sortedTasks = sortTasks(taskList);
+      await AsyncStorage.setItem('tasks', JSON.stringify(sortedTasks));
+      setTasks(sortedTasks);
     } catch (error) {
       console.error('Error toggling star:', error);
     }
   };
+
+  // Fetch and sort tasks
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -147,6 +166,7 @@ const TodaysTaskToDoScreen = () => {
     fetchTasks();
   }, []); // Trigger on initial load
 
+  // Delete task handler
   const handleDelete = async (id: string) => {
     Alert.alert(
       'Delete Task',
@@ -177,109 +197,106 @@ const TodaysTaskToDoScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-2xl font-semibold mb-4`}>All Tasks</Text>
+      <Text style={tw`text-2xl font-semibold mb-4`}>Today's Tasks</Text>
+
       {loading ? (
-        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text> // Show loading text
+        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
       ) : (
         <ScrollView contentContainerStyle={tw`pb-10`}>
           {tasks.length === 0 ? (
             <Text style={tw`text-center text-gray-500`}>
-              No tasks available for the selected date range.
+              No tasks for today. Enjoy your day!
             </Text>
           ) : (
             tasks.map((task: any) => (
               <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-                  <Icon
-                    name={
-                      task.completed ? 'checkmark-circle' : 'ellipse-outline'
-                    }
-                    size={24}
-                    color={task.completed ? 'green' : 'gray'}
-                    style={tw`mr-2`}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => toggleStar(task.id)}
-                  style={tw`absolute top-3 right-3`}>
-                  <Icon
-                    name={task.isStarred ? 'star' : 'star-outline'}
-                    size={24}
-                    color={task.isStarred ? 'gold' : 'gray'}
-                  />
-                </TouchableOpacity>
-                <Text style={tw`text-lg font-bold mb-1`}>
-                  Task ID: {task.id}
-                </Text>
-                {/* Task Icon */}
-                <View style={tw`flex-row items-center mb-2`}>
-                  {task.icon && (
-                    <Image
-                      source={task.icon} // Assuming `task.icon` is an image source or URI
-                      style={tw`w-10 h-10 mr-4`} // Style it as needed
+                <View style={tw`flex-row items-center justify-between`}>
+                  <TouchableOpacity onPress={() => toggleComplete(task.id)}>
+                    <Icon
+                      name={
+                        task.completed ? 'checkmark-circle' : 'ellipse-outline'
+                      }
+                      size={24}
+                      color={task.completed ? 'green' : 'gray'}
                     />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                    <Icon
+                      name={task.isStarred ? 'star' : 'star-outline'}
+                      size={24}
+                      color={task.isStarred ? 'gold' : 'gray'}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={tw`mt-2`}>
+                  {task.icon && (
+                    <Image source={task.icon} style={tw`w-10 h-10 mb-2`} />
                   )}
                   <Text style={tw`text-lg font-bold`}>{task.name}</Text>
-                </View>
-                {(!task.scheduleType || task.scheduleType === '') &&
-                  !task.endDate &&
-                  (!task.selectedDays || task.selectedDays.length === 0) &&
-                  (!task.selectedDate || task.selectedDate.length === 0) &&
-                  (!task.selectedDates || task.selectedDates.length === 0) &&
-                  (!task.selectedMonths ||
-                    task.selectedMonths.length === 0) && (
-                    <Text style={tw`text-sm text-green-700 mb-1`}>
-                      🔁 This task is part of your Daily Routine
-                    </Text>
-                  )}
 
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Set Daily Target: {task.dailyTarget || 'N/A'}
-                </Text>
+                  {(!task.scheduleType || task.scheduleType === '') &&
+                    !task.endDate &&
+                    (!task.selectedDays || task.selectedDays.length === 0) &&
+                    (!task.selectedDate || task.selectedDate.length === 0) &&
+                    (!task.selectedDates || task.selectedDates.length === 0) &&
+                    (!task.selectedMonths ||
+                      task.selectedMonths.length === 0) && (
+                      <Text style={tw`text-sm text-green-700 mb-1`}>
+                        🔁 This task is part of your Daily Routine
+                      </Text>
+                    )}
 
-                {/* Add Specific For */}
-                {task.specificFor && task.specificForValue ? (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: {task.specificForValue} {task.specificFor}
+                    Set Daily Target: {task.dailyTarget || 'N/A'}
                   </Text>
-                ) : (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: N/A
-                  </Text>
-                )}
 
-                {/* Add Specific Day On (Weekly) */}
-                {task.selectedDays?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Weekly): {task.selectedDays.join(', ')}
-                  </Text>
-                )}
-
-                {/* Add Specific Day On (Monthly) */}
-                {task.selectedDate?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Monthly):{' '}
-                    {task.selectedDate.join(', ')}
-                  </Text>
-                )}
-
-                {/* Add Specific Day On (Yearly) */}
-                {task.selectedDates &&
-                  task.selectedDates.length > 0 &&
-                  task.selectedMonths &&
-                  task.selectedMonths.length > 0 && (
+                  {/* Add Specific For */}
+                  {task.specificFor && task.specificForValue ? (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Selected Dates: {task.selectedDates.join(', ')},{' '}
-                      {task.selectedMonths.join(', ')}
+                      Add Specific For: {task.specificForValue}{' '}
+                      {task.specificFor}
+                    </Text>
+                  ) : (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Add Specific For: N/A
                     </Text>
                   )}
 
-                {/* Delete Button */}
+                  {/* Add Specific Day On (Weekly) */}
+                  {task.selectedDays?.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Add Specific Day On (Weekly):{' '}
+                      {task.selectedDays.join(', ')} {task.selectedDate}
+                    </Text>
+                  )}
+
+                  {/* Add Specific Day On (Monthly) */}
+                  {task.selectedDate?.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Add Specific Day On (Monthly):{' '}
+                      {task.selectedDate.join(', ')}
+                    </Text>
+                  )}
+
+                  {/* Add Specific Day On (Yearly) */}
+                  {task.selectedDates &&
+                    task.selectedDates.length > 0 &&
+                    task.selectedMonths &&
+                    task.selectedMonths.length > 0 && (
+                      <Text style={tw`text-sm text-gray-600 mb-1`}>
+                        Selected Dates: {task.selectedDates.join(', ')},{' '}
+                        {task.selectedMonths.join(', ')}
+                      </Text>
+                    )}
+                </View>
+
                 <TouchableOpacity
                   onPress={() => handleDelete(task.id)}
                   style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
                   <Text style={tw`text-white text-center font-semibold`}>
-                    Delete
+                    Delete Task
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -287,8 +304,8 @@ const TodaysTaskToDoScreen = () => {
           )}
         </ScrollView>
       )}
-      {/* bottom navigation */}
-      <BottomNavigation></BottomNavigation>
+
+      <BottomNavigation />
     </View>
   );
 };
