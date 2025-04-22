@@ -19,7 +19,7 @@ const tasksData: Record<string, any> = {
     'Mindfulness ': require('../../assets/images/Walking.png'),
     'Gratitude Practice ': require('../../assets/images/Walking.png'),
     'Affirmations ': require('../../assets/images/Walking.png'),
-    'Visualization 🔮': require('../../assets/images/Walking.png'),
+    'Visualization ': require('../../assets/images/Walking.png'),
     'Relaxation 😌': require('../../assets/images/Walking.png'),
     'Nature Interaction 🌳': require('../../assets/images/Walking.png'),
     'Laughing & Smiling 😄': require('../../assets/images/Walking.png'),
