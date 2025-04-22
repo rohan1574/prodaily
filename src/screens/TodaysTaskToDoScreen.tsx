@@ -181,7 +181,23 @@ const TodaysTaskToDoScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-2xl font-semibold mb-4`}>Today's Tasks</Text>
+       {/* Header */}
+            <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
+              <View>
+                <Text style={tw`text-white text-lg font-bold`}>Today</Text>
+                <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
+              </View>
+              <View style={tw`flex-row items-center`}>
+                <Image
+                  source={require('../../assets/images/sun.png')}
+                  style={tw`w-10 h-10 rounded-full mr-3`}
+                />
+                <View>
+                  <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
+                  <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
+                </View>
+              </View>
+            </View>
 
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
