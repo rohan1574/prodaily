@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import tasksData from '../data/tasksData';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
-import { Modal } from 'react-native';
+import {Modal} from 'react-native';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -58,7 +58,7 @@ const categories = Object.keys(categoryIcons) as Category[];
 
 // Make Infinite Scroll Data (Repeat categories)
 const infiniteCategories = [...categories, ...categories, ...categories];
-
+const CUSTOM_TASKS_KEY = 'custom_tasks';
 const AddDailyTaskScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [selectedCategory, setSelectedCategory] = useState<string>(
@@ -94,6 +94,54 @@ const AddDailyTaskScreen = () => {
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [customTasksData, setCustomTasksData] = useState<Record<string, any>>(
+    {},
+  );
+  const [isCustomTaskModalVisible, setIsCustomTaskModalVisible] =
+    useState(false);
+  const [customTaskName, setCustomTaskName] = useState('');
+  const [selectedCustomIcon, setSelectedCustomIcon] = useState<any>(null);
+  useEffect(() => {
+    const loadCustomTasks = async () => {
+      try {
+        const storedTasks = await AsyncStorage.getItem(CUSTOM_TASKS_KEY);
+        if (storedTasks) {
+          setCustomTasksData(JSON.parse(storedTasks));
+        }
+      } catch (error) {
+        console.error('Error loading custom tasks:', error);
+      }
+    };
+    loadCustomTasks();
+  }, []);
+
+  const saveCustomTask = async () => {
+    if (!customTaskName || !selectedCustomIcon) {
+      Alert.alert('Error', 'Please enter task name and select an icon');
+      return;
+    }
+
+    const newCustomTask = {
+      ...customTasksData,
+      [selectedCategory]: {
+        ...customTasksData[selectedCategory],
+        [customTaskName]: selectedCustomIcon,
+      },
+    };
+
+    try {
+      await AsyncStorage.setItem(
+        CUSTOM_TASKS_KEY,
+        JSON.stringify(newCustomTask),
+      );
+      setCustomTasksData(newCustomTask);
+      setIsCustomTaskModalVisible(false);
+      setCustomTaskName('');
+      setSelectedCustomIcon(null);
+    } catch (error) {
+      console.error('Error saving custom task:', error);
+    }
+  };
   const handleWeeklyClick = () => {
     setSelectedDayOnType('weekly');
     setDayOnError(null);
@@ -143,7 +191,9 @@ const AddDailyTaskScreen = () => {
   const handleSaveTask = async () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
-    const icon = tasksData[selectedCategory][taskName];
+    const icon =
+      tasksData[selectedCategory][taskName] ||
+      customTasksData[selectedCategory]?.[taskName];
     // Initialize task data object
     const taskData: any = {
       id: `${Date.now()}`, // Unique task id
@@ -206,8 +256,8 @@ const AddDailyTaskScreen = () => {
 
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
-       // Show success modal after save
-    setShowSuccessModal(true);
+      // Show success modal after save
+      setShowSuccessModal(true);
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }
@@ -285,18 +335,24 @@ const AddDailyTaskScreen = () => {
 
       {/* Task List (Scrollable) */}
       <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
-        {Object.keys(tasksData[selectedCategory] || {}).map((task, index) => (
+        {Object.keys({
+          ...tasksData[selectedCategory],
+          ...(customTasksData[selectedCategory] || {}),
+        }).map((task, index) => (
           <View key={index} style={tw`mb-2`}>
             <TouchableOpacity
               onPress={() => {
                 setExpandedTask(expandedTask === task ? null : task);
-                setTaskName(task); // Set task name when selecting a task
+                setTaskName(task);
               }}
               style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
               <View style={tw`flex-row items-center`}>
                 <Image
-                  source={tasksData[selectedCategory][task]}
-                  style={tw`mr-3 w-8 h-8`} // Adjust the size of the image
+                  source={
+                    tasksData[selectedCategory][task] ||
+                    customTasksData[selectedCategory][task]
+                  }
+                  style={tw`mr-3 w-8 h-8`}
                 />
                 <Text style={tw`text-base font-semibold text-black`}>
                   {task}
@@ -580,7 +636,7 @@ const AddDailyTaskScreen = () => {
                   onRequestClose={() => setShowSuccessModal(false)}>
                   <View
                     style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-                    <View style={tw`bg-indigo-100 p-6 rounded-xl`}> 
+                    <View style={tw`bg-indigo-100 p-6 rounded-xl`}>
                       <View style={tw`items-center mb-4`}>
                         <Icon
                           name="checkmark-circle"
@@ -622,6 +678,72 @@ const AddDailyTaskScreen = () => {
             )}
           </View>
         ))}
+        {/* Add Custom Task Button */}
+        <TouchableOpacity
+          onPress={() => {
+            setIsCustomTaskModalVisible(true);
+            setCustomTaskName(''); // Reset previous input
+            setSelectedCustomIcon(null); // Reset icon selection
+          }}
+          style={tw`flex-row items-center bg-blue-100 p-4 rounded-lg mt-4`}>
+          <Icon name="add-circle-outline" size={24} color="#3B82F6" />
+          <Text style={tw`ml-2 text-blue-600 font-semibold`}>
+            Create Custom Task
+          </Text>
+        </TouchableOpacity>
+        {/* কাস্টম টাস্ক মডাল */}
+        <Modal
+          visible={isCustomTaskModalVisible}
+          transparent={true}
+          animationType="slide">
+          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+              <Text style={tw`text-lg font-bold mb-4`}>Create Custom Task</Text>
+
+              <TextInput
+                placeholder="Enter Task Name"
+                value={customTaskName}
+                onChangeText={setCustomTaskName}
+                style={tw`border p-2 rounded mb-4`}
+                placeholderTextColor="#9CA3AF"
+              />
+
+              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {Object.entries(categoryIcons).map(([category, iconSource]) => (
+                  <TouchableOpacity
+                    key={category}
+                    onPress={() => setSelectedCustomIcon(iconSource)}
+                    style={tw`p-2 mx-1 rounded-lg ${
+                      selectedCustomIcon === iconSource
+                        ? 'bg-blue-100'
+                        : 'bg-gray-100'
+                    }`}>
+                    <Image
+                      source={iconSource}
+                      style={tw`w-10 h-10`}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <View style={tw`flex-row justify-between mt-6 gap-3`}>
+                <TouchableOpacity
+                  onPress={() => setIsCustomTaskModalVisible(false)}
+                  style={tw`flex-1 bg-gray-500 px-4 py-3 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={saveCustomTask}
+                  style={tw`flex-1 bg-blue-500 px-4 py-3 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Save Task</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
       {/* bottom navigation */}
       <BottomNavigation></BottomNavigation>
