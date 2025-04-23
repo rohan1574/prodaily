@@ -315,6 +315,21 @@ const AddDailyTaskScreen = () => {
       const storedTasks = await AsyncStorage.getItem('tasks');
       const taskList = storedTasks ? JSON.parse(storedTasks) : []; // Parse existing tasks
 
+       // ডুপ্লিকেট চেক করুন (নাম এবং ক্যাটাগরি মিললে)
+    const isDuplicate = taskList.some(
+      (task: any) =>
+        task.name === taskData.name && 
+        task.category === taskData.category
+    );
+
+    if (isDuplicate) {
+      Alert.alert(
+        'Task Already Exists',
+        'এই টাস্কটি ইতিমধ্যেই আপনার রুটিনে রয়েছে!',
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+      );
+      return; // ডুপ্লিকেট থাকলে সেভ করবে না
+    }
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
       // Show success modal after save
