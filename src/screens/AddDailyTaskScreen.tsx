@@ -315,21 +315,20 @@ const AddDailyTaskScreen = () => {
       const storedTasks = await AsyncStorage.getItem('tasks');
       const taskList = storedTasks ? JSON.parse(storedTasks) : []; // Parse existing tasks
 
-       // ডুপ্লিকেট চেক করুন (নাম এবং ক্যাটাগরি মিললে)
-    const isDuplicate = taskList.some(
-      (task: any) =>
-        task.name === taskData.name && 
-        task.category === taskData.category
-    );
-
-    if (isDuplicate) {
-      Alert.alert(
-        'Task Already Exists',
-        'এই টাস্কটি ইতিমধ্যেই আপনার রুটিনে রয়েছে!',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+      // ডুপ্লিকেট চেক করুন (নাম এবং ক্যাটাগরি মিললে)
+      const isDuplicate = taskList.some(
+        (task: any) =>
+          task.name === taskData.name && task.category === taskData.category,
       );
-      return; // ডুপ্লিকেট থাকলে সেভ করবে না
-    }
+
+      if (isDuplicate) {
+        Alert.alert(
+          'Task Already Exists',
+          'এই টাস্কটি ইতিমধ্যেই আপনার রুটিনে রয়েছে!',
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        );
+        return; // ডুপ্লিকেট থাকলে সেভ করবে না
+      }
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
       // Show success modal after save
@@ -363,11 +362,12 @@ const AddDailyTaskScreen = () => {
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
-      <View style={tw`mb-2`}>
-        <Text style={tw`text-xl font-bold text-black`}>Add Daily Task</Text>
-        <Text style={tw`text-sm text-gray-500`}>
-          Add tasks to your daily routine to stay productive.
+      <View style={tw`mb-4`}>
+        <Text style={[tw` font-bold text-black`,{fontSize:24}]}>Add Daily Task</Text>
+        <Text style={[tw`font-light text-black`,{fontSize:15}]}>
+        Add task, which you want to include in your daily routine. Make them Compulsory to make your every day productive .
         </Text>
+        <Text style={tw`text-base top-2 font-bold text-zinc-800`}>Categories</Text>
       </View>
 
       {/* Horizontal Scrollable Categories (Fixed) */}
