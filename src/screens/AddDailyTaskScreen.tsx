@@ -52,10 +52,10 @@ type Category =
   | 'Tech'
   | 'Academic'
   | 'Spiritual'
-  | 'Pet';
+  | 'Pet'
+  | string;
 
-  const categories = Object.keys(categoryIcons) as Category[];
-
+const categories = Object.keys(categoryIcons) as Category[];
 
 const CUSTOM_TASKS_KEY = 'custom_tasks';
 const CUSTOM_CATEGORIES_KEY = 'custom_categories';
@@ -102,10 +102,13 @@ const AddDailyTaskScreen = () => {
   const [customTaskName, setCustomTaskName] = useState('');
   const [selectedCustomIcon, setSelectedCustomIcon] = useState<any>(null);
   // 2. State গুলি আপডেট করুন
-const [customCategories, setCustomCategories] = useState<Record<string, any>>({});
-const [isCustomCategoryModalVisible, setIsCustomCategoryModalVisible] = useState(false);
-const [newCategoryName, setNewCategoryName] = useState('');
-const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
+  const [customCategories, setCustomCategories] = useState<Record<string, any>>(
+    {},
+  );
+  const [isCustomCategoryModalVisible, setIsCustomCategoryModalVisible] =
+    useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
   // Load custom data
   useEffect(() => {
     const loadData = async () => {
@@ -114,7 +117,7 @@ const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
           AsyncStorage.getItem(CUSTOM_TASKS_KEY),
           AsyncStorage.getItem(CUSTOM_CATEGORIES_KEY),
         ]);
-        
+
         if (tasks) setCustomTasksData(JSON.parse(tasks));
         if (categories) setCustomCategories(JSON.parse(categories));
       } catch (error) {
@@ -127,7 +130,11 @@ const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
   // Merge default and custom categories
   const mergedIcons = {...categoryIcons, ...customCategories};
   const allCategories = Object.keys(mergedIcons);
-  const infiniteCategories = [...allCategories, ...allCategories, ...allCategories];
+  const infiniteCategories = [
+    ...allCategories,
+    ...allCategories,
+    ...allCategories,
+  ];
 
   // Save custom category
   const saveCustomCategory = async () => {
@@ -138,11 +145,14 @@ const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
 
     const newCategory = {
       ...customCategories,
-      [newCategoryName]: selectedCategoryIcon
+      [newCategoryName]: selectedCategoryIcon,
     };
 
     try {
-      await AsyncStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(newCategory));
+      await AsyncStorage.setItem(
+        CUSTOM_CATEGORIES_KEY,
+        JSON.stringify(newCategory),
+      );
       setCustomCategories(newCategory);
       setIsCustomCategoryModalVisible(false);
       setNewCategoryName('');
@@ -366,10 +376,10 @@ const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
                     ? tw`border-blue-500`
                     : tw`border-gray-300`,
                 ]}>
-                 <Image
-                source={mergedIcons[category]}
-                style={tw`w-8 h-8`}
-              />
+                <Image
+                  source={mergedIcons[category as keyof typeof mergedIcons]}
+                  style={tw`w-8 h-8`}
+                />
               </View>
               <Text
                 style={tw`text-sm mt-1 ${
@@ -383,72 +393,74 @@ const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
           ))}
         </ScrollView>
         {/* Custom Category Modal */}
-      <Modal
-        visible={isCustomCategoryModalVisible}
-        transparent={true}
-        animationType="slide">
-        <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-          <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
-            <Text style={tw`text-lg font-bold mb-4`}>Create Custom Category</Text>
+        <Modal
+          visible={isCustomCategoryModalVisible}
+          transparent={true}
+          animationType="slide">
+          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+              <Text style={tw`text-lg font-bold mb-4`}>
+                Create Custom Category
+              </Text>
 
-            <TextInput
-              placeholder="Enter Category Name"
-              value={newCategoryName}
-              onChangeText={setNewCategoryName}
-              style={tw`border p-2 rounded mb-4`}
-              placeholderTextColor="#9CA3AF"
-            />
+              <TextInput
+                placeholder="Enter Category Name"
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+                style={tw`border p-2 rounded mb-4`}
+                placeholderTextColor="#9CA3AF"
+              />
 
-            <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {Object.entries(categoryIcons).map(([category, iconSource]) => (
+              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {Object.entries(categoryIcons).map(([category, iconSource]) => (
+                  <TouchableOpacity
+                    key={category}
+                    onPress={() => setSelectedCategoryIcon(iconSource)}
+                    style={tw`p-2 mx-1 rounded-lg ${
+                      selectedCategoryIcon === iconSource
+                        ? 'bg-blue-100'
+                        : 'bg-gray-100'
+                    }`}>
+                    <Image
+                      source={iconSource}
+                      style={tw`w-10 h-10`}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <View style={tw`flex-row justify-between mt-6 gap-3`}>
                 <TouchableOpacity
-                  key={category}
-                  onPress={() => setSelectedCategoryIcon(iconSource)}
-                  style={tw`p-2 mx-1 rounded-lg ${
-                    selectedCategoryIcon === iconSource
-                      ? 'bg-blue-100'
-                      : 'bg-gray-100'
-                  }`}>
-                  <Image
-                    source={iconSource}
-                    style={tw`w-10 h-10`}
-                    resizeMode="contain"
-                  />
+                  onPress={() => setIsCustomCategoryModalVisible(false)}
+                  style={tw`flex-1 bg-gray-500 px-4 py-3 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Cancel</Text>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
 
-            <View style={tw`flex-row justify-between mt-6 gap-3`}>
-              <TouchableOpacity
-                onPress={() => setIsCustomCategoryModalVisible(false)}
-                style={tw`flex-1 bg-gray-500 px-4 py-3 rounded-lg items-center`}>
-                <Text style={tw`text-white font-medium`}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={saveCustomCategory}
-                style={tw`flex-1 bg-blue-500 px-4 py-3 rounded-lg items-center`}>
-                <Text style={tw`text-white font-medium`}>Save Category</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={saveCustomCategory}
+                  style={tw`flex-1 bg-blue-500 px-4 py-3 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Save Category</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Custom Category Button */}
-      <TouchableOpacity
-        onPress={() => {
-          setIsCustomCategoryModalVisible(true);
-          setNewCategoryName('');
-          setSelectedCategoryIcon(null);
-        }}
-        style={tw`flex-row items-center bg-green-100 p-4 rounded-lg mt-4`}>
-        <Icon name="add-circle-outline" size={24} color="#3B82F6" />
-        <Text style={tw`ml-2 text-green-600 font-semibold`}>
-          Create Custom Category
-        </Text>
-      </TouchableOpacity>
+        {/* Custom Category Button */}
+        <TouchableOpacity
+          onPress={() => {
+            setIsCustomCategoryModalVisible(true);
+            setNewCategoryName('');
+            setSelectedCategoryIcon(null);
+          }}
+          style={tw`flex-row items-center bg-green-100 p-4 rounded-lg mt-4`}>
+          <Icon name="add-circle-outline" size={24} color="#3B82F6" />
+          <Text style={tw`ml-2 text-green-600 font-semibold`}>
+            Create Custom Category
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Task List (Scrollable) */}
