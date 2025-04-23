@@ -386,18 +386,18 @@ const AddDailyTaskScreen = () => {
               onPress={() => setSelectedCategory(category)}>
               <View
                 style={[
-                  tw`w-20 h-20 rounded-full flex items-center justify-center border-2`,
+                  tw`w-20 h-20 rounded-full flex items-center justify-center border-2 bg-white`,
                   selectedCategory === category
                     ? tw`border-blue-500`
-                    : tw`border-gray-300`,
+                    : tw`border-gray-200`,
                 ]}>
                 <Image
                   source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={tw`w-8 h-8`}
+                  style={tw`w-12 h-12`}
                 />
               </View>
               <Text
-                style={tw`text-sm mt-1 ${
+                style={tw`text-sm mt-1 font-bold ${
                   selectedCategory === category
                     ? 'text-blue-500'
                     : 'text-gray-600'
@@ -471,7 +471,7 @@ const AddDailyTaskScreen = () => {
             setSelectedCategoryIcon(null);
           }}
           style={tw`flex-row items-center bg-green-100 p-4 rounded-lg mt-4`}>
-          <Icon name="add-circle-outline" size={24} color="#3B82F6" />
+          <Icon name="add-circle-outline" size={28} color="#3B82F6" />
           <Text style={tw`ml-2 text-green-600 font-semibold`}>
             Create Custom Category
           </Text>
