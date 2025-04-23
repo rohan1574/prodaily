@@ -382,11 +382,11 @@ const AddDailyTaskScreen = () => {
           {infiniteCategories.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={tw`items-center mx-2`}
+              style={tw`items-center mr-2`}
               onPress={() => setSelectedCategory(category)}>
               <View
                 style={[
-                  tw`w-16 h-16 rounded-full flex items-center justify-center border-2`,
+                  tw`w-20 h-20 rounded-full flex items-center justify-center border-2`,
                   selectedCategory === category
                     ? tw`border-blue-500`
                     : tw`border-gray-300`,
