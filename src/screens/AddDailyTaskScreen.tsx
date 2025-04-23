@@ -687,7 +687,7 @@ const AddDailyTaskScreen = () => {
           }}
           style={tw`flex-row items-center bg-blue-100 p-4 rounded-lg mt-4`}>
           <Icon name="add-circle-outline" size={24} color="#3B82F6" />
-          <Text style={tw`ml-2 text-blue-600 font-semibold`}>
+          <Text style={tw`ml-2 text-blue-800 font-semibold`}>
             Create Custom Task
           </Text>
         </TouchableOpacity>
