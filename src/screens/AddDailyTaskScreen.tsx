@@ -665,7 +665,7 @@ const AddDailyTaskScreen = () => {
                   </View>
                 </View>
                 {/* Add Specific Day On */}
-                <View style={tw`mb-4`}>
+                <View style={tw`top-6`}>
                   <TouchableOpacity
                     onPress={toggleSpecificDayOn}
                     style={tw`flex-row items-center`}>
@@ -688,14 +688,14 @@ const AddDailyTaskScreen = () => {
                     onPress={handleWeeklyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-5 rounded-lg`,
+                      tw`py-3 px-5 left-32 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'weekly'
                         ? tw`bg-green-600`
                         : tw`bg-blue-500`,
                     ]}>
-                    <Text style={tw`text-white`}>Weekly</Text>
+                    <Text style={tw`text-white font-bold right-2`}>Weekly</Text>
                   </TouchableOpacity>
 
                   {/* Monthly Button */}
@@ -703,14 +703,14 @@ const AddDailyTaskScreen = () => {
                     onPress={handleMonthlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-5 rounded-lg`,
+                      tw`py-3 px-5 left-16 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'monthly'
                         ? tw`bg-green-600`
-                        : tw`bg-blue-500`,
+                        : tw`bg-blue-500 `,
                     ]}>
-                    <Text style={tw`text-white`}>Monthly</Text>
+                    <Text style={tw`text-white font-bold right-2`}>Monthly</Text>
                   </TouchableOpacity>
 
                   {/* Yearly Button */}
@@ -718,14 +718,14 @@ const AddDailyTaskScreen = () => {
                     onPress={handleYearlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-5 rounded-lg`,
+                      tw`py-3 px-4 left-2 rounded-lg`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'yearly'
-                        ? tw`bg-green-600`
-                        : tw`bg-blue-500`,
+                        ? tw`bg-green-600 font-bold`
+                        : tw`bg-red-500 font-bold`,
                     ]}>
-                    <Text style={tw`text-white`}>Yearly</Text>
+                    <Text style={tw`text-white font-bold`}>Yearly</Text>
                   </TouchableOpacity>
                 </View>
                 {/* Show DayPicker modal when isDayPickerVisible is true */}
