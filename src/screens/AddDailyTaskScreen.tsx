@@ -512,7 +512,7 @@ const AddDailyTaskScreen = () => {
 
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
-              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-1`}>
+              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-3`}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-4`}>
                   <Image
@@ -643,8 +643,8 @@ const AddDailyTaskScreen = () => {
                         <Text
                           style={tw`${
                             targetType === 'Minutes'
-                              ? 'text-white'
-                              : 'text-black'
+                              ? 'text-white font-bold'
+                              : 'text-gray-500 font-bold'
                           }`}>
                           Minutes
                         </Text>
@@ -656,7 +656,7 @@ const AddDailyTaskScreen = () => {
                         onPress={() => setTargetType('Times')}>
                         <Text
                           style={tw`${
-                            targetType === 'Times' ? 'text-white' : 'text-black'
+                            targetType === 'Times' ? 'text-white font-bold' : 'text-gray-500 font-bold'
                           }`}>
                           Times
                         </Text>
