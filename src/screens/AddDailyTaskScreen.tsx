@@ -446,16 +446,16 @@ const AddDailyTaskScreen = () => {
                 ))}
               </ScrollView>
 
-              <View style={tw`flex-row justify-between mt-6 gap-3`}>
+              <View style={tw`flex-row justify-between mt-6 `}>
                 <TouchableOpacity
                   onPress={() => setIsCustomCategoryModalVisible(false)}
-                  style={tw`flex-1 bg-gray-500 px-4 py-3 rounded-lg items-center`}>
+                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
                   <Text style={tw`text-white font-medium`}>Cancel</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={saveCustomCategory}
-                  style={tw`flex-1 bg-blue-500 px-4 py-3 rounded-lg items-center`}>
+                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
                   <Text style={tw`text-white font-medium`}>Save Category</Text>
                 </TouchableOpacity>
               </View>
@@ -497,9 +497,9 @@ const AddDailyTaskScreen = () => {
                     tasksData[selectedCategory][task] ||
                     customTasksData[selectedCategory][task]
                   }
-                  style={tw`mr-3 w-8 h-8`}
+                  style={tw`mr-4 w-6 h-6`}
                 />
-                <Text style={tw`text-base font-semibold text-black`}>
+                <Text style={tw`text-sm font-medium text-black`}>
                   {task}
                 </Text>
               </View>
@@ -512,17 +512,18 @@ const AddDailyTaskScreen = () => {
 
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
-              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84`}>
+              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-1`}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-4`}>
                   <Image
                     source={tasksData[selectedCategory][expandedTask]}
-                    style={tw`mr-3 w-8 h-8`} // Adjust the size of the image
+                    style={tw`mr-3`} // Adjust the size of the image
                   />
-                  <Text style={tw`text-lg font-semibold ml-2 text-gray-900`}>
+                  <Text style={tw`text-lg font-semibold ml-2 text-slate-800`}>
                     {expandedTask}
                   </Text>
                   {/* star icon */}
+                  <View style={tw`left-48`}>
                   <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
                     <Icon
                       name={isStarred ? 'star' : 'star-outline'}
@@ -531,9 +532,10 @@ const AddDailyTaskScreen = () => {
                       style={tw`mr-2`}
                     />
                   </TouchableOpacity>
+                  </View>
                 </View>
                 {/* Add Specific For */}
-                <View style={tw`mb-6`}>
+                <View style={tw``}>
                   <View style={tw`flex-row items-center mb-4`}>
                     <TouchableOpacity onPress={handleToggleSpecificFor}>
                       <Icon
@@ -542,16 +544,16 @@ const AddDailyTaskScreen = () => {
                             ? 'radio-button-on'
                             : 'radio-button-off'
                         }
-                        size={16}
-                        color="#3B82F6"
+                        size={20}
+                        color={isSpecificForEnabled ? 'blue' : 'gray'}
                       />
                     </TouchableOpacity>
-                    <Text style={tw`text-xs font-semibold ml-1`}>
-                      Add specific for:
+                    <Text style={tw`text-xs font-bold text-gray-500`}>
+                      Add specific for
                     </Text>
 
                     <TextInput
-                      style={tw`border p-2 rounded w-8 text-xs ml-2`}
+                      style={tw`border border-gray-500 p-2 rounded w-8 h-8 text-xs ml-2 `}
                       keyboardType="numeric"
                       placeholder="00"
                       value={specificForValue}
@@ -560,45 +562,45 @@ const AddDailyTaskScreen = () => {
                     />
 
                     <TouchableOpacity
-                      style={tw`py-2 px-2 mx-1 rounded ${
+                      style={tw`py-2 px-3 left-3 rounded ${
                         specificFor === 'Days' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Days')}>
                       <Text
                         style={
                           specificFor === 'Days'
-                            ? tw`text-white`
-                            : tw`text-gray-500`
+                            ? tw`text-white font-bold`
+                            : tw`text-gray-500 font-bold`
                         }>
                         Days
                       </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                      style={tw`py-2 px-2 mx-1 rounded ${
+                      style={tw`py-2 px-2 left-2 rounded ${
                         specificFor === 'Weeks' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Weeks')}>
                       <Text
                         style={
                           specificFor === 'Weeks'
-                            ? tw`text-white`
-                            : tw`text-gray-500`
+                            ? tw`text-white font-bold`
+                            : tw`text-gray-500 font-bold`
                         }>
                         Weeks
                       </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                      style={tw`py-2 px-2 mx-1 rounded ${
+                      style={tw`py-2 px-2 rounded ${
                         specificFor === 'Months' ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onPress={() => setSpecificFor('Months')}>
                       <Text
                         style={
                           specificFor === 'Months'
-                            ? tw`text-white`
-                            : tw`text-gray-500`
+                            ? tw`text-white font-bold`
+                            : tw`text-gray-500 font-bold`
                         }>
                         Months
                       </Text>
@@ -606,8 +608,8 @@ const AddDailyTaskScreen = () => {
                   </View>
                 </View>
                 {/* Set Daily Target */}
-                <View style={tw`mb-6`}>
-                  <View style={tw`flex-row items-center mb-4`}>
+                <View style={tw``}>
+                  <View style={tw`flex-row items-center `}>
                     <TouchableOpacity onPress={toggleDailyTarget}>
                       <Icon
                         name={
@@ -615,24 +617,24 @@ const AddDailyTaskScreen = () => {
                             ? 'radio-button-on'
                             : 'radio-button-off'
                         }
-                        size={16}
-                        color="#3B82F6"
+                        size={20}
+                        color={isDailyTargetEnabled ? 'blue' : 'gray'}
                       />
                     </TouchableOpacity>
-                    <Text style={tw`text-xs font-semibold`}>
+                    <Text style={tw`text-xs font-bold text-gray-500`}>
                       Set Daily Target for
                     </Text>
                     <TextInput
-                      style={tw`border p-2 rounded w-8 text-xs mt-2`}
+                      style={tw`border border-gray-500 p-2 left-2 rounded w-8 text-xs mt-2`}
                       keyboardType="numeric"
                       placeholder="00"
                       value={dailyTarget}
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
-                    <View style={tw`flex-row mt-2`}>
+                    <View style={tw`flex-row mt-2 `}>
                       <TouchableOpacity
-                        style={tw`px-4 py-2 mx-1 rounded ${
+                        style={tw`px-4 py-2 mx-1 rounded left-4 ${
                           targetType === 'Minutes'
                             ? 'bg-blue-500'
                             : 'bg-gray-300'
@@ -676,7 +678,7 @@ const AddDailyTaskScreen = () => {
                       size={20}
                       color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                     />
-                    <Text style={tw`ml-2 text-sm`}>Add Specific day on</Text>
+                    <Text style={tw`text-xs font-bold text-gray-500`}>Add Specific day on</Text>
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
@@ -876,13 +878,13 @@ const AddDailyTaskScreen = () => {
               <View style={tw`flex-row justify-between mt-6 gap-3`}>
                 <TouchableOpacity
                   onPress={() => setIsCustomTaskModalVisible(false)}
-                  style={tw`flex-1 bg-gray-500 px-4 py-3 rounded-lg items-center`}>
+                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-cente`}>
                   <Text style={tw`text-white font-medium`}>Cancel</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={saveCustomTask}
-                  style={tw`flex-1 bg-blue-500 px-4 py-3 rounded-lg items-center`}>
+                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
                   <Text style={tw`text-white font-medium`}>Save Task</Text>
                 </TouchableOpacity>
               </View>
