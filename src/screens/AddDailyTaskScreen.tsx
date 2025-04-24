@@ -512,7 +512,7 @@ const AddDailyTaskScreen = () => {
 
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
-              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-3`}>
+              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-4`}>
                   <Image
@@ -695,7 +695,7 @@ const AddDailyTaskScreen = () => {
                         ? tw`bg-green-600`
                         : tw`bg-blue-500`,
                     ]}>
-                    <Text style={tw`text-white font-bold right-2`}>Weekly</Text>
+                    <Text style={tw`text-white font-bold right-3`}>Weekly</Text>
                   </TouchableOpacity>
 
                   {/* Monthly Button */}
@@ -767,14 +767,28 @@ const AddDailyTaskScreen = () => {
                     }}
                   />
                 )}
-                {/* Add to Routine Button */}
+                <View>
+                  {/* Add to Routine Button */}
                 <TouchableOpacity
                   onPress={handleSaveTask}
-                  style={tw`bg-blue-500 py-2 rounded-lg`}>
-                  <Text style={tw`text-white text-center font-semibold`}>
+                  style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
+                  <Text style={tw`text-white text-center font-semibold `}>
                     Add to Daily Routine
                   </Text>
                 </TouchableOpacity>
+                {/* Toggle Button */}
+                <TouchableOpacity
+                  onPress={() =>
+                    setExpandedTask(expandedTask === task ? null : task)
+                  }
+                  style={tw`p-3 rounded-lg left-72 bottom-6`}>
+                  <Icon
+                    name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
+                    size={24}
+                    color="#8D99AE" // Blue Color
+                  />
+                </TouchableOpacity>
+                </View>
                 {/* modal */}
                 <Modal
                   visible={showSuccessModal}
@@ -809,18 +823,7 @@ const AddDailyTaskScreen = () => {
                     </View>
                   </View>
                 </Modal>
-                {/* Toggle Button */}
-                <TouchableOpacity
-                  onPress={() =>
-                    setExpandedTask(expandedTask === task ? null : task)
-                  }
-                  style={tw`p-3 rounded-lg`}>
-                  <Icon
-                    name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
-                    size={24}
-                    color="#3B82F6" // Blue Color
-                  />
-                </TouchableOpacity>
+                
               </View>
             )}
           </View>
