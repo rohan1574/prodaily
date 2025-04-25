@@ -31,6 +31,7 @@ interface Task {
   selectedMonths?: string[]; // বার্ষিক মাস (যেমন: ['January', 'December'])
 }
 const TodaysTaskToDoScreen = () => {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -150,54 +151,30 @@ const TodaysTaskToDoScreen = () => {
 
     fetchAndFilterTasks();
   }, []);
-  // Delete task handler
-  const handleDelete = async (id: string) => {
-    Alert.alert(
-      'Delete Task',
-      'Are you sure you want to delete this task?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const storedTasks = await AsyncStorage.getItem('tasks');
-              const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-              const updatedList = taskList.filter(
-                (task: any) => task.id !== id,
-              );
-              await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-              setTasks(updatedList);
-            } catch (error) {
-              console.error('Error deleting task:', error);
-            }
-          },
-        },
-      ],
-      {cancelable: true},
-    );
-  };
+ 
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-       {/* Header */}
-            <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
-              <View>
-                <Text style={tw`text-white text-lg font-bold`}>Today</Text>
-                <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
-              </View>
-              <View style={tw`flex-row items-center`}>
-                <Image
-                  source={require('../../assets/images/sun.png')}
-                  style={tw`w-10 h-10 rounded-full mr-3`}
-                />
-                <View>
-                  <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-                  <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
-                </View>
-              </View>
-            </View>
+      {/* Header */}
+      <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
+        <View>
+          <Text style={tw`text-white text-lg font-bold`}>Today</Text>
+          <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
+          <Text style={tw`text-2xl font-semibold my-4`}>
+            {selectedDate.toDateString()}
+          </Text>
+        </View>
+        <View style={tw`flex-row items-center`}>
+          <Image
+            source={require('../../assets/images/sun.png')}
+            style={tw`w-10 h-10 rounded-full mr-3`}
+          />
+          <View>
+            <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
+            <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
+          </View>
+        </View>
+      </View>
 
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
@@ -220,6 +197,10 @@ const TodaysTaskToDoScreen = () => {
                       color={task.completed ? 'green' : 'gray'}
                     />
                   </TouchableOpacity>
+                  {task.icon && (
+                    <Image source={task.icon} style={tw`w-6 h-8 right-12`} />
+                  )}
+                  <Text style={tw`text-lg font-bold right-24`}>{task.name}</Text>
 
                   <TouchableOpacity onPress={() => toggleStar(task.id)}>
                     <Icon
@@ -230,75 +211,67 @@ const TodaysTaskToDoScreen = () => {
                   </TouchableOpacity>
                 </View>
 
-                <View style={tw`mt-2`}>
-                  {task.icon && (
-                    <Image source={task.icon} style={tw`w-10 h-10 mb-2`} />
-                  )}
-                  <Text style={tw`text-lg font-bold`}>{task.name}</Text>
-
-                  {(!task.scheduleType || task.scheduleType === '') &&
+                <View style={tw``}>
+                  
+                  {/* ডেইলি রুটিন ট্যাগ */}
+                  {!task.scheduleType &&
                     !task.endDate &&
-                    (!task.selectedDays || task.selectedDays.length === 0) &&
-                    (!task.selectedDate || task.selectedDate.length === 0) &&
-                    (!task.selectedDates || task.selectedDates.length === 0) &&
-                    (!task.selectedMonths ||
-                      task.selectedMonths.length === 0) && (
+                    !task.selectedDays?.length &&
+                    !task.selectedDate?.length &&
+                    !task.selectedDates?.length &&
+                    !task.selectedMonths?.length && (
                       <Text style={tw`text-sm text-green-700 mb-1`}>
                         🔁 This task is part of your Daily Routine
                       </Text>
                     )}
 
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Set Daily Target: {task.dailyTarget || 'N/A'}
-                  </Text>
-
-                  {/* Add Specific For */}
-                  {task.specificFor && task.specificForValue ? (
+                  {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
+                  {task.dailyTarget && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Add Specific For: {task.specificForValue}{' '}
-                      {task.specificFor}
-                    </Text>
-                  ) : (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Add Specific For: N/A
+                      Set Daily Target:{' '}
+                      {task.dailyTarget
+                        ? `${task.dailyTarget} ${task.targetType}`
+                        : 'N/A'}
                     </Text>
                   )}
 
-                  {/* Add Specific Day On (Weekly) */}
+                  {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
+                  {task.specificFor && task.specificForValue && (
+                    <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      Specific For: {task.specificForValue} {task.specificFor}
+                    </Text>
+                  )}
+
+                  {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
                   {task.selectedDays?.length > 0 && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Add Specific Day On (Weekly):{' '}
-                      {task.selectedDays.join(', ')} {task.selectedDate}
+                      Weekly: {task.selectedDays.join(', ')}
                     </Text>
                   )}
 
-                  {/* Add Specific Day On (Monthly) */}
+                  {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
                   {task.selectedDate?.length > 0 && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Add Specific Day On (Monthly):{' '}
-                      {task.selectedDate.join(', ')}
+                      Monthly: {task.selectedDate.join(', ')}
                     </Text>
                   )}
 
-                  {/* Add Specific Day On (Yearly) */}
-                  {task.selectedDates &&
-                    task.selectedDates.length > 0 &&
-                    task.selectedMonths &&
-                    task.selectedMonths.length > 0 && (
+                  {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
+                  {task.selectedDates?.length > 0 &&
+                    task.selectedMonths?.length > 0 && (
                       <Text style={tw`text-sm text-gray-600 mb-1`}>
-                        Selected Dates: {task.selectedDates.join(', ')},{' '}
+                        Yearly: {task.selectedDates.join(', ')} -{' '}
                         {task.selectedMonths.join(', ')}
                       </Text>
                     )}
-                </View>
 
-                <TouchableOpacity
-                  onPress={() => handleDelete(task.id)}
-                  style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
-                  <Text style={tw`text-white text-center font-semibold`}>
-                    Delete Task
-                  </Text>
-                </TouchableOpacity>
+                  {/* সময়সীমা (শুধু endDate থাকলে) */}
+                  {task.endDate && (
+                    <Text style={tw`text-sm text-purple-600 mt-2`}>
+                      Valid until: {new Date(task.endDate).toLocaleDateString()}
+                    </Text>
+                  )}
+                </View>
               </View>
             ))
           )}

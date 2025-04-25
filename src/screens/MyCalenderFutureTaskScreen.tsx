@@ -7,6 +7,7 @@ import {
   Alert,
   Modal,
   TextInput,
+  Image,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,8 +18,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const MyCalenderFutureTaskScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [editingTask, setEditingTask] = useState<any | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const toggleStar = async (taskId: string) => {
     try {
@@ -138,90 +137,89 @@ const MyCalenderFutureTaskScreen = () => {
             </Text>
           ) : (
             tasks.map((task: any) => (
-              <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                {/* টাস্ক ডিটেইলস এবং একশন বাটন */}
-                <Text style={tw`text-lg font-bold mb-1`}>{task.name}</Text>
-                <Text style={tw`text-sm text-gray-600`}>
-                  {task.dailyTarget}
-                </Text>
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Set Daily Target: {task.dailyTarget || 'N/A'}
-                </Text>
-                <Text style={tw`text-lg font-bold mb-1`}>
-                  Task ID: {task.id}
-                </Text>
-                {/* star icon */}
-                                <TouchableOpacity
-                                  onPress={() => toggleStar(task.id)}
-                                  style={tw`absolute top-3 right-3`}>
-                                  <Icon
-                                    name={task.isStarred ? 'star' : 'star-outline'}
-                                    size={24}
-                                    color={task.isStarred ? 'gold' : 'gray'}
-                                  />
-                                </TouchableOpacity>
+              <View
+                key={task.id}
+                style={tw`bg-gray-100 p-4 mb-4 rounded-lg relative`}>
+                {/* টাস্ক নাম ও স্টার আইকন */}
+                {task.icon && (
+                  <View style={tw`flex-row items-center gap-2 mb-2`}>
+                    <Image source={task.icon} style={tw`w-8 h-8`} />
+                    <Text style={tw`text-lg font-bold`}>{task.name}</Text>
+                  </View>
+                )}
 
-                {(!task.scheduleType || task.scheduleType === '') &&
+                {!task.icon && (
+                  <Text style={tw`text-lg font-bold mb-2`}>{task.name}</Text>
+                )}
+
+                <TouchableOpacity
+                  onPress={() => toggleStar(task.id)}
+                  style={tw`absolute top-3 right-3`}>
+                  <Icon
+                    name={task.isStarred ? 'star' : 'star-outline'}
+                    size={24}
+                    color={task.isStarred ? 'gold' : 'gray'}
+                  />
+                </TouchableOpacity>
+
+                {/* ডেইলি রুটিন ট্যাগ */}
+                {!task.scheduleType &&
                   !task.endDate &&
-                  (!task.selectedDays || task.selectedDays.length === 0) &&
-                  (!task.selectedDate || task.selectedDate.length === 0) &&
-                  (!task.selectedDates || task.selectedDates.length === 0) &&
-                  (!task.selectedMonths ||
-                    task.selectedMonths.length === 0) && (
+                  !task.selectedDays?.length &&
+                  !task.selectedDate?.length &&
+                  !task.selectedDates?.length &&
+                  !task.selectedMonths?.length && (
                     <Text style={tw`text-sm text-green-700 mb-1`}>
                       🔁 This task is part of your Daily Routine
                     </Text>
                   )}
 
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Set Daily Target: {task.dailyTarget || 'N/A'}
-                </Text>
-
-                {/* Add Specific For */}
-                {task.specificFor && task.specificForValue ? (
+                {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
+                {task.dailyTarget && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: {task.specificForValue} {task.specificFor}
-                  </Text>
-                ) : (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: N/A
+                    Set Daily Target:{' '}
+                    {task.dailyTarget
+                      ? `${task.dailyTarget} ${task.targetType}`
+                      : 'N/A'}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Weekly) */}
+                {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
+                {task.specificFor && task.specificForValue && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Specific For: {task.specificForValue} {task.specificFor}
+                  </Text>
+                )}
+
+                {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
                 {task.selectedDays?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Weekly): {task.selectedDays.join(', ')}
+                    Weekly: {task.selectedDays.join(', ')}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Monthly) */}
+                {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
                 {task.selectedDate?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Monthly):{' '}
-                    {task.selectedDate.join(', ')}
+                    Monthly: {task.selectedDate.join(', ')}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Yearly) */}
-                {task.selectedDates &&
-                  task.selectedDates.length > 0 &&
-                  task.selectedMonths &&
-                  task.selectedMonths.length > 0 && (
+                {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
+                {task.selectedDates?.length > 0 &&
+                  task.selectedMonths?.length > 0 && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Selected Dates: {task.selectedDates.join(', ')},{' '}
+                      Yearly: {task.selectedDates.join(', ')} -{' '}
                       {task.selectedMonths.join(', ')}
                     </Text>
                   )}
 
-                {/* শিডিউল টাইপ ইনফো */}
+                {/* সময়সীমা (শুধু endDate থাকলে) */}
                 {task.endDate && (
                   <Text style={tw`text-sm text-purple-600 mt-2`}>
-                    Valid until: {new Date(task.endDate).toDateString()}
+                    Valid until: {new Date(task.endDate).toLocaleDateString()}
                   </Text>
                 )}
-
-                {/* বাকি UI কম্পোনেন্ট */}
               </View>
             ))
           )}

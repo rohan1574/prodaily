@@ -363,11 +363,16 @@ const AddDailyTaskScreen = () => {
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
       <View style={tw`mb-4`}>
-        <Text style={[tw` font-bold text-black`,{fontSize:24}]}>Add Daily Task</Text>
-        <Text style={[tw`font-light text-black`,{fontSize:15}]}>
-        Add task, which you want to include in your daily routine. Make them Compulsory to make your every day productive .
+        <Text style={[tw` font-bold text-black`, {fontSize: 24}]}>
+          Add Daily Task
         </Text>
-        <Text style={tw`text-base top-2 font-bold text-zinc-800`}>Categories</Text>
+        <Text style={[tw`font-light text-black`, {fontSize: 15}]}>
+          Add task, which you want to include in your daily routine. Make them
+          Compulsory to make your every day productive .
+        </Text>
+        <Text style={tw`text-base top-2 font-bold text-zinc-800`}>
+          Categories
+        </Text>
       </View>
 
       {/* Horizontal Scrollable Categories (Fixed) */}
@@ -499,9 +504,7 @@ const AddDailyTaskScreen = () => {
                   }
                   style={tw`mr-4 w-6 h-6`}
                 />
-                <Text style={tw`text-sm font-medium text-black`}>
-                  {task}
-                </Text>
+                <Text style={tw`text-sm font-medium text-black`}>{task}</Text>
               </View>
               <Icon
                 name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
@@ -512,26 +515,30 @@ const AddDailyTaskScreen = () => {
 
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
-              <View style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`}>
+              <View
+                style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`}>
                 {/* Header */}
-                <View style={tw`flex-row items-center mb-4`}>
+                <View style={tw`flex-row items-center mb-12`}>
                   <Image
-                    source={tasksData[selectedCategory][expandedTask]}
-                    style={tw`mr-3`} // Adjust the size of the image
+                    source={
+                      tasksData[selectedCategory][expandedTask] ||
+                      customTasksData[selectedCategory]?.[expandedTask]
+                    }
+                    style={tw`w-6 h-6 mr-3`} // সংশোধিত লাইন
                   />
                   <Text style={tw`text-lg font-semibold ml-2 text-slate-800`}>
                     {expandedTask}
                   </Text>
                   {/* star icon */}
                   <View style={tw`left-48`}>
-                  <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
-                    <Icon
-                      name={isStarred ? 'star' : 'star-outline'}
-                      size={24}
-                      color={isStarred ? 'gold' : 'gray'}
-                      style={tw`mr-2`}
-                    />
-                  </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
+                      <Icon
+                        name={isStarred ? 'star' : 'star-outline'}
+                        size={24}
+                        color={isStarred ? 'gold' : 'gray'}
+                        style={tw`mr-2`}
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
                 {/* Add Specific For */}
@@ -656,7 +663,9 @@ const AddDailyTaskScreen = () => {
                         onPress={() => setTargetType('Times')}>
                         <Text
                           style={tw`${
-                            targetType === 'Times' ? 'text-white font-bold' : 'text-gray-500 font-bold'
+                            targetType === 'Times'
+                              ? 'text-white font-bold'
+                              : 'text-gray-500 font-bold'
                           }`}>
                           Times
                         </Text>
@@ -678,7 +687,9 @@ const AddDailyTaskScreen = () => {
                       size={20}
                       color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                     />
-                    <Text style={tw`text-xs font-bold text-gray-500`}>Add Specific day on</Text>
+                    <Text style={tw`text-xs font-bold text-gray-500`}>
+                      Add Specific day on
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
@@ -710,7 +721,9 @@ const AddDailyTaskScreen = () => {
                         ? tw`bg-green-600`
                         : tw`bg-blue-500 `,
                     ]}>
-                    <Text style={tw`text-white font-bold right-2`}>Monthly</Text>
+                    <Text style={tw`text-white font-bold right-2`}>
+                      Monthly
+                    </Text>
                   </TouchableOpacity>
 
                   {/* Yearly Button */}
@@ -769,25 +782,27 @@ const AddDailyTaskScreen = () => {
                 )}
                 <View>
                   {/* Add to Routine Button */}
-                <TouchableOpacity
-                  onPress={handleSaveTask}
-                  style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
-                  <Text style={tw`text-white text-center font-semibold `}>
-                    Add to Daily Routine
-                  </Text>
-                </TouchableOpacity>
-                {/* Toggle Button */}
-                <TouchableOpacity
-                  onPress={() =>
-                    setExpandedTask(expandedTask === task ? null : task)
-                  }
-                  style={tw`p-3 rounded-lg left-72 bottom-6`}>
-                  <Icon
-                    name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
-                    size={24}
-                    color="#8D99AE" // Blue Color
-                  />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSaveTask}
+                    style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
+                    <Text style={tw`text-white text-center font-semibold `}>
+                      Add to Daily Routine
+                    </Text>
+                  </TouchableOpacity>
+                  {/* Toggle Button */}
+                  <TouchableOpacity
+                    onPress={() =>
+                      setExpandedTask(expandedTask === task ? null : task)
+                    }
+                    style={tw`p-3 rounded-lg left-72 bottom-6`}>
+                    <Icon
+                      name={
+                        expandedTask === task ? 'chevron-up' : 'chevron-down'
+                      }
+                      size={24}
+                      color="#8D99AE" // Blue Color
+                    />
+                  </TouchableOpacity>
                 </View>
                 {/* modal */}
                 <Modal
@@ -823,7 +838,6 @@ const AddDailyTaskScreen = () => {
                     </View>
                   </View>
                 </Modal>
-                
               </View>
             )}
           </View>

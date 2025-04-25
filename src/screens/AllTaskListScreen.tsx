@@ -7,6 +7,7 @@ import {
   Alert,
   Modal,
   TextInput,
+  Image,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -270,9 +271,16 @@ const AllTaskListScreen = () => {
           ) : (
             tasks.map((task: any) => (
               <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                <Text style={tw`text-lg font-bold mb-1`}>
-                  Task ID: {task.id}
-                </Text>
+                {task.icon && (
+                  <View style={tw`flex-row items-center gap-2 mb-2`}>
+                    <Image source={task.icon} style={tw`w-8 h-8`} />
+                    <Text style={tw`text-lg font-bold`}>{task.name}</Text>
+                  </View>
+                )}
+
+                {!task.icon && (
+                  <Text style={tw`text-lg font-bold mb-2`}>{task.name}</Text>
+                )}
                 {/* star icon */}
                 <TouchableOpacity
                   onPress={() => toggleStar(task.id)}
@@ -284,75 +292,84 @@ const AllTaskListScreen = () => {
                   />
                 </TouchableOpacity>
 
-                {(!task.scheduleType || task.scheduleType === '') &&
+                {/* ডেইলি রুটিন ট্যাগ */}
+                {!task.scheduleType &&
                   !task.endDate &&
-                  (!task.selectedDays || task.selectedDays.length === 0) &&
-                  (!task.selectedDate || task.selectedDate.length === 0) &&
-                  (!task.selectedDates || task.selectedDates.length === 0) &&
-                  (!task.selectedMonths ||
-                    task.selectedMonths.length === 0) && (
+                  !task.selectedDays?.length &&
+                  !task.selectedDate?.length &&
+                  !task.selectedDates?.length &&
+                  !task.selectedMonths?.length && (
                     <Text style={tw`text-sm text-green-700 mb-1`}>
                       🔁 This task is part of your Daily Routine
                     </Text>
                   )}
 
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Set Daily Target: {task.dailyTarget || 'N/A'}
-                </Text>
-
-                {/* Add Specific For */}
-                {task.specificFor && task.specificForValue ? (
+                {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
+                {task.dailyTarget && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: {task.specificForValue} {task.specificFor}
-                  </Text>
-                ) : (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific For: N/A
+                    Set Daily Target:{' '}
+                    {task.dailyTarget
+                      ? `${task.dailyTarget} ${task.targetType}`
+                      : 'N/A'}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Weekly) */}
+                {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
+                {task.specificFor && task.specificForValue && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Specific For: {task.specificForValue} {task.specificFor}
+                  </Text>
+                )}
+
+                {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
                 {task.selectedDays?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Weekly): {task.selectedDays.join(', ')}
+                    Weekly: {task.selectedDays.join(', ')}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Monthly) */}
+                {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
                 {task.selectedDate?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Add Specific Day On (Monthly):{' '}
-                    {task.selectedDate.join(', ')}
+                    Monthly: {task.selectedDate.join(', ')}
                   </Text>
                 )}
 
-                {/* Add Specific Day On (Yearly) */}
-                {task.selectedDates &&
-                  task.selectedDates.length > 0 &&
-                  task.selectedMonths &&
-                  task.selectedMonths.length > 0 && (
+                {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
+                {task.selectedDates?.length > 0 &&
+                  task.selectedMonths?.length > 0 && (
                     <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Selected Dates: {task.selectedDates.join(', ')},{' '}
+                      Yearly: {task.selectedDates.join(', ')} -{' '}
                       {task.selectedMonths.join(', ')}
                     </Text>
                   )}
 
-                {/* Delete Button */}
-                <TouchableOpacity
-                  onPress={() => handleDelete(task.id)}
-                  style={tw`bg-red-500 mt-3 py-2 rounded-lg`}>
-                  <Text style={tw`text-white text-center font-semibold`}>
-                    Delete
+                {/* সময়সীমা (শুধু endDate থাকলে) */}
+                {task.endDate && (
+                  <Text style={tw`text-sm text-purple-600 mt-2`}>
+                    Valid until: {new Date(task.endDate).toLocaleDateString()}
                   </Text>
-                </TouchableOpacity>
-                {/* update */}
-                <TouchableOpacity
-                  onPress={() => openUpdateModal(task)}
-                  style={tw`bg-blue-500 mt-3 py-2 rounded-lg`}>
-                  <Text style={tw`text-white text-center font-semibold`}>
-                    Update
-                  </Text>
-                </TouchableOpacity>
+                )}
+                {/* বাটন গ্রুপ */}
+                <View style={tw`flex-row mx-2 mt-3`}>
+                  {/* ডিলিট বাটন */}
+                  <TouchableOpacity
+                    onPress={() => handleDelete(task.id)}
+                    style={tw`flex-1 bg-red-500 py-2 mx-2 rounded-lg`}>
+                    <Text style={tw`text-white text-center font-semibold`}>
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* আপডেট বাটন */}
+                  <TouchableOpacity
+                    onPress={() => openUpdateModal(task)}
+                    style={tw`flex-1 bg-blue-500 py-2 mx-2 rounded-lg`}>
+                    <Text style={tw`text-white text-center font-semibold`}>
+                      Update
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))
           )}

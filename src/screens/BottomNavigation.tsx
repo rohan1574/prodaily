@@ -20,7 +20,7 @@ const BottomNavigation: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
 
   return (
-    <View style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
+    <View style={tw`flex-row justify-between  border-t border-gray-200 bg-white`}>
       <TouchableOpacity onPress={() => navigation.navigate('TodaysTaskToDoScreen')}>
         <Icon name="home-outline" size={28} color="gray" />
       </TouchableOpacity>

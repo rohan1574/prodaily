@@ -2,7 +2,7 @@ const tasksData: Record<string, any> = {
   Fitness: {
     Walking: require('../../assets/images/Walking.png'),
     Running: require('../../assets/images/Running.png'),
-    Swimming: require('../../assets/images/Swimming.png'),
+    Swimming: require('../../assets/images/swimming.png'),
     Cycling: require('../../assets/images/Cycling.png'),
     Yoga: require('../../assets/images/Yoga.png'),
     'Strength Workout': require('../../assets/images/StrengthWorkout.png'),
