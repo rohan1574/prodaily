@@ -6,10 +6,9 @@ import {
   ScrollView,
   Image,
   TextInput,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   Alert,
 } from 'react-native';
+import {Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -60,6 +59,9 @@ const categories = Object.keys(categoryIcons) as Category[];
 const CUSTOM_TASKS_KEY = 'custom_tasks';
 const CUSTOM_CATEGORIES_KEY = 'custom_categories';
 const AddDailyTaskScreen = () => {
+  // ডিভাইসের স্ক্রিন প্রস্থ পান
+  const {width: SCREEN_WIDTH} = Dimensions.get('window');
+  const CATEGORY_WIDTH = SCREEN_WIDTH / 4; // ৪টি ক্যাটাগরি দেখানোর জন্য
   const navigation = useNavigation<NavigationProp>();
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0],
@@ -128,13 +130,11 @@ const AddDailyTaskScreen = () => {
   }, []);
 
   // Merge default and custom categories
-  const mergedIcons = {...categoryIcons, ...customCategories};
+  const mergedIcons: {[key: string]: any} = {
+    ...categoryIcons,
+    ...customCategories,
+  };
   const allCategories = Object.keys(mergedIcons);
-  const infiniteCategories = [
-    ...allCategories,
-    ...allCategories,
-    ...allCategories,
-  ];
 
   // Save custom category
   const saveCustomCategory = async () => {
@@ -253,7 +253,7 @@ const AddDailyTaskScreen = () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
     const icon =
-      tasksData[selectedCategory][taskName] ||
+      tasksData[selectedCategory]?.[taskName] || // Optional Chaining এখানে
       customTasksData[selectedCategory]?.[taskName];
     // Initialize task data object
     const taskData: any = {
@@ -337,28 +337,6 @@ const AddDailyTaskScreen = () => {
       console.error('Error saving task:', error); // Handle any errors
     }
   };
-
-  // Handle scrolling and auto-select first visible category
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const scrollX = event.nativeEvent.contentOffset.x;
-    const categoryWidth = 80; // Approximate width of each category item
-
-    const firstVisibleIndex =
-      Math.round(scrollX / categoryWidth) % categories.length;
-    setSelectedCategory(categories[firstVisibleIndex]);
-  };
-
-  // Infinite Scroll Effect
-  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const scrollX = event.nativeEvent.contentOffset.x;
-    const categoryWidth = 80;
-    const totalWidth = categoryWidth * categories.length;
-
-    if (scrollX >= totalWidth) {
-      scrollViewRef.current?.scrollTo({x: 0, animated: false});
-    }
-  };
-
   return (
     <View style={tw`flex-1 bg-red-50 p-4`}>
       {/* Header */}
@@ -376,18 +354,26 @@ const AddDailyTaskScreen = () => {
       </View>
 
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View>
+      <View style={tw`left-8`}>
         <ScrollView
-          ref={scrollViewRef}
           horizontal
           showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          onMomentumScrollEnd={handleScrollEnd}
-          scrollEventThrottle={16}>
-          {infiniteCategories.map((category, index) => (
+          snapToInterval={CATEGORY_WIDTH}
+          snapToAlignment="start"
+          decelerationRate="fast"
+          onScroll={event => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const selectedIndex = Math.round(offsetX / CATEGORY_WIDTH);
+            const category = allCategories[selectedIndex];
+            if (category) setSelectedCategory(category);
+          }}
+          scrollEventThrottle={2}
+          contentContainerStyle={tw`pb-2`}>
+          {/* Render all categories */}
+          {allCategories.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={tw`items-center mr-2`}
+              style={tw`items-center `}
               onPress={() => setSelectedCategory(category)}>
               <View
                 style={[
@@ -411,6 +397,23 @@ const AddDailyTaskScreen = () => {
               </Text>
             </TouchableOpacity>
           ))}
+
+          {/* Custom Category Button - Now inside ScrollView */}
+          <TouchableOpacity
+            onPress={() => {
+              setIsCustomCategoryModalVisible(true);
+              setNewCategoryName('');
+              setSelectedCategoryIcon(null);
+            }}
+            style={tw`items-center mr-2`}>
+            <View
+              style={tw`w-20 h-20 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
+              <Icon name="add" size={32} color="#6B7280" />
+            </View>
+            <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>
+              Add Custom
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
         {/* Custom Category Modal */}
         <Modal
@@ -467,26 +470,11 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
-
-        {/* Custom Category Button */}
-        <TouchableOpacity
-          onPress={() => {
-            setIsCustomCategoryModalVisible(true);
-            setNewCategoryName('');
-            setSelectedCategoryIcon(null);
-          }}
-          style={tw`flex-row items-center bg-green-100 p-4 rounded-lg mt-4`}>
-          <Icon name="add-circle-outline" size={28} color="#3B82F6" />
-          <Text style={tw`ml-2 text-green-600 font-semibold`}>
-            Create Custom Category
-          </Text>
-        </TouchableOpacity>
       </View>
-
       {/* Task List (Scrollable) */}
       <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
         {Object.keys({
-          ...tasksData[selectedCategory],
+          ...(tasksData[selectedCategory] || {}),
           ...(customTasksData[selectedCategory] || {}),
         }).map((task, index) => (
           <View key={index} style={tw`mb-2`}>
@@ -499,8 +487,8 @@ const AddDailyTaskScreen = () => {
               <View style={tw`flex-row items-center`}>
                 <Image
                   source={
-                    tasksData[selectedCategory][task] ||
-                    customTasksData[selectedCategory][task]
+                    tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
+                    customTasksData[selectedCategory]?.[task]
                   }
                   style={tw`mr-4 w-6 h-6`}
                 />
@@ -521,7 +509,7 @@ const AddDailyTaskScreen = () => {
                 <View style={tw`flex-row items-center mb-12`}>
                   <Image
                     source={
-                      tasksData[selectedCategory][expandedTask] ||
+                      tasksData[selectedCategory]?.[expandedTask] ||
                       customTasksData[selectedCategory]?.[expandedTask]
                     }
                     style={tw`w-6 h-6 mr-3`} // সংশোধিত লাইন
