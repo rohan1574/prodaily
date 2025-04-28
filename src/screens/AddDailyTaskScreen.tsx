@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
 import {Modal} from 'react-native';
+import SvgComponent from '../../assets/svg/class-attending';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -485,13 +486,14 @@ const AddDailyTaskScreen = () => {
               }}
               style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
               <View style={tw`flex-row items-center`}>
-                <Image
+                {/* <Image
                   source={
                     tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
                     customTasksData[selectedCategory]?.[task]
                   }
                   style={tw`mr-4 w-6 h-6`}
-                />
+                /> */}
+                <SvgComponent color="#000" />
                 <Text style={tw`text-sm font-medium text-black`}>{task}</Text>
               </View>
               <Icon
