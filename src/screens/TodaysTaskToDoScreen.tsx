@@ -70,7 +70,7 @@ const TodaysTaskToDoScreen = () => {
       // সাপ্তাহিক টাস্ক চেক
       if ((task.selectedDays?.length ?? 0) > 0) {
         const todayName = currentDate.toLocaleDateString('en-US', {
-          weekday: 'long',
+          weekday: 'short',
         });
         return task.selectedDays?.includes(todayName) ?? false; // Optional Chaining + Nullish Coalescing
       }

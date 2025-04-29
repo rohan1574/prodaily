@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,8 @@ import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
 import {Modal} from 'react-native';
-import SvgComponent from '../../assets/svg/class-attending';
+import { ColorContext } from '../context/ColorContext';
+
 
 // Define the navigation type
 type RootStackParamList = {
@@ -36,6 +37,7 @@ type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'TodaysTaskToDoScreen'
 >;
+
 // List of categories
 type Category =
   | 'Fitness'
@@ -112,6 +114,14 @@ const AddDailyTaskScreen = () => {
     useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
+  const colorContext = useContext(ColorContext);
+
+  if (!colorContext) {
+    throw new Error('ColorContext is not available. Wrap your component in <ColorProvider>.');
+  }
+
+  const { selectedColor } = colorContext;
+
   // Load custom data
   useEffect(() => {
     const loadData = async () => {
@@ -472,6 +482,7 @@ const AddDailyTaskScreen = () => {
           </View>
         </Modal>
       </View>
+      
       {/* Task List (Scrollable) */}
       <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
         {Object.keys({
@@ -484,17 +495,20 @@ const AddDailyTaskScreen = () => {
                 setExpandedTask(expandedTask === task ? null : task);
                 setTaskName(task);
               }}
-              style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg`}>
+              style={[tw`flex-row items-center justify-between bg-white p-3 rounded-lg`,{ bg: selectedColor }]}>
               <View style={tw`flex-row items-center`}>
-                {/* <Image
+                <Image
                   source={
                     tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
                     customTasksData[selectedCategory]?.[task]
                   }
-                  style={tw`mr-4 w-6 h-6`}
-                /> */}
-                <SvgComponent color="#000" />
-                <Text style={tw`text-sm font-medium text-black`}>{task}</Text>
+                  style={[
+                    tw`bottom-2 h-auto mt-4 mr-6`,
+                    { tintColor: selectedColor ,width:32,height:32}
+                  ]}
+                />
+               
+                <Text style={[tw`text-sm font-medium text-black`,{ color: selectedColor }]}>{task}</Text>
               </View>
               <Icon
                 name={expandedTask === task ? 'chevron-up' : 'chevron-down'}

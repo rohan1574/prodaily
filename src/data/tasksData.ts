@@ -1,12 +1,12 @@
 const tasksData: Record<string, any> = {
   Fitness: {
     Walking: require('../../assets/images/Walking.png'),
-    Running: require('../../assets/images/Running.png'),
-    Swimming: require('../../assets/images/swimming.png'),
-    Cycling: require('../../assets/images/Cycling.png'),
-    Yoga: require('../../assets/images/Yoga.png'),
-    'Strength Workout': require('../../assets/images/StrengthWorkout.png'),
-    'Stretching Workout': require('../../assets/images/StretchingWorkout.png'),
+    Running: require('../../assets/images/swimming.png'),
+    Acrobatics: require('../../assets/images/acrobatics.png'),
+    Cycling: require('../../assets/images/cycling.png'),
+    Yoga: require('../../assets/images/yoga.png'),
+    'Strength Workout': require('../../assets/images/stretching.png'),
+    'Run': require('../../assets/images/run.png'),
     'High Intensive Interval Trainning': require('../../assets/images/High.png'),
     'Rope Jumping': require('../../assets/images/RopeJumping.png'),
     'Dance Workout': require('../../assets/images/DanceWorkout.png'),

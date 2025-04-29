@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
+import {ColorContext} from '../context/ColorContext';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -22,7 +23,12 @@ type NavigationProp = StackNavigationProp<
 const ProfileManageScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [showSignOut, setShowSignOut] = useState(false);
+  const context = useContext(ColorContext);
+  if (!context) {
+    throw new Error('ColorContext is not available');
+  }
 
+  const {setSelectedColor} = context;
   return (
     <View style={tw`flex-1 bg-gray-100`}>
       {/* Fixed Header Section */}
@@ -76,7 +82,6 @@ const ProfileManageScreen = () => {
             </Text>
           </TouchableOpacity>
         )}
-
         {/* Themes Section with Colors */}
         <View
           style={tw`p-4 bg-white mb-2 rounded-xl shadow flex-row items-center`}>
@@ -87,19 +92,24 @@ const ProfileManageScreen = () => {
             style={tw`mr-4`}
           />
           <Text style={tw`text-gray-700 text-base mr-4`}>Themes</Text>
-          {['blue', 'black', 'red', 'green', 'yellow', 'pink'].map(
-            (color, index) => (
+
+          {['blue', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
+            <TouchableOpacity
+              key={color}
+              onPress={() => setSelectedColor(color)}
+              style={tw`items-center mx-1`}>
+              {/* Color Circle */}
               <View
-                key={index}
                 style={[
-                  tw`w-6 h-6 rounded-full mx-1`,
+                  tw`w-6 h-6 rounded-full mb-1`,
                   {backgroundColor: color},
                 ]}
               />
-            ),
-          )}
+              {/* Color Text */}
+              {/* <Text style={{color, fontSize: 10}}>bg {color}</Text> */}
+            </TouchableOpacity>
+          ))}
         </View>
-
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon

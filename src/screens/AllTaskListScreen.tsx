@@ -5,9 +5,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  Modal,
   TextInput,
   Image,
+  Modal,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,546 +16,452 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
-  const [editingTask, setEditingTask] = useState<any | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  //  star
-  const toggleStar = async (taskId: string) => {
-    try {
-      const storedTasks = await AsyncStorage.getItem('tasks');
-      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-
-      const updatedList = taskList.map((task: any) => {
-        if (task.id === taskId) {
-          return {...task, isStarred: !task.isStarred};
-        }
-        return task;
-      });
-
-      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-      setTasks(updatedList); // Update UI
-    } catch (error) {
-      console.error('Error toggling star:', error);
-    }
-  };
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [editedTask, setEditedTask] = useState<any>({});
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
         const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-
-        const currentDate = new Date();
-        const startOfWeek = new Date(currentDate); // Start of the week (today)
-        const endOfWeek = new Date(currentDate); // End of the week (Sunday)
-
-        // Set the start date to today at 00:00:00
-        startOfWeek.setHours(0, 0, 0, 0);
-
-        // Set the end date to Sunday of the current week at 23:59:59
-        endOfWeek.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Set it to Sunday
-        endOfWeek.setHours(23, 59, 59, 999); // Set to the last moment of Sunday
-
-        console.log('Start Date:', startOfWeek);
-        console.log('End Date:', endOfWeek);
-
-        // 🟢 যদি ইউজার কোনো schedule টাইপ সিলেক্ট না করে — মানে এটা Daily Routine
-        const filteredTasks = taskList.filter((task: any) => {
-          const isDailyRoutineTask =
-            (!task.scheduleType || task.scheduleType === '') &&
-            !task.endDate &&
-            (!task.selectedDays || task.selectedDays.length === 0) &&
-            (!task.selectedDate || task.selectedDate.length === 0) &&
-            (!task.selectedDates || task.selectedDates.length === 0) &&
-            (!task.selectedMonths || task.selectedMonths.length === 0);
-          // add daily
-          if (isDailyRoutineTask) {
-            return true; // Show every day
-          }
-          // Add Specific For
-          if (task.endDate) {
-            const taskEndDate = new Date(task.endDate);
-            taskEndDate.setHours(0, 0, 0, 0); // Adjust endDate for proper comparison
-            return taskEndDate >= currentDate;
-          }
-          // Add Specific Day On (Weekly)
-          if (task.selectedDays && task.selectedDays.length > 0) {
-            const taskDates = task.selectedDays.map((day: string) => {
-              const taskDate = new Date(currentDate); // Use current date as reference
-              let dayOffset = taskDate.getDay();
-
-              // Map the day names to corresponding offsets
-              switch (day) {
-                case 'Sun':
-                  dayOffset = 0;
-                  break;
-                case 'Mon':
-                  dayOffset = 1;
-                  break;
-                case 'Tue':
-                  dayOffset = 2;
-                  break;
-                case 'Wed':
-                  dayOffset = 3;
-                  break;
-                case 'Thu':
-                  dayOffset = 4;
-                  break;
-                case 'Fri':
-                  dayOffset = 5;
-                  break;
-                case 'Sat':
-                  dayOffset = 6;
-                  break;
-              }
-
-              // Find the next date for the selected day (this will repeat indefinitely)
-              const targetDate = new Date(
-                taskDate.setDate(
-                  taskDate.getDate() + (dayOffset - taskDate.getDay()),
-                ),
-              );
-
-              // Adjust targetDate to always show from today onward
-              if (targetDate < new Date()) {
-                targetDate.setDate(targetDate.getDate() + 7); // If the target date is in the past, show it for the next week
-              }
-
-              return targetDate;
-            });
-
-            // Check if any task date is today or in the future (to show indefinitely from today onwards)
-            return taskDates.some((taskDate: Date) => {
-              const today = new Date();
-              today.setHours(0, 0, 0, 0); // Reset the time to midnight to compare only the date
-              return taskDate >= today; // Task is shown if it's today or in the future
-            });
-          }
-
-          // Add Specific Day On (Monthly)
-          if (task.selectedDate?.length > 0) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Set the time to midnight
-
-            const matchingDates: Date[] = [];
-
-            // Loop through the next 30 days and find the matching dates
-            for (let i = 0; i < 30; i++) {
-              const current = new Date();
-              current.setDate(today.getDate() + i);
-              current.setHours(0, 0, 0, 0);
-              const dayOfMonth = current.getDate();
-
-              if (task.selectedDate.includes(dayOfMonth)) {
-                matchingDates.push(current);
-              }
-            }
-
-            // Show tasks from today onwards indefinitely, regardless of the selected date
-            return matchingDates.some((taskDate: Date) => {
-              return taskDate >= today; // Show tasks from today onwards indefinitely
-            });
-          }
-
-          // Add Specific Day On (Yearly)
-          if (
-            task.selectedDates?.length > 0 &&
-            task.selectedMonths?.length > 0
-          ) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Set the time to midnight
-
-            const yearlyMatchingDates: Date[] = [];
-
-            // Loop through the entire year from today onward
-            for (
-              let d = new Date(today);
-              d.getFullYear() === today.getFullYear() ||
-              d.getFullYear() === today.getFullYear() + 1;
-              d.setDate(d.getDate() + 1)
-            ) {
-              const day = d.getDate(); // 1 - 31
-              const monthName = d.toLocaleString('default', {month: 'short'}); // 'Jan', 'Feb', etc.
-
-              // If the selected day and month match the current date
-              if (
-                task.selectedDates.includes(day) &&
-                task.selectedMonths.includes(monthName)
-              ) {
-                const dateMatch = new Date(d);
-                dateMatch.setHours(0, 0, 0, 0); // Set to midnight
-                yearlyMatchingDates.push(dateMatch);
-              }
-            }
-
-            // Show tasks from today onwards indefinitely
-            return yearlyMatchingDates.some((taskDate: Date) => {
-              return taskDate >= today; // Show from today onwards indefinitely
-            });
-          }
-
-          return false;
-        });
-
-        setTasks(filteredTasks);
+        setTasks(taskList);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       } finally {
-        setLoading(false); // Set loading to false after fetch is complete
+        setLoading(false);
       }
     };
-
     fetchTasks();
-  }, []); // Trigger on initial load
+  }, []);
 
-  const handleDelete = async (id: string) => {
-    Alert.alert(
-      'Delete Task',
-      'Are you sure you want to delete this task?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const storedTasks = await AsyncStorage.getItem('tasks');
-              const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-              const updatedList = taskList.filter(
-                (task: any) => task.id !== id,
-              );
-              await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-              setTasks(updatedList);
-            } catch (error) {
-              console.error('Error deleting task:', error);
-            }
-          },
-        },
-      ],
-      {cancelable: true},
+  const toggleStar = async (taskId: string) => {
+    const updatedTasks = tasks.map(task =>
+      task.id === taskId ? {...task, isStarred: !task.isStarred} : task,
     );
-  };
-  const openUpdateModal = (task: any) => {
-    setEditingTask({...task}); // clone task
-    setModalVisible(true);
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
   };
 
-  const handleUpdateTask = async () => {
+  const toggleExpansion = (taskId: string) => {
+    setExpandedTaskId(prev => (prev === taskId ? null : taskId));
+    const task = tasks.find(t => t.id === taskId);
+    setEditedTask(task || {});
+  };
+
+  const handleUpdateTask = async (taskId: string) => {
     try {
-      const storedTasks = await AsyncStorage.getItem('tasks');
-      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
-
-      const updatedList = taskList.map((task: any) =>
-        task.id === editingTask.id ? editingTask : task,
+      const updatedTasks = tasks.map(task =>
+        task.id === taskId ? editedTask : task,
       );
-
-      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-      setTasks(updatedList);
-      setModalVisible(false);
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      setTasks(updatedTasks);
+      setExpandedTaskId(null);
     } catch (error) {
       console.error('Error updating task:', error);
     }
   };
 
+  const handleDelete = async (taskId: string) => {
+    Alert.alert('Delete Task', 'Are you sure?', [
+      {text: 'Cancel', style: 'cancel'},
+      {
+        text: 'Delete',
+        onPress: async () => {
+          const updatedTasks = tasks.filter(task => task.id !== taskId);
+          await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+          setTasks(updatedTasks);
+        },
+      },
+    ]);
+  };
+
+  const handleSpecificForChange = (value: string) => {
+    const numericValue = parseInt(value) || 0;
+    setEditedTask({
+      ...editedTask,
+      specificForValue: numericValue,
+    });
+  };
+
+  const toggleDaySelection = (day: string) => {
+    const updatedDays = editedTask.selectedDays?.includes(day)
+      ? editedTask.selectedDays.filter((d: string) => d !== day)
+      : [...(editedTask.selectedDays || []), day];
+
+    setEditedTask({
+      ...editedTask,
+      selectedDays: updatedDays,
+    });
+  };
+  const handleTaskLongPress = (taskId: string) => {
+    setTaskToDelete(taskId);
+    setDeleteModalVisible(true);
+  };
+  // ডিলিট কনফার্মেশন মোডাল
+  const DeleteConfirmationModal = () => (
+    <Modal
+      visible={deleteModalVisible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={() => setDeleteModalVisible(false)}>
+      <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+        <View style={tw`bg-white p-6 rounded-xl w-full max-w-80`}>
+          <Text style={tw`text-lg font-bold mb-4 text-center`}>
+            Are you sure you want to delete this task?
+          </Text>
+
+          <View style={tw`flex-row justify-between gap-3`}>
+            <TouchableOpacity
+              style={tw`flex-1 bg-gray-300 py-2 rounded-lg`}
+              onPress={() => setDeleteModalVisible(false)}>
+              <Text style={tw`text-center`}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={tw`flex-1 bg-red-500 py-2 rounded-lg`}
+              onPress={async () => {
+                if (!taskToDelete) return;
+                const updatedTasks = tasks.filter(
+                  task => task.id !== taskToDelete,
+                );
+                await AsyncStorage.setItem(
+                  'tasks',
+                  JSON.stringify(updatedTasks),
+                );
+                setTasks(updatedTasks);
+                setDeleteModalVisible(false);
+              }}>
+              <Text style={tw`text-white text-center`}>Yes</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+
   return (
     <View style={tw`flex-1 bg-white p-4`}>
-      <Text style={tw`text-2xl font-semibold mb-4`}>All Tasks</Text>
+      <DeleteConfirmationModal />
+      <Text style={tw`text-2xl font-bold mb-4`}>All Tasks</Text>
+
       {loading ? (
-        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text> // Show loading text
+        <Text style={tw`text-center text-gray-500`}>Loading...</Text>
       ) : (
-        <ScrollView contentContainerStyle={tw`pb-10`}>
-          {tasks.length === 0 ? (
-            <Text style={tw`text-center text-gray-500`}>
-              No tasks available for the selected date range.
-            </Text>
-          ) : (
-            tasks.map((task: any) => (
-              <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
-                {task.icon && (
-                  <View style={tw`flex-row items-center gap-2 mb-2`}>
+        <ScrollView>
+          {tasks.map(task => (
+            <TouchableOpacity
+              key={task.id}
+              onLongPress={() => handleTaskLongPress(task.id)}
+              activeOpacity={0.8}
+              style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+              <View style={tw`flex-row justify-between items-center`}>
+                <View style={tw`flex-row items-center gap-2`}>
+                  {task.icon && (
                     <Image source={task.icon} style={tw`w-8 h-8`} />
-                    <Text style={tw`text-lg font-bold`}>{task.name}</Text>
-                  </View>
-                )}
-
-                {!task.icon && (
-                  <Text style={tw`text-lg font-bold mb-2`}>{task.name}</Text>
-                )}
-                {/* star icon */}
-                <TouchableOpacity
-                  onPress={() => toggleStar(task.id)}
-                  style={tw`absolute top-3 right-3`}>
-                  <Icon
-                    name={task.isStarred ? 'star' : 'star-outline'}
-                    size={24}
-                    color={task.isStarred ? 'gold' : 'gray'}
-                  />
-                </TouchableOpacity>
-
-                {/* ডেইলি রুটিন ট্যাগ */}
-                {!task.scheduleType &&
-                  !task.endDate &&
-                  !task.selectedDays?.length &&
-                  !task.selectedDate?.length &&
-                  !task.selectedDates?.length &&
-                  !task.selectedMonths?.length && (
-                    <Text style={tw`text-sm text-green-700 mb-1`}>
-                      🔁 This task is part of your Daily Routine
-                    </Text>
                   )}
+                  <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
+                </View>
 
-                {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
-                {task.dailyTarget && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Set Daily Target:{' '}
-                    {task.dailyTarget
-                      ? `${task.dailyTarget} ${task.targetType}`
-                      : 'N/A'}
-                  </Text>
-                )}
-
-                {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                {task.specificFor && task.specificForValue && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Specific For: {task.specificForValue} {task.specificFor}
-                  </Text>
-                )}
-
-                {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDays?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Weekly: {task.selectedDays.join(', ')}
-                  </Text>
-                )}
-
-                {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDate?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Monthly: {task.selectedDate.join(', ')}
-                  </Text>
-                )}
-
-                {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDates?.length > 0 &&
-                  task.selectedMonths?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Yearly: {task.selectedDates.join(', ')} -{' '}
-                      {task.selectedMonths.join(', ')}
-                    </Text>
-                  )}
-
-                {/* সময়সীমা (শুধু endDate থাকলে) */}
-                {task.endDate && (
-                  <Text style={tw`text-sm text-purple-600 mt-2`}>
-                    Valid until: {new Date(task.endDate).toLocaleDateString()}
-                  </Text>
-                )}
-                {/* বাটন গ্রুপ */}
-                <View style={tw`flex-row mx-2 mt-3`}>
-                  {/* ডিলিট বাটন */}
-                  <TouchableOpacity
-                    onPress={() => handleDelete(task.id)}
-                    style={tw`flex-1 bg-red-500 py-2 mx-2 rounded-lg`}>
-                    <Text style={tw`text-white text-center font-semibold`}>
-                      Delete
-                    </Text>
+                <View style={tw`flex-row items-center gap-2`}>
+                  <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                    <Icon
+                      name={task.isStarred ? 'star' : 'star-outline'}
+                      size={24}
+                      color={task.isStarred ? 'gold' : 'gray'}
+                    />
                   </TouchableOpacity>
 
-                  {/* আপডেট বাটন */}
-                  <TouchableOpacity
-                    onPress={() => openUpdateModal(task)}
-                    style={tw`flex-1 bg-blue-500 py-2 mx-2 rounded-lg`}>
-                    <Text style={tw`text-white text-center font-semibold`}>
-                      Update
-                    </Text>
+                  <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
+                    <Icon
+                      name={
+                        expandedTaskId === task.id
+                          ? 'chevron-down'
+                          : 'create-outline'
+                      }
+                      size={24}
+                      color="#4b5563"
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
-            ))
-          )}
+              {/* ডেইলি রুটিন ট্যাগ */}
+              {!task.scheduleType &&
+                !task.endDate &&
+                !task.selectedDays?.length &&
+                !task.selectedDate?.length &&
+                !task.selectedDates?.length &&
+                !task.selectedMonths?.length && (
+                  <Text style={tw`text-sm text-green-700 mb-1`}>
+                    🔁 This task is part of your Daily Routine
+                  </Text>
+                )}
+
+              {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
+              {task.dailyTarget && (
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Set Daily Target:{' '}
+                  {task.dailyTarget
+                    ? `${task.dailyTarget} ${task.targetType}`
+                    : 'N/A'}
+                </Text>
+              )}
+
+              {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
+              {task.specificFor && task.specificForValue && (
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  F_ {task.specificForValue}_ {task.specificFor}
+                </Text>
+              )}
+
+              {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
+              {task.selectedDays?.length > 0 && (
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Weekly: {task.selectedDays.join(', ')}
+                </Text>
+              )}
+
+              {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
+              {task.selectedDate?.length > 0 && (
+                <Text style={tw`text-sm text-gray-600 mb-1`}>
+                  Monthly: {task.selectedDate.join(', ')}
+                </Text>
+              )}
+
+              {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
+              {task.selectedDates?.length > 0 &&
+                task.selectedMonths?.length > 0 && (
+                  <Text style={tw`text-sm text-gray-600 mb-1`}>
+                    Yearly: {task.selectedDates.join(', ')} -{' '}
+                    {task.selectedMonths.join(', ')}
+                  </Text>
+                )}
+
+              {expandedTaskId === task.id && (
+                <View style={tw`mt-4`}>
+                  {/* Specific For Section */}
+                  <View style={tw`mb-4`}>
+                    <Text style={tw`text-sm font-bold mb-2`}>Specific For</Text>
+                    <View style={tw`flex-row items-center`}>
+                      <TextInput
+                        style={tw`border p-2 w-16 rounded`}
+                        keyboardType="numeric"
+                        value={editedTask.specificForValue?.toString()}
+                        onChangeText={handleSpecificForChange}
+                      />
+                      <View style={tw`flex-row ml-2`}>
+                        {['Days', 'Weeks', 'Months'].map(type => (
+                          <TouchableOpacity
+                            key={type}
+                            style={tw`px-3 py-1 mx-1 rounded ${
+                              editedTask.specificFor === type
+                                ? 'bg-blue-500'
+                                : 'bg-gray-300'
+                            }`}
+                            onPress={() =>
+                              setEditedTask({
+                                ...editedTask,
+                                specificFor: type,
+                              })
+                            }>
+                            <Text
+                              style={tw`${
+                                editedTask.specificFor === type
+                                  ? 'text-white'
+                                  : 'text-gray-700'
+                              }`}>
+                              {type}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Daily Target Section */}
+                  <View style={tw`mb-4`}>
+                    <Text style={tw`text-sm font-bold mb-2`}>Daily Target</Text>
+                    <View style={tw`flex-row items-center`}>
+                      <TextInput
+                        style={tw`border p-2 w-16 rounded`}
+                        keyboardType="numeric"
+                        value={editedTask.dailyTarget?.toString()}
+                        onChangeText={v =>
+                          setEditedTask({
+                            ...editedTask,
+                            dailyTarget: parseInt(v) || 0,
+                          })
+                        }
+                      />
+                      <View style={tw`flex-row ml-2`}>
+                        {['Minutes', 'Times'].map(type => (
+                          <TouchableOpacity
+                            key={type}
+                            style={tw`px-3 py-1 mx-1 rounded ${
+                              editedTask.targetType === type
+                                ? 'bg-blue-500'
+                                : 'bg-gray-300'
+                            }`}
+                            onPress={() =>
+                              setEditedTask({
+                                ...editedTask,
+                                targetType: type,
+                              })
+                            }>
+                            <Text
+                              style={tw`${
+                                editedTask.targetType === type
+                                  ? 'text-white'
+                                  : 'text-gray-700'
+                              }`}>
+                              {type}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Specific Days Section */}
+                  <View style={tw`mb-4`}>
+                    <Text style={tw`text-sm font-bold mb-2`}>
+                      Specific Days
+                    </Text>
+
+                    {/* Weekly Days */}
+                    <View style={tw`flex-row flex-wrap mb-2`}>
+                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
+                        day => (
+                          <TouchableOpacity
+                            key={day}
+                            style={tw`px-3 py-1 mx-1 my-1 rounded ${
+                              editedTask.selectedDays?.includes(day)
+                                ? 'bg-blue-500'
+                                : 'bg-gray-300'
+                            }`}
+                            onPress={() => toggleDaySelection(day)}>
+                            <Text
+                              style={tw`${
+                                editedTask.selectedDays?.includes(day)
+                                  ? 'text-white'
+                                  : 'text-gray-700'
+                              }`}>
+                              {day}
+                            </Text>
+                          </TouchableOpacity>
+                        ),
+                      )}
+                    </View>
+
+                    {/* Monthly Days */}
+                    <Text style={tw`text-sm font-bold `}>Months</Text>
+                    <TextInput
+                      style={tw`border p-2 rounded mb-2`}
+                      placeholder="Monthly days (e.g., 1,15)"
+                      value={editedTask.selectedDate?.join(', ')}
+                      onChangeText={v =>
+                        setEditedTask({
+                          ...editedTask,
+                          selectedDate: v
+                            .split(',')
+                            .map(n => parseInt(n.trim()))
+                            .filter(n => !isNaN(n)),
+                        })
+                      }
+                    />
+                  </View>
+                  {/* Yearly Selection */}
+                  <View style={tw`mb-4`}>
+                    <Text style={tw`text-sm font-bold mb-2`}>
+                      Yearly Selection
+                    </Text>
+
+                    {/* তারিখ সিলেকশন ইনপুট */}
+                    <TextInput
+                      placeholder="Enter dates (e.g. 1, 15)"
+                      style={tw`border p-2 rounded mb-2`}
+                      keyboardType="numeric"
+                      value={editedTask.selectedDates?.join(', ') || ''}
+                      onChangeText={text => {
+                        const dates = text
+                          .split(',')
+                          .map(date => parseInt(date.trim()))
+                          .filter(n => !isNaN(n) && n > 0 && n < 32); // ১-৩১ এর মধ্যে ভ্যালিডেশন
+                        setEditedTask({...editedTask, selectedDates: dates});
+                      }}
+                    />
+
+                    {/* মাস সিলেকশন বাটন */}
+                    <View style={tw`flex-row flex-wrap`}>
+                      {[
+                        'Jan',
+                        'Feb',
+                        'Mar',
+                        'Apr',
+                        'May',
+                        'Jun',
+                        'Jul',
+                        'Aug',
+                        'Sep',
+                        'Oct',
+                        'Nov',
+                        'Dec',
+                      ].map(month => (
+                        <TouchableOpacity
+                          key={month}
+                          style={tw`px-3 py-1 mx-1 my-1 rounded ${
+                            editedTask.selectedMonths?.includes(month)
+                              ? 'bg-blue-500'
+                              : 'bg-gray-300'
+                          }`}
+                          onPress={() => {
+                            const updatedMonths =
+                              editedTask.selectedMonths?.includes(month)
+                                ? editedTask.selectedMonths.filter(
+                                    (m: string) => m !== month,
+                                  )
+                                : [...(editedTask.selectedMonths || []), month];
+                            setEditedTask({
+                              ...editedTask,
+                              selectedMonths: updatedMonths,
+                            });
+                          }}>
+                          <Text
+                            style={tw`${
+                              editedTask.selectedMonths?.includes(month)
+                                ? 'text-white'
+                                : 'text-gray-700'
+                            }`}>
+                            {month}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+
+                  {/* Action Buttons */}
+                  <View style={tw`flex-row justify-between mt-4`}>
+                    <TouchableOpacity
+                      style={tw`bg-red-500 px-6 py-2 rounded-lg`}
+                      onPress={() => handleDelete(task.id)}>
+                      <Text style={tw`text-white`}>Delete</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={tw`bg-green-500 px-6 py-2 rounded-lg`}
+                      onPress={() => handleUpdateTask(task.id)}>
+                      <Text style={tw`text-white`}>Save Changes</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       )}
-      {/* Update Modal */}
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={tw`flex-1 bg-white p-6`}>
-          <Text style={tw`text-xl font-bold mb-4`}>Update Task</Text>
 
-          {/* Daily Target */}
-          <TextInput
-            placeholder="Daily Target"
-            value={editingTask?.dailyTarget}
-            onChangeText={text =>
-              setEditingTask({...editingTask, dailyTarget: text})
-            }
-            style={tw`border p-2 mb-3 rounded`}
-          />
-
-          {/* Add Specific For Value */}
-          <Text style={tw`text-base font-semibold mb-1`}>
-            Add Specific For:
-          </Text>
-          <View style={tw`flex-row mb-2`}>
-            {['days', 'weeks', 'months'].map(type => (
-              <TouchableOpacity
-                key={type}
-                onPress={() =>
-                  setEditingTask({...editingTask, specificFor: type})
-                }
-                style={tw`mr-2 px-3 py-1 rounded-full ${
-                  editingTask?.specificFor === type
-                    ? 'bg-blue-500'
-                    : 'bg-gray-300'
-                }`}>
-                <Text
-                  style={tw`text-sm ${
-                    editingTask?.specificFor === type
-                      ? 'text-white'
-                      : 'text-black'
-                  }`}>
-                  {type}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <TextInput
-            placeholder="Enter number"
-            keyboardType="numeric"
-            value={
-              editingTask?.specificForValue
-                ? editingTask.specificForValue.toString()
-                : ''
-            }
-            onChangeText={text =>
-              setEditingTask({
-                ...editingTask,
-                specificForValue: parseInt(text) || '',
-              })
-            }
-            style={tw`border p-2 mb-4 rounded`}
-          />
-          {/* Add Specific Day On Value */}
-          {/* Add Specific Day On (Weekly) */}
-          <View style={tw`flex-row mb-2`}>
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
-              (day: string) => (
-                <TouchableOpacity
-                  key={day}
-                  onPress={() => {
-                    const updatedDays = editingTask?.selectedDays?.includes(day)
-                      ? editingTask.selectedDays.filter(
-                          (selectedDay: string) => selectedDay !== day,
-                        )
-                      : [...(editingTask?.selectedDays || []), day];
-                    setEditingTask({...editingTask, selectedDays: updatedDays});
-                  }}
-                  style={tw`mr-2 px-3 py-1 rounded-full ${
-                    editingTask?.selectedDays?.includes(day)
-                      ? 'bg-blue-500'
-                      : 'bg-gray-300'
-                  }`}>
-                  <Text
-                    style={tw`text-sm ${
-                      editingTask?.selectedDays?.includes(day)
-                        ? 'text-white'
-                        : 'text-black'
-                    }`}>
-                    {day}
-                  </Text>
-                </TouchableOpacity>
-              ),
-            )}
-          </View>
-
-          {/* Add Specific Day On (Monthly) */}
-          <TextInput
-            placeholder="Select Dates (e.g. 1, 15, 20)"
-            value={editingTask?.selectedDate?.join(', ') || ''}
-            onChangeText={text => {
-              const dates = text
-                .split(',')
-                .map(date => parseInt(date.trim(), 10));
-              setEditingTask({...editingTask, selectedDate: dates});
-            }}
-            style={tw`border p-2 mb-4 rounded`}
-          />
-
-          {/* Add Specific Day On (Yearly) */}
-          <TextInput
-            placeholder="Select Dates (e.g. 1, 15)"
-            value={editingTask?.selectedDates?.join(', ') || ''}
-            onChangeText={text => {
-              const dates = text
-                .split(',')
-                .map(date => parseInt(date.trim(), 10));
-              setEditingTask({...editingTask, selectedDates: dates});
-            }}
-            style={tw`border p-2 mb-4 rounded`}
-          />
-          <View style={tw`flex-row mb-2`}>
-            {[
-              'Jan',
-              'Feb',
-              'Mar',
-              'Apr',
-              'May',
-              'Jun',
-              'Jul',
-              'Aug',
-              'Sep',
-              'Oct',
-              'Nov',
-              'Dec',
-            ].map((month: string) => (
-              <TouchableOpacity
-                key={month}
-                onPress={() => {
-                  const updatedMonths = editingTask?.selectedMonths?.includes(
-                    month,
-                  )
-                    ? editingTask.selectedMonths.filter(
-                        (selectedMonth: string) => selectedMonth !== month,
-                      )
-                    : [...(editingTask?.selectedMonths || []), month];
-                  setEditingTask({
-                    ...editingTask,
-                    selectedMonths: updatedMonths,
-                  });
-                }}
-                style={tw`mr-2 px-3 py-1 rounded-full ${
-                  editingTask?.selectedMonths?.includes(month)
-                    ? 'bg-blue-500'
-                    : 'bg-gray-300'
-                }`}>
-                <Text
-                  style={tw`text-sm ${
-                    editingTask?.selectedMonths?.includes(month)
-                      ? 'text-white'
-                      : 'text-black'
-                  }`}>
-                  {month}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Save & Cancel */}
-          <TouchableOpacity
-            onPress={handleUpdateTask}
-            style={tw`bg-green-500 py-2 rounded-lg mb-3`}>
-            <Text style={tw`text-white text-center font-semibold`}>Save</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setModalVisible(false)}
-            style={tw`bg-gray-300 py-2 rounded-lg`}>
-            <Text style={tw`text-center`}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      {/* bottom navigation */}
-      <BottomNavigation></BottomNavigation>
+      <BottomNavigation />
     </View>
   );
 };
