@@ -13,7 +13,7 @@ const tasksData: Record<string, any> = {
     Others: require('../../assets/images/Others.png'),
   },
   Wellness: {
-    'Meditation 🧘‍♂️': require('../../assets/images/Walking.png'),
+    'Meditation ': require('../../assets/images/Walking.png'),
     'Breathing Exercises 💨': require('../../assets/images/Walking.png'),
     'Journaling 📝': require('../../assets/images/Walking.png'),
     'Mindfulness 🙏': require('../../assets/images/Walking.png'),
