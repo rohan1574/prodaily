@@ -65,17 +65,29 @@ const AllTaskListScreen = () => {
     setExpandedTaskId(prev => (prev === taskId ? null : taskId));
     const task = tasks.find(t => t.id === taskId);
     if (task) {
-      setEditedTask(task);
+      // Determine specTarget based on existing data
+      let specTarget = task.specTarget;
+      if (!specTarget) {
+        if (task.selectedDays?.length) specTarget = 'Weekly';
+        else if (task.selectedDate?.length) specTarget = 'Monthly';
+        else if (task.selectedDates?.length && task.selectedMonths?.length) specTarget = 'Yearly';
+      }
+  
+      setEditedTask({
+        ...task,
+        specTarget // Add inferred specTarget
+      });
+      
       setIsSpecificForEnabled(!!task.specificForValue);
       setIsDailyTargetEnabled(!!task.dailyTarget);
       setIsSpecificDayOnSelected(
         !!task.selectedDays?.length ||
-          !!task.selectedDates?.length ||
-          !!task.selectedMonths?.length,
+        !!task.selectedDate?.length ||
+        !!task.selectedDates?.length ||
+        !!task.selectedMonths?.length
       );
     }
   };
-
   const handleUpdateTask = async (taskId: string) => {
     try {
       const updatedTasks = tasks.map(task =>
