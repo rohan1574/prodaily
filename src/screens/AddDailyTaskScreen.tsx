@@ -21,8 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
 import {Modal} from 'react-native';
-import { ColorContext } from '../context/ColorContext';
-
+import {ColorContext} from '../context/ColorContext';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -76,14 +75,9 @@ const AddDailyTaskScreen = () => {
   const [dailyTarget, setDailyTarget] = useState('');
   const [specTarget, setSpecTarget] = useState('Weekly');
   const [targetType, setTargetType] = useState<'Minutes' | 'Times'>('Minutes');
-  const toggleSpecificFor = () =>
-    setIsSpecificForEnabled(!isSpecificForEnabled);
-  const toggleDailyTarget = () =>
-    setIsDailyTargetEnabled(!isDailyTargetEnabled);
   const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
   const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
   const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [selectedDates, setSelectedDates] = useState<number[]>([]);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
@@ -117,10 +111,12 @@ const AddDailyTaskScreen = () => {
   const colorContext = useContext(ColorContext);
 
   if (!colorContext) {
-    throw new Error('ColorContext is not available. Wrap your component in <ColorProvider>.');
+    throw new Error(
+      'ColorContext is not available. Wrap your component in <ColorProvider>.',
+    );
   }
 
-  const { selectedColor } = colorContext;
+  const {selectedColor} = colorContext;
 
   // Load custom data
   useEffect(() => {
@@ -238,27 +234,47 @@ const AddDailyTaskScreen = () => {
     setSelectedDates([]); // Reset other selections
   };
 
-  // Functions with logic to prevent both being selected
-  const handleToggleSpecificFor = () => {
-    if (isSpecificDayOnSelected) {
-      Alert.alert(
-        'Error',
-        'You cannot select "Add Specific For" while "Add Specific Day On" is selected.',
-      );
-      return;
+  // Update toggle function to reset dailyTarget when turned off
+  const toggleDailyTarget = () => {
+    if (isDailyTargetEnabled) {
+      setDailyTarget(''); // Clear input when radio is turned off
     }
-    setIsSpecificForEnabled(!isSpecificForEnabled);
+    setIsDailyTargetEnabled(!isDailyTargetEnabled);
+  };
+  // Existing code...
+
+  const handleToggleSpecificFor = () => {
+    const newSpecificForState = !isSpecificForEnabled;
+
+    // যদি নতুন স্টেট ON হয় (চালু করা হয়)
+    if (newSpecificForState) {
+      setIsSpecificDayOnSelected(false); // Add Specific Day On বন্ধ করুন
+      setSelectedDays([]); // সিলেক্টেড দিন রিসেট
+      setSelectedDates([]); // সিলেক্টেড তারিখ রিসেট
+      setSelectedMonths([]); // সিলেক্টেড মাস রিসেট
+    }
+
+    // নিজের ইনপুট রিসেট (যদি বন্ধ করা হয়)
+    if (isSpecificForEnabled) {
+      setSpecificForValue('');
+      setSpecificFor('Days');
+    }
+
+    setIsSpecificForEnabled(newSpecificForState);
   };
 
   const toggleSpecificDayOn = () => {
-    if (isSpecificForEnabled) {
-      Alert.alert(
-        'Error',
-        'You cannot select "Add Specific Day On" while "Add Specific For" is selected.',
-      );
-      return;
+    const newSpecificDayOnState = !isSpecificDayOnSelected;
+
+    // যদি নতুন স্টেট ON হয় (চালু করা হয়)
+    if (newSpecificDayOnState) {
+      setIsSpecificForEnabled(false); // Add Specific For বন্ধ করুন
+      setSpecificForValue(''); // Specific For এর ইনপুট রিসেট
+      setSpecificFor('Days'); // ডিফল্ট ইউনিট সেট
     }
-    setIsSpecificDayOnSelected(!isSpecificDayOnSelected);
+
+    // নিজের স্টেট টগল করুন
+    setIsSpecificDayOnSelected(newSpecificDayOnState);
   };
   const handleSaveTask = async () => {
     const currentDate = new Date();
@@ -274,7 +290,7 @@ const AddDailyTaskScreen = () => {
       isStarred: isStarred, // ⭐️ এখানে যুক্ত করো
       category: selectedCategory,
       dailyTarget,
-      selectedDays: [], // For specific days selection
+      // selectedDays: [], // For specific days selection
       selectedDate: selectedDate, // For specific dates selection
       selectedDates: selectedDates, // For specific dates selection
       selectedYears: selectedYears,
@@ -344,6 +360,11 @@ const AddDailyTaskScreen = () => {
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
       // Show success modal after save
       setShowSuccessModal(true);
+      // ✅ সফল সেভের পর স্টেট রিসেট
+      setSelectedDays([]);
+      setSelectedDate([]);
+      setSelectedDates([]);
+      setSelectedMonths([]);
     } catch (error) {
       console.error('Error saving task:', error); // Handle any errors
     }
@@ -482,7 +503,7 @@ const AddDailyTaskScreen = () => {
           </View>
         </Modal>
       </View>
-      
+
       {/* Task List (Scrollable) */}
       <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
         {Object.keys({
@@ -492,10 +513,26 @@ const AddDailyTaskScreen = () => {
           <View key={index} style={tw`mb-2`}>
             <TouchableOpacity
               onPress={() => {
+                if (expandedTask !== task) {
+                  setSelectedDays([]);
+                  setSelectedDates([]);
+                  setSelectedMonths([]);
+                  setSelectedYears([]);
+                  setSpecificForValue('');
+                  setSpecificFor('Days');
+                  setDailyTarget('');
+                  setTargetType('Minutes');
+                  setIsStarred(false);
+                  setIsSpecificForEnabled(false);
+                  setIsSpecificDayOnSelected(false);
+                }
                 setExpandedTask(expandedTask === task ? null : task);
                 setTaskName(task);
               }}
-              style={[tw`flex-row items-center justify-between bg-white p-3 rounded-lg`,{ bg: selectedColor }]}>
+              style={[
+                tw`flex-row items-center justify-between bg-white p-3 rounded-lg`,
+                {bg: selectedColor},
+              ]}>
               <View style={tw`flex-row items-center`}>
                 <Image
                   source={
@@ -504,11 +541,17 @@ const AddDailyTaskScreen = () => {
                   }
                   style={[
                     tw`bottom-2 h-auto mt-4 mr-6`,
-                    { tintColor: selectedColor ,width:32,height:32}
+                    {tintColor: selectedColor, width: 32, height: 32},
                   ]}
                 />
-               
-                <Text style={[tw`text-sm font-medium text-black`,{ color: selectedColor }]}>{task}</Text>
+
+                <Text
+                  style={[
+                    tw`text-sm font-medium text-black`,
+                    {color: selectedColor},
+                  ]}>
+                  {task}
+                </Text>
               </View>
               <Icon
                 name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
@@ -745,42 +788,50 @@ const AddDailyTaskScreen = () => {
                     <Text style={tw`text-white font-bold`}>Yearly</Text>
                   </TouchableOpacity>
                 </View>
-                {/* Show DayPicker modal when isDayPickerVisible is true */}
+                {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
                 {isDayPickerVisible && (
                   <DayPicker
                     selectedDays={selectedDays}
                     onSelectDays={setSelectedDays}
-                    onCancel={() => setIsDayPickerVisible(false)}
-                    onAddDay={() => setIsDayPickerVisible(false)} // Close modal on Add Day
+                    onCancel={() => {
+                      setIsDayPickerVisible(false);
+                      setSelectedDays([]);
+                    }}
+                    onAddDay={() => {
+                      setIsDayPickerVisible(false);
+                    }}
                   />
                 )}
-                {/* Show DatePicker modal when isDatePickerVisible is true */}
+
                 {isDatePickerVisible && (
                   <DatePicker
                     selectedDate={selectedDate}
                     onSelectDate={setSelectedDate}
-                    onCancel={() => setIsDatePickerVisible(false)}
-                    onAddDay={() => setIsDatePickerVisible(false)} // Close modal on Add Day
+                    onCancel={() => {
+                      setIsDatePickerVisible(false);
+                      setSelectedDate([]);
+                    }}
+                    onAddDay={() => {
+                      setIsDatePickerVisible(false);
+                    }}
                   />
                 )}
-                {/* Show DateSelector modal when isDateSelectorVisible is true */}
+
                 {isDateSeletorVisible && (
                   <DateSelector
                     selectedDates={selectedDates}
                     selectedMonths={selectedMonths}
-                    onSelectDate={(date: number) => {
-                      // Only allow one date to be selected
-                      setSelectedDates([date]);
-                    }}
-                    onSelectMonth={(month: string) => {
-                      // Only allow one month to be selected
-                      setSelectedMonths([month]);
-                    }}
-                    onCancel={() => setIsDateSeletorVisible(false)} // Close the modal without saving
-                    onAddDay={() => {
-                      // Close the modal after saving the selected dates and months
+                    onSelectDate={(date: number) => setSelectedDates([date])}
+                    onSelectMonth={(month: string) =>
+                      setSelectedMonths([month])
+                    }
+                    onCancel={() => {
                       setIsDateSeletorVisible(false);
-                      // Optionally, you can also add additional logic here to save the selected values elsewhere if needed
+                      setSelectedDates([]);
+                      setSelectedMonths([]);
+                    }}
+                    onAddDay={() => {
+                      setIsDateSeletorVisible(false);
                     }}
                   />
                 )}
@@ -912,9 +963,9 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
+        {/* bottom navigation */}
+        <BottomNavigation></BottomNavigation>
       </ScrollView>
-      {/* bottom navigation */}
-      <BottomNavigation></BottomNavigation>
     </View>
   );
 };

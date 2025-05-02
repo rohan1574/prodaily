@@ -21,6 +21,7 @@ const AllTaskListScreen = () => {
   const [editedTask, setEditedTask] = useState<any>({});
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+ const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -172,7 +173,6 @@ const AllTaskListScreen = () => {
                       color={task.isStarred ? 'gold' : 'gray'}
                     />
                   </TouchableOpacity>
-
                   <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
                     <Icon
                       name={
@@ -244,6 +244,15 @@ const AllTaskListScreen = () => {
                   <View style={tw`mb-4`}>
                     <Text style={tw`text-sm font-bold mb-2`}>Specific For</Text>
                     <View style={tw`flex-row items-center`}>
+                      <Icon
+                        name={
+                          isSpecificForEnabled
+                            ? 'radio-button-on'
+                            : 'radio-button-off'
+                        }
+                        size={20}
+                        color={isSpecificForEnabled ? 'blue' : 'gray'}
+                      />
                       <TextInput
                         style={tw`border p-2 w-16 rounded`}
                         keyboardType="numeric"
@@ -283,6 +292,15 @@ const AllTaskListScreen = () => {
                   <View style={tw`mb-4`}>
                     <Text style={tw`text-sm font-bold mb-2`}>Daily Target</Text>
                     <View style={tw`flex-row items-center`}>
+                    <Icon
+                        name={
+                          isSpecificForEnabled
+                            ? 'radio-button-on'
+                            : 'radio-button-off'
+                        }
+                        size={20}
+                        color={isSpecificForEnabled ? 'blue' : 'gray'}
+                      />
                       <TextInput
                         style={tw`border p-2 w-16 rounded`}
                         keyboardType="numeric"
@@ -328,7 +346,15 @@ const AllTaskListScreen = () => {
                     <Text style={tw`text-sm font-bold mb-2`}>
                       Specific Days
                     </Text>
-
+                    <Icon
+                        name={
+                          isSpecificForEnabled
+                            ? 'radio-button-on'
+                            : 'radio-button-off'
+                        }
+                        size={20}
+                        color={isSpecificForEnabled ? 'blue' : 'gray'}
+                      />
                     {/* Weekly Days */}
                     <View style={tw`flex-row flex-wrap mb-2`}>
                       {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
