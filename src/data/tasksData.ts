@@ -193,25 +193,29 @@ Sleep: {
   },
   Spiritual: {
     Prayer: require('../../assets/images/Spiritual/prayer.png'),
-    "Read Sacred Texts": require('../../assets/images/Spiritual/sacred_text.png'),
-    "Attend Religious Program": require('../../assets/images/Spiritual/program.png'),
-    "Spiritual Meditation": require('../../assets/images/Spiritual/meditation.png'),
-    "Religious Fasting": require('../../assets/images/Spiritual/fasting.png'),
-    "Spiritual Journaling": require('../../assets/images/Spiritual/journal.png'),
-    "Community Service": require('../../assets/images/Spiritual/community.png'),
-    "Donations/Charity": require('../../assets/images/Spiritual/donation.png'),
-    "Going Church/Mosque": require('../../assets/images/Spiritual/worship_place.png'),
-    "Learning other Religion": require('../../assets/images/Spiritual/learning.png'),
-    "Watching Lectures": require('../../assets/images/Spiritual/lecture.png')
+    "Read Sacred Texts": require('../../assets/images/Spiritual/sacred-text.png'),
+    "Attend Religious Program": require('../../assets/images/Spiritual/religious-program.png'),
+    "Spiritual Meditation": require('../../assets/images/Spiritual/spimeditat.png'),
+    "Religious Fasting": require('../../assets/images/Spiritual/religious-fasting.png'),
+    "Spiritual Journaling": require('../../assets/images/Spiritual/spiritual-Journ.png'),
+    "Community Service": require('../../assets/images/Spiritual/community-ser.png'),
+    "Donations/Charity": require('../../assets/images/Spiritual/donations.png'),
+    "Going Church/Mosque": require('../../assets/images/Spiritual/gochurch.png'),
+    "Learning other Religion": require('../../assets/images/Spiritual/learn-religion.png'),
+    "Watching Lectures": require('../../assets/images/Spiritual/watching-lect.png')
   },
-  // Pet: {
-  //   'Walking Pets 🐕': require('../../assets/images/Walking.png'),
-  //   'Feeding Pets 🍖': require('../../assets/images/Walking.png'),
-  //   'Grooming Pets ✂️': require('../../assets/images/Walking.png'),
-  //   'Training Pets 🐕‍🦺': require('../../assets/images/Walking.png'),
-  //   'Bathing Pets': require('../../assets/images/Walking.png'),
-  //   'Vet Appointments 🏥': require('../../assets/images/Walking.png'),
-  //   'Playtime 🐾': require('../../assets/images/Walking.png'),
-  // },
+  Pet: {
+    "Walk Pet": require('../../assets/images/Pet/walk-pet.png'),
+    "Feed Pet": require('../../assets/images/Pet/feed-pet.png'),
+    "Groom Pet": require('../../assets/images/Pet/groom-pets.png'),
+    "Train Pet": require('../../assets/images/Pet/train-pet.png'),
+    "Bathing Pet": require('../../assets/images/Pet/bath-pet.png'),
+    "Vet Visit": require('../../assets/images/Pet/vet-app.png'),
+    "Play with pet": require('../../assets/images/Pet/play-pet.png'),
+    "Surprising pet": require('../../assets/images/Pet/gift-pet.png'),
+    "Pet Health Checkup": require('../../assets/images/Pet/health.png'),
+    "Pet Nutrition": require('../../assets/images/Pet/nutrition.png'),
+    "Cleaning Pet": require('../../assets/images/Pet/clean-pet.png')
+  },
 };
 export default tasksData;
