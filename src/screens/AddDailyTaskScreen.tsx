@@ -902,14 +902,16 @@ const AddDailyTaskScreen = () => {
         <TouchableOpacity
           onPress={() => {
             setIsCustomTaskModalVisible(true);
-            setCustomTaskName(''); // Reset previous input
-            setSelectedCustomIcon(null); // Reset icon selection
+            setCustomTaskName('');
+            setSelectedCustomIcon(null);
           }}
-          style={tw`flex-row items-center bg-blue-100 p-4 rounded-lg mt-4`}>
-          <Icon name="add-circle-outline" size={24} color="#3B82F6" />
-          <Text style={tw`ml-2 text-blue-600 font-semibold`}>
-            Create Custom Task
-          </Text>
+          style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg mb-2`}>
+          <View style={tw`flex-row items-center`}>
+            <Icon name="add-circle-outline" size={32} color={selectedColor} style={tw`mr-4`} />
+            <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
+              Add Custom Task
+            </Text>
+          </View>
         </TouchableOpacity>
         {/* কাস্টম টাস্ক মডাল */}
         <Modal
@@ -964,9 +966,9 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
-        {/* bottom navigation */}
-        <BottomNavigation></BottomNavigation>
       </ScrollView>
+      {/* bottom navigation */}
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };
