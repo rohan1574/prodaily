@@ -582,7 +582,7 @@ const AllTaskListScreen = () => {
                                         setEditedTask({
                                           ...editedTask,
                                           selectedDate: updatedDates.sort(
-                                            (a: numbe, b: number) => a - b,
+                                            (a: number, b: number) => a - b,
                                           ),
                                         });
                                       }}>
