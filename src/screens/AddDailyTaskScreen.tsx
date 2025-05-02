@@ -22,7 +22,8 @@ import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
 import {Modal} from 'react-native';
 import {ColorContext} from '../context/ColorContext';
-
+// Add at the top with other imports
+import {Keyboard} from 'react-native';
 // Define the navigation type
 type RootStackParamList = {
   TodaysTaskToDoScreen: undefined;
@@ -61,6 +62,30 @@ const categories = Object.keys(categoryIcons) as Category[];
 const CUSTOM_TASKS_KEY = 'custom_tasks';
 const CUSTOM_CATEGORIES_KEY = 'custom_categories';
 const AddDailyTaskScreen = () => {
+
+  // Add this state
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  // Add this useEffect
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   // ডিভাইসের স্ক্রিন প্রস্থ পান
   const {width: SCREEN_WIDTH} = Dimensions.get('window');
   const CATEGORY_WIDTH = SCREEN_WIDTH / 4; // ৪টি ক্যাটাগরি দেখানোর জন্য
@@ -967,8 +992,7 @@ const AddDailyTaskScreen = () => {
           </View>
         </Modal>
       </ScrollView>
-      {/* bottom navigation */}
-      <BottomNavigation></BottomNavigation>
+      {!isKeyboardVisible && <BottomNavigation />}
     </View>
   );
 };
