@@ -531,7 +531,7 @@ const AddDailyTaskScreen = () => {
                 setTaskName(task);
               }}
               style={[
-                tw`flex-row items-center justify-between bg-white p-3 rounded-lg`,
+                tw`flex-rows items-center justify-between bg-white p-3 rounded-lg`,
                 {bg: selectedColor},
               ]}>
               <View style={tw`flex-row items-center`}>
