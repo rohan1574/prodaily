@@ -62,7 +62,6 @@ const categories = Object.keys(categoryIcons) as Category[];
 const CUSTOM_TASKS_KEY = 'custom_tasks';
 const CUSTOM_CATEGORIES_KEY = 'custom_categories';
 const AddDailyTaskScreen = () => {
-
   // Add this state
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
@@ -932,7 +931,12 @@ const AddDailyTaskScreen = () => {
           }}
           style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
-            <Icon name="add-circle-outline" size={32} color={selectedColor} style={tw`mr-4`} />
+            <Icon
+              name="add-circle-outline"
+              size={32}
+              color={selectedColor}
+              style={tw`mr-4`}
+            />
             <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
               Add Custom Task
             </Text>
@@ -957,17 +961,30 @@ const AddDailyTaskScreen = () => {
 
               <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Object.entries(categoryIcons).map(([category, iconSource]) => (
+                {Object.keys({
+                  ...(tasksData[selectedCategory] || {}),
+                  ...(customTasksData[selectedCategory] || {}),
+                }).map((taskName, index) => (
                   <TouchableOpacity
-                    key={category}
-                    onPress={() => setSelectedCustomIcon(iconSource)}
+                    key={index}
+                    onPress={() =>
+                      setSelectedCustomIcon(
+                        tasksData[selectedCategory]?.[taskName] ||
+                          customTasksData[selectedCategory]?.[taskName],
+                      )
+                    }
                     style={tw`p-2 mx-1 rounded-lg ${
-                      selectedCustomIcon === iconSource
+                      selectedCustomIcon ===
+                      (tasksData[selectedCategory]?.[taskName] ||
+                        customTasksData[selectedCategory]?.[taskName])
                         ? 'bg-blue-100'
                         : 'bg-gray-100'
                     }`}>
                     <Image
-                      source={iconSource}
+                      source={
+                        tasksData[selectedCategory]?.[taskName] ||
+                        customTasksData[selectedCategory]?.[taskName]
+                      }
                       style={tw`w-10 h-10`}
                       resizeMode="contain"
                     />
