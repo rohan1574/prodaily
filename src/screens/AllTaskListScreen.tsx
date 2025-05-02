@@ -13,7 +13,21 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+interface Task {
+  id: string;
+  name: string;
+  icon?: any;
+  isStarred?: boolean;
+  specificForValue?: number | string;
+  specificFor?: 'Days' | 'Weeks' | 'Months';
+  selectedDays?: string[];
+  selectedDates?: number[];
+  selectedMonths?: string[];
+  selectedYears?: number[];
+  dailyTarget?: number;
+  targetType?: 'Minutes' | 'Times';
+  specTarget?: 'Weekly' | 'Monthly' | 'Yearly';
+}
 const AllTaskListScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -21,7 +35,9 @@ const AllTaskListScreen = () => {
   const [editedTask, setEditedTask] = useState<any>({});
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
- const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
+  const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
+  const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
+  const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -48,7 +64,16 @@ const AllTaskListScreen = () => {
   const toggleExpansion = (taskId: string) => {
     setExpandedTaskId(prev => (prev === taskId ? null : taskId));
     const task = tasks.find(t => t.id === taskId);
-    setEditedTask(task || {});
+    if (task) {
+      setEditedTask(task);
+      setIsSpecificForEnabled(!!task.specificForValue);
+      setIsDailyTargetEnabled(!!task.dailyTarget);
+      setIsSpecificDayOnSelected(
+        !!task.selectedDays?.length ||
+          !!task.selectedDates?.length ||
+          !!task.selectedMonths?.length,
+      );
+    }
   };
 
   const handleUpdateTask = async (taskId: string) => {
@@ -64,6 +89,66 @@ const AllTaskListScreen = () => {
     }
   };
 
+  // রেডিও বাটন টগল লজিক
+  const toggleSpecificFor = () => {
+    const newState = !isSpecificForEnabled;
+    setIsSpecificForEnabled(newState);
+    setIsSpecificDayOnSelected(false);
+
+    setEditedTask((prev: Task) => ({
+      ...prev,
+      specificForValue: newState ? prev.specificForValue : '',
+      specificFor: newState ? prev.specificFor : 'Days',
+      selectedDays: [],
+      selectedDates: [],
+      selectedMonths: [],
+      selectedYears: [],
+    }));
+  };
+
+  const toggleSpecificDayOn = () => {
+    const newState = !isSpecificDayOnSelected;
+    setIsSpecificDayOnSelected(newState);
+    setIsSpecificForEnabled(false);
+
+    setEditedTask((prev: Task) => ({
+      ...prev,
+      specificForValue: '',
+      specificFor: 'Days',
+      selectedDays: newState ? prev.selectedDays : [],
+      selectedDates: newState ? prev.selectedDates : [],
+      selectedMonths: newState ? prev.selectedMonths : [],
+      selectedYears: newState ? prev.selectedYears : [],
+    }));
+  };
+
+  const toggleDaySelection = (day: string) => {
+    const updatedDays = editedTask.selectedDays?.includes(day)
+      ? editedTask.selectedDays.filter((d: string) => d !== day)
+      : [...(editedTask.selectedDays || []), day];
+
+    setEditedTask({...editedTask, selectedDays: updatedDays});
+  };
+
+  const handleMonthSelection = (month: string) => {
+    const updatedMonths = editedTask.selectedMonths?.includes(month)
+      ? editedTask.selectedMonths.filter((m: string) => m !== month)
+      : [...(editedTask.selectedMonths || []), month];
+
+    setEditedTask({...editedTask, selectedMonths: updatedMonths});
+  };
+  const toggleDailyTarget = () => {
+    const newState = !isDailyTargetEnabled;
+    setIsDailyTargetEnabled(newState);
+
+    if (!newState) {
+      setEditedTask((prev: Task) => ({
+        ...prev,
+        dailyTarget: 0,
+        targetType: 'Minutes',
+      }));
+    }
+  };
   const handleDelete = async (taskId: string) => {
     Alert.alert('Delete Task', 'Are you sure?', [
       {text: 'Cancel', style: 'cancel'},
@@ -78,24 +163,6 @@ const AllTaskListScreen = () => {
     ]);
   };
 
-  const handleSpecificForChange = (value: string) => {
-    const numericValue = parseInt(value) || 0;
-    setEditedTask({
-      ...editedTask,
-      specificForValue: numericValue,
-    });
-  };
-
-  const toggleDaySelection = (day: string) => {
-    const updatedDays = editedTask.selectedDays?.includes(day)
-      ? editedTask.selectedDays.filter((d: string) => d !== day)
-      : [...(editedTask.selectedDays || []), day];
-
-    setEditedTask({
-      ...editedTask,
-      selectedDays: updatedDays,
-    });
-  };
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
     setDeleteModalVisible(true);
@@ -241,44 +308,59 @@ const AllTaskListScreen = () => {
               {expandedTaskId === task.id && (
                 <View style={tw`mt-4`}>
                   {/* Specific For Section */}
-                  <View style={tw`mb-4`}>
-                    <Text style={tw`text-sm font-bold mb-2`}>Specific For</Text>
+                  <View style={tw`mb-6`}>
                     <View style={tw`flex-row items-center`}>
-                      <Icon
-                        name={
-                          isSpecificForEnabled
-                            ? 'radio-button-on'
-                            : 'radio-button-off'
-                        }
-                        size={20}
-                        color={isSpecificForEnabled ? 'blue' : 'gray'}
-                      />
+                      <TouchableOpacity onPress={toggleSpecificFor}>
+                        <Icon
+                          name={
+                            isSpecificForEnabled
+                              ? 'radio-button-on'
+                              : 'radio-button-off'
+                          }
+                          size={20}
+                          color={isSpecificForEnabled ? 'blue' : 'gray'}
+                        />
+                      </TouchableOpacity>
                       <TextInput
-                        style={tw`border p-2 w-16 rounded`}
+                        style={tw`border p-2 w-16 rounded ml-2 ${
+                          !isSpecificForEnabled ? 'bg-gray-100' : ''
+                        }`}
                         keyboardType="numeric"
-                        value={editedTask.specificForValue?.toString()}
-                        onChangeText={handleSpecificForChange}
+                        value={
+                          isSpecificForEnabled
+                            ? editedTask.specificForValue?.toString()
+                            : ''
+                        }
+                        onChangeText={v =>
+                          setEditedTask({
+                            ...editedTask,
+                            specificForValue: parseInt(v) || 0,
+                          })
+                        }
+                        editable={isSpecificForEnabled}
+                        placeholder="0"
                       />
                       <View style={tw`flex-row ml-2`}>
                         {['Days', 'Weeks', 'Months'].map(type => (
                           <TouchableOpacity
                             key={type}
                             style={tw`px-3 py-1 mx-1 rounded ${
-                              editedTask.specificFor === type
+                              editedTask.specificFor === type &&
+                              isSpecificForEnabled
                                 ? 'bg-blue-500'
-                                : 'bg-gray-300'
+                                : 'bg-gray-200'
                             }`}
                             onPress={() =>
-                              setEditedTask({
-                                ...editedTask,
-                                specificFor: type,
-                              })
-                            }>
+                              isSpecificForEnabled &&
+                              setEditedTask({...editedTask, specificFor: type})
+                            }
+                            disabled={!isSpecificForEnabled}>
                             <Text
                               style={tw`${
-                                editedTask.specificFor === type
+                                editedTask.specificFor === type &&
+                                isSpecificForEnabled
                                   ? 'text-white'
-                                  : 'text-gray-700'
+                                  : 'text-gray-500'
                               }`}>
                               {type}
                             </Text>
@@ -287,51 +369,63 @@ const AllTaskListScreen = () => {
                       </View>
                     </View>
                   </View>
-
                   {/* Daily Target Section */}
-                  <View style={tw`mb-4`}>
-                    <Text style={tw`text-sm font-bold mb-2`}>Daily Target</Text>
+                  <View style={tw`mb-6`}>
                     <View style={tw`flex-row items-center`}>
-                    <Icon
-                        name={
-                          isSpecificForEnabled
-                            ? 'radio-button-on'
-                            : 'radio-button-off'
-                        }
-                        size={20}
-                        color={isSpecificForEnabled ? 'blue' : 'gray'}
-                      />
+                      <TouchableOpacity onPress={toggleDailyTarget}>
+                        <Icon
+                          name={
+                            isDailyTargetEnabled
+                              ? 'radio-button-on'
+                              : 'radio-button-off'
+                          }
+                          size={20}
+                          color={isDailyTargetEnabled ? 'blue' : 'gray'}
+                        />
+                      </TouchableOpacity>
+                      <Text style={tw`text-sm font-bold ml-2`}>
+                        Set Daily Target
+                      </Text>
                       <TextInput
-                        style={tw`border p-2 w-16 rounded`}
+                        style={tw`border p-2 w-16 rounded ml-2 ${
+                          !isDailyTargetEnabled ? 'bg-gray-100' : ''
+                        }`}
                         keyboardType="numeric"
-                        value={editedTask.dailyTarget?.toString()}
+                        value={
+                          isDailyTargetEnabled
+                            ? editedTask.dailyTarget?.toString()
+                            : ''
+                        }
                         onChangeText={v =>
                           setEditedTask({
                             ...editedTask,
                             dailyTarget: parseInt(v) || 0,
                           })
                         }
+                        editable={isDailyTargetEnabled}
+                        placeholder="0"
                       />
                       <View style={tw`flex-row ml-2`}>
                         {['Minutes', 'Times'].map(type => (
                           <TouchableOpacity
                             key={type}
                             style={tw`px-3 py-1 mx-1 rounded ${
-                              editedTask.targetType === type
+                              editedTask.targetType === type &&
+                              isDailyTargetEnabled
                                 ? 'bg-blue-500'
-                                : 'bg-gray-300'
+                                : 'bg-gray-200'
                             }`}
                             onPress={() =>
-                              setEditedTask({
-                                ...editedTask,
-                                targetType: type,
-                              })
-                            }>
+                              isDailyTargetEnabled &&
+                              setEditedTask({...editedTask, targetType: type})
+                            }
+                            disabled={!isDailyTargetEnabled}>
                             <Text
                               style={tw`${
-                                editedTask.targetType === type
+                                editedTask.targetType === type &&
+                                isDailyTargetEnabled
                                   ? 'text-white'
-                                  : 'text-gray-700'
+                                  : 'text-gray-500'
                               }`}>
                               {type}
                             </Text>
@@ -340,130 +434,154 @@ const AllTaskListScreen = () => {
                       </View>
                     </View>
                   </View>
-
-                  {/* Specific Days Section */}
-                  <View style={tw`mb-4`}>
-                    <Text style={tw`text-sm font-bold mb-2`}>
-                      Specific Days
-                    </Text>
-                    <Icon
-                        name={
-                          isSpecificForEnabled
-                            ? 'radio-button-on'
-                            : 'radio-button-off'
-                        }
-                        size={20}
-                        color={isSpecificForEnabled ? 'blue' : 'gray'}
-                      />
-                    {/* Weekly Days */}
-                    <View style={tw`flex-row flex-wrap mb-2`}>
-                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
-                        day => (
-                          <TouchableOpacity
-                            key={day}
-                            style={tw`px-3 py-1 mx-1 my-1 rounded ${
-                              editedTask.selectedDays?.includes(day)
-                                ? 'bg-blue-500'
-                                : 'bg-gray-300'
-                            }`}
-                            onPress={() => toggleDaySelection(day)}>
-                            <Text
-                              style={tw`${
-                                editedTask.selectedDays?.includes(day)
-                                  ? 'text-white'
-                                  : 'text-gray-700'
-                              }`}>
-                              {day}
-                            </Text>
-                          </TouchableOpacity>
-                        ),
-                      )}
+                  {/* Specific Day On Section */}
+                  <View style={tw`mb-6`}>
+                    <View style={tw`flex-row items-center mb-4`}>
+                      <TouchableOpacity onPress={toggleSpecificDayOn}>
+                        <Icon
+                          name={
+                            isSpecificDayOnSelected
+                              ? 'radio-button-on'
+                              : 'radio-button-off'
+                          }
+                          size={20}
+                          color={isSpecificDayOnSelected ? 'blue' : 'gray'}
+                        />
+                      </TouchableOpacity>
+                      <Text style={tw`text-sm font-bold ml-2`}>
+                        Specific Day On
+                      </Text>
                     </View>
 
-                    {/* Monthly Days */}
-                    <Text style={tw`text-sm font-bold `}>Months</Text>
-                    <TextInput
-                      style={tw`border p-2 rounded mb-2`}
-                      placeholder="Monthly days (e.g., 1,15)"
-                      value={editedTask.selectedDate?.join(', ')}
-                      onChangeText={v =>
-                        setEditedTask({
-                          ...editedTask,
-                          selectedDate: v
-                            .split(',')
-                            .map(n => parseInt(n.trim()))
-                            .filter(n => !isNaN(n)),
-                        })
-                      }
-                    />
-                  </View>
-                  {/* Yearly Selection */}
-                  <View style={tw`mb-4`}>
-                    <Text style={tw`text-sm font-bold mb-2`}>
-                      Yearly Selection
-                    </Text>
+                    {isSpecificDayOnSelected && (
+                      <>
+                        <View style={tw`flex-row justify-between mb-4`}>
+                          {['Weekly', 'Monthly', 'Yearly'].map(type => (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-4 py-2 rounded-lg ${
+                                editedTask.specTarget === type
+                                  ? 'bg-blue-500'
+                                  : 'bg-gray-200'
+                              }`}
+                              onPress={() =>
+                                setEditedTask({...editedTask, specTarget: type})
+                              }>
+                              <Text
+                                style={tw`${
+                                  editedTask.specTarget === type
+                                    ? 'text-white'
+                                    : 'text-gray-700'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
 
-                    {/* তারিখ সিলেকশন ইনপুট */}
-                    <TextInput
-                      placeholder="Enter dates (e.g. 1, 15)"
-                      style={tw`border p-2 rounded mb-2`}
-                      keyboardType="numeric"
-                      value={editedTask.selectedDates?.join(', ') || ''}
-                      onChangeText={text => {
-                        const dates = text
-                          .split(',')
-                          .map(date => parseInt(date.trim()))
-                          .filter(n => !isNaN(n) && n > 0 && n < 32); // ১-৩১ এর মধ্যে ভ্যালিডেশন
-                        setEditedTask({...editedTask, selectedDates: dates});
-                      }}
-                    />
+                        {editedTask.specTarget === 'Weekly' && (
+                          <View style={tw`flex-row flex-wrap`}>
+                            {[
+                              'Sun',
+                              'Mon',
+                              'Tue',
+                              'Wed',
+                              'Thu',
+                              'Fri',
+                              'Sat',
+                            ].map(day => (
+                              <TouchableOpacity
+                                key={day}
+                                style={tw`px-3 py-1 mx-1 my-1 rounded ${
+                                  editedTask.selectedDays?.includes(day)
+                                    ? 'bg-blue-500'
+                                    : 'bg-gray-200'
+                                }`}
+                                onPress={() => toggleDaySelection(day)}>
+                                <Text
+                                  style={tw`${
+                                    editedTask.selectedDays?.includes(day)
+                                      ? 'text-white'
+                                      : 'text-gray-700'
+                                  }`}>
+                                  {day}
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
 
-                    {/* মাস সিলেকশন বাটন */}
-                    <View style={tw`flex-row flex-wrap`}>
-                      {[
-                        'Jan',
-                        'Feb',
-                        'Mar',
-                        'Apr',
-                        'May',
-                        'Jun',
-                        'Jul',
-                        'Aug',
-                        'Sep',
-                        'Oct',
-                        'Nov',
-                        'Dec',
-                      ].map(month => (
-                        <TouchableOpacity
-                          key={month}
-                          style={tw`px-3 py-1 mx-1 my-1 rounded ${
-                            editedTask.selectedMonths?.includes(month)
-                              ? 'bg-blue-500'
-                              : 'bg-gray-300'
-                          }`}
-                          onPress={() => {
-                            const updatedMonths =
-                              editedTask.selectedMonths?.includes(month)
-                                ? editedTask.selectedMonths.filter(
-                                    (m: string) => m !== month,
-                                  )
-                                : [...(editedTask.selectedMonths || []), month];
-                            setEditedTask({
-                              ...editedTask,
-                              selectedMonths: updatedMonths,
-                            });
-                          }}>
-                          <Text
-                            style={tw`${
-                              editedTask.selectedMonths?.includes(month)
-                                ? 'text-white'
-                                : 'text-gray-700'
-                            }`}>
-                            {month}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
+                        {editedTask.specTarget === 'Monthly' && (
+                          <TextInput
+                            style={tw`border p-2 rounded`}
+                            placeholder="Enter dates (e.g. 1,15)"
+                            value={editedTask.selectedDates?.join(', ')}
+                            onChangeText={text => {
+                              const dates = text
+                                .split(',')
+                                .map(d => parseInt(d.trim()));
+                              setEditedTask({
+                                ...editedTask,
+                                selectedDates: dates,
+                              });
+                            }}
+                          />
+                        )}
+
+                        {editedTask.specTarget === 'Yearly' && (
+                          <View>
+                            <View style={tw`flex-row flex-wrap mb-2`}>
+                              {[
+                                'Jan',
+                                'Feb',
+                                'Mar',
+                                'Apr',
+                                'May',
+                                'Jun',
+                                'Jul',
+                                'Aug',
+                                'Sep',
+                                'Oct',
+                                'Nov',
+                                'Dec',
+                              ].map(month => (
+                                <TouchableOpacity
+                                  key={month}
+                                  style={tw`px-3 py-1 mx-1 my-1 rounded ${
+                                    editedTask.selectedMonths?.includes(month)
+                                      ? 'bg-blue-500'
+                                      : 'bg-gray-200'
+                                  }`}
+                                  onPress={() => handleMonthSelection(month)}>
+                                  <Text
+                                    style={tw`${
+                                      editedTask.selectedMonths?.includes(month)
+                                        ? 'text-white'
+                                        : 'text-gray-700'
+                                    }`}>
+                                    {month}
+                                  </Text>
+                                </TouchableOpacity>
+                              ))}
+                            </View>
+                            <TextInput
+                              style={tw`border p-2 rounded`}
+                              placeholder="Enter dates (e.g. 1,15)"
+                              value={editedTask.selectedDates?.join(', ')}
+                              onChangeText={text => {
+                                const dates = text
+                                  .split(',')
+                                  .map(d => parseInt(d.trim()));
+                                setEditedTask({
+                                  ...editedTask,
+                                  selectedDates: dates,
+                                });
+                              }}
+                            />
+                          </View>
+                        )}
+                      </>
+                    )}
                   </View>
 
                   {/* Action Buttons */}
