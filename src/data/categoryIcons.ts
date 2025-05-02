@@ -1,12 +1,12 @@
 const categoryIcons: Record<
   | 'Fitness'
   | 'Wellness'
-  | 'Productivity'
+  | 'Work'
   | 'Nutrition'
   | 'Sleep'
-  | 'Growth'
+  | 'Personal Growth'
   | 'Household'
-  | 'Social'
+  | 'FnF'
   | 'Self-Care'
   | 'Financials'
   | 'Career'
@@ -16,20 +16,20 @@ const categoryIcons: Record<
   | 'Pet',
   any
 > = {
-  Fitness: require('../../assets/images/fitness.png'),
-  Wellness: require('../../assets/images/wellness.png'),
-  Productivity: require('../../assets/images/work.png'),
-  Nutrition: require('../../assets/images/nutrition.png'),
-  Sleep: require('../../assets/images/nutrition.png'),
-  Growth: require('../../assets/images/nutrition.png'),
-  Household: require('../../assets/images/nutrition.png'),
-  Social: require('../../assets/images/nutrition.png'),
-  'Self-Care': require('../../assets/images/nutrition.png'),
-  Financials: require('../../assets/images/nutrition.png'),
-  Career: require('../../assets/images/nutrition.png'),
-  Tech: require('../../assets/images/nutrition.png'),
-  Academic: require('../../assets/images/nutrition.png'),
-  Spiritual: require('../../assets/images/nutrition.png'),
-  Pet: require('../../assets/images/nutrition.png'),
+  Fitness: require('../../assets/images/Category/Fitness.png'),
+  Wellness: require('../../assets/images/Category/Wellness.png'),
+  Work: require('../../assets/images/Category/Work.png'),
+  Nutrition: require('../../assets/images/Category/Nutrition.png'),
+  Sleep: require('../../assets/images/Category/Sleep.png'),
+  'Personal Growth': require('../../assets/images/Category/PersonalGrowth.png'),
+  Household: require('../../assets/images/Category/HouseHold.png'),
+  FnF: require('../../assets/images/Category/Fnf.png'),
+  'Self-Care': require('../../assets/images/Category/Self-Care.png'),
+  Financials: require('../../assets/images/Category/Financials.png'),
+  Career: require('../../assets/images/Category/Career.png'),
+  Tech: require('../../assets/images/Category/Tech.png'),
+  Academic: require('../../assets/images/Category/Academic.png'),
+  Spiritual: require('../../assets/images/Category/Spiritual.png'),
+  Pet: require('../../assets/images/Category/Pet.png'),
 };
 export default categoryIcons;
