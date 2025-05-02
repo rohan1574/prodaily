@@ -102,21 +102,22 @@ Sleep: {
     "Car maintenance": require('../../assets/images/Household/car-main.png'),
     "Car Washing": require('../../assets/images/Household/car-wash.png')
   },
-  // Social: {
-  //   'Family Time 👨‍👩‍👧‍👦': require('../../assets/images/Walking.png'),
-  //   'Friend Catch-ups 👯‍♂️': require('../../assets/images/Walking.png'),
-  //   'Partner Time 💕': require('../../assets/images/Walking.png'),
-  //   'Networking 🌐': require('../../assets/images/Walking.png'),
-  //   'Social Media Engagement 📱': require('../../assets/images/Walking.png'),
-  //   'Mentorship 👩‍🏫': require('../../assets/images/Walking.png'),
-  //   'Helping F&F 🤝': require('../../assets/images/Walking.png'),
-  //   'Calling F&F ☎️': require('../../assets/images/Walking.png'),
-  //   'Community Activities 🏘️': require('../../assets/images/Walking.png'),
-  //   'Quality Conversations 💬': require('../../assets/images/Walking.png'),
-  //   'Expressing Gratitude 🙏': require('../../assets/images/Walking.png'),
-  //   'Take Care Loved Ones ❤️': require('../../assets/images/Walking.png'),
-  //   'Celebrating Occasions 🎉': require('../../assets/images/Walking.png'),
-  // },
+  FnF: {
+    "Family Time": require('../../assets/images/FnF/family-time.png'),
+    "Friend Catch-ups": require('../../assets/images/FnF/friend-cat.png'),
+    "Partner Time": require('../../assets/images/FnF/partner-time.png'),
+    Networking: require('../../assets/images/FnF/networking.png'),
+    "Social Media": require('../../assets/images/FnF/sm-engm.png'),
+    Mentorship: require('../../assets/images/FnF/mentorship.png'),
+    "Helping F&F": require('../../assets/images/FnF/helping-f.png'),
+    "Calling F&F": require('../../assets/images/FnF/calling-f.png'),
+    "Community Activities": require('../../assets/images/FnF/community-act.png'),
+    "Neighbor Conversations": require('../../assets/images/FnF/neighbor-on.png'),
+    "Expressing Gratitude": require('../../assets/images/FnF/expressing-gra.png'),
+    "Take Care Loved One": require('../../assets/images/FnF/tcloveone.png'),
+    "Celebrate Occasion": require('../../assets/images/FnF/celebrate-oc.png'),
+    Wish: require('../../assets/images/FnF/wish.png')
+  },
 
   // 'Self-Care': {
   //   'Skincare 🧴': require('../../assets/images/Walking.png'),
