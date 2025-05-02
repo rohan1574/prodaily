@@ -525,6 +525,7 @@ const AddDailyTaskScreen = () => {
                   setIsStarred(false);
                   setIsSpecificForEnabled(false);
                   setIsSpecificDayOnSelected(false);
+                  setIsDailyTargetEnabled(false);
                 }
                 setExpandedTask(expandedTask === task ? null : task);
                 setTaskName(task);
