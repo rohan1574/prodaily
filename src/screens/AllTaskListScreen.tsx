@@ -208,7 +208,47 @@ const AllTaskListScreen = () => {
       </View>
     </Modal>
   );
+  // তারিখ টগল করার লজিক - টাইপ সংযোজন করুন
+  const toggleDateSelection = (date: number) => {
+    const updatedDates = editedTask.selectedDates?.includes(date)
+      ? editedTask.selectedDates.filter((d: number) => d !== date)
+      : [...(editedTask.selectedDates || []), date];
 
+    setEditedTask({
+      ...editedTask,
+      selectedDates: updatedDates.sort((a: number, b: number) => a - b), // এখানে টাইপ ডিক্লেয়ার করুন
+    });
+  };
+
+  // ১-৩১ তারিখের লিস্ট কম্পোনেন্ট
+  const DateGridList = () => (
+    <ScrollView
+      horizontal={false}
+      style={tw`max-h-40`}
+      showsVerticalScrollIndicator={false}>
+      <View style={tw`flex-row flex-wrap justify-between`}>
+        {Array.from({length: 31}, (_, i) => i + 1).map(date => (
+          <TouchableOpacity
+            key={date}
+            style={tw`w-8 h-8 m-1 rounded-full items-center justify-center ${
+              editedTask.selectedDates?.includes(date)
+                ? 'bg-blue-500'
+                : 'bg-gray-200'
+            }`}
+            onPress={() => toggleDateSelection(date)}>
+            <Text
+              style={tw`${
+                editedTask.selectedDates?.includes(date)
+                  ? 'text-white font-bold'
+                  : 'text-gray-700'
+              }`}>
+              {date}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
+  );
   return (
     <View style={tw`flex-1 bg-white p-4`}>
       <DeleteConfirmationModal />
@@ -242,11 +282,7 @@ const AllTaskListScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
                     <Icon
-                      name={
-                        expandedTaskId === task.id
-                          ? 'chevron-down'
-                          : 'create-outline'
-                      }
+                      name={expandedTaskId === task.id ? '' : 'create-outline'}
                       size={24}
                       color="#4b5563"
                     />
@@ -510,24 +546,64 @@ const AllTaskListScreen = () => {
                             ))}
                           </View>
                         )}
-
                         {editedTask.specTarget === 'Monthly' && (
-                          <TextInput
-                            style={tw`border p-2 rounded`}
-                            placeholder="Enter dates (e.g. 1,15)"
-                            value={editedTask.selectedDates?.join(', ')}
-                            onChangeText={text => {
-                              const dates = text
-                                .split(',')
-                                .map(d => parseInt(d.trim()));
-                              setEditedTask({
-                                ...editedTask,
-                                selectedDates: dates,
-                              });
-                            }}
-                          />
+                          <View>
+                            <Text style={tw`text-gray-600 mb-2`}>
+                              Select dates:
+                            </Text>
+                            <ScrollView
+                              horizontal={false}
+                              style={tw`max-h-40`}
+                              showsVerticalScrollIndicator={false}>
+                              <View
+                                style={tw`flex-row flex-wrap justify-between`}>
+                                {Array.from({length: 31}, (_, i) => i + 1).map(
+                                  date => (
+                                    <TouchableOpacity
+                                      key={date}
+                                      style={tw`w-8 h-8 m-1 rounded-full items-center justify-center ${
+                                        editedTask.selectedDate?.includes(date)
+                                          ? 'bg-blue-500'
+                                          : 'bg-gray-200'
+                                      }`}
+                                      onPress={() => {
+                                        const updatedDates =
+                                          editedTask.selectedDate?.includes(
+                                            date,
+                                          )
+                                            ? editedTask.selectedDate.filter(
+                                                (d: number) => d !== date,
+                                              )
+                                            : [
+                                                ...(editedTask.selectedDate ||
+                                                  []),
+                                                date,
+                                              ];
+                                        setEditedTask({
+                                          ...editedTask,
+                                          selectedDate: updatedDates.sort(
+                                            (a: numbe, b: number) => a - b,
+                                          ),
+                                        });
+                                      }}>
+                                      <Text
+                                        style={tw`${
+                                          editedTask.selectedDate?.includes(
+                                            date,
+                                          )
+                                            ? 'text-white font-bold'
+                                            : 'text-gray-700'
+                                        }`}>
+                                        {date}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  ),
+                                )}
+                              </View>
+                            </ScrollView>
+                          </View>
                         )}
-
+                        {/* year */}
                         {editedTask.specTarget === 'Yearly' && (
                           <View>
                             <View style={tw`flex-row flex-wrap mb-2`}>
@@ -564,20 +640,17 @@ const AllTaskListScreen = () => {
                                 </TouchableOpacity>
                               ))}
                             </View>
-                            <TextInput
-                              style={tw`border p-2 rounded`}
-                              placeholder="Enter dates (e.g. 1,15)"
-                              value={editedTask.selectedDates?.join(', ')}
-                              onChangeText={text => {
-                                const dates = text
-                                  .split(',')
-                                  .map(d => parseInt(d.trim()));
-                                setEditedTask({
-                                  ...editedTask,
-                                  selectedDates: dates,
-                                });
-                              }}
-                            />
+                            {editedTask.specTarget === 'Yearly' && (
+                              <View>
+                                <View style={tw`flex-row flex-wrap mb-2`}>
+                                  {/* Months selection (existing code) */}
+                                </View>
+                                <Text style={tw`text-gray-600 mb-2`}>
+                                  Select dates:
+                                </Text>
+                                <DateGridList />
+                              </View>
+                            )}
                           </View>
                         )}
                       </>
@@ -586,10 +659,16 @@ const AllTaskListScreen = () => {
 
                   {/* Action Buttons */}
                   <View style={tw`flex-row justify-between mt-4`}>
-                    <TouchableOpacity
-                      style={tw`bg-red-500 px-6 py-2 rounded-lg`}
-                      onPress={() => handleDelete(task.id)}>
-                      <Text style={tw`text-white`}>Delete</Text>
+                    <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
+                      <Icon
+                        name={
+                          expandedTaskId === task.id
+                            ? 'chevron-down'
+                            : 'create-outline'
+                        }
+                        size={24}
+                        color="#4b5563"
+                      />
                     </TouchableOpacity>
 
                     <TouchableOpacity
