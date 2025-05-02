@@ -89,18 +89,18 @@ Sleep: {
   Household: {
     Cleaning: require('../../assets/images/Household/cleaning.png'),
     Laundry: require('../../assets/images/Household/laundry.png'),
-    Dishwashing: require('../../assets/images/Household/dishwashing.png'),
-    "Home Organization": require('../../assets/images/Household/organization.png'),
+    Dishwashing: require('../../assets/images/Household/dishwash.png'),
+    "Home Organization": require('../../assets/images/Household/organizing.png'),
     "Grocery Shopping": require('../../assets/images/Household/grocery.png'),
-    Decluttering: require('../../assets/images/Household/declutter.png'),
+    Decluttering: require('../../assets/images/Household/decluttering.png'),
     "Rearrange Things": require('../../assets/images/Household/rearrange.png'),
-    "Making the Bed": require('../../assets/images/Household/bed.png'),
+    "Making the Bed": require('../../assets/images/Household/making-bed.png'),
     Cooking: require('../../assets/images/Household/cooking.png'),
-    "Taking Out Trash": require('../../assets/images/Household/trash.png'),
+    "Taking Out Trash": require('../../assets/images/Household/taking-trash.png'),
     Gardening: require('../../assets/images/Household/gardening.png'),
-    "Home Maintenance": require('../../assets/images/Household/maintenance.png'),
-    "Car maintenance": require('../../assets/images/Household/car_maintenance.png'),
-    "Car Washing": require('../../assets/images/Household/car_wash.png')
+    "Home Maintenance": require('../../assets/images/Household/home-main.png'),
+    "Car maintenance": require('../../assets/images/Household/car-main.png'),
+    "Car Washing": require('../../assets/images/Household/car-wash.png')
   },
   // Social: {
   //   'Family Time 👨‍👩‍👧‍👦': require('../../assets/images/Walking.png'),
