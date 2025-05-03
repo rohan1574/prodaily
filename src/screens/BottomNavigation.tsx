@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import {View, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { s as tw } from 'react-native-wind';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import {s as tw} from 'react-native-wind';
+import {useNavigation} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
+
 
 // Define Navigation Types
 type RootStackParamList = {
@@ -20,23 +21,43 @@ const BottomNavigation: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
 
   return (
-    <View style={tw`flex-row justify-between  border-t border-gray-200 bg-white`}>
-      <TouchableOpacity onPress={() => navigation.navigate('TodaysTaskToDoScreen')}>
-        <Icon name="home-outline" size={28} color="gray" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('MyStatisticsScreen')}>
-        <Icon name="bar-chart-outline" size={28} color="gray" />
+    <View style={tw`flex-row justify-between  border-gray-200 bg-white`}>
+      <TouchableOpacity
+        style={tw`top-4 left-6 `}
+        onPress={() => navigation.navigate('TodaysTaskToDoScreen')}>
+        <Image
+          source={require('../../assets/images/Nab/home.png')}
+          style={[tw``,{width:24,height:26}]}
+        />
       </TouchableOpacity>
       <TouchableOpacity
-        style={tw`bg-blue-500 rounded-full p-4`}
+        style={tw`top-4 left-4`}
+        onPress={() => navigation.navigate('MyStatisticsScreen')}>
+         <Image
+          source={require('../../assets/images/Nab/bar-chart.png')}
+          style={[tw``,{width:24,height:26}]}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={tw`bg-blue-200 rounded-full p-4 bottom-4 border-2 border-gray-200`}
         onPress={() => navigation.navigate('AddDailyTaskScreen')}>
-        <Icon name="add" size={28} color="white" />
+        <Icon name="add" size={28} color="blue" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}>
-        <Icon name="calendar-outline" size={28} color="gray" />
+      <TouchableOpacity
+        style={tw`top-4 right-4`}
+        onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}>
+         <Image
+          source={require('../../assets/images/Nab/calendar.png')}
+          style={[tw``,{width:24,height:26}]}
+        />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileManageScreen')}>
-        <Icon name="settings-outline" size={28} color="gray" />
+      <TouchableOpacity
+        style={tw`top-4 right-6`}
+        onPress={() => navigation.navigate('ProfileManageScreen')}>
+         <Image
+          source={require('../../assets/images/Nab/settings.png')}
+          style={[tw``,{width:24,height:26,tintColor: '#000000'}]}
+        />
       </TouchableOpacity>
     </View>
   );

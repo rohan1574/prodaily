@@ -111,9 +111,14 @@ const MyCalenderFutureTaskScreen = () => {
   // বাকি ফাংশন (toggleStar, handleDelete, openUpdateModal, handleUpdateTask)
 
   return (
-    <View style={tw`flex-1 bg-white p-4`}>
+    <View style={[tw`flex-1 `,{backgroundColor:"#F7FAFF"}]}>
+      <View style={tw`mb-4 top-2 left-4 `}>
+      <Text style={tw`text-xl font-bold `}>My Calendar</Text>
+      <Text style={[tw` `,{fontSize:16,color:"#8D99AE"}]}>Your added tasks on the selected calendar day.</Text>
+      </View>
       {/* ক্যালেন্ডার সেকশন */}
-      <CalendarPicker
+    <View style={tw`bg-white mb-2 mx-2 rounded-lg`}>
+    <CalendarPicker
         onDateChange={(date: Date) => setSelectedDate(date)}
         selectedStartDate={selectedDate}
         allowRangeSelection={false}
@@ -121,11 +126,13 @@ const MyCalenderFutureTaskScreen = () => {
         selectedDayTextColor="#fff"
         scaleFactor={375}
         textStyle={{fontFamily: 'Roboto'}}
+      
       />
+    </View>
 
-      <Text style={tw`text-2xl font-semibold my-4`}>
-        Tasks for {selectedDate.toDateString()}
-      </Text>
+      {/* <Text style={tw`text-2xl font-semibold my-4`}>
+        {selectedDate.toDateString()}
+      </Text> */}
 
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
@@ -139,96 +146,28 @@ const MyCalenderFutureTaskScreen = () => {
             tasks.map((task: any) => (
               <View
                 key={task.id}
-                style={tw`bg-gray-100 p-4 mb-4 rounded-lg relative`}>
+                style={[tw`bg-white mx-4 mb-2 rounded-lg relative`,]}>
                 {/* টাস্ক নাম ও স্টার আইকন */}
                 {task.icon && (
-                  <View style={tw`flex-row items-center gap-2 mb-2`}>
-                    <Image source={task.icon} style={tw`w-8 h-8`} />
-                    <Text style={tw`text-lg font-bold`}>{task.name}</Text>
+                  <View style={tw`flex-row items-center p-2`}>
+                    <Image source={task.icon} style={[tw`left-2`,{width: 32, height: 32}]} />
+                    <Text style={[tw`text-base font-medium left-6`,{color:"#2B2D42"}]}>{task.name}</Text>
                   </View>
                 )}
 
                 {!task.icon && (
-                  <Text style={tw`text-lg font-bold mb-2`}>{task.name}</Text>
-                )}
-
-                <TouchableOpacity
-                  onPress={() => toggleStar(task.id)}
-                  style={tw`absolute top-3 right-3`}>
-                  <Icon
-                    name={task.isStarred ? 'star' : 'star-outline'}
-                    size={24}
-                    color={task.isStarred ? 'gold' : 'gray'}
-                  />
-                </TouchableOpacity>
-
-                {/* ডেইলি রুটিন ট্যাগ */}
-                {!task.scheduleType &&
-                  !task.endDate &&
-                  !task.selectedDays?.length &&
-                  !task.selectedDate?.length &&
-                  !task.selectedDates?.length &&
-                  !task.selectedMonths?.length && (
-                    <Text style={tw`text-sm text-green-700 mb-1`}>
-                      🔁 This task is part of your Daily Routine
-                    </Text>
-                  )}
-
-                {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
-                {task.dailyTarget && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Set Daily Target:{' '}
-                    {task.dailyTarget
-                      ? `${task.dailyTarget} ${task.targetType}`
-                      : 'N/A'}
-                  </Text>
-                )}
-
-                {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                {task.specificFor && task.specificForValue && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Specific For: {task.specificForValue} {task.specificFor}
-                  </Text>
-                )}
-
-                {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDays?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Weekly: {task.selectedDays.join(', ')}
-                  </Text>
-                )}
-
-                {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDate?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Monthly: {task.selectedDate.join(', ')}
-                  </Text>
-                )}
-
-                {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                {task.selectedDates?.length > 0 &&
-                  task.selectedMonths?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Yearly: {task.selectedDates.join(', ')} -{' '}
-                      {task.selectedMonths.join(', ')}
-                    </Text>
-                  )}
-
-                {/* সময়সীমা (শুধু endDate থাকলে) */}
-                {task.endDate && (
-                  <Text style={tw`text-sm text-purple-600 mt-2`}>
-                    Valid until: {new Date(task.endDate).toLocaleDateString()}
-                  </Text>
+                  <Text style={tw`text-lg font-bold `}>{task.name}</Text>
                 )}
               </View>
             ))
           )}
+          
         </ScrollView>
+        
       )}
-
-      {/* মডাল এবং বাকি কম্পোনেন্ট */}
-
-      <BottomNavigation />
+    <View style={tw``}>
+    <BottomNavigation />
+    </View>
     </View>
   );
 };

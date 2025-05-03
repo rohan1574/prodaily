@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Image,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
@@ -154,7 +153,7 @@ const TodaysTaskToDoScreen = () => {
  
 
   return (
-    <View style={tw`flex-1 bg-white p-4`}>
+    <View style={tw`flex-1 bg-gray-200`}>
       {/* Header */}
       <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
         <View>

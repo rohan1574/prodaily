@@ -394,10 +394,10 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
-    <View style={tw`flex-1 bg-red-50 p-4`}>
+    <View style={tw`flex-1 bg-red-50`}>
       {/* Header */}
-      <View style={tw`mb-4`}>
-        <Text style={[tw` font-bold text-black`, {fontSize: 24}]}>
+      <View style={tw`mb-4 `}>
+        <Text style={[tw` font-bold text-black `, {fontSize: 24}]}>
           Add Daily Task
         </Text>
         <Text style={[tw`font-light text-black`, {fontSize: 15}]}>
@@ -424,7 +424,7 @@ const AddDailyTaskScreen = () => {
             if (category) setSelectedCategory(category);
           }}
           scrollEventThrottle={2}
-          contentContainerStyle={tw`pb-2`}>
+          contentContainerStyle={tw``}>
           {/* Render all categories */}
           {allCategories.map((category, index) => (
             <TouchableOpacity
@@ -463,7 +463,7 @@ const AddDailyTaskScreen = () => {
             }}
             style={tw`items-center mr-2`}>
             <View
-              style={tw`w-20 h-20 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
+              style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
               <Icon name="add" size={32} color="#6B7280" />
             </View>
             <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>
@@ -529,7 +529,7 @@ const AddDailyTaskScreen = () => {
       </View>
 
       {/* Task List (Scrollable) */}
-      <ScrollView style={tw`flex-1 top-4`} showsVerticalScrollIndicator={false}>
+      <ScrollView style={tw`flex-1 p-4 bottom-2 `} showsVerticalScrollIndicator={false}>
         {Object.keys({
           ...(tasksData[selectedCategory] || {}),
           ...(customTasksData[selectedCategory] || {}),
@@ -929,13 +929,13 @@ const AddDailyTaskScreen = () => {
             setCustomTaskName('');
             setSelectedCustomIcon(null);
           }}
-          style={tw`flex-row items-center justify-between bg-white p-3 rounded-lg mb-2`}>
+          style={tw`flex-row items-center justify-between bg-white p-2  rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
             <Icon
               name="add-circle-outline"
               size={32}
               color={selectedColor}
-              style={tw`mr-4`}
+              style={tw``}
             />
             <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
               Add Custom Task
@@ -1020,6 +1020,7 @@ const AddDailyTaskScreen = () => {
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
+    
   );
 };
 

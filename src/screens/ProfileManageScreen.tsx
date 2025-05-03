@@ -5,6 +5,7 @@ import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {ColorContext} from '../context/ColorContext';
+import BottomNavigation from './BottomNavigation';
 
 // Define the navigation type
 type RootStackParamList = {
@@ -30,7 +31,7 @@ const ProfileManageScreen = () => {
 
   const {setSelectedColor} = context;
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
+    <View style={tw`flex-1 bg-gray-200`}>
       {/* Fixed Header Section */}
       <View style={tw`bg-blue-500 p-6 rounded-b-3xl items-center`}>
         <View style={tw`w-24 h-24 bg-gray-300 rounded-full mb-2`} />
@@ -185,49 +186,7 @@ const ProfileManageScreen = () => {
       </ScrollView>
 
       {/* Bottom Navigation Bar */}
-      <View
-        style={tw`flex-row justify-between p-4 border-t border-gray-200 bg-white`}>
-        <TouchableOpacity>
-          <Icon
-            name="home-outline"
-            size={28}
-            color="gray"
-            onPress={() => navigation.navigate('TodaysTaskToDoScreen')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon
-            name="bar-chart-outline"
-            size={28}
-            color="gray"
-            onPress={() => navigation.navigate('MyStatisticsScreen')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={tw`bg-blue-500 rounded-full p-4`}>
-          <Icon
-            name="add"
-            size={28}
-            color="white"
-            onPress={() => navigation.navigate('AddDailyTaskScreen')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon
-            name="calendar-outline"
-            size={28}
-            color="gray"
-            onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon
-            name="settings-outline"
-            size={28}
-            color="gray"
-            onPress={() => navigation.navigate('ProfileManageScreen')}
-          />
-        </TouchableOpacity>
-      </View>
+      <BottomNavigation></BottomNavigation>
     </View>
   );
 };
