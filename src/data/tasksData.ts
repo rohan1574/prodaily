@@ -1,3 +1,4 @@
+
 const tasksData: Record<string, any> = {
   Fitness: {
     Walking: require('../../assets/images/Fitness/exercise.png'),

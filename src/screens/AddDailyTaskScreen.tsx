@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   Alert,
+  ImageSourcePropType,
 } from 'react-native';
 import {Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -56,7 +57,6 @@ type Category =
   | 'Spiritual'
   | 'Pet'
   | string;
-
 const categories = Object.keys(categoryIcons) as Category[];
 
 const CUSTOM_TASKS_KEY = 'custom_tasks';
@@ -117,17 +117,17 @@ const AddDailyTaskScreen = () => {
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [customTasksData, setCustomTasksData] = useState<Record<string, any>>(
-    {},
-  );
+  const [customTasksData, setCustomTasksData] = useState<
+    Record<string, Record<string, ImageSourcePropType>>
+  >({});
   const [isCustomTaskModalVisible, setIsCustomTaskModalVisible] =
     useState(false);
   const [customTaskName, setCustomTaskName] = useState('');
   const [selectedCustomIcon, setSelectedCustomIcon] = useState<any>(null);
   // 2. State গুলি আপডেট করুন
-  const [customCategories, setCustomCategories] = useState<Record<string, any>>(
-    {},
-  );
+  const [customCategories, setCustomCategories] = useState<
+    Record<string, ImageSourcePropType>
+  >({});
   const [isCustomCategoryModalVisible, setIsCustomCategoryModalVisible] =
     useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -161,7 +161,7 @@ const AddDailyTaskScreen = () => {
   }, []);
 
   // Merge default and custom categories
-  const mergedIcons: {[key: string]: any} = {
+  const mergedIcons: Record<string, ImageSourcePropType> = {
     ...categoryIcons,
     ...customCategories,
   };
@@ -961,35 +961,44 @@ const AddDailyTaskScreen = () => {
 
               <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Object.keys({
-                  ...(tasksData[selectedCategory] || {}),
-                  ...(customTasksData[selectedCategory] || {}),
-                }).map((taskName, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() =>
-                      setSelectedCustomIcon(
-                        tasksData[selectedCategory]?.[taskName] ||
-                          customTasksData[selectedCategory]?.[taskName],
-                      )
-                    }
-                    style={tw`p-2 mx-1 rounded-lg ${
-                      selectedCustomIcon ===
-                      (tasksData[selectedCategory]?.[taskName] ||
-                        customTasksData[selectedCategory]?.[taskName])
-                        ? 'bg-blue-100'
-                        : 'bg-gray-100'
-                    }`}>
-                    <Image
-                      source={
-                        tasksData[selectedCategory]?.[taskName] ||
-                        customTasksData[selectedCategory]?.[taskName]
-                      }
-                      style={tw`w-10 h-10`}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                ))}
+                {Object.entries(tasksData).map(([category, tasks]) =>
+                  Object.entries(tasks).map(([taskName, iconSource]) => (
+                    <TouchableOpacity
+                      key={`${category}-${taskName}`}
+                      onPress={() => setSelectedCustomIcon(iconSource)}
+                      style={tw`p-2 mx-1 rounded-lg ${
+                        selectedCustomIcon === iconSource
+                          ? 'bg-blue-100'
+                          : 'bg-gray-100'
+                      }`}>
+                      <Image
+                        source={iconSource as ImageSourcePropType} // Add type assertion here
+                        style={tw`w-10 h-10`}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )),
+                )}
+
+                {/* সকল ক্যাটাগরির কাস্টম টাস্ক আইকন যোগ করুন */}
+                {Object.entries(customTasksData).map(([category, tasks]) =>
+                  Object.entries(tasks).map(([taskName, iconSource]) => (
+                    <TouchableOpacity
+                      key={`custom-${category}-${taskName}`}
+                      onPress={() => setSelectedCustomIcon(iconSource)}
+                      style={tw`p-2 mx-1 rounded-lg ${
+                        selectedCustomIcon === iconSource
+                          ? 'bg-blue-100'
+                          : 'bg-gray-100'
+                      }`}>
+                      <Image
+                        source={iconSource}
+                        style={tw`w-10 h-10`}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )),
+                )}
               </ScrollView>
 
               <View style={tw`flex-row justify-between mt-6 gap-3`}>
