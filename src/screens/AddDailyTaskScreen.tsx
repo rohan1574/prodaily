@@ -410,7 +410,7 @@ const AddDailyTaskScreen = () => {
       </View>
 
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`left-8`}>
+      <View style={tw``}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -433,21 +433,21 @@ const AddDailyTaskScreen = () => {
               onPress={() => setSelectedCategory(category)}>
               <View
                 style={[
-                  tw`w-20 h-20 rounded-full flex items-center justify-center border-2 bg-white`,
+                  tw`w-24 h-24 rounded-full flex mr-1 items-center justify-center bg-white`,
                   selectedCategory === category
-                    ? tw`border-blue-500`
-                    : tw`border-gray-200`,
+                    ? tw`border-blue-500 border-4`
+                    : tw`border-gray-200 `,
                 ]}>
                 <Image
                   source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={tw`w-12 h-12`}
+                  style={[tw``,{width:56,height:56}]}
                 />
               </View>
               <Text
-                style={tw`text-sm mt-1 font-bold ${
+                style={tw` mt-1 font-bold ${
                   selectedCategory === category
-                    ? 'text-blue-500'
-                    : 'text-gray-600'
+                    ? 'text-blue-500 text-sm'
+                    : 'text-black text-xs font-medium'
                 }`}>
                 {category}
               </Text>
@@ -529,7 +529,7 @@ const AddDailyTaskScreen = () => {
       </View>
 
       {/* Task List (Scrollable) */}
-      <ScrollView style={tw`flex-1 mt-4`} showsVerticalScrollIndicator={false}>
+      <ScrollView style={tw`flex-1 top-4`} showsVerticalScrollIndicator={false}>
         {Object.keys({
           ...(tasksData[selectedCategory] || {}),
           ...(customTasksData[selectedCategory] || {}),
@@ -555,7 +555,7 @@ const AddDailyTaskScreen = () => {
                 setTaskName(task);
               }}
               style={[
-                tw`flex-row items-center justify-between bg-white p-3 rounded-lg`,
+                tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
                 {bg: selectedColor},
               ]}>
               <View style={tw`flex-row items-center`}>
@@ -573,7 +573,7 @@ const AddDailyTaskScreen = () => {
                 <Text
                   style={[
                     tw`text-sm font-medium text-black`,
-                    {color: selectedColor},
+                    // {color: selectedColor},
                   ]}>
                   {task}
                 </Text>
