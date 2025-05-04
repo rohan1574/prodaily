@@ -225,68 +225,66 @@ const TodaysTaskToDoScreen = () => {
             </Text>
           ) : (
             tasks.map((task: any) => (
-              <View
-                key={task.id}
-                style={tw`p-4 mb-4 rounded-lg ${
-                  task.completed ? 'bg-green-100' : 'bg-gray-100'
-                }`}>
-                <View style={tw`flex-row items-center justify-between`}>
-                  <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-                    <Icon
-                      name={
-                        task.completed ? 'checkmark-circle' : 'ellipse-outline'
-                      }
-                      size={24}
-                      color={task.completed ? 'green' : 'gray'}
-                    />
-                  </TouchableOpacity>
+              <View key={task.id} style={tw`p-4 mb-4 rounded-lg ${task.completed ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <View style={tw`flex-row items-center justify-between`}>
+                {/* Left Side: Check Icon */}
+                <TouchableOpacity onPress={() => toggleComplete(task.id)}>
+                  <Icon
+                    name={task.completed ? 'checkmark-circle' : 'ellipse-outline'}
+                    size={24}
+                    color={task.completed ? 'green' : 'gray'}
+                  />
+                </TouchableOpacity>
+            
+                {/* Middle Content: Image, Name, Daily Target */}
+                <View style={tw`flex-row items-center flex-1 mx-3`}>
                   {task.icon && (
-                    <Image source={task.icon} style={tw`w-6 h-8 right-12`} />
+                    <Image 
+                      source={task.icon} 
+                      style={tw`w-6 h-6 mr-2`}
+                    />
                   )}
-                  <Text style={tw`text-lg font-bold right-24,${task.completed ? 'line-through text-green-200' : 'text-gray-800'}`}>
+                  
+                  <Text style={tw`text-lg font-bold flex-1`}>
                     {task.name}
                   </Text>
-
-                  <TouchableOpacity onPress={() => toggleStar(task.id)}>
-                    <Icon
-                      name={task.isStarred ? 'star' : 'star-outline'}
-                      size={24}
-                      color={task.isStarred ? 'gold' : 'gray'}
-                    />
-                  </TouchableOpacity>
-                </View>
-                {task.dailyTarget && (
-                  <View style={tw`flex-row items-center mt-2`}>
-                    <Text style={tw`mr-2 font-semibold`}>
-                      {task.dailyTarget}
-                    </Text>
-                    <View
-                      style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
-                      <TouchableOpacity
-                        onPress={() => decrementProgress(task.id)}
-                        style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}>
-                        <Text style={tw`text-gray-700`}>-</Text>
-                      </TouchableOpacity>
-                      <Text style={tw`px-3 py-1 bg-white`}>
-                        {task.currentProgress}
+            
+                  {task.dailyTarget && (
+                    <View style={tw`flex-row items-center ml-2`}>
+                      <Text style={tw`mr-2 font-semibold`}>
+                        {task.dailyTarget}
                       </Text>
-                      <TouchableOpacity
-                        onPress={() => incrementProgress(task.id)}
-                        disabled={task.currentProgress >= task.dailyTarget}
-                        style={tw`px-3 py-1 bg-gray-100 rounded-r-lg ${
-                          task.currentProgress >= task.dailyTarget
-                            ? 'opacity-50'
-                            : ''
-                        }`}>
-                        <Text style={tw`text-gray-700`}>+</Text>
-                      </TouchableOpacity>
+                      <View style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
+                        <TouchableOpacity
+                          onPress={() => decrementProgress(task.id)}
+                          style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}
+                        >
+                          <Text style={tw`text-gray-700`}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={tw`px-3 py-1 bg-white`}>
+                          {task.currentProgress}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => incrementProgress(task.id)}
+                          style={tw`px-3 py-1 bg-gray-100 rounded-r-lg`}
+                        >
+                          <Text style={tw`text-gray-700`}>+</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                    <Text style={tw`ml-2 text-gray-600`}>
-                      {task.targetType}
-                    </Text>
-                  </View>
-                )}
+                  )}
+                </View>
+            
+                {/* Right Side: Star Icon */}
+                <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                  <Icon
+                    name={task.isStarred ? 'star' : 'star-outline'}
+                    size={24}
+                    color={task.isStarred ? 'gold' : 'gray'}
+                  />
+                </TouchableOpacity>
               </View>
+            </View>
             ))
           )}
         </ScrollView>

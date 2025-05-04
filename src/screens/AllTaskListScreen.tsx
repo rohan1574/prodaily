@@ -70,37 +70,38 @@ const AllTaskListScreen = () => {
       if (!specTarget) {
         if (task.selectedDays?.length) specTarget = 'Weekly';
         else if (task.selectedDate?.length) specTarget = 'Monthly';
-        else if (task.selectedDates?.length && task.selectedMonths?.length) specTarget = 'Yearly';
+        else if (task.selectedDates?.length && task.selectedMonths?.length)
+          specTarget = 'Yearly';
       }
-  
+
       setEditedTask({
         ...task,
-        specTarget // Add inferred specTarget
+        specTarget, // Add inferred specTarget
       });
-      
+
       setIsSpecificForEnabled(!!task.specificForValue);
       setIsDailyTargetEnabled(!!task.dailyTarget);
       setIsSpecificDayOnSelected(
         !!task.selectedDays?.length ||
-        !!task.selectedDate?.length ||
-        !!task.selectedDates?.length ||
-        !!task.selectedMonths?.length
+          !!task.selectedDate?.length ||
+          !!task.selectedDates?.length ||
+          !!task.selectedMonths?.length,
       );
     }
   };
- // সেভ বাটনের হ্যান্ডলারে যোগ করুন
-const handleUpdateTask = async (taskId: string) => {
-  try {
-    const updatedTasks = tasks.map(task =>
-      task.id === taskId ? {...editedTask, isStarred: task.isStarred} : task,
-    );
-    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    setTasks(updatedTasks);
-    setExpandedTaskId(null);
-  } catch (error) {
-    console.error('Error updating task:', error);
-  }
-};
+  // সেভ বাটনের হ্যান্ডলারে যোগ করুন
+  const handleUpdateTask = async (taskId: string) => {
+    try {
+      const updatedTasks = tasks.map(task =>
+        task.id === taskId ? {...editedTask, isStarred: task.isStarred} : task,
+      );
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      setTasks(updatedTasks);
+      setExpandedTaskId(null);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
   // রেডিও বাটন টগল লজিক
   const toggleSpecificFor = () => {
@@ -162,7 +163,6 @@ const handleUpdateTask = async (taskId: string) => {
       }));
     }
   };
- 
 
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
@@ -272,74 +272,75 @@ const handleUpdateTask = async (taskId: string) => {
                   )}
                   <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
                 </View>
+                <View style={tw``}>
+                  {/* ডেইলি রুটিন ট্যাগ */}
+                  {!task.scheduleType &&
+                    !task.endDate &&
+                    !task.selectedDays?.length &&
+                    !task.selectedDate?.length &&
+                    !task.selectedDates?.length &&
+                    !task.selectedMonths?.length && (
+                      <Text style={tw`text-sm text-green-700`}>Daily</Text>
+                    )}
 
+                  {/* ডেইলি টার্গেট */}
+                  {/* {task.dailyTarget && (
+                    <Text style={tw`text-sm text-gray-600`}>
+                       Target: {task.dailyTarget} {task.targetType}
+                    </Text>
+                  )} */}
+
+                  {/* স্পেসিফিক ফর */}
+                  {task.specificFor && task.specificForValue && (
+                    <Text style={tw`text-sm text-gray-600`}>
+                      F_ {task.specificForValue}_ {task.specificFor}
+                    </Text>
+                  )}
+
+                  {/* সাপ্তাহিক দিন */}
+                  {task.selectedDays?.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600`}>
+                      {task.selectedDays.join(', ')}_E_Week
+                    </Text>
+                  )}
+
+                  {/* মাসিক তারিখ */}
+                  {task.selectedDate?.length > 0 && (
+                    <Text style={tw`text-sm text-gray-600`}>Monthly</Text>
+                  )}
+
+                  {/* বার্ষিক তারিখ */}
+                  {task.selectedDates?.length > 0 &&
+                    task.selectedMonths?.length > 0 && (
+                      <Text style={tw`text-sm text-gray-600`}>Yearly</Text>
+                    )}
+                </View>
+
+                {/* Edit + Conditional Star Section */}
                 <View style={tw`flex-row items-center gap-2`}>
-                  <TouchableOpacity onPress={() => toggleStar(task.id)}>
-                    <Icon
-                      name={task.isStarred ? 'star' : 'star-outline'}
-                      size={24}
-                      color={task.isStarred ? 'gold' : 'gray'}
-                    />
-                  </TouchableOpacity>
+                  {expandedTaskId === task.id && (
+                    <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                      <Icon
+                        name={task.isStarred ? 'star' : 'star-outline'}
+                        size={24}
+                        color={task.isStarred ? 'gold' : 'gray'}
+                      />
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
                     <Icon
-                      name={expandedTaskId === task.id ? '' : 'create-outline'}
+                      name={
+                        expandedTaskId === task.id
+                          ? ''
+                          : 'create-outline'
+                      }
                       size={24}
                       color="#4b5563"
                     />
                   </TouchableOpacity>
                 </View>
               </View>
-              {/* ডেইলি রুটিন ট্যাগ */}
-              {!task.scheduleType &&
-                !task.endDate &&
-                !task.selectedDays?.length &&
-                !task.selectedDate?.length &&
-                !task.selectedDates?.length &&
-                !task.selectedMonths?.length && (
-                  <Text style={tw`text-sm text-green-700 mb-1`}>
-                    Daily
-                  </Text>
-                )}
-
-              {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
-              {task.dailyTarget && (
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Set Daily Target:{' '}
-                  {task.dailyTarget
-                    ? `${task.dailyTarget} ${task.targetType}`
-                    : 'N/A'}
-                </Text>
-              )}
-
-              {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-              {task.specificFor && task.specificForValue && (
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  F_ {task.specificForValue}_ {task.specificFor}
-                </Text>
-              )}
-
-              {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
-              {task.selectedDays?.length > 0 && (
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  {task.selectedDays.join(', ')}_E_Week
-                </Text>
-              )}
-
-              {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
-              {task.selectedDate?.length > 0 && (
-                <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Monthly
-                </Text>
-              )}
-
-              {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
-              {task.selectedDates?.length > 0 &&
-                task.selectedMonths?.length > 0 && (
-                  <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Yearly
-                  </Text>
-                )}
+              {/* Conditional tags rendered in a single line */}
 
               {expandedTaskId === task.id && (
                 <View style={tw`mt-4`}>
