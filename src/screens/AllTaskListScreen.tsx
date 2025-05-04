@@ -269,7 +269,10 @@ const AllTaskListScreen = () => {
                 {/* Left Section - Image & Name */}
                 <View style={tw`flex-row items-center gap-2 flex-shrink`}>
                   {task.icon && (
-                    <Image source={task.icon} style={tw`w-8 h-8`} />
+                    <Image
+                      source={task.icon}
+                      style={[tw``, {width: 32, height: 32}]}
+                    />
                   )}
                   <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
                 </View>
@@ -287,6 +290,12 @@ const AllTaskListScreen = () => {
                       !task.selectedMonths?.length && (
                         <Text style={tw`text-sm text-green-700`}>Daily</Text>
                       )}
+                    {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
+                    {task.specificFor && task.specificForValue && (
+                      <Text style={tw`text-sm text-gray-600 mb-1`}>
+                        F_ {task.specificForValue}_ {task.specificFor}
+                      </Text>
+                    )}
 
                     {/* সাপ্তাহিক দিন */}
                     {task.selectedDays?.length > 0 && (

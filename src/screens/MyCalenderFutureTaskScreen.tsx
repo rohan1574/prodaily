@@ -108,7 +108,6 @@ const MyCalenderFutureTaskScreen = () => {
     fetchTasks();
   }, [selectedDate]);
 
-  // বাকি ফাংশন (toggleStar, handleDelete, openUpdateModal, handleUpdateTask)
 
   return (
     <View style={[tw`flex-1 `,{backgroundColor:"#F7FAFF"}]}>
