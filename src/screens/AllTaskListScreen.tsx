@@ -266,81 +266,72 @@ const AllTaskListScreen = () => {
               activeOpacity={0.8}
               style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
               <View style={tw`flex-row justify-between items-center`}>
-                <View style={tw`flex-row items-center gap-2`}>
+                {/* Left Section - Image & Name */}
+                <View style={tw`flex-row items-center gap-2 flex-shrink`}>
                   {task.icon && (
                     <Image source={task.icon} style={tw`w-8 h-8`} />
                   )}
                   <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
                 </View>
-                <View style={tw``}>
-                  {/* ডেইলি রুটিন ট্যাগ */}
-                  {!task.scheduleType &&
-                    !task.endDate &&
-                    !task.selectedDays?.length &&
-                    !task.selectedDate?.length &&
-                    !task.selectedDates?.length &&
-                    !task.selectedMonths?.length && (
-                      <Text style={tw`text-sm text-green-700`}>Daily</Text>
+
+                {/* Right Section - Tags & Icons */}
+                <View style={tw`flex-row items-center gap-4 flex-shrink`}>
+                  {/* Daily Tags */}
+                  <View style={tw`flex-row items-center gap-2`}>
+                    {/* ডেইলি রুটিন ট্যাগ */}
+                    {!task.scheduleType &&
+                      !task.endDate &&
+                      !task.selectedDays?.length &&
+                      !task.selectedDate?.length &&
+                      !task.selectedDates?.length &&
+                      !task.selectedMonths?.length && (
+                        <Text style={tw`text-sm text-green-700`}>Daily</Text>
+                      )}
+
+                    {/* সাপ্তাহিক দিন */}
+                    {task.selectedDays?.length > 0 && (
+                      <Text style={tw`text-sm text-gray-600`}>
+                        {task.selectedDays.join(', ')}_E_Week
+                      </Text>
                     )}
 
-                  {/* ডেইলি টার্গেট */}
-                  {/* {task.dailyTarget && (
-                    <Text style={tw`text-sm text-gray-600`}>
-                       Target: {task.dailyTarget} {task.targetType}
-                    </Text>
-                  )} */}
-
-                  {/* স্পেসিফিক ফর */}
-                  {task.specificFor && task.specificForValue && (
-                    <Text style={tw`text-sm text-gray-600`}>
-                      F_ {task.specificForValue}_ {task.specificFor}
-                    </Text>
-                  )}
-
-                  {/* সাপ্তাহিক দিন */}
-                  {task.selectedDays?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600`}>
-                      {task.selectedDays.join(', ')}_E_Week
-                    </Text>
-                  )}
-
-                  {/* মাসিক তারিখ */}
-                  {task.selectedDate?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600`}>Monthly</Text>
-                  )}
-
-                  {/* বার্ষিক তারিখ */}
-                  {task.selectedDates?.length > 0 &&
-                    task.selectedMonths?.length > 0 && (
-                      <Text style={tw`text-sm text-gray-600`}>Yearly</Text>
+                    {/* মাসিক তারিখ */}
+                    {task.selectedDate?.length > 0 && (
+                      <Text style={tw`text-sm text-gray-600`}>Monthly</Text>
                     )}
-                </View>
 
-                {/* Edit + Conditional Star Section */}
-                <View style={tw`flex-row items-center gap-2`}>
-                  {expandedTaskId === task.id && (
-                    <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                    {/* বার্ষিক তারিখ */}
+                    {task.selectedDates?.length > 0 &&
+                      task.selectedMonths?.length > 0 && (
+                        <Text style={tw`text-sm text-gray-600`}>Yearly</Text>
+                      )}
+                  </View>
+
+                  {/* Edit & Star Icons */}
+                  <View style={tw`flex-row items-center gap-2`}>
+                    {expandedTaskId === task.id && (
+                      <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                        <Icon
+                          name={task.isStarred ? 'star' : 'star-outline'}
+                          size={24}
+                          color={task.isStarred ? 'gold' : 'gray'}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
                       <Icon
-                        name={task.isStarred ? 'star' : 'star-outline'}
+                        name={
+                          expandedTaskId === task.id
+                            ? 'chevron-down'
+                            : 'create-outline'
+                        }
                         size={24}
-                        color={task.isStarred ? 'gold' : 'gray'}
+                        color="#4b5563"
                       />
                     </TouchableOpacity>
-                  )}
-                  <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
-                    <Icon
-                      name={
-                        expandedTaskId === task.id
-                          ? ''
-                          : 'create-outline'
-                      }
-                      size={24}
-                      color="#4b5563"
-                    />
-                  </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-              {/* Conditional tags rendered in a single line */}
 
               {expandedTaskId === task.id && (
                 <View style={tw`mt-4`}>
