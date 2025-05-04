@@ -243,7 +243,7 @@ const TodaysTaskToDoScreen = () => {
                   {task.icon && (
                     <Image source={task.icon} style={tw`w-6 h-8 right-12`} />
                   )}
-                  <Text style={tw`text-lg font-bold right-24,${task.completed ? 'text-green-200' : 'text-red-100'}`}>
+                  <Text style={tw`text-lg font-bold right-24,${task.completed ? 'line-through text-green-200' : 'text-gray-800'}`}>
                     {task.name}
                   </Text>
 
