@@ -225,7 +225,11 @@ const TodaysTaskToDoScreen = () => {
             </Text>
           ) : (
             tasks.map((task: any) => (
-              <View key={task.id} style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+              <View
+                key={task.id}
+                style={tw`p-4 mb-4 rounded-lg ${
+                  task.completed ? 'bg-green-100' : 'bg-gray-100'
+                }`}>
                 <View style={tw`flex-row items-center justify-between`}>
                   <TouchableOpacity onPress={() => toggleComplete(task.id)}>
                     <Icon
@@ -239,7 +243,7 @@ const TodaysTaskToDoScreen = () => {
                   {task.icon && (
                     <Image source={task.icon} style={tw`w-6 h-8 right-12`} />
                   )}
-                  <Text style={tw`text-lg font-bold right-24`}>
+                  <Text style={tw`text-lg font-bold right-24,${task.completed ? 'text-green-200' : 'text-red-100'}`}>
                     {task.name}
                   </Text>
 
