@@ -88,18 +88,19 @@ const AllTaskListScreen = () => {
       );
     }
   };
-  const handleUpdateTask = async (taskId: string) => {
-    try {
-      const updatedTasks = tasks.map(task =>
-        task.id === taskId ? editedTask : task,
-      );
-      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      setTasks(updatedTasks);
-      setExpandedTaskId(null);
-    } catch (error) {
-      console.error('Error updating task:', error);
-    }
-  };
+ // সেভ বাটনের হ্যান্ডলারে যোগ করুন
+const handleUpdateTask = async (taskId: string) => {
+  try {
+    const updatedTasks = tasks.map(task =>
+      task.id === taskId ? {...editedTask, isStarred: task.isStarred} : task,
+    );
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
+    setExpandedTaskId(null);
+  } catch (error) {
+    console.error('Error updating task:', error);
+  }
+};
 
   // রেডিও বাটন টগল লজিক
   const toggleSpecificFor = () => {
@@ -161,19 +162,7 @@ const AllTaskListScreen = () => {
       }));
     }
   };
-  const handleDelete = async (taskId: string) => {
-    Alert.alert('Delete Task', 'Are you sure?', [
-      {text: 'Cancel', style: 'cancel'},
-      {
-        text: 'Delete',
-        onPress: async () => {
-          const updatedTasks = tasks.filter(task => task.id !== taskId);
-          await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
-          setTasks(updatedTasks);
-        },
-      },
-    ]);
-  };
+ 
 
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
@@ -309,7 +298,7 @@ const AllTaskListScreen = () => {
                 !task.selectedDates?.length &&
                 !task.selectedMonths?.length && (
                   <Text style={tw`text-sm text-green-700 mb-1`}>
-                    🔁 This task is part of your Daily Routine
+                    Daily
                   </Text>
                 )}
 
@@ -333,14 +322,14 @@ const AllTaskListScreen = () => {
               {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
               {task.selectedDays?.length > 0 && (
                 <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Weekly: {task.selectedDays.join(', ')}
+                  {task.selectedDays.join(', ')}_E_Week
                 </Text>
               )}
 
               {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
               {task.selectedDate?.length > 0 && (
                 <Text style={tw`text-sm text-gray-600 mb-1`}>
-                  Monthly: {task.selectedDate.join(', ')}
+                  Monthly
                 </Text>
               )}
 
@@ -348,8 +337,7 @@ const AllTaskListScreen = () => {
               {task.selectedDates?.length > 0 &&
                 task.selectedMonths?.length > 0 && (
                   <Text style={tw`text-sm text-gray-600 mb-1`}>
-                    Yearly: {task.selectedDates.join(', ')} -{' '}
-                    {task.selectedMonths.join(', ')}
+                    Yearly
                   </Text>
                 )}
 

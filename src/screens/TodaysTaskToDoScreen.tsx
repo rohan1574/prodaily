@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
@@ -17,10 +11,13 @@ interface Task {
   name: string;
 
   // Existing properties
-  dailyTarget?: string;
+
   specificFor?: string;
   specificForValue?: string;
-
+  // নতুন প্রপার্টি
+  dailyTarget?: number;
+  currentProgress?: number;
+  targetType?: string;
   // নতুন প্রপার্টি যোগ করুন
   scheduleType?: string; // 'daily', 'weekly', 'monthly', 'yearly' ইত্যাদি
   endDate?: string; // তারিখ স্ট্রিং হিসেবে (যেমন: '2024-05-30')
@@ -33,6 +30,43 @@ const TodaysTaskToDoScreen = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  // প্রোগ্রেস বাড়ানোর ফাংশন
+  const incrementProgress = async (taskId: string) => {
+    try {
+      const updatedTasks = tasks.map(task => {
+        if (task.id === taskId && task.dailyTarget) {
+          const newProgress = (task.currentProgress || 0) + 1;
+          return {
+            ...task,
+            currentProgress:
+              newProgress > task.dailyTarget ? task.dailyTarget : newProgress,
+          };
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    } catch (error) {
+      console.error('Error incrementing progress:', error);
+    }
+  };
+
+  // প্রোগ্রেস কমানোর ফাংশন
+  const decrementProgress = async (taskId: string) => {
+    try {
+      const updatedTasks = tasks.map(task => {
+        if (task.id === taskId) {
+          const newProgress = Math.max((task.currentProgress || 0) - 1, 0);
+          return {...task, currentProgress: newProgress};
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    } catch (error) {
+      console.error('Error decrementing progress:', error);
+    }
+  };
 
   // Sorting helper function
   const sortTasks = (tasks: any[]) => {
@@ -133,12 +167,19 @@ const TodaysTaskToDoScreen = () => {
     }
   };
 
-  // প্রথম লোডে এবং তারিখ পরিবর্তনে ফিল্টার প্রয়োগ
+  // টাস্ক ফিল্টার করার সময় currentProgress ইনিশিয়ালাইজ করুন
   useEffect(() => {
     const fetchAndFilterTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
-        const taskList = storedTasks ? JSON.parse(storedTasks) : [];
+        let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
+
+        // currentProgress ইনিশিয়ালাইজ করুন
+        taskList = taskList.map(task => ({
+          ...task,
+          currentProgress: task.currentProgress || 0,
+        }));
+
         const filtered = filterTasksForToday(taskList);
         setTasks(sortTasks(filtered));
       } catch (error) {
@@ -150,7 +191,6 @@ const TodaysTaskToDoScreen = () => {
 
     fetchAndFilterTasks();
   }, []);
- 
 
   return (
     <View style={tw`flex-1 bg-gray-200`}>
@@ -199,7 +239,9 @@ const TodaysTaskToDoScreen = () => {
                   {task.icon && (
                     <Image source={task.icon} style={tw`w-6 h-8 right-12`} />
                   )}
-                  <Text style={tw`text-lg font-bold right-24`}>{task.name}</Text>
+                  <Text style={tw`text-lg font-bold right-24`}>
+                    {task.name}
+                  </Text>
 
                   <TouchableOpacity onPress={() => toggleStar(task.id)}>
                     <Icon
@@ -209,68 +251,37 @@ const TodaysTaskToDoScreen = () => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={tw``}>
-                  
-                  {/* ডেইলি রুটিন ট্যাগ */}
-                  {!task.scheduleType &&
-                    !task.endDate &&
-                    !task.selectedDays?.length &&
-                    !task.selectedDate?.length &&
-                    !task.selectedDates?.length &&
-                    !task.selectedMonths?.length && (
-                      <Text style={tw`text-sm text-green-700 mb-1`}>
-                        🔁 This task is part of your Daily Routine
+                {task.dailyTarget && (
+                  <View style={tw`flex-row items-center mt-2`}>
+                    <Text style={tw`mr-2 font-semibold`}>
+                      {task.dailyTarget}
+                    </Text>
+                    <View
+                      style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
+                      <TouchableOpacity
+                        onPress={() => decrementProgress(task.id)}
+                        style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}>
+                        <Text style={tw`text-gray-700`}>-</Text>
+                      </TouchableOpacity>
+                      <Text style={tw`px-3 py-1 bg-white`}>
+                        {task.currentProgress}
                       </Text>
-                    )}
-
-                  {/* ডেইলি টার্গেট (শুধু ভ্যালু থাকলে) */}
-                  {task.dailyTarget && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Set Daily Target:{' '}
-                      {task.dailyTarget
-                        ? `${task.dailyTarget} ${task.targetType}`
-                        : 'N/A'}
+                      <TouchableOpacity
+                        onPress={() => incrementProgress(task.id)}
+                        disabled={task.currentProgress >= task.dailyTarget}
+                        style={tw`px-3 py-1 bg-gray-100 rounded-r-lg ${
+                          task.currentProgress >= task.dailyTarget
+                            ? 'opacity-50'
+                            : ''
+                        }`}>
+                        <Text style={tw`text-gray-700`}>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={tw`ml-2 text-gray-600`}>
+                      {task.targetType}
                     </Text>
-                  )}
-
-                  {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                  {task.specificFor && task.specificForValue && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Specific For: {task.specificForValue} {task.specificFor}
-                    </Text>
-                  )}
-
-                  {/* সাপ্তাহিক দিন (শুধু ভ্যালু থাকলে) */}
-                  {task.selectedDays?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Weekly: {task.selectedDays.join(', ')}
-                    </Text>
-                  )}
-
-                  {/* মাসিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                  {task.selectedDate?.length > 0 && (
-                    <Text style={tw`text-sm text-gray-600 mb-1`}>
-                      Monthly: {task.selectedDate.join(', ')}
-                    </Text>
-                  )}
-
-                  {/* বার্ষিক তারিখ (শুধু ভ্যালু থাকলে) */}
-                  {task.selectedDates?.length > 0 &&
-                    task.selectedMonths?.length > 0 && (
-                      <Text style={tw`text-sm text-gray-600 mb-1`}>
-                        Yearly: {task.selectedDates.join(', ')} -{' '}
-                        {task.selectedMonths.join(', ')}
-                      </Text>
-                    )}
-
-                  {/* সময়সীমা (শুধু endDate থাকলে) */}
-                  {task.endDate && (
-                    <Text style={tw`text-sm text-purple-600 mt-2`}>
-                      Valid until: {new Date(task.endDate).toLocaleDateString()}
-                    </Text>
-                  )}
-                </View>
+                  </View>
+                )}
               </View>
             ))
           )}
