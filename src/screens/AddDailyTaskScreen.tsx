@@ -9,7 +9,6 @@ import {
   Alert,
   ImageSourcePropType,
 } from 'react-native';
-import {Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -18,26 +17,11 @@ import DatePicker from './DatePicker';
 import DayPicker from './DayPicker';
 import categoryIcons from '../data/categoryIcons';
 import tasksData from '../data/tasksData';
-import {useNavigation} from '@react-navigation/native';
-import type {StackNavigationProp} from '@react-navigation/stack';
 import BottomNavigation from './BottomNavigation';
 import {Modal} from 'react-native';
 import {ColorContext} from '../context/ColorContext';
 // Add at the top with other imports
 import {Keyboard} from 'react-native';
-// Define the navigation type
-type RootStackParamList = {
-  TodaysTaskToDoScreen: undefined;
-  MyCalenderFutureTaskScreen: undefined;
-  MyStatisticsScreen: undefined;
-  ProfileManageScreen: undefined;
-  AddDailyTaskScreen: undefined;
-  AllTaskListScreen: undefined;
-};
-type NavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'TodaysTaskToDoScreen'
->;
 
 // List of categories
 type Category =
@@ -85,10 +69,7 @@ const AddDailyTaskScreen = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  // ডিভাইসের স্ক্রিন প্রস্থ পান
-  const {width: SCREEN_WIDTH} = Dimensions.get('window');
-  const CATEGORY_WIDTH = SCREEN_WIDTH / 4; // ৪টি ক্যাটাগরি দেখানোর জন্য
-  const navigation = useNavigation<NavigationProp>();
+
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0],
   );
@@ -444,7 +425,7 @@ const AddDailyTaskScreen = () => {
           style={[
             tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
             selectedCategory === category
-              ? tw`border-blue-500 border-4`
+              ? tw`border-blue-500 border-4 w-28 h-28`
               : tw`border-gray-200`,
           ]}
         >
