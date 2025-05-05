@@ -396,11 +396,11 @@ const AddDailyTaskScreen = () => {
   return (
     <View style={tw`flex-1 bg-red-50`}>
       {/* Header */}
-      <View style={tw`mb-4 `}>
+      <View style={tw` left-4`}>
         <Text style={[tw` font-bold text-black `, {fontSize: 24}]}>
           Add Daily Task
         </Text>
-        <Text style={[tw`font-light text-black`, {fontSize: 15}]}>
+        <Text style={[tw`font-light text-black`, {fontSize: 16}]}>
           Add task, which you want to include in your daily routine. Make them
           Compulsory to make your every day productive .
         </Text>
@@ -410,126 +410,82 @@ const AddDailyTaskScreen = () => {
       </View>
 
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw``}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={CATEGORY_WIDTH}
-          snapToAlignment="start"
-          decelerationRate="fast"
-          onScroll={event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
-            const selectedIndex = Math.round(offsetX / CATEGORY_WIDTH);
-            const category = allCategories[selectedIndex];
-            if (category) setSelectedCategory(category);
-          }}
-          scrollEventThrottle={2}
-          contentContainerStyle={tw``}>
-          {/* Render all categories */}
-          {allCategories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              style={tw`items-center `}
-              onPress={() => setSelectedCategory(category)}>
-              <View
-                style={[
-                  tw`w-24 h-24 rounded-full flex mr-1 items-center justify-center bg-white`,
-                  selectedCategory === category
-                    ? tw`border-blue-500 border-4`
-                    : tw`border-gray-200 `,
-                ]}>
-                <Image
-                  source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={[tw``,{width:56,height:56}]}
-                />
-              </View>
-              <Text
-                style={tw` mt-1 font-bold ${
-                  selectedCategory === category
-                    ? 'text-blue-500 text-sm'
-                    : 'text-black text-xs font-medium'
-                }`}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
+     {/* Horizontal Scrollable Categories (Fixed) */}
+<View style={tw`top-2 left-4`}>
+  <ScrollView
+    horizontal
+    ref={scrollViewRef}
+    showsHorizontalScrollIndicator={false}
+    snapToInterval={96 + 8} // w-24 (96px) + mr-2 (8px)
+    snapToAlignment="start"
+    decelerationRate="fast"
+    contentContainerStyle={tw`pr-4`}
+    onScroll={event => {
+      const offsetX = event.nativeEvent.contentOffset.x;
+      const selectedIndex = Math.round(offsetX / (96 + 8));
+      const category = allCategories[selectedIndex];
+      if (category) setSelectedCategory(category);
+    }}
+    scrollEventThrottle={16}
+  >
+    {allCategories.map((category, index) => (
+      <TouchableOpacity
+        key={index}
+        style={tw`items-center mr-2 ${index === 0 ? 'ml-0' : ''}`}
+        onPress={() => {
+          setSelectedCategory(category);
+          scrollViewRef.current?.scrollTo({
+            x: index * (96 + 8),
+            animated: true,
+          });
+        }}
+      >
+        <View
+          style={[
+            tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
+            selectedCategory === category
+              ? tw`border-blue-500 border-4`
+              : tw`border-gray-200`,
+          ]}
+        >
+          <Image
+            source={mergedIcons[category as keyof typeof mergedIcons]}
+            style={{ width: 56, height: 56 }}
+          />
+        </View>
+        <Text
+          style={tw`mt-1 font-bold ${
+            selectedCategory === category
+              ? 'text-blue-500 text-sm'
+              : 'text-black text-xs font-medium'
+          }`}
+        >
+          {category}
+        </Text>
+      </TouchableOpacity>
+    ))}
 
-          {/* Custom Category Button - Now inside ScrollView */}
-          <TouchableOpacity
-            onPress={() => {
-              setIsCustomCategoryModalVisible(true);
-              setNewCategoryName('');
-              setSelectedCategoryIcon(null);
-            }}
-            style={tw`items-center mr-2`}>
-            <View
-              style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
-              <Icon name="add" size={32} color="#6B7280" />
-            </View>
-            <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>
-              Add Custom
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-        {/* Custom Category Modal */}
-        <Modal
-          visible={isCustomCategoryModalVisible}
-          transparent={true}
-          animationType="slide">
-          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
-              <Text style={tw`text-lg font-bold mb-4`}>
-                Create Custom Category
-              </Text>
-
-              <TextInput
-                placeholder="Enter Category Name"
-                value={newCategoryName}
-                onChangeText={setNewCategoryName}
-                style={tw`border p-2 rounded mb-4`}
-                placeholderTextColor="#9CA3AF"
-              />
-
-              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Object.entries(categoryIcons).map(([category, iconSource]) => (
-                  <TouchableOpacity
-                    key={category}
-                    onPress={() => setSelectedCategoryIcon(iconSource)}
-                    style={tw`p-2 mx-1 rounded-lg ${
-                      selectedCategoryIcon === iconSource
-                        ? 'bg-blue-100'
-                        : 'bg-gray-100'
-                    }`}>
-                    <Image
-                      source={iconSource}
-                      style={tw`w-10 h-10`}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              <View style={tw`flex-row justify-between mt-6 `}>
-                <TouchableOpacity
-                  onPress={() => setIsCustomCategoryModalVisible(false)}
-                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
-                  <Text style={tw`text-white font-medium`}>Cancel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={saveCustomCategory}
-                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
-                  <Text style={tw`text-white font-medium`}>Save Category</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
+    {/* Custom Category Button */}
+    <TouchableOpacity
+      onPress={() => {
+        setIsCustomCategoryModalVisible(true);
+        setNewCategoryName('');
+        setSelectedCategoryIcon(null);
+      }}
+      style={tw`items-center mr-2`}
+    >
+      <View
+        style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}
+      >
+        <Icon name="add" size={32} color="#6B7280" />
       </View>
+      <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>Add Custom</Text>
+    </TouchableOpacity>
+  </ScrollView>
+</View>
 
       {/* Task List (Scrollable) */}
-      <ScrollView style={tw`flex-1 p-4 bottom-2 `} showsVerticalScrollIndicator={false}>
+      <ScrollView style={tw`flex-1 p-4 top-6`} contentContainerStyle={tw`pb-20`} showsVerticalScrollIndicator={false}>
         {Object.keys({
           ...(tasksData[selectedCategory] || {}),
           ...(customTasksData[selectedCategory] || {}),
@@ -929,13 +885,13 @@ const AddDailyTaskScreen = () => {
             setCustomTaskName('');
             setSelectedCustomIcon(null);
           }}
-          style={tw`flex-row items-center justify-between bg-white p-2  rounded-lg mb-2`}>
+          style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
             <Icon
               name="add-circle-outline"
               size={32}
               color={selectedColor}
-              style={tw``}
+              
             />
             <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
               Add Custom Task

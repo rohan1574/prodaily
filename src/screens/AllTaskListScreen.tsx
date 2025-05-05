@@ -251,9 +251,14 @@ const AllTaskListScreen = () => {
     </ScrollView>
   );
   return (
-    <View style={tw`flex-1 bg-white p-4`}>
+    <View style={[tw`flex-1 p-4`,{backgroundColor:"#F7FAFF"}]}>
       <DeleteConfirmationModal />
-      <Text style={tw`text-2xl font-bold mb-4`}>All Tasks</Text>
+      <View style={tw`mb-4 top-2 left-4 `}>
+        <Text style={tw`text-2xl font-bold `}>Manage My Task </Text>
+        <Text style={[tw` `, {fontSize: 16, color: '#8D99AE'}]}>
+        Your all the added running tasks list.
+        </Text>
+      </View>
 
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading...</Text>
@@ -264,14 +269,14 @@ const AllTaskListScreen = () => {
               key={task.id}
               onLongPress={() => handleTaskLongPress(task.id)}
               activeOpacity={0.8}
-              style={tw`bg-gray-100 p-4 mb-4 rounded-lg`}>
+              style={tw`bg-white p-3 mb-3 top-6 rounded-lg`}>
               <View style={tw`flex-row justify-between items-center`}>
                 {/* Left Section - Image & Name */}
-                <View style={tw`flex-row items-center gap-2 flex-shrink`}>
+                <View style={tw`flex-row items-center flex-shrink`}>
                   {task.icon && (
                     <Image
                       source={task.icon}
-                      style={[tw``, {width: 32, height: 32}]}
+                      style={[tw``, {width: 28, height: 28}]}
                     />
                   )}
                   <Text style={tw`text-lg font-semibold`}>{task.name}</Text>

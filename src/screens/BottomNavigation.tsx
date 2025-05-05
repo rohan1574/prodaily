@@ -39,7 +39,7 @@ const BottomNavigation: React.FC = () => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={tw`bg-blue-200 rounded-full p-4 bottom-4 border-2 border-gray-200`}
+        style={tw`bg-blue-200 rounded-full p-4 bottom border-2 border-gray-200`}
         onPress={() => navigation.navigate('AddDailyTaskScreen')}>
         <Icon name="add" size={28} color="blue" />
       </TouchableOpacity>
