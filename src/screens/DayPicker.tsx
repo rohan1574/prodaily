@@ -26,29 +26,57 @@ const DayPicker: React.FC<DayPickerProps> = ({
 
   return (
     <Modal transparent={true} visible={true}>
-      <View style={tw`flex-1 justify-center items-center bg-gray-500 bg-opacity-50`}>
-        <View style={tw`bg-white p-4 rounded-lg w-80`}>
-          <Text style={tw`text-lg font-bold mb-4`}>Select Days</Text>
+      <View style={tw`flex-1 justify-center items-center  bg-black bg-opacity-30`}>
+        <View style={tw`bg-white p-6 rounded-2xl h-80 shadow-xl`}>
+          <Text style={tw`text-2xl font-bold bottom-4 text-gray-800 text-center`}>
+            Select Days
+          </Text>
+          
           <FlatList
             data={WeekDays}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => toggleDaySelection(item)}
-                style={[
-                  tw`py-2 px-4 rounded-md mb-2`,
-                  selectedDays.includes(item) ? tw`bg-blue-500` : tw`bg-gray-200`,
-                ]}>
-                <Text style={tw`text-center`}>{item}</Text>
-              </TouchableOpacity>
-            )}
+            numColumns={3}
+            columnWrapperStyle={tw`justify-between`}
+            contentContainerStyle={tw``}
+            renderItem={({ item }) => {
+              const isSelected = selectedDays.includes(item);
+              return (
+                <TouchableOpacity
+                  onPress={() => toggleDaySelection(item)}
+                  style={[
+                    tw`w-24 mr-1 mb-3 p-3 rounded-xl items-center justify-center 
+                       border-2 transition-colors duration-200`,
+                    isSelected 
+                      ? tw`border-blue-500 bg-blue-50`
+                      : tw`border-gray-200 bg-white`
+                  ]}
+                >
+                  <Text style={[
+                    tw`text-lg font-medium`,
+                    isSelected ? tw`text-blue-600` : tw`text-gray-600`
+                  ]}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
             keyExtractor={(item) => item}
           />
-          <View style={tw`flex-row justify-between mt-4`}>
-            <TouchableOpacity onPress={onCancel} style={tw`bg-gray-300 px-4 py-2 rounded-md`}>
-              <Text>Cancel</Text>
+
+          <View style={tw`flex-row justify-between top-2`}>
+            <TouchableOpacity 
+              onPress={onCancel}
+              style={tw`flex-1 mr-2 px-6 py-3 border-2 border-red-100 rounded-xl 
+                        bg-red-50 active:bg-red-100`}
+            >
+              <Text style={tw`text-center text-red-600 font-medium`}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onAddDay} style={tw`bg-blue-500 px-4 py-2 rounded-md`}>
-              <Text style={tw`text-white`}>Add Day</Text>
+            
+            <TouchableOpacity 
+              onPress={onAddDay}
+              style={tw`flex-1 ml-2 px-6 py-3 rounded-xl bg-blue-500 
+                        active:bg-blue-600 shadow-sm`}
+            >
+              <Text style={tw`text-center text-white font-medium`}>Add Day</Text>
             </TouchableOpacity>
           </View>
         </View>
