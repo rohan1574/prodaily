@@ -24,42 +24,57 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <Modal transparent={true} visible={true}>
-      <View style={tw`flex-1 justify-center items-center bg-opacity-50 top-16`}>
-        <View style={tw`bg-white p-4 rounded-lg w-80`}>
-          <Text style={tw`text-lg font-bold mb-4`}>Select Dates</Text>
+      <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        <View style={[tw`bg-white p-6 rounded-2xl w-80 shadow-xl`,{height:410}]}>
+          <Text style={tw`text-2xl font-bold bottom-4 text-gray-800 text-center`}>
+            Select Dates
+          </Text>
+          
           <FlatList
             data={Array.from({ length: 31 }, (_, i) => i + 1)}
             numColumns={6}
-            renderItem={({ item }) => (
-              <View style={tw`flex-1 mx-1 mb-1`}>
+            contentContainerStyle={tw`pb-2`}
+            columnWrapperStyle={tw`justify-between mb-2`}
+            renderItem={({ item }) => {
+              const isSelected = selectedDate.includes(item);
+              return (
                 <TouchableOpacity
                   onPress={() => toggleDateSelection(item)}
                   style={[
-                    tw`rounded-md aspect-square justify-center`,
-                    selectedDate.includes(item) 
-                      ? tw`bg-blue-500` 
-                      : tw`bg-gray-200`,
+                    tw`w-10 h-10 items-center justify-center rounded-lg 
+                       border-2 transition-colors duration-200`,
+                    isSelected 
+                      ? tw`border-blue-500 bg-blue-50`
+                      : tw`border-gray-200 bg-white`
+                  ]}
+                >
+                  <Text style={[
+                    tw`text-base font-medium`,
+                    isSelected ? tw`text-blue-600` : tw`text-gray-600`
                   ]}>
-                  <Text 
-                    style={[
-                      tw`text-center text-sm`,
-                      selectedDate.includes(item) && tw`text-white`
-                    ]}
-                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
-              </View>
-            )}
+              );
+            }}
             keyExtractor={(item) => item.toString()}
-            contentContainerStyle={tw`p-1`}
           />
-          <View style={tw`flex-row justify-between mt-4`}>
-            <TouchableOpacity onPress={onCancel} style={tw`bg-gray-300 px-4 py-2 rounded-md`}>
-              <Text>Cancel</Text>
+
+          <View style={tw`flex-row justify-between top-4`}>
+            <TouchableOpacity 
+              onPress={onCancel}
+              style={tw`flex-1 mr-2 px-6 py-3 border-2 border-red-100 rounded-xl 
+                        bg-red-50 active:bg-red-100`}
+            >
+              <Text style={tw`text-center text-red-600 font-medium`}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onAddDay} style={tw`bg-blue-500 px-4 py-2 rounded-md`}>
-              <Text style={tw`text-white`}>Add Day</Text>
+            
+            <TouchableOpacity 
+              onPress={onAddDay}
+              style={tw`flex-1 ml-2 px-6 py-3 rounded-xl bg-blue-500 
+                        active:bg-blue-600 shadow-sm`}
+            >
+              <Text style={tw`text-center text-white font-medium`}>Add Dates</Text>
             </TouchableOpacity>
           </View>
         </View>
