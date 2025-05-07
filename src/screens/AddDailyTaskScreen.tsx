@@ -375,7 +375,7 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
-    <View style={tw`flex-1 bg-red-50`}>
+    <View style={[tw`flex-1 bg-red-50`,{backgroundColor: "#FAFAFA"}]}>
       {/* Header */}
       <View style={tw` left-4`}>
         <Text style={[tw` font-bold text-black `, {fontSize: 28}]}>
@@ -389,84 +389,81 @@ const AddDailyTaskScreen = () => {
           Categories
         </Text>
       </View>
-
       {/* Horizontal Scrollable Categories (Fixed) */}
-     {/* Horizontal Scrollable Categories (Fixed) */}
-<View style={tw`top-2 left-4`}>
-  <ScrollView
-    horizontal
-    ref={scrollViewRef}
-    showsHorizontalScrollIndicator={false}
-    snapToInterval={96 + 8} // w-24 (96px) + mr-2 (8px)
-    snapToAlignment="start"
-    decelerationRate="fast"
-    contentContainerStyle={tw`pr-4`}
-    onScroll={event => {
-      const offsetX = event.nativeEvent.contentOffset.x;
-      const selectedIndex = Math.round(offsetX / (96 + 8));
-      const category = allCategories[selectedIndex];
-      if (category) setSelectedCategory(category);
-    }}
-    scrollEventThrottle={16}
-  >
-    {allCategories.map((category, index) => (
-      <TouchableOpacity
-        key={index}
-        style={tw`items-center mr-2 ${index === 0 ? 'ml-0' : ''}`}
-        onPress={() => {
-          setSelectedCategory(category);
-          scrollViewRef.current?.scrollTo({
-            x: index * (96 + 8),
-            animated: true,
-          });
-        }}
-      >
-        <View
-          style={[
-            tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
-            selectedCategory === category
-              ? tw`border-blue-500 border-4 w-28 h-28`
-              : tw`border-gray-200`,
-          ]}
-        >
-          <Image
-            source={mergedIcons[category as keyof typeof mergedIcons]}
-            style={{ width: 56, height: 56 }}
-          />
-        </View>
-        <Text
-          style={tw`mt-1 font-bold ${
-            selectedCategory === category
-              ? 'text-blue-500 text-sm'
-              : 'text-black text-xs font-medium'
-          }`}
-        >
-          {category}
-        </Text>
-      </TouchableOpacity>
-    ))}
+      <View style={tw`top-2 left-4`}>
+        <ScrollView
+          horizontal
+          ref={scrollViewRef}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={96 + 8} // w-24 (96px) + mr-2 (8px)
+          snapToAlignment="start"
+          decelerationRate="fast"
+          contentContainerStyle={tw`pr-4`}
+          onScroll={event => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const selectedIndex = Math.round(offsetX / (96 + 8));
+            const category = allCategories[selectedIndex];
+            if (category) setSelectedCategory(category);
+          }}
+          scrollEventThrottle={16}>
+          {allCategories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={tw`items-center mr-2 ${index === 0 ? 'ml-0' : ''}`}
+              onPress={() => {
+                setSelectedCategory(category);
+                scrollViewRef.current?.scrollTo({
+                  x: index * (96 + 8),
+                  animated: true,
+                });
+              }}>
+              <View
+                style={[
+                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
+                  selectedCategory === category
+                    ? tw`border-blue-500 border-4 w-28 h-28`
+                    : tw`border-gray-200`,
+                ]}>
+                <Image
+                  source={mergedIcons[category as keyof typeof mergedIcons]}
+                  style={{width: 56, height: 56}}
+                />
+              </View>
+              <Text
+                style={tw`mt-1 font-bold ${
+                  selectedCategory === category
+                    ? 'text-blue-500 text-sm'
+                    : 'text-black text-xs font-medium'
+                }`}>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
 
-    {/* Custom Category Button */}
-    <TouchableOpacity
-      onPress={() => {
-        setIsCustomCategoryModalVisible(true);
-        setNewCategoryName('');
-        setSelectedCategoryIcon(null);
-      }}
-      style={tw`items-center mr-2`}
-    >
-      <View
-        style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}
-      >
-        <Icon name="add" size={32} color="#6B7280" />
+          {/* Custom Category Button */}
+          <TouchableOpacity
+            onPress={() => {
+              setIsCustomCategoryModalVisible(true);
+              setNewCategoryName('');
+              setSelectedCategoryIcon(null);
+            }}
+            style={tw`items-center mr-2`}>
+            <View
+              style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
+              <Icon name="add" size={32} color="#6B7280" />
+            </View>
+            <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>
+              Add Custom
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
-      <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>Add Custom</Text>
-    </TouchableOpacity>
-  </ScrollView>
-</View>
 
       {/* Task List (Scrollable) */}
-      <ScrollView style={tw`flex-1 p-4 top-6`} contentContainerStyle={tw`pb-20`} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={tw`flex-1 p-4 top-6`}
+        contentContainerStyle={tw`pb-20`}
+        showsVerticalScrollIndicator={false}>
         {Object.keys({
           ...(tasksData[selectedCategory] || {}),
           ...(customTasksData[selectedCategory] || {}),
@@ -495,7 +492,7 @@ const AddDailyTaskScreen = () => {
                 tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
                 {bg: selectedColor},
               ]}>
-              <View style={tw`flex-row items-center`}>
+              <View style={tw`flex-row items-center left-4`}>
                 <Image
                   source={
                     tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
@@ -515,7 +512,7 @@ const AddDailyTaskScreen = () => {
                   {task}
                 </Text>
               </View>
-              <Icon
+              <Icon style={tw`right-4`}
                 name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
                 size={20}
                 color="#DFDFDF"
@@ -868,12 +865,7 @@ const AddDailyTaskScreen = () => {
           }}
           style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
-            <Icon
-              name="add-circle-outline"
-              size={32}
-              color={selectedColor}
-              
-            />
+            <Icon name="add-circle-outline" size={32} color={selectedColor} />
             <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
               Add Custom Task
             </Text>
@@ -957,7 +949,6 @@ const AddDailyTaskScreen = () => {
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
-    
   );
 };
 
