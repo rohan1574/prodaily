@@ -808,7 +808,7 @@ const AddDailyTaskScreen = () => {
                     onPress={() =>
                       setExpandedTask(expandedTask === task ? null : task)
                     }
-                    style={tw`p-3 rounded-lg left-72 bottom-6`}>
+                    style={tw`p-3 rounded-lg left-72 `}>
                     <Icon
                       name={
                         expandedTask === task ? 'chevron-up' : 'chevron-down'
