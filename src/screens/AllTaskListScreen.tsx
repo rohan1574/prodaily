@@ -276,7 +276,7 @@ const AllTaskListScreen = () => {
                   {task.icon && (
                     <Image
                       source={task.icon}
-                      style={[tw``, {width: 28, height: 28}]}
+                      style={[tw`mr-6`, {width: 28, height: 28}]}
                     />
                   )}
                   <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
@@ -285,7 +285,7 @@ const AllTaskListScreen = () => {
                 {/* Right Section - Tags & Icons */}
                 <View style={tw`flex-row items-center gap-4 flex-shrink`}>
                   {/* Daily Tags */}
-                  <View style={tw`flex-row items-center gap-2`}>
+                  <View style={tw`flex-row items-center right-4`}>
                     {/* ডেইলি রুটিন ট্যাগ */}
                     {!task.scheduleType &&
                       !task.endDate &&
