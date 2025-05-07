@@ -530,9 +530,9 @@ const AddDailyTaskScreen = () => {
                       tasksData[selectedCategory]?.[expandedTask] ||
                       customTasksData[selectedCategory]?.[expandedTask]
                     }
-                    style={tw`w-6 h-6 mr-3`} // সংশোধিত লাইন
+                    style={[tw`mr-3`,{width: 32, height: 32}]} // সংশোধিত লাইন
                   />
-                  <Text style={tw`text-lg font-semibold ml-2 text-slate-800`}>
+                  <Text style={tw`text-sm font-medium text-black ml-2`}>
                     {expandedTask}
                   </Text>
                   {/* star icon */}
@@ -647,17 +647,17 @@ const AddDailyTaskScreen = () => {
                     />
                     <View style={tw`flex-row mt-2 `}>
                       <TouchableOpacity
-                        style={tw`px-4 py-2 mx-1 rounded left-4 ${
+                        style={[tw`px-4 py-2 mx-1 rounded  ${
                           targetType === 'Minutes'
                             ? 'bg-blue-500'
                             : 'bg-gray-300'
-                        }`}
+                        }`,{left:22}]}
                         onPress={() => setTargetType('Minutes')}>
                         <Text
                           style={tw`${
                             targetType === 'Minutes'
-                              ? 'text-white font-bold'
-                              : 'text-gray-500 font-bold'
+                              ? 'text-white font-bold right-2'
+                              : 'text-gray-500 font-bold right-2'
                           }`}>
                           Minutes
                         </Text>
@@ -742,7 +742,7 @@ const AddDailyTaskScreen = () => {
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'yearly'
                         ? tw`bg-green-600 font-bold`
-                        : tw`bg-red-500 font-bold`,
+                        : tw`bg-blue-500 font-bold`,
                     ]}>
                     <Text style={tw`text-white font-bold`}>Yearly</Text>
                   </TouchableOpacity>
