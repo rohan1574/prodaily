@@ -378,7 +378,7 @@ const AddDailyTaskScreen = () => {
     <View style={tw`flex-1 bg-red-50`}>
       {/* Header */}
       <View style={tw` left-4`}>
-        <Text style={[tw` font-bold text-black `, {fontSize: 24}]}>
+        <Text style={[tw` font-bold text-black `, {fontSize: 28}]}>
           Add Daily Task
         </Text>
         <Text style={[tw`font-light text-black`, {fontSize: 16}]}>
