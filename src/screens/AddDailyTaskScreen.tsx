@@ -375,7 +375,7 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
-    <View style={[tw`flex-1 bg-red-50`,{backgroundColor: "#FAFAFA"}]}>
+    <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
       {/* Header */}
       <View style={tw` left-4`}>
         <Text style={[tw` font-bold text-black `, {fontSize: 28}]}>
@@ -512,7 +512,8 @@ const AddDailyTaskScreen = () => {
                   {task}
                 </Text>
               </View>
-              <Icon style={tw`right-4`}
+              <Icon
+                style={tw`right-4`}
                 name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
                 size={20}
                 color="#DFDFDF"
@@ -530,7 +531,7 @@ const AddDailyTaskScreen = () => {
                       tasksData[selectedCategory]?.[expandedTask] ||
                       customTasksData[selectedCategory]?.[expandedTask]
                     }
-                    style={[tw`mr-3`,{width: 32, height: 32}]} // সংশোধিত লাইন
+                    style={[tw`mr-3`, {width: 32, height: 32}]} // সংশোধিত লাইন
                   />
                   <Text style={tw`text-sm font-medium text-black ml-2`}>
                     {expandedTask}
@@ -647,11 +648,14 @@ const AddDailyTaskScreen = () => {
                     />
                     <View style={tw`flex-row mt-2 `}>
                       <TouchableOpacity
-                        style={[tw`px-4 py-2 mx-1 rounded  ${
-                          targetType === 'Minutes'
-                            ? 'bg-blue-500'
-                            : 'bg-gray-300'
-                        }`,{left:22}]}
+                        style={[
+                          tw`px-4 py-2 mx-1 rounded  ${
+                            targetType === 'Minutes'
+                              ? 'bg-blue-500'
+                              : 'bg-gray-300'
+                          }`,
+                          {left: 22},
+                        ]}
                         onPress={() => setTargetType('Minutes')}>
                         <Text
                           style={tw`${
@@ -791,6 +795,17 @@ const AddDailyTaskScreen = () => {
                     }}
                     onAddDay={() => {
                       setIsDateSeletorVisible(false);
+                    }}
+                    onRemoveDay={(index: number) => {
+                      // Create new arrays without the item at the specified index
+                      const newDates = [...selectedDates];
+                      const newMonths = [...selectedMonths];
+
+                      newDates.splice(index, 1);
+                      newMonths.splice(index, 1);
+
+                      setSelectedDates(newDates);
+                      setSelectedMonths(newMonths);
                     }}
                   />
                 )}
