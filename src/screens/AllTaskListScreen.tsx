@@ -251,9 +251,9 @@ const AllTaskListScreen = () => {
     </ScrollView>
   );
   return (
-    <View style={[tw`flex-1 p-4`,{backgroundColor:"#F7FAFF"}]}>
+    <View style={[tw`flex-1 `,{backgroundColor:"#F7FAFF"}]}>
       <DeleteConfirmationModal />
-      <View style={tw`mb-4 top-2 left-4 `}>
+      <View style={tw`mb-4 top-2 left-4 mx-2`}>
         <Text style={tw`text-2xl font-bold `}>Manage My Task </Text>
         <Text style={[tw` `, {fontSize: 16, color: '#8D99AE'}]}>
         Your all the added running tasks list.
@@ -269,7 +269,7 @@ const AllTaskListScreen = () => {
               key={task.id}
               onLongPress={() => handleTaskLongPress(task.id)}
               activeOpacity={0.8}
-              style={tw`bg-white p-3 mb-3 top-6 rounded-lg`}>
+              style={tw`bg-white p-3 mx-4 mb-3 top-6 rounded-lg`}>
               <View style={tw`flex-row justify-between items-center`}>
                 {/* Left Section - Image & Name */}
                 <View style={tw`flex-row items-center flex-shrink`}>

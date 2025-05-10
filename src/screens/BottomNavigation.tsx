@@ -39,9 +39,9 @@ const BottomNavigation: React.FC = () => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={tw`bg-blue-200 rounded-full p-4 bottom border-2 border-gray-200`}
+        style={tw`bg-blue-500 rounded-full p-4 bottom border-2 bottom-6 border-gray-200`}
         onPress={() => navigation.navigate('AddDailyTaskScreen')}>
-        <Icon name="add" size={28} color="blue" />
+        <Icon name="add" size={28} color="white" />
       </TouchableOpacity>
       <TouchableOpacity
         style={tw`top-4 right-4`}
@@ -56,7 +56,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('ProfileManageScreen')}>
          <Image
           source={require('../../assets/images/Nab/settings.png')}
-          style={[tw``,{width:24,height:26,tintColor: '#000000'}]}
+          style={[tw``,{width:24,height:26}]}
         />
       </TouchableOpacity>
     </View>
