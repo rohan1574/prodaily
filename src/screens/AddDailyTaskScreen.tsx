@@ -141,6 +141,16 @@ const AddDailyTaskScreen = () => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (showSuccessModal) {
+      const timer = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000); // 30 seconds
+
+      return () => clearTimeout(timer); // Cleanup on unmount or when modal hides
+    }
+  }, [showSuccessModal]);
+
   // Merge default and custom categories
   const mergedIcons: Record<string, ImageSourcePropType> = {
     ...categoryIcons,
@@ -840,30 +850,23 @@ const AddDailyTaskScreen = () => {
                   animationType="fade"
                   onRequestClose={() => setShowSuccessModal(false)}>
                   <View
-                    style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-                    <View style={tw`bg-indigo-100 p-6 rounded-xl`}>
-                      <View style={tw`items-center mb-4`}>
-                        <Icon
-                          name="checkmark-circle"
-                          size={50}
-                          color="#4BB543"
-                          style={tw`mb-2`}
-                        />
-                        <Text style={tw`text-purple-800 font-bold text-2xl`}>
-                          Task Added!
+                    style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+                    <View
+                      style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
+                      <Icon
+                        name="checkmark-circle-outline"
+                        size={28}
+                        color="white"
+                        style={tw`mr-2`}
+                      />
+                      <View>
+                        <Text style={tw`text-white font-semibold text-base`}>
+                          Task Saved!
                         </Text>
-                        <Text style={tw`text-gray-600 text-center mt-2`}>
-                          Your task has been successfully added to daily routine
+                        <Text style={tw`text-white text-xs`}>
+                          to your routine Successfully
                         </Text>
                       </View>
-
-                      <TouchableOpacity
-                        onPress={() => setShowSuccessModal(false)}
-                        style={tw`bg-blue-500 py-3 rounded-lg`}>
-                        <Text style={tw`text-white text-center font-semibold`}>
-                          OK
-                        </Text>
-                      </TouchableOpacity>
                     </View>
                   </View>
                 </Modal>
