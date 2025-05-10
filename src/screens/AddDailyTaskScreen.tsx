@@ -462,7 +462,7 @@ const AddDailyTaskScreen = () => {
               style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
               <Icon name="add" size={32} color="#6B7280" />
             </View>
-            <Text style={tw`text-sm mt-1 font-bold text-gray-600`}>
+            <Text style={tw`text-xs mt-1 font-bold text-gray-600`}>
               Add Custom
             </Text>
           </TouchableOpacity>

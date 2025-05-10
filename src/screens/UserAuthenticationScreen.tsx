@@ -30,7 +30,7 @@ const UserAuthenticationScreen = () => {
         <TouchableOpacity
           style={tw`bg-white flex-row items-center px-4 py-3 rounded-full mb-4`}>
           <Image
-            source={require('./assets/images/Google.png')}
+            source={require('./assets/images/google.png')}
             style={[tw``, {left: 70}]}
           />
           <Text style={[tw`text-gray-500 font-bold`, {left: 80,fontSize:18}]}>Google</Text>
