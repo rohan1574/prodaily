@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
@@ -193,98 +200,123 @@ const TodaysTaskToDoScreen = () => {
   }, []);
 
   return (
-    <View style={tw`flex-1 bg-gray-200`}>
+    <View style={tw`flex-1 bg-gray-200 p-4`}>
       {/* Header */}
-      <View style={tw`bg-blue-500 p-4 flex-row justify-between items-center`}>
-        <View>
-          <Text style={tw`text-white text-lg font-bold`}>Today</Text>
-          <Text style={tw`text-white text-sm`}>March 12, Friday</Text>
-          <Text style={tw`text-2xl font-semibold my-4`}>
-            {selectedDate.toDateString()}
-          </Text>
-        </View>
-        <View style={tw`flex-row items-center`}>
-          <Image
-            source={require('../../assets/images/sun.png')}
-            style={tw`w-10 h-10 rounded-full mr-3`}
-          />
-          <View>
-            <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-            <Text style={tw`text-white text-sm`}>mrrony1574@gmail.com</Text>
+      <ImageBackground
+        source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
+        style={tw`flex-1 rounded-lg`}
+        resizeMode="cover">
+        {/* Overlay for better text visibility */}
+        <View style={tw`absolute inset-0 bg-black bg-opacity-30 `}></View>
+
+        <View style={tw`p-4 h-full`}>
+          {/* Top Section */}
+          <View style={tw`flex-row justify-between items-start mb-6`}>
+            {/* Left Side - Date */}
+            <View style={tw`top-4`}>
+              <Text style={tw`text-xl font-normal text-white `}>Today</Text>
+              <Text style={tw`text-base text-gray-200`}>March 12, Friday</Text>
+            </View>
+
+            {/* Right Side - Profile with Image */}
+            <View style={tw`items-end z-10`}>
+              <Image
+                source={require('../../assets/images/rony.png')}
+                style={tw`w-9 h-9 rounded-full mb-2 border-2 border-white`}
+                resizeMode="cover"
+              />
+              <Text style={tw`text-lg font-bold text-white bottom-2`}>Mr Rony</Text>
+              <Text style={tw`text-sm text-gray-400 bottom-2`}>mrony@gmail.com</Text>
+            </View>
+          </View>
+
+          {/* Quote Section */}
+          <View style={tw`absolute bottom-8 left-4 right-4 `}>
+            <Text style={tw`text-center italic text-white shadow-md`}>
+              "Time is the most valuable thing a man can spend."
+            </Text>
           </View>
         </View>
-      </View>
+      </ImageBackground>
 
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
       ) : (
-        <ScrollView contentContainerStyle={tw`pb-10`}>
+        <ScrollView contentContainerStyle={tw`pb-10 top-4`}>
           {tasks.length === 0 ? (
             <Text style={tw`text-center text-gray-500`}>
               No tasks for today. Enjoy your day!
             </Text>
           ) : (
             tasks.map((task: any) => (
-              <View key={task.id} style={tw`p-4 mb-4 rounded-lg ${task.completed ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <View style={tw`flex-row items-center justify-between`}>
-                {/* Left Side: Check Icon */}
-                <TouchableOpacity onPress={() => toggleComplete(task.id)}>
-                  <Icon
-                    name={task.completed ? 'checkmark-circle' : 'ellipse-outline'}
-                    size={24}
-                    color={task.completed ? 'green' : 'gray'}
-                  />
-                </TouchableOpacity>
-            
-                {/* Middle Content: Image, Name, Daily Target */}
-                <View style={tw`flex-row items-center flex-1 mx-3`}>
-                  {task.icon && (
-                    <Image 
-                      source={task.icon} 
-                      style={tw`w-6 h-6 mr-2`}
-                    />
-                  )}
-                  
-                  <Text style={tw`text-lg font-bold flex-1`}>
-                    {task.name}
-                  </Text>
-            
-                  {task.dailyTarget && (
-                    <View style={tw`flex-row items-center ml-2`}>
-                      <Text style={tw`mr-2 font-semibold`}>
-                        {task.dailyTarget}
-                      </Text>
-                      <View style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
-                        <TouchableOpacity
-                          onPress={() => decrementProgress(task.id)}
-                          style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}
-                        >
-                          <Text style={tw`text-gray-700`}>-</Text>
-                        </TouchableOpacity>
-                        <Text style={tw`px-3 py-1 bg-white`}>
-                          {task.currentProgress}
+              <View
+                key={task.id}
+                style={tw`p-4 mb-4 rounded-lg ${
+                  task.completed ? 'bg-green-100' : 'bg-gray-100'
+                }`}>
+                <View style={tw`flex-row items-center justify-between`}>
+                  {/* Left Side: Check Icon */}
+                  <TouchableOpacity onPress={() => toggleComplete(task.id)}>
+                    {task.completed ? (
+                      <Image
+                        source={require('../../assets/images/check.png')}
+                        style={{width: 24, height: 24, tintColor: 'green'}}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <Image
+                        source={require('../../assets/images/Circle.png')} // বা অন্য কোনো আনচেকড ইমেজ
+                        style={{width: 24, height: 24, tintColor: 'gray'}}
+                        resizeMode="contain"
+                      />
+                    )}
+                  </TouchableOpacity>
+
+                  {/* Middle Content: Image, Name, Daily Target */}
+                  <View style={tw`flex-row items-center flex-1 mx-3`}>
+                    {task.icon && (
+                      <Image source={task.icon} style={tw`w-6 h-6 mr-2`} />
+                    )}
+
+                    <Text style={tw`text-lg font-bold flex-1`}>
+                      {task.name}
+                    </Text>
+
+                    {task.dailyTarget && (
+                      <View style={tw`flex-row items-center ml-2`}>
+                        <Text style={tw`mr-2 font-semibold`}>
+                          {task.dailyTarget}
                         </Text>
-                        <TouchableOpacity
-                          onPress={() => incrementProgress(task.id)}
-                          style={tw`px-3 py-1 bg-gray-100 rounded-r-lg`}
-                        >
-                          <Text style={tw`text-gray-700`}>+</Text>
-                        </TouchableOpacity>
+                        <View
+                          style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
+                          <TouchableOpacity
+                            onPress={() => decrementProgress(task.id)}
+                            style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}>
+                            <Text style={tw`text-gray-700`}>-</Text>
+                          </TouchableOpacity>
+                          <Text style={tw`px-3 py-1 bg-white`}>
+                            {task.currentProgress}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => incrementProgress(task.id)}
+                            style={tw`px-3 py-1 bg-gray-100 rounded-r-lg`}>
+                            <Text style={tw`text-gray-700`}>+</Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                    </View>
-                  )}
+                    )}
+                  </View>
+
+                  {/* Right Side: Star Icon */}
+                  <TouchableOpacity onPress={() => toggleStar(task.id)}>
+                    <Icon
+                      name={task.isStarred ? 'star' : 'star-outline'}
+                      size={24}
+                      color={task.isStarred ? 'gold' : 'gray'}
+                    />
+                  </TouchableOpacity>
                 </View>
-            
-                {/* Right Side: Star Icon */}
-                <TouchableOpacity onPress={() => toggleStar(task.id)}>
-                  <Icon
-                    name={task.isStarred ? 'star' : 'star-outline'}
-                    size={24}
-                    color={task.isStarred ? 'gold' : 'gray'}
-                  />
-                </TouchableOpacity>
               </View>
-            </View>
             ))
           )}
         </ScrollView>
