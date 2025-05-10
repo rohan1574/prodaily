@@ -113,6 +113,7 @@ const AddDailyTaskScreen = () => {
     useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
+  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const colorContext = useContext(ColorContext);
 
   if (!colorContext) {
@@ -364,13 +365,10 @@ const AddDailyTaskScreen = () => {
       );
 
       if (isDuplicate) {
-        Alert.alert(
-          'Task Already Exists',
-          'এই টাস্কটি ইতিমধ্যেই আপনার রুটিনে রয়েছে!',
-          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        );
-        return; // ডুপ্লিকেট থাকলে সেভ করবে না
+        setShowDuplicateAlert(true); // Alert.alert এর পরিবর্তে
+        return;
       }
+
       taskList.push(taskData); // Add new task to the list
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList)); // Save updated task list
       // Show success modal after save
@@ -843,6 +841,28 @@ const AddDailyTaskScreen = () => {
                     />
                   </TouchableOpacity>
                 </View>
+                {showDuplicateAlert && (
+                  <Modal transparent visible={showDuplicateAlert}>
+                    <View
+                      style={tw`flex-1 justify-center items-center bg-black/50`}>
+                      <View
+                        style={tw`bg-red-500 p-6 rounded-2xl w-3/4 items-center shadow-lg`}>
+                        <Text style={tw`text-white text-xl font-bold mb-2`}>
+                          Task Already Exists
+                        </Text>
+                        <Text style={tw`text-white text-center mb-6`}>
+                          This task is already in your routine.
+                        </Text>
+
+                        <TouchableOpacity
+                          onPress={() => setShowDuplicateAlert(false)}
+                          style={tw`bg-white px-8 py-2 rounded-full`}>
+                          <Text style={tw`text-red-500 font-bold`}>OK</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </Modal>
+                )}
                 {/* modal */}
                 <Modal
                   visible={showSuccessModal}
