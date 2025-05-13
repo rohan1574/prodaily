@@ -200,22 +200,23 @@ const TodaysTaskToDoScreen = () => {
   }, []);
 
   return (
-    <View style={tw`flex-1 bg-gray-200 p-4`}>
+    <View style={tw`flex-1 bg-gray-200 `}>
       {/* Header */}
       <ImageBackground
         source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
-        style={tw`flex-1 rounded-lg`}
-        resizeMode="cover">
+        style={tw` rounded-lg m-4 h-44`}
+        imageStyle={tw`rounded-lg`}
+        >
         {/* Overlay for better text visibility */}
         <View style={tw`absolute inset-0 bg-black bg-opacity-30 `}></View>
 
-        <View style={tw`p-4 h-full`}>
+        <View style={tw`p-4`}>
           {/* Top Section */}
-          <View style={tw`flex-row justify-between items-start mb-6`}>
+          <View style={tw`flex-row justify-between items-start `}>
             {/* Left Side - Date */}
             <View style={tw`top-4`}>
               <Text style={tw`text-xl font-normal text-white `}>Today</Text>
-              <Text style={tw`text-base text-gray-200`}>March 12, Friday</Text>
+              <Text style={tw`text-base text-gray-200`}> {selectedDate.toDateString()}</Text>
             </View>
 
             {/* Right Side - Profile with Image */}
@@ -231,7 +232,7 @@ const TodaysTaskToDoScreen = () => {
           </View>
 
           {/* Quote Section */}
-          <View style={tw`absolute bottom-8 left-4 right-4 `}>
+          <View style={tw`absolute top-32 left-4 right-4 `}>
             <Text style={tw`text-center italic text-white shadow-md`}>
               "Time is the most valuable thing a man can spend."
             </Text>
@@ -242,7 +243,7 @@ const TodaysTaskToDoScreen = () => {
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
       ) : (
-        <ScrollView contentContainerStyle={tw`pb-10 top-4`}>
+        <ScrollView contentContainerStyle={tw` px-4`}>
           {tasks.length === 0 ? (
             <Text style={tw`text-center text-gray-500`}>
               No tasks for today. Enjoy your day!
@@ -251,7 +252,7 @@ const TodaysTaskToDoScreen = () => {
             tasks.map((task: any) => (
               <View
                 key={task.id}
-                style={tw`p-4 mb-4 rounded-lg ${
+                style={tw`p-4  rounded-lg  ${
                   task.completed ? 'bg-green-100' : 'bg-gray-100'
                 }`}>
                 <View style={tw`flex-row items-center justify-between`}>
