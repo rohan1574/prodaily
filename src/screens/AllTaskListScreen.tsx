@@ -359,7 +359,6 @@ const AllTaskListScreen = () => {
                   </View>
                 </View>
               </View>
-              // মোডাল কম্পোনেন্ট আপডেট করুন
               <Modal
                 visible={showSuccessModal}
                 transparent={true}
@@ -536,51 +535,49 @@ const AllTaskListScreen = () => {
 
                     {isSpecificDayOnSelected && (
                       <>
-                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-<View style={tw`flex-row justify-between mb-4`}>
-  {['Weekly', 'Monthly', 'Yearly'].map(type => (
-    <TouchableOpacity
-      key={type}
-      style={tw`px-4 py-2 rounded-lg ${
-        editedTask.specTarget === type
-          ? 'bg-blue-500'
-          : 'bg-gray-200'
-      }`}
-      onPress={() => {
-        const updatedTask: Task = { 
-          ...editedTask, 
-          specTarget: type,
-          // রিসেট করার লজিক
-          ...(type === 'Weekly' && { 
-            selectedDate: [], 
-            selectedDates: [], 
-            selectedMonths: [] 
-          }),
-          ...(type === 'Monthly' && { 
-            selectedDays: [], 
-            selectedDates: [], 
-            selectedMonths: [] 
-          }),
-          ...(type === 'Yearly' && { 
-            selectedDays: [], 
-            selectedDate: [] 
-          })
-        };
-        setEditedTask(updatedTask);
-      }}
-    >
-      <Text
-        style={tw`${
-          editedTask.specTarget === type
-            ? 'text-white'
-            : 'text-gray-700'
-        }`}
-      >
-        {type}
-      </Text>
-    </TouchableOpacity>
-  ))}
-</View>
+                        {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
+                        <View style={tw`flex-row justify-between mb-4`}>
+                          {['Weekly', 'Monthly', 'Yearly'].map(type => (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-4 py-2 rounded-lg ${
+                                editedTask.specTarget === type
+                                  ? 'bg-blue-500'
+                                  : 'bg-gray-200'
+                              }`}
+                              onPress={() => {
+                                const updatedTask: Task = {
+                                  ...editedTask,
+                                  specTarget: type,
+                                  // রিসেট করার লজিক
+                                  ...(type === 'Weekly' && {
+                                    selectedDate: [],
+                                    selectedDates: [],
+                                    selectedMonths: [],
+                                  }),
+                                  ...(type === 'Monthly' && {
+                                    selectedDays: [],
+                                    selectedDates: [],
+                                    selectedMonths: [],
+                                  }),
+                                  ...(type === 'Yearly' && {
+                                    selectedDays: [],
+                                    selectedDate: [],
+                                  }),
+                                };
+                                setEditedTask(updatedTask);
+                              }}>
+                              <Text
+                                style={tw`${
+                                  editedTask.specTarget === type
+                                    ? 'text-white'
+                                    : 'text-gray-700'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
 
                         {editedTask.specTarget === 'Weekly' && (
                           <View style={tw`flex-row flex-wrap`}>
