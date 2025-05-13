@@ -80,6 +80,7 @@ const AddDailyTaskScreen = () => {
   const [dailyTarget, setDailyTarget] = useState('');
   const [specTarget, setSpecTarget] = useState('Weekly');
   const [targetType, setTargetType] = useState<'Minutes' | 'Times'>('Minutes');
+  const options = ['Minutes', 'Times'] as const;
   const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
   const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
   const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
@@ -583,50 +584,31 @@ const AddDailyTaskScreen = () => {
                       editable={isSpecificForEnabled}
                     />
 
-                    <TouchableOpacity
-                      style={tw`py-2 px-3 left-3 rounded ${
-                        specificFor === 'Days' ? 'bg-blue-500' : 'bg-gray-300'
-                      }`}
-                      onPress={() => setSpecificFor('Days')}>
-                      <Text
-                        style={
-                          specificFor === 'Days'
-                            ? tw`text-white font-bold`
-                            : tw`text-gray-500 font-bold`
-                        }>
-                        Days
-                      </Text>
-                    </TouchableOpacity>
+                    <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                      {['Days', 'Weeks', 'Months'].map(type => {
+                        const isSelected = specificFor === type;
 
-                    <TouchableOpacity
-                      style={tw`py-2 px-2 left-2 rounded ${
-                        specificFor === 'Weeks' ? 'bg-blue-500' : 'bg-gray-300'
-                      }`}
-                      onPress={() => setSpecificFor('Weeks')}>
-                      <Text
-                        style={
-                          specificFor === 'Weeks'
-                            ? tw`text-white font-bold`
-                            : tw`text-gray-500 font-bold`
-                        }>
-                        Weeks
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={tw`py-2 px-2 rounded ${
-                        specificFor === 'Months' ? 'bg-blue-500' : 'bg-gray-300'
-                      }`}
-                      onPress={() => setSpecificFor('Months')}>
-                      <Text
-                        style={
-                          specificFor === 'Months'
-                            ? tw`text-white font-bold`
-                            : tw`text-gray-500 font-bold`
-                        }>
-                        Months
-                      </Text>
-                    </TouchableOpacity>
+                        return (
+                          <TouchableOpacity
+                            key={type}
+                            style={tw`px-2 py-1 mx- rounded-full ${
+                              isSelected
+                                ? 'bg-white border border-blue-500'
+                                : ''
+                            }`}
+                            onPress={() => setSpecificFor(type)}>
+                            <Text
+                              style={tw`text-sm ${
+                                isSelected
+                                  ? 'text-blue-500 font-semibold'
+                                  : 'text-gray-500'
+                              }`}>
+                              {type}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
                   </View>
                 </View>
                 {/* Set Daily Target */}
@@ -654,40 +636,31 @@ const AddDailyTaskScreen = () => {
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
-                    <View style={tw`flex-row mt-2 `}>
-                      <TouchableOpacity
-                        style={[
-                          tw`px-4 py-2 mx-1 rounded  ${
-                            targetType === 'Minutes'
-                              ? 'bg-blue-500'
-                              : 'bg-gray-300'
-                          }`,
-                          {left: 22},
-                        ]}
-                        onPress={() => setTargetType('Minutes')}>
-                        <Text
-                          style={tw`${
-                            targetType === 'Minutes'
-                              ? 'text-white font-bold right-2'
-                              : 'text-gray-500 font-bold right-2'
-                          }`}>
-                          Minutes
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={tw`px-4 py-2 mx-1 rounded ${
-                          targetType === 'Times' ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}
-                        onPress={() => setTargetType('Times')}>
-                        <Text
-                          style={tw`${
-                            targetType === 'Times'
-                              ? 'text-white font-bold'
-                              : 'text-gray-500 font-bold'
-                          }`}>
-                          Times
-                        </Text>
-                      </TouchableOpacity>
+                    <View
+                      style={tw`flex-row bg-blue-100 rounded-full p-1 left-4 mt-2`}>
+                      {options.map(type => {
+                        const isSelected = targetType === type;
+
+                        return (
+                          <TouchableOpacity
+                            key={type}
+                            style={tw`px-2 py-1 mx-1 rounded-full ${
+                              isSelected
+                                ? 'bg-white border border-blue-500'
+                                : ''
+                            }`}
+                            onPress={() => setTargetType(type)}>
+                            <Text
+                              style={tw`text-sm ${
+                                isSelected
+                                  ? 'text-blue-500 font-semibold'
+                                  : 'text-gray-500'
+                              }`}>
+                              {type}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
                     </View>
                   </View>
                 </View>
@@ -711,20 +684,28 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`flex-row justify-between`}>
+                <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
                   {/* Weekly Button */}
                   <TouchableOpacity
                     onPress={handleWeeklyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-5 left-32 rounded-lg`,
+                      tw`px-3 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'weekly'
-                        ? tw`bg-green-600`
+                        ? tw`bg-white border border-blue-500`
                         : tw`bg-blue-500`,
                     ]}>
-                    <Text style={tw`text-white font-bold right-3`}>Weekly</Text>
+                    <Text
+                      style={tw`text-sm ${
+                        selectedDayOnType === 'weekly' &&
+                        isSpecificDayOnSelected
+                          ? 'text-blue-500 font-semibold'
+                          : 'text-gray-500'
+                      }`}>
+                      Weekly
+                    </Text>
                   </TouchableOpacity>
 
                   {/* Monthly Button */}
@@ -732,14 +713,20 @@ const AddDailyTaskScreen = () => {
                     onPress={handleMonthlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-5 left-16 rounded-lg`,
+                      tw`px-3 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'monthly'
-                        ? tw`bg-green-600`
-                        : tw`bg-blue-500 `,
+                        ? tw`bg-white border border-blue-500`
+                        : tw`bg-blue-500`,
                     ]}>
-                    <Text style={tw`text-white font-bold right-2`}>
+                    <Text
+                      style={tw`text-sm ${
+                        selectedDayOnType === 'monthly' &&
+                        isSpecificDayOnSelected
+                          ? 'text-blue-500 font-semibold'
+                          : 'text-gray-500'
+                      }`}>
                       Monthly
                     </Text>
                   </TouchableOpacity>
@@ -749,16 +736,25 @@ const AddDailyTaskScreen = () => {
                     onPress={handleYearlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`py-3 px-4 left-2 rounded-lg`,
+                      tw`px-3 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
                         ? tw`bg-gray-300`
                         : selectedDayOnType === 'yearly'
-                        ? tw`bg-green-600 font-bold`
-                        : tw`bg-blue-500 font-bold`,
+                        ? tw`bg-white border border-blue-500`
+                        : tw`bg-blue-500`,
                     ]}>
-                    <Text style={tw`text-white font-bold`}>Yearly</Text>
+                    <Text
+                      style={tw`text-sm ${
+                        selectedDayOnType === 'yearly' &&
+                        isSpecificDayOnSelected
+                          ? 'text-blue-500 font-semibold'
+                          : 'text-gray-500'
+                      }`}>
+                      Yearly
+                    </Text>
                   </TouchableOpacity>
                 </View>
+
                 {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
                 {isDayPickerVisible && (
                   <DayPicker

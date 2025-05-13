@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   TextInput,
   Image,
   Modal,
@@ -429,8 +428,11 @@ const AllTaskListScreen = () => {
                           color={isSpecificForEnabled ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
+                      <Text style={tw`text-xs font-bold text-gray-500`}>
+                        Add Specific for
+                      </Text>
                       <TextInput
-                        style={tw`border p-2 w-16 rounded ml-2 ${
+                        style={tw`border h-8 w-8 rounded ml-1 ${
                           !isSpecificForEnabled ? 'bg-gray-100' : ''
                         }`}
                         keyboardType="numeric"
@@ -448,32 +450,38 @@ const AllTaskListScreen = () => {
                         editable={isSpecificForEnabled}
                         placeholder="0"
                       />
-                      <View style={tw`flex-row ml-2`}>
-                        {['Days', 'Weeks', 'Months'].map(type => (
-                          <TouchableOpacity
-                            key={type}
-                            style={tw`px-3 py-1 mx-1 rounded ${
-                              editedTask.specificFor === type &&
-                              isSpecificForEnabled
-                                ? 'bg-blue-500'
-                                : 'bg-gray-200'
-                            }`}
-                            onPress={() =>
-                              isSpecificForEnabled &&
-                              setEditedTask({...editedTask, specificFor: type})
-                            }
-                            disabled={!isSpecificForEnabled}>
-                            <Text
-                              style={tw`${
-                                editedTask.specificFor === type &&
-                                isSpecificForEnabled
-                                  ? 'text-white'
-                                  : 'text-gray-500'
-                              }`}>
-                              {type}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
+                      <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                        {['Days', 'Weeks', 'Months'].map(type => {
+                          const isSelected =
+                            editedTask.specificFor === type &&
+                            isSpecificForEnabled;
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-2 py-1 mx- rounded-full ${
+                                isSelected
+                                  ? 'bg-white border border-blue-500'
+                                  : ''
+                              }`}
+                              onPress={() =>
+                                isSpecificForEnabled &&
+                                setEditedTask({
+                                  ...editedTask,
+                                  specificFor: type,
+                                })
+                              }
+                              disabled={!isSpecificForEnabled}>
+                              <Text
+                                style={tw`text-sm ${
+                                  isSelected
+                                    ? 'text-blue-500 font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
                       </View>
                     </View>
                   </View>
@@ -491,7 +499,7 @@ const AllTaskListScreen = () => {
                           color={isDailyTargetEnabled ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
-                      <Text style={tw`text-sm font-bold ml-2`}>
+                      <Text style={tw`text-xs font-bold text-gray-500`}>
                         Set Daily Target
                       </Text>
                       <TextInput
@@ -513,32 +521,36 @@ const AllTaskListScreen = () => {
                         editable={isDailyTargetEnabled}
                         placeholder="0"
                       />
-                      <View style={tw`flex-row ml-2`}>
-                        {['Minutes', 'Times'].map(type => (
-                          <TouchableOpacity
-                            key={type}
-                            style={tw`px-3 py-1 mx-1 rounded ${
-                              editedTask.targetType === type &&
-                              isDailyTargetEnabled
-                                ? 'bg-blue-500'
-                                : 'bg-gray-200'
-                            }`}
-                            onPress={() =>
-                              isDailyTargetEnabled &&
-                              setEditedTask({...editedTask, targetType: type})
-                            }
-                            disabled={!isDailyTargetEnabled}>
-                            <Text
-                              style={tw`${
-                                editedTask.targetType === type &&
-                                isDailyTargetEnabled
-                                  ? 'text-white'
-                                  : 'text-gray-500'
-                              }`}>
-                              {type}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
+                      <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                        {['Minutes', 'Times'].map(type => {
+                          const isSelected =
+                            editedTask.targetType === type &&
+                            isDailyTargetEnabled;
+
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-3 py-1 mx-1 rounded-full ${
+                                isSelected
+                                  ? 'bg-white border border-blue-500'
+                                  : 'bg-gray-200'
+                              }`}
+                              onPress={() =>
+                                isDailyTargetEnabled &&
+                                setEditedTask({...editedTask, targetType: type})
+                              }
+                              disabled={!isDailyTargetEnabled}>
+                              <Text
+                                style={tw`text-sm ${
+                                  isSelected
+                                    ? 'text-blue-500 font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
                       </View>
                     </View>
                   </View>
@@ -556,7 +568,7 @@ const AllTaskListScreen = () => {
                           color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
-                      <Text style={tw`text-sm font-bold ml-2`}>
+                      <Text style={tw`text-xs font-bold text-gray-500`}>
                         Specific Day On
                       </Text>
                     </View>
@@ -564,47 +576,53 @@ const AllTaskListScreen = () => {
                     {isSpecificDayOnSelected && (
                       <>
                         {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                        <View style={tw`flex-row justify-between mb-4`}>
-                          {['Weekly', 'Monthly', 'Yearly'].map(type => (
-                            <TouchableOpacity
-                              key={type}
-                              style={tw`px-4 py-2 rounded-lg ${
-                                editedTask.specTarget === type
-                                  ? 'bg-blue-500'
-                                  : 'bg-gray-200'
-                              }`}
-                              onPress={() => {
-                                const updatedTask: Task = {
-                                  ...editedTask,
-                                  specTarget: type,
-                                  // রিসেট করার লজিক
-                                  ...(type === 'Weekly' && {
-                                    selectedDate: [],
-                                    selectedDates: [],
-                                    selectedMonths: [],
-                                  }),
-                                  ...(type === 'Monthly' && {
-                                    selectedDays: [],
-                                    selectedDates: [],
-                                    selectedMonths: [],
-                                  }),
-                                  ...(type === 'Yearly' && {
-                                    selectedDays: [],
-                                    selectedDate: [],
-                                  }),
-                                };
-                                setEditedTask(updatedTask);
-                              }}>
-                              <Text
-                                style={tw`${
-                                  editedTask.specTarget === type
-                                    ? 'text-white'
-                                    : 'text-gray-700'
-                                }`}>
-                                {type}
-                              </Text>
-                            </TouchableOpacity>
-                          ))}
+                        <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                          {['Weekly', 'Monthly', 'Yearly'].map(type => {
+                            const isSelected = editedTask.specTarget === type;
+                            return (
+                              <TouchableOpacity
+                                key={type}
+                                style={[
+                                  tw`px-3 py-1 rounded-full mx-1`,
+                                  isSelected
+                                    ? tw`bg-white border border-blue-500`
+                                    : 'bg-blue-500',
+                                  !isSpecificDayOnSelected && tw`bg-gray-300`, // Disable if isSpecificDayOnSelected is false
+                                ]}
+                                disabled={!isSpecificDayOnSelected}
+                                onPress={() => {
+                                  const updatedTask: Task = {
+                                    ...editedTask,
+                                    specTarget: type,
+                                    // Reset logic
+                                    ...(type === 'Weekly' && {
+                                      selectedDate: [],
+                                      selectedDates: [],
+                                      selectedMonths: [],
+                                    }),
+                                    ...(type === 'Monthly' && {
+                                      selectedDays: [],
+                                      selectedDates: [],
+                                      selectedMonths: [],
+                                    }),
+                                    ...(type === 'Yearly' && {
+                                      selectedDays: [],
+                                      selectedDate: [],
+                                    }),
+                                  };
+                                  setEditedTask(updatedTask);
+                                }}>
+                                <Text
+                                  style={tw`text-sm ${
+                                    isSelected
+                                      ? 'text-blue-500 font-semibold'
+                                      : 'text-gray-500'
+                                  }`}>
+                                  {type}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
                         </View>
 
                         {editedTask.specTarget === 'Weekly' && (
