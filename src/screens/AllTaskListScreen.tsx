@@ -116,78 +116,78 @@ const AllTaskListScreen = () => {
     }
   };
 
-// রেডিও বাটন টগল লজিক আপডেট করুন
-const toggleSpecificFor = () => {
-  const newState = !isSpecificForEnabled;
-  
-  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
-  setIsDailyTargetEnabled(false);
-  setIsSpecificDayOnSelected(false);
+  // রেডিও বাটন টগল লজিক আপডেট করুন
+  const toggleSpecificFor = () => {
+    const newState = !isSpecificForEnabled;
 
-  setEditedTask((prev: Task) => ({
-    ...prev,
-    // ডেইলি টার্গেট এবং স্পেসিফিক ডে অন ডেটা রিসেট
-    dailyTarget: 0,
-    targetType: 'Minutes',
-    selectedDays: [],
-    selectedDate: [],
-    selectedDates: [],
-    selectedMonths: [],
-    // বর্তমান সেকশনের ডেটা আপডেট
-    specificForValue: newState ? prev.specificForValue : '',
-    specificFor: newState ? prev.specificFor : 'Days',
-  }));
+    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+    setIsDailyTargetEnabled(false);
+    setIsSpecificDayOnSelected(false);
 
-  setIsSpecificForEnabled(newState);
-};
+    setEditedTask((prev: Task) => ({
+      ...prev,
+      // ডেইলি টার্গেট এবং স্পেসিফিক ডে অন ডেটা রিসেট
+      dailyTarget: 0,
+      targetType: 'Minutes',
+      selectedDays: [],
+      selectedDate: [],
+      selectedDates: [],
+      selectedMonths: [],
+      // বর্তমান সেকশনের ডেটা আপডেট
+      specificForValue: newState ? prev.specificForValue : '',
+      specificFor: newState ? prev.specificFor : 'Days',
+    }));
 
-const toggleDailyTarget = () => {
-  const newState = !isDailyTargetEnabled;
-  
-  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
-  setIsSpecificForEnabled(false);
-  setIsSpecificDayOnSelected(false);
+    setIsSpecificForEnabled(newState);
+  };
 
-  setEditedTask((prev: Task) => ({
-    ...prev,
-    // স্পেসিফিক ফর এবং স্পেসিফিক ডে অন ডেটা রিসেট
-    specificForValue: '',
-    specificFor: 'Days',
-    selectedDays: [],
-    selectedDate: [],
-    selectedDates: [],
-    selectedMonths: [],
-    // বর্তমান সেকশনের ডেটা আপডেট
-    dailyTarget: newState ? prev.dailyTarget : 0,
-    targetType: newState ? prev.targetType : 'Minutes',
-  }));
+  const toggleDailyTarget = () => {
+    const newState = !isDailyTargetEnabled;
 
-  setIsDailyTargetEnabled(newState);
-};
+    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+    setIsSpecificForEnabled(false);
+    setIsSpecificDayOnSelected(false);
 
-const toggleSpecificDayOn = () => {
-  const newState = !isSpecificDayOnSelected;
-  
-  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
-  setIsSpecificForEnabled(false);
-  setIsDailyTargetEnabled(false);
+    setEditedTask((prev: Task) => ({
+      ...prev,
+      // স্পেসিফিক ফর এবং স্পেসিফিক ডে অন ডেটা রিসেট
+      specificForValue: '',
+      specificFor: 'Days',
+      selectedDays: [],
+      selectedDate: [],
+      selectedDates: [],
+      selectedMonths: [],
+      // বর্তমান সেকশনের ডেটা আপডেট
+      dailyTarget: newState ? prev.dailyTarget : 0,
+      targetType: newState ? prev.targetType : 'Minutes',
+    }));
 
-  setEditedTask((prev: Task) => ({
-    ...prev,
-    // স্পেসিফিক ফর এবং ডেইলি টার্গেট ডেটা রিসেট
-    specificForValue: '',
-    specificFor: 'Days',
-    dailyTarget: 0,
-    targetType: 'Minutes',
-    // বর্তমান সেকশনের ডেটা আপডেট
-    selectedDays: newState ? prev.selectedDays : [],
-    selectedDate: newState ? prev.selectedDate : [],
-    selectedDates: newState ? prev.selectedDates : [],
-    selectedMonths: newState ? prev.selectedMonths : [],
-  }));
+    setIsDailyTargetEnabled(newState);
+  };
 
-  setIsSpecificDayOnSelected(newState);
-};
+  const toggleSpecificDayOn = () => {
+    const newState = !isSpecificDayOnSelected;
+
+    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+    setIsSpecificForEnabled(false);
+    setIsDailyTargetEnabled(false);
+
+    setEditedTask((prev: Task) => ({
+      ...prev,
+      // স্পেসিফিক ফর এবং ডেইলি টার্গেট ডেটা রিসেট
+      specificForValue: '',
+      specificFor: 'Days',
+      dailyTarget: 0,
+      targetType: 'Minutes',
+      // বর্তমান সেকশনের ডেটা আপডেট
+      selectedDays: newState ? prev.selectedDays : [],
+      selectedDate: newState ? prev.selectedDate : [],
+      selectedDates: newState ? prev.selectedDates : [],
+      selectedMonths: newState ? prev.selectedMonths : [],
+    }));
+
+    setIsSpecificDayOnSelected(newState);
+  };
 
   const toggleDaySelection = (day: string) => {
     const updatedDays = editedTask.selectedDays?.includes(day)
@@ -204,7 +204,6 @@ const toggleSpecificDayOn = () => {
 
     setEditedTask({...editedTask, selectedMonths: updatedMonths});
   };
-
 
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
@@ -379,7 +378,7 @@ const toggleSpecificDayOn = () => {
                       <Icon
                         name={
                           expandedTaskId === task.id
-                            ? 'chevron-down'
+                            ? ''
                             : 'create-outline'
                         }
                         size={24}
@@ -462,9 +461,12 @@ const toggleSpecificDayOn = () => {
                         Add Specific for
                       </Text>
                       <TextInput
-                        style={[tw`border rounded mx-2 ${
-                          !isSpecificForEnabled ? 'bg-gray-100' : ''
-                        }`,{width:32,height:36}]}
+                        style={[
+                          tw`border rounded mx-2 ${
+                            !isSpecificForEnabled ? 'bg-gray-100' : ''
+                          }`,
+                          {width: 32, height: 36},
+                        ]}
                         keyboardType="numeric"
                         value={
                           isSpecificForEnabled
@@ -533,10 +535,11 @@ const toggleSpecificDayOn = () => {
                         Set Daily Target
                       </Text>
                       <TextInput
-                        style={[tw`border p-2  rounded mx-2
-                          ${
-                          !isDailyTargetEnabled ? 'bg-gray-100' : ''
-                        }`,{width:32,height:36}]}
+                        style={[
+                          tw`border p-2  rounded mx-2
+                          ${!isDailyTargetEnabled ? 'bg-gray-100' : ''}`,
+                          {width: 32, height: 36},
+                        ]}
                         keyboardType="numeric"
                         value={
                           isDailyTargetEnabled
@@ -602,55 +605,59 @@ const toggleSpecificDayOn = () => {
                       <Text style={tw`text-xs font-bold text-gray-500`}>
                         Specific Day On
                       </Text>
-                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                        <View style={[tw`flex-row bg-blue-100 rounded-full p-1 mx-1`,{width:228}]}>
-                          {['Weekly', 'Monthly', 'Yearly'].map(type => {
-                            const isSelected = editedTask.specTarget === type;
-                            return (
-                              <TouchableOpacity
-                                key={type}
-                                style={[
-                                  tw`px-3 py-1 rounded-full mr-1`,
+                      {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
+                      <View
+                        style={[
+                          tw`flex-row bg-blue-100 rounded-full p-1 mx-1`,
+                          {width: 228},
+                        ]}>
+                        {['Weekly', 'Monthly', 'Yearly'].map(type => {
+                          const isSelected = editedTask.specTarget === type;
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={[
+                                tw`px-3 py-1 rounded-full mr-1`,
+                                isSelected
+                                  ? tw`bg-white border border-blue-500`
+                                  : 'bg-blue-500',
+                                !isSpecificDayOnSelected && tw`bg-gray-300`, // Disable if isSpecificDayOnSelected is false
+                              ]}
+                              disabled={!isSpecificDayOnSelected}
+                              onPress={() => {
+                                const updatedTask: Task = {
+                                  ...editedTask,
+                                  specTarget: type,
+                                  // Reset logic
+                                  ...(type === 'Weekly' && {
+                                    selectedDate: [],
+                                    selectedDates: [],
+                                    selectedMonths: [],
+                                  }),
+                                  ...(type === 'Monthly' && {
+                                    selectedDays: [],
+                                    selectedDates: [],
+                                    selectedMonths: [],
+                                  }),
+                                  ...(type === 'Yearly' && {
+                                    selectedDays: [],
+                                    selectedDate: [],
+                                  }),
+                                };
+                                setEditedTask(updatedTask);
+                              }}>
+                              <Text
+                                style={tw`text-sm ${
                                   isSelected
-                                    ? tw`bg-white border border-blue-500`
-                                    : 'bg-blue-500',
-                                  !isSpecificDayOnSelected && tw`bg-gray-300`, // Disable if isSpecificDayOnSelected is false
-                                ]}
-                                disabled={!isSpecificDayOnSelected}
-                                onPress={() => {
-                                  const updatedTask: Task = {
-                                    ...editedTask,
-                                    specTarget: type,
-                                    // Reset logic
-                                    ...(type === 'Weekly' && {
-                                      selectedDate: [],
-                                      selectedDates: [],
-                                      selectedMonths: [],
-                                    }),
-                                    ...(type === 'Monthly' && {
-                                      selectedDays: [],
-                                      selectedDates: [],
-                                      selectedMonths: [],
-                                    }),
-                                    ...(type === 'Yearly' && {
-                                      selectedDays: [],
-                                      selectedDate: [],
-                                    }),
-                                  };
-                                  setEditedTask(updatedTask);
-                                }}>
-                                <Text
-                                  style={tw`text-sm ${
-                                    isSelected
-                                      ? 'text-blue-500 font-semibold'
-                                      : 'text-gray-500'
-                                  }`}>
-                                  {type}
-                                </Text>
-                              </TouchableOpacity>
-                            );
-                          })}
-                        </View>
+                                    ? 'text-blue-500 font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
                     </View>
                     {isSpecificDayOnSelected && (
                       <>
@@ -797,8 +804,13 @@ const toggleSpecificDayOn = () => {
                   </View>
 
                   {/* Action Buttons */}
-                  <View style={tw`flex-row justify-between mt-4`}>
-                    <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
+                  <View style={tw`flex-row justify-between `}>
+                    <TouchableOpacity
+                      style={tw`bg-blue-500 px-24 py-2 rounded-full left-12`}
+                      onPress={() => handleUpdateTask(task.id)}>
+                      <Text style={tw`text-white font-bold`}>Skip</Text>
+                    </TouchableOpacity>
+                     <TouchableOpacity style={tw`top-4`} onPress={() => toggleExpansion(task.id)}>
                       <Icon
                         name={
                           expandedTaskId === task.id
@@ -808,12 +820,6 @@ const toggleSpecificDayOn = () => {
                         size={24}
                         color="#4b5563"
                       />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={tw`bg-green-500 px-6 py-2 rounded-lg`}
-                      onPress={() => handleUpdateTask(task.id)}>
-                      <Text style={tw`text-white`}>Save Changes</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
