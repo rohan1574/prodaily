@@ -684,18 +684,18 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                <View style={tw`flex-row bg-blue-100 w-48 rounded-full p-1 left-32`}>
                   {/* Weekly Button */}
                   <TouchableOpacity
                     onPress={handleWeeklyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`px-3 py-1 rounded-full mx-1`,
+                      tw`px-2 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
-                        ? tw`bg-gray-300`
+                        ? tw`bg-white border border-blue-500`
                         : selectedDayOnType === 'weekly'
                         ? tw`bg-white border border-blue-500`
-                        : tw`bg-blue-500`,
+                        : tw`bg-white border border-blue-500`,
                     ]}>
                     <Text
                       style={tw`text-sm ${
@@ -704,7 +704,7 @@ const AddDailyTaskScreen = () => {
                           ? 'text-blue-500 font-semibold'
                           : 'text-gray-500'
                       }`}>
-                      Weekly
+                      Week
                     </Text>
                   </TouchableOpacity>
 
@@ -713,12 +713,12 @@ const AddDailyTaskScreen = () => {
                     onPress={handleMonthlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`px-3 py-1 rounded-full mx-1`,
+                      tw`px-2 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
-                        ? tw`bg-gray-300`
+                        ? tw``
                         : selectedDayOnType === 'monthly'
                         ? tw`bg-white border border-blue-500`
-                        : tw`bg-blue-500`,
+                        : tw`bg-white border border-blue-500`,
                     ]}>
                     <Text
                       style={tw`text-sm ${
@@ -727,7 +727,7 @@ const AddDailyTaskScreen = () => {
                           ? 'text-blue-500 font-semibold'
                           : 'text-gray-500'
                       }`}>
-                      Monthly
+                      Month
                     </Text>
                   </TouchableOpacity>
 
@@ -736,12 +736,12 @@ const AddDailyTaskScreen = () => {
                     onPress={handleYearlyClick}
                     disabled={!isSpecificDayOnSelected}
                     style={[
-                      tw`px-3 py-1 rounded-full mx-1`,
+                      tw`px-2 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
-                        ? tw`bg-gray-300`
+                        ? tw``
                         : selectedDayOnType === 'yearly'
                         ? tw`bg-white border border-blue-500`
-                        : tw`bg-blue-500`,
+                        : tw`bg-white border border-blue-500`,
                     ]}>
                     <Text
                       style={tw`text-sm ${
@@ -750,7 +750,7 @@ const AddDailyTaskScreen = () => {
                           ? 'text-blue-500 font-semibold'
                           : 'text-gray-500'
                       }`}>
-                      Yearly
+                      Year
                     </Text>
                   </TouchableOpacity>
                 </View>

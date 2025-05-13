@@ -571,12 +571,8 @@ const AllTaskListScreen = () => {
                       <Text style={tw`text-xs font-bold text-gray-500`}>
                         Specific Day On
                       </Text>
-                    </View>
-
-                    {isSpecificDayOnSelected && (
-                      <>
-                        {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                        <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
+                        <View style={tw`flex-row bg-blue-100 w-60 rounded-full p-1`}>
                           {['Weekly', 'Monthly', 'Yearly'].map(type => {
                             const isSelected = editedTask.specTarget === type;
                             return (
@@ -624,6 +620,11 @@ const AllTaskListScreen = () => {
                             );
                           })}
                         </View>
+                    </View>
+
+                    {isSpecificDayOnSelected && (
+                      <>
+                       
 
                         {editedTask.specTarget === 'Weekly' && (
                           <View style={tw`flex-row flex-wrap`}>
