@@ -462,9 +462,9 @@ const toggleSpecificDayOn = () => {
                         Add Specific for
                       </Text>
                       <TextInput
-                        style={tw`border h-8 w-8 rounded ml-1 ${
+                        style={[tw`border rounded mx-2 ${
                           !isSpecificForEnabled ? 'bg-gray-100' : ''
-                        }`}
+                        }`,{width:32,height:36}]}
                         keyboardType="numeric"
                         value={
                           isSpecificForEnabled
@@ -533,9 +533,10 @@ const toggleSpecificDayOn = () => {
                         Set Daily Target
                       </Text>
                       <TextInput
-                        style={tw`border p-2 w-16 rounded ml-2 ${
+                        style={[tw`border p-2  rounded mx-2
+                          ${
                           !isDailyTargetEnabled ? 'bg-gray-100' : ''
-                        }`}
+                        }`,{width:32,height:36}]}
                         keyboardType="numeric"
                         value={
                           isDailyTargetEnabled
@@ -602,14 +603,14 @@ const toggleSpecificDayOn = () => {
                         Specific Day On
                       </Text>
                        {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                        <View style={tw`flex-row bg-blue-100 w-60 rounded-full p-1`}>
+                        <View style={[tw`flex-row bg-blue-100 rounded-full p-1 mx-1`,{width:228}]}>
                           {['Weekly', 'Monthly', 'Yearly'].map(type => {
                             const isSelected = editedTask.specTarget === type;
                             return (
                               <TouchableOpacity
                                 key={type}
                                 style={[
-                                  tw`px-3 py-1 rounded-full mx-1`,
+                                  tw`px-3 py-1 rounded-full mr-1`,
                                   isSelected
                                     ? tw`bg-white border border-blue-500`
                                     : 'bg-blue-500',
@@ -651,11 +652,8 @@ const toggleSpecificDayOn = () => {
                           })}
                         </View>
                     </View>
-
                     {isSpecificDayOnSelected && (
                       <>
-                       
-
                         {editedTask.specTarget === 'Weekly' && (
                           <View style={tw`flex-row flex-wrap`}>
                             {[
