@@ -20,6 +20,7 @@ interface Task {
   specificForValue?: number | string;
   specificFor?: 'Days' | 'Weeks' | 'Months';
   selectedDays?: string[];
+  selectedDate?: number[];
   selectedDates?: number[];
   selectedMonths?: string[];
   selectedYears?: number[];
@@ -115,38 +116,78 @@ const AllTaskListScreen = () => {
     }
   };
 
-  // রেডিও বাটন টগল লজিক
-  const toggleSpecificFor = () => {
-    const newState = !isSpecificForEnabled;
-    setIsSpecificForEnabled(newState);
-    setIsSpecificDayOnSelected(false);
+// রেডিও বাটন টগল লজিক আপডেট করুন
+const toggleSpecificFor = () => {
+  const newState = !isSpecificForEnabled;
+  
+  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+  setIsDailyTargetEnabled(false);
+  setIsSpecificDayOnSelected(false);
 
-    setEditedTask((prev: Task) => ({
-      ...prev,
-      specificForValue: newState ? prev.specificForValue : '',
-      specificFor: newState ? prev.specificFor : 'Days',
-      selectedDays: [],
-      selectedDates: [],
-      selectedMonths: [],
-      selectedYears: [],
-    }));
-  };
+  setEditedTask((prev: Task) => ({
+    ...prev,
+    // ডেইলি টার্গেট এবং স্পেসিফিক ডে অন ডেটা রিসেট
+    dailyTarget: 0,
+    targetType: 'Minutes',
+    selectedDays: [],
+    selectedDate: [],
+    selectedDates: [],
+    selectedMonths: [],
+    // বর্তমান সেকশনের ডেটা আপডেট
+    specificForValue: newState ? prev.specificForValue : '',
+    specificFor: newState ? prev.specificFor : 'Days',
+  }));
 
-  const toggleSpecificDayOn = () => {
-    const newState = !isSpecificDayOnSelected;
-    setIsSpecificDayOnSelected(newState);
-    setIsSpecificForEnabled(false);
+  setIsSpecificForEnabled(newState);
+};
 
-    setEditedTask((prev: Task) => ({
-      ...prev,
-      specificForValue: '',
-      specificFor: 'Days',
-      selectedDays: newState ? prev.selectedDays : [],
-      selectedDates: newState ? prev.selectedDates : [],
-      selectedMonths: newState ? prev.selectedMonths : [],
-      selectedYears: newState ? prev.selectedYears : [],
-    }));
-  };
+const toggleDailyTarget = () => {
+  const newState = !isDailyTargetEnabled;
+  
+  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+  setIsSpecificForEnabled(false);
+  setIsSpecificDayOnSelected(false);
+
+  setEditedTask((prev: Task) => ({
+    ...prev,
+    // স্পেসিফিক ফর এবং স্পেসিফিক ডে অন ডেটা রিসেট
+    specificForValue: '',
+    specificFor: 'Days',
+    selectedDays: [],
+    selectedDate: [],
+    selectedDates: [],
+    selectedMonths: [],
+    // বর্তমান সেকশনের ডেটা আপডেট
+    dailyTarget: newState ? prev.dailyTarget : 0,
+    targetType: newState ? prev.targetType : 'Minutes',
+  }));
+
+  setIsDailyTargetEnabled(newState);
+};
+
+const toggleSpecificDayOn = () => {
+  const newState = !isSpecificDayOnSelected;
+  
+  // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
+  setIsSpecificForEnabled(false);
+  setIsDailyTargetEnabled(false);
+
+  setEditedTask((prev: Task) => ({
+    ...prev,
+    // স্পেসিফিক ফর এবং ডেইলি টার্গেট ডেটা রিসেট
+    specificForValue: '',
+    specificFor: 'Days',
+    dailyTarget: 0,
+    targetType: 'Minutes',
+    // বর্তমান সেকশনের ডেটা আপডেট
+    selectedDays: newState ? prev.selectedDays : [],
+    selectedDate: newState ? prev.selectedDate : [],
+    selectedDates: newState ? prev.selectedDates : [],
+    selectedMonths: newState ? prev.selectedMonths : [],
+  }));
+
+  setIsSpecificDayOnSelected(newState);
+};
 
   const toggleDaySelection = (day: string) => {
     const updatedDays = editedTask.selectedDays?.includes(day)
@@ -163,18 +204,7 @@ const AllTaskListScreen = () => {
 
     setEditedTask({...editedTask, selectedMonths: updatedMonths});
   };
-  const toggleDailyTarget = () => {
-    const newState = !isDailyTargetEnabled;
-    setIsDailyTargetEnabled(newState);
 
-    if (!newState) {
-      setEditedTask((prev: Task) => ({
-        ...prev,
-        dailyTarget: 0,
-        targetType: 'Minutes',
-      }));
-    }
-  };
 
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
