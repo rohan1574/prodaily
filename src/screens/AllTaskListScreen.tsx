@@ -214,6 +214,7 @@ const AllTaskListScreen = () => {
                 );
                 setTasks(updatedTasks);
                 setDeleteModalVisible(false);
+                setShowSuccessModal(true);
               }}>
               <Text style={tw`text-white text-center`}>Yes</Text>
             </TouchableOpacity>
@@ -380,6 +381,33 @@ const AllTaskListScreen = () => {
                       </Text>
                       <Text style={tw`text-white text-xs`}>
                         Your changes have been applied successfully
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+              {/* Move this outside of the ScrollView/map loop */}
+              <Modal
+                visible={showSuccessModal}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setShowSuccessModal(false)}>
+                <View
+                  style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+                  <View
+                    style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
+                    <Icon
+                      name="checkmark-circle-outline"
+                      size={28}
+                      color="white"
+                      style={tw`mr-3`}
+                    />
+                    <View>
+                      <Text style={tw`text-white font-semibold text-base`}>
+                        Action Successful!
+                      </Text>
+                      <Text style={tw`text-white text-xs`}>
+                        Your changes have been applied
                       </Text>
                     </View>
                   </View>

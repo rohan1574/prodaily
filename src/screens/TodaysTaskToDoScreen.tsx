@@ -205,8 +205,7 @@ const TodaysTaskToDoScreen = () => {
       <ImageBackground
         source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
         style={tw` rounded-lg m-4 h-44`}
-        imageStyle={tw`rounded-lg`}
-        >
+        imageStyle={tw`rounded-lg`}>
         {/* Overlay for better text visibility */}
         <View style={tw`absolute inset-0 bg-black bg-opacity-30 `}></View>
 
@@ -216,7 +215,10 @@ const TodaysTaskToDoScreen = () => {
             {/* Left Side - Date */}
             <View style={tw`top-4`}>
               <Text style={tw`text-xl font-normal text-white `}>Today</Text>
-              <Text style={tw`text-base text-gray-200`}> {selectedDate.toDateString()}</Text>
+              <Text style={tw`text-base text-gray-200`}>
+                {' '}
+                {selectedDate.toDateString()}
+              </Text>
             </View>
 
             {/* Right Side - Profile with Image */}
@@ -226,8 +228,12 @@ const TodaysTaskToDoScreen = () => {
                 style={tw`w-9 h-9 rounded-full mb-2 border-2 border-white`}
                 resizeMode="cover"
               />
-              <Text style={tw`text-lg font-bold text-white bottom-2`}>Mr Rony</Text>
-              <Text style={tw`text-sm text-gray-400 bottom-2`}>mrony@gmail.com</Text>
+              <Text style={tw`text-lg font-bold text-white bottom-2`}>
+                Mr Rony
+              </Text>
+              <Text style={tw`text-sm text-gray-400 bottom-2`}>
+                mrony@gmail.com
+              </Text>
             </View>
           </View>
 
