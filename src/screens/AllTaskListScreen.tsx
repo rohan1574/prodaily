@@ -162,7 +162,7 @@ const AllTaskListScreen = () => {
     setIsSpecificForEnabled(newState);
   };
 
-    const toggleDailyTarget = () => {
+  const toggleDailyTarget = () => {
     const newState = !isDailyTargetEnabled;
     setIsDailyTargetEnabled(newState);
 
@@ -338,21 +338,21 @@ const AllTaskListScreen = () => {
                   <View style={tw`flex-row items-center right-4`}>
                     {/* ডেইলি রুটিন ট্যাগ */}
                     {/* ডেইলি রুটিন ট্যাগ */}
-{!task.specificForValue &&  // এই লাইনটি যোগ করুন
-  !task.scheduleType &&
-  !task.endDate &&
-  !task.selectedDays?.length &&
-  !task.selectedDate?.length &&
-  !task.selectedDates?.length &&
-  !task.selectedMonths?.length && (
-    <Text style={tw`text-sm text-green-700`}>Daily</Text>
-)}
+                    {!task.specificForValue && // এই লাইনটি যোগ করুন
+                      !task.scheduleType &&
+                      !task.endDate &&
+                      !task.selectedDays?.length &&
+                      !task.selectedDate?.length &&
+                      !task.selectedDates?.length &&
+                      !task.selectedMonths?.length && (
+                        <Text style={tw`text-sm text-green-700`}>Daily</Text>
+                      )}
                     {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                   {task.specificFor && task.specificForValue && (
-  <Text style={tw`text-sm text-gray-600 mb-1`}>
-    F_ {task.specificForValue}_ {task.specificFor}
-  </Text>
-)}
+                    {task.specificFor && task.specificForValue && (
+                      <Text style={tw`text-sm text-gray-600 mb-1`}>
+                        F_ {task.specificForValue}_ {task.specificFor}
+                      </Text>
+                    )}
 
                     {/* সাপ্তাহিক দিন */}
                     {task.selectedDays?.length > 0 && (

@@ -1,5 +1,12 @@
 import React, {useContext, useState} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
@@ -31,32 +38,79 @@ const ProfileManageScreen = () => {
 
   const {setSelectedColor} = context;
   return (
-    <View style={tw`flex-1 bg-gray-200`}>
+    <View style={tw`flex-1 bg-gray-200 `}>
       {/* Fixed Header Section */}
-      <View style={tw`bg-blue-500 p-6 rounded-b-3xl items-center`}>
-        <View style={tw`w-24 h-24 bg-gray-300 rounded-full mb-2`} />
-        <Text style={tw`text-white text-lg font-bold`}>Mr Rony</Text>
-        <Text style={tw`text-gray-200`}>mrrony@gmail.com</Text>
-        <TouchableOpacity style={tw`bg-white px-4 py-1 rounded-full mt-2`}>
-          <Text style={tw`text-blue-500 font-semibold`}>Try Premium</Text>
-        </TouchableOpacity>
+      <View style={tw`bg-gray-200`}>
+        <ImageBackground
+          source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
+          style={tw`bg-blue-500 rounded-b-3xl pt-12 pb-8 px-4`}
+          imageStyle={tw`rounded-lg`}>
+          <View style={tw`flex-row items-center`}>
+            <Text style={tw`text-white text-xl font-bold mr-2`}>Profile</Text>
+            <View style={tw`bg-white px-2 py-0.5 rounded`}>
+              <Text style={tw`text-xs text-blue-500 font-medium`}>Free</Text>
+            </View>
+          </View>
+        </ImageBackground>
+
+        {/* Profile Image & Info */}
+        <View style={tw`items-center bottom-12 `}>
+          <Image
+            source={require('../../assets/images/rony.png')} // Replace with actual URL or local image
+            style={tw`w-24 h-24 rounded-full border-4 border-white`}
+          />
+          <View style={tw`items-center `}>
+            <Text style={tw`text-lg font-semibold text-gray-800`}>Mr Rony</Text>
+
+            <View style={tw`flex-row items-center left-12`}>
+              <Text style={tw`text-gray-500 mr-2`}>mrrony1574@gmail.com</Text>
+
+              <TouchableOpacity
+                style={tw`bg-white px-2 py-1 rounded-lg border border-blue-500 bottom-16`}>
+                <Text style={tw`text-blue-500 text-xs font-semibold`}>
+                  Try Premium
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </View>
 
       {/* Fixed Stats Section */}
-      <View
-        style={tw`flex-row justify-around bg-white p-4 mt-4 rounded-xl mx-4 shadow`}>
-        <View style={tw`items-center`}>
-          <Text style={tw`text-xl font-bold`}>143</Text>
-          <Text style={tw`text-gray-600`}>Days</Text>
+      <View style={tw`px-4 bottom-4`}>
+        {/* Two Card Row */}
+        <View style={tw`flex-row justify-between`}>
+          {/* Building Habit Card */}
+          <View style={tw`bg-white rounded-xl px-4 py-3 w-40 shadow-sm`}>
+            <Text style={tw`text-gray-600 font-medium`}>Building Habit</Text>
+            <Text style={tw`text-2xl font-bold text-black mt-1`}>
+              143 <Text style={tw`text-sm text-gray-500`}>Days</Text>
+            </Text>
+          </View>
+
+          {/* Point Collected Card */}
+          <View style={tw`bg-white rounded-xl px-4 py-3 w-[48%] shadow-sm`}>
+            <Text style={tw`text-gray-600 font-medium`}>Point Collected</Text>
+            <View style={tw`flex-row items-center mt-1`}>
+              <Text style={tw`text-yellow-400 text-2xl font-bold`}>🏅322</Text>
+              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
+            </View>
+          </View>
         </View>
-        <View style={tw`items-center`}>
-          <Text style={tw`text-xl font-bold text-yellow-500`}>322</Text>
-          <Text style={tw`text-gray-600`}>Points</Text>
+
+        {/* Bottom Info Text */}
+        <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
+          <Text style={tw`text-gray-500 text-center text-sm`}>
+            Be regular, collect points, Stick with ProDAILY time{'\n'}
+            consciousness journey. You'll get rewards.
+          </Text>
         </View>
       </View>
 
       {/* Scrollable Menu Options */}
-      <ScrollView style={tw`flex-1 mt-4 px-4`}>
+      <ScrollView
+        style={tw`flex-1 mt-4 px-4 `}
+        contentContainerStyle={tw`pb-20`}>
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon name="home-outline" size={24} color="gray" style={tw`mr-4`} />
@@ -160,29 +214,39 @@ const ProfileManageScreen = () => {
           <Text style={tw`text-gray-700 text-base font-bold mb-2`}>
             Support
           </Text>
-          <TouchableOpacity style={tw`flex-row items-center mb-2`}>
-            <Icon
-              name="alert-circle-outline"
-              size={24}
-              color="gray"
-              style={tw`mr-4`}
-            />
-            <Text style={tw`text-gray-700 text-base`}>App Issue</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={tw`flex-row items-center mb-2`}>
-            <Icon
-              name="chatbubble-outline"
-              size={24}
-              color="gray"
-              style={tw`mr-4`}
-            />
-            <Text style={tw`text-gray-700 text-base`}>Suggestion</Text>
-          </TouchableOpacity>
+          <View style={tw`flex-row justify-between items-center mb-2`}>
+            {/* Left: App Issue */}
+            <TouchableOpacity style={tw`flex-row items-center`}>
+              <Icon
+                name="alert-circle-outline"
+                size={24}
+                color="gray"
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-gray-700 text-base`}>App Issue</Text>
+            </TouchableOpacity>
+
+            {/* Right: Suggestion */}
+            <TouchableOpacity style={tw`flex-row items-center`}>
+              <Icon
+                name="chatbubble-outline"
+                size={24}
+                color="gray"
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-gray-700 text-base`}>Suggestion</Text>
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity
             style={tw`bg-blue-500 p-3 rounded-xl mt-2 items-center`}>
             <Text style={tw`text-white font-bold`}>Contact Us</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={tw`bg-gray-400 p-3 rounded-xl mt-2 items-center`}>
+          <Text style={tw`text-white font-bold`}>Rate Us on Google Play</Text>
+        </TouchableOpacity>
       </ScrollView>
 
       {/* Bottom Navigation Bar */}
