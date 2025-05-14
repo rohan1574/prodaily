@@ -12,6 +12,8 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+// Add at the top with other imports
+import {Keyboard} from 'react-native';
 interface Task {
   id: string;
   name: string;
@@ -29,6 +31,28 @@ interface Task {
   specTarget?: 'Weekly' | 'Monthly' | 'Yearly';
 }
 const AllTaskListScreen = () => {
+  // Add this state
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  // Add this useEffect
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
@@ -121,14 +145,11 @@ const AllTaskListScreen = () => {
     const newState = !isSpecificForEnabled;
 
     // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
-    setIsDailyTargetEnabled(false);
     setIsSpecificDayOnSelected(false);
 
     setEditedTask((prev: Task) => ({
       ...prev,
       // ডেইলি টার্গেট এবং স্পেসিফিক ডে অন ডেটা রিসেট
-      dailyTarget: 0,
-      targetType: 'Minutes',
       selectedDays: [],
       selectedDate: [],
       selectedDates: [],
@@ -141,28 +162,17 @@ const AllTaskListScreen = () => {
     setIsSpecificForEnabled(newState);
   };
 
-  const toggleDailyTarget = () => {
+    const toggleDailyTarget = () => {
     const newState = !isDailyTargetEnabled;
-
-    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
-    setIsSpecificForEnabled(false);
-    setIsSpecificDayOnSelected(false);
-
-    setEditedTask((prev: Task) => ({
-      ...prev,
-      // স্পেসিফিক ফর এবং স্পেসিফিক ডে অন ডেটা রিসেট
-      specificForValue: '',
-      specificFor: 'Days',
-      selectedDays: [],
-      selectedDate: [],
-      selectedDates: [],
-      selectedMonths: [],
-      // বর্তমান সেকশনের ডেটা আপডেট
-      dailyTarget: newState ? prev.dailyTarget : 0,
-      targetType: newState ? prev.targetType : 'Minutes',
-    }));
-
     setIsDailyTargetEnabled(newState);
+
+    if (!newState) {
+      setEditedTask((prev: Task) => ({
+        ...prev,
+        dailyTarget: 0,
+        targetType: 'Minutes',
+      }));
+    }
   };
 
   const toggleSpecificDayOn = () => {
@@ -170,8 +180,6 @@ const AllTaskListScreen = () => {
 
     // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
     setIsSpecificForEnabled(false);
-    setIsDailyTargetEnabled(false);
-
     setEditedTask((prev: Task) => ({
       ...prev,
       // স্পেসিফিক ফর এবং ডেইলি টার্গেট ডেটা রিসেট
@@ -329,20 +337,22 @@ const AllTaskListScreen = () => {
                   {/* Daily Tags */}
                   <View style={tw`flex-row items-center right-4`}>
                     {/* ডেইলি রুটিন ট্যাগ */}
-                    {!task.scheduleType &&
-                      !task.endDate &&
-                      !task.selectedDays?.length &&
-                      !task.selectedDate?.length &&
-                      !task.selectedDates?.length &&
-                      !task.selectedMonths?.length && (
-                        <Text style={tw`text-sm text-green-700`}>Daily</Text>
-                      )}
+                    {/* ডেইলি রুটিন ট্যাগ */}
+{!task.specificForValue &&  // এই লাইনটি যোগ করুন
+  !task.scheduleType &&
+  !task.endDate &&
+  !task.selectedDays?.length &&
+  !task.selectedDate?.length &&
+  !task.selectedDates?.length &&
+  !task.selectedMonths?.length && (
+    <Text style={tw`text-sm text-green-700`}>Daily</Text>
+)}
                     {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                    {task.specificFor && task.specificForValue && (
-                      <Text style={tw`text-sm text-gray-600 mb-1`}>
-                        F_ {task.specificForValue}_ {task.specificFor}
-                      </Text>
-                    )}
+                   {task.specificFor && task.specificForValue && (
+  <Text style={tw`text-sm text-gray-600 mb-1`}>
+    F_ {task.specificForValue}_ {task.specificFor}
+  </Text>
+)}
 
                     {/* সাপ্তাহিক দিন */}
                     {task.selectedDays?.length > 0 && (
@@ -377,9 +387,7 @@ const AllTaskListScreen = () => {
                     <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
                       <Icon
                         name={
-                          expandedTaskId === task.id
-                            ? ''
-                            : 'create-outline'
+                          expandedTaskId === task.id ? '' : 'create-outline'
                         }
                         size={24}
                         color="#4b5563"
@@ -810,7 +818,9 @@ const AllTaskListScreen = () => {
                       onPress={() => handleUpdateTask(task.id)}>
                       <Text style={tw`text-white font-bold`}>Skip</Text>
                     </TouchableOpacity>
-                     <TouchableOpacity style={tw`top-4`} onPress={() => toggleExpansion(task.id)}>
+                    <TouchableOpacity
+                      style={tw`top-4`}
+                      onPress={() => toggleExpansion(task.id)}>
                       <Icon
                         name={
                           expandedTaskId === task.id
@@ -829,7 +839,7 @@ const AllTaskListScreen = () => {
         </ScrollView>
       )}
 
-      <BottomNavigation />
+      {!isKeyboardVisible && <BottomNavigation />}
     </View>
   );
 };

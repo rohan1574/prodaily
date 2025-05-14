@@ -584,7 +584,7 @@ const AddDailyTaskScreen = () => {
                       editable={isSpecificForEnabled}
                     />
 
-                    <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                    <View style={tw`flex-row bg-blue-100 rounded-full p-1 mx-1`}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
 
@@ -684,7 +684,7 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`flex-row bg-blue-100 w-48 rounded-full p-1 left-32`}>
+                <View style={tw`flex-row bg-blue-100 w-48 rounded-full p-1 mx-1 left-32`}>
                   {/* Weekly Button */}
                   <TouchableOpacity
                     onPress={handleWeeklyClick}
