@@ -148,7 +148,7 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-gray-700 text-base mr-4`}>Themes</Text>
 
-          {['blue', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
+          {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
             <TouchableOpacity
               key={color}
               onPress={() => setSelectedColor(color)}

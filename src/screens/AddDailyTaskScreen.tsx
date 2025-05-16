@@ -399,12 +399,12 @@ const AddDailyTaskScreen = () => {
         </Text>
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`top-2 left-4`}>
+      <View style={tw`top-2 `}>
         <ScrollView
           horizontal
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
-          snapToInterval={96 + 8} // w-24 (96px) + mr-2 (8px)
+          snapToInterval={98 + 8} // w-24 (96px) + mr-2 (8px)
           snapToAlignment="start"
           decelerationRate="fast"
           contentContainerStyle={tw`pr-4`}
@@ -428,9 +428,9 @@ const AddDailyTaskScreen = () => {
               }}>
               <View
                 style={[
-                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
+                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,{width:94,height:94},
                   selectedCategory === category
-                    ? tw`border-blue-500 border-4 w-28 h-28`
+                    ? tw`border-blue-500 border-4 `
                     : tw`border-gray-200`,
                 ]}>
                 <Image

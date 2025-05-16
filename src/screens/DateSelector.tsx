@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Modal, Platform} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import {View, Text, TouchableOpacity, Modal, ScrollView} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 
 type DateSelectorProps = {
@@ -10,23 +10,13 @@ type DateSelectorProps = {
   onSelectMonth: (month: string) => void;
   onCancel: () => void;
   onAddDay: () => void;
-  onRemoveDay: (index: number) => void; // নতুন প্রপস যোগ করা হয়েছে
+  onRemoveDay: (index: number) => void;
 };
 
 const Days = Array.from({length: 31}, (_, index) => index + 1);
 const Months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
 const DateSelector: React.FC<DateSelectorProps> = ({
@@ -39,19 +29,18 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   onRemoveDay,
 }) => {
   const [selectedDate, setSelectedDate] = useState<number>(selectedDates[0] || 1);
-  const [selectedMonth, setSelectedMonth] = useState<string>(selectedMonths[0] || 'Jan');
+  const [selectedMonth, setSelectedMonth] = useState<string>(selectedMonths[0] || 'January');
 
-  const handleDateChange = (itemValue: number) => {
-    setSelectedDate(itemValue);
-    onSelectDate(itemValue);
+  const handleDateChange = (day: number) => {
+    setSelectedDate(day);
+    onSelectDate(day);
   };
 
-  const handleMonthChange = (itemValue: string) => {
-    setSelectedMonth(itemValue);
-    onSelectMonth(itemValue);
+  const handleMonthChange = (month: string) => {
+    setSelectedMonth(month);
+    onSelectMonth(month);
   };
 
-  // সিলেক্ট করা তারিখ এবং মাসের লিস্ট তৈরি
   const selectedDays = selectedDates.map((date, index) => ({
     date,
     month: selectedMonths[index],
@@ -60,79 +49,96 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
-        <View style={tw`bg-blue-100 p-4 rounded-lg w-4/5`}>
-          {/* সিলেক্ট করা দিনগুলোর লিস্ট */}
-          <View style={tw`mb-4`}>
-            {selectedDays.map((day, index) => (
-              <View 
-                key={index} 
-                style={tw`flex-row justify-between items-center bg-blue-200 p-2 rounded-md mb-2`}
-              >
-                <Text style={tw`text-gray-800`}>
-                  {day.date} {day.month}
-                </Text>
-                <TouchableOpacity 
-                  onPress={() => onRemoveDay(index)}
-                  style={tw`p-1`}
+        <View style={tw`bg-white rounded-xl p-4 w-4/5`}>
+          <View style={tw`flex-row`}>
+            {/* Selected Dates List */}
+            <View style={tw`w-1/2 pr-2`}>
+              {selectedDays.map((day, index) => (
+                <View
+                  key={index}
+                  style={tw`flex-row justify-between items-center bg-gray-100 px-3 py-2 rounded-xl mb-2`}
                 >
-                  <Text style={tw`text-red-600 text-lg`}>×</Text>
+                  <Text style={tw`text-gray-800`}>{`${day.month} ${day.date}`}</Text>
+                  <TouchableOpacity onPress={() => onRemoveDay(index)}>
+                    <Icon name="close" size={16} color="#555" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
+            {/* Date Selectors */}
+            <View style={tw`w-1/2 pl-2 border-l border-gray-200`}>
+             <View style={tw`flex-row justify-between mt-3`}
+             >
+               {/* Day Scroll */}
+              <ScrollView style={{height: 90}} showsVerticalScrollIndicator={false}>
+                {Days.map(day => (
+                  <TouchableOpacity
+                    key={day}
+                    onPress={() => handleDateChange(day)}
+                    style={tw`items-center py-1`}
+                  >
+                    <Text 
+                      style={tw`${
+                        selectedDate === day 
+                        ? 'text-black font-bold' 
+                        : 'text-gray-400'
+                      }`}
+                    >
+                      {day}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {/* Month Scroll */}
+              <ScrollView style={{height: 90}} showsVerticalScrollIndicator={false}>
+                {Months.map(month => (
+                  <TouchableOpacity
+                    key={month}
+                    onPress={() => handleMonthChange(month)}
+                    style={tw`items-center py-1`}
+                  >
+                    <Text
+                      style={tw`${
+                        selectedMonth === month
+                        ? 'text-black font-bold'
+                        : 'text-gray-400'
+                      }`}
+                    >
+                      {month}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+             </View>
+
+              {/* Buttons */}
+              <View style={tw`flex-row justify-between mt-3`}>
+                <TouchableOpacity
+                  onPress={onCancel}
+                  style={tw`bg-gray-400 px-3 py-2 rounded-xl`}
+                >
+                  <Text style={tw`text-white`}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={onAddDay}
+                  style={tw`bg-blue-500 px-3 py-2 rounded-xl`}
+                >
+                  <Text style={tw`text-white`}>Add Date</Text>
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
 
-          <View style={tw`flex-row justify-between`}>
-            {/* তারিখ সিলেক্টর */}
-            <View style={tw`flex-1 mr-2`}>
-              <Text style={tw`text-lg font-bold mb-4 text-center`}>Select Date</Text>
-              <View style={tw`h-48 overflow-hidden`}>
-                <Picker
-                  selectedValue={selectedDate}
-                  onValueChange={handleDateChange}
-                  style={tw`w-full h-full`}
-                  itemStyle={tw`h-12 text-lg`}
-                  mode="dropdown"
-                >
-                  {Days.map(day => (
-                    <Picker.Item key={day} label={day.toString()} value={day} />
-                  ))}
-                </Picker>
+              {/* Info Note */}
+              <View style={tw`flex-row items-center mt-4`}>
+                <View style={tw`w-4 h-4 rounded-full border-2 border-blue-500 mr-2 justify-center items-center`}>
+                  <View style={tw`w-2 h-2 bg-blue-500 rounded-full`} />
+                </View>
+                <Text style={tw`text-gray-600 text-xs`}>
+                  Show Daily from start date Until Complete
+                </Text>
               </View>
             </View>
-
-            {/* মাস সিলেক্টর */}
-            <View style={tw`flex-1`}>
-              <Text style={tw`text-lg font-bold mb-4 text-center`}>Select Month</Text>
-              <View style={tw`h-48 overflow-hidden`}>
-                <Picker
-                  selectedValue={selectedMonth}
-                  onValueChange={handleMonthChange}
-                  style={tw`w-full h-full`}
-                  itemStyle={tw`h-12 text-lg`}
-                  mode="dropdown"
-                >
-                  {Months.map(month => (
-                    <Picker.Item key={month} label={month} value={month} />
-                  ))}
-                </Picker>
-              </View>
-            </View>
-          </View>
-
-          {/* বাটনসমূহ */}
-          <View style={tw`flex-row justify-between mt-4`}>
-            <TouchableOpacity
-              onPress={onCancel}
-              style={tw`bg-gray-300 px-4 py-2 rounded-md`}
-            >
-              <Text style={tw`text-gray-800`}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onAddDay}
-              style={tw`bg-blue-500 px-4 py-2 rounded-md`}
-            >
-              <Text style={tw`text-white`}>Add Day</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
