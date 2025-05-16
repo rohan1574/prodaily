@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Modal, ScrollView} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, Text, TouchableOpacity, Modal, ScrollView, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
+
+const ITEM_HEIGHT = 30;
+const VISIBLE_ITEMS = 3;
+const SCROLL_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS;
 
 type DateSelectorProps = {
   selectedDates: number[];
@@ -30,15 +34,52 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState<number>(selectedDates[0] || 1);
   const [selectedMonth, setSelectedMonth] = useState<string>(selectedMonths[0] || 'January');
+  const dayScrollRef = useRef<ScrollView>(null);
+  const monthScrollRef = useRef<ScrollView>(null);
+
+  // Initialize scroll positions
+  useEffect(() => {
+    const initialDayIndex = Days.indexOf(selectedDate);
+    const dayY = initialDayIndex * ITEM_HEIGHT - ITEM_HEIGHT;
+    dayScrollRef.current?.scrollTo({y: dayY, animated: false});
+
+    const initialMonthIndex = Months.indexOf(selectedMonth);
+    const monthY = initialMonthIndex * ITEM_HEIGHT - ITEM_HEIGHT;
+    monthScrollRef.current?.scrollTo({y: monthY, animated: false});
+  }, []);
 
   const handleDateChange = (day: number) => {
     setSelectedDate(day);
     onSelectDate(day);
+    const index = Days.indexOf(day);
+    const y = index * ITEM_HEIGHT - ITEM_HEIGHT;
+    dayScrollRef.current?.scrollTo({y, animated: true});
   };
 
   const handleMonthChange = (month: string) => {
     setSelectedMonth(month);
     onSelectMonth(month);
+    const index = Months.indexOf(month);
+    const y = index * ITEM_HEIGHT - ITEM_HEIGHT;
+    monthScrollRef.current?.scrollTo({y, animated: true});
+  };
+
+  const handleDayScroll = (event: any) => {
+    const y = event.nativeEvent.contentOffset.y + ITEM_HEIGHT;
+    const index = Math.round(y / ITEM_HEIGHT);
+    if (Days[index]) {
+      setSelectedDate(Days[index]);
+      onSelectDate(Days[index]);
+    }
+  };
+
+  const handleMonthScroll = (event: any) => {
+    const y = event.nativeEvent.contentOffset.y + ITEM_HEIGHT;
+    const index = Math.round(y / ITEM_HEIGHT);
+    if (Months[index]) {
+      setSelectedMonth(Months[index]);
+      onSelectMonth(Months[index]);
+    }
   };
 
   const selectedDays = selectedDates.map((date, index) => ({
@@ -68,50 +109,51 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
             {/* Date Selectors */}
             <View style={tw`w-1/2 pl-2 border-l border-gray-200`}>
-             <View style={tw`flex-row justify-between mt-3`}
-             >
-               {/* Day Scroll */}
-              <ScrollView style={{height: 90}} showsVerticalScrollIndicator={false}>
-                {Days.map(day => (
-                  <TouchableOpacity
-                    key={day}
-                    onPress={() => handleDateChange(day)}
-                    style={tw`items-center py-1`}
-                  >
-                    <Text 
-                      style={tw`${
-                        selectedDate === day 
-                        ? 'text-black font-bold' 
-                        : 'text-gray-400'
-                      }`}
+              <View style={tw`flex-row justify-between`}>
+                {/* Day Scroll */}
+                <ScrollView
+                  ref={dayScrollRef}
+                  style={{height: SCROLL_HEIGHT}}
+                  showsVerticalScrollIndicator={false}
+                  snapToInterval={ITEM_HEIGHT}
+                  decelerationRate="fast"
+                  onMomentumScrollEnd={handleDayScroll}
+                >
+                  {Days.map(day => (
+                    <TouchableOpacity
+                      key={day}
+                      onPress={() => handleDateChange(day)}
+                      style={[tw`items-center justify-center`, {height: ITEM_HEIGHT}]}
                     >
-                      {day}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+                      <Text style={tw`${selectedDate === day ? 'text-black font-bold' : 'text-gray-400'}`}>
+                        {day}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
 
-              {/* Month Scroll */}
-              <ScrollView style={{height: 90}} showsVerticalScrollIndicator={false}>
-                {Months.map(month => (
-                  <TouchableOpacity
-                    key={month}
-                    onPress={() => handleMonthChange(month)}
-                    style={tw`items-center py-1`}
-                  >
-                    <Text
-                      style={tw`${
-                        selectedMonth === month
-                        ? 'text-black font-bold'
-                        : 'text-gray-400'
-                      }`}
+                {/* Month Scroll */}
+                <ScrollView
+                  ref={monthScrollRef}
+                  style={{height: SCROLL_HEIGHT}}
+                  showsVerticalScrollIndicator={false}
+                  snapToInterval={ITEM_HEIGHT}
+                  decelerationRate="fast"
+                  onMomentumScrollEnd={handleMonthScroll}
+                >
+                  {Months.map(month => (
+                    <TouchableOpacity
+                      key={month}
+                      onPress={() => handleMonthChange(month)}
+                      style={[tw`items-center justify-center`, {height: ITEM_HEIGHT}]}
                     >
-                      {month}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-             </View>
+                      <Text style={tw`${selectedMonth === month ? 'text-black font-bold' : 'text-gray-400'}`}>
+                        {month}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
 
               {/* Buttons */}
               <View style={tw`flex-row justify-between mt-3`}>
