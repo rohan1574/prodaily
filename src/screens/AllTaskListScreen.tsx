@@ -221,22 +221,6 @@ const AllTaskListScreen = () => {
     setIsSpecificDayOnSelected(newState);
   };
 
-  const toggleDaySelection = (day: string) => {
-    const updatedDays = editedTask.selectedDays?.includes(day)
-      ? editedTask.selectedDays.filter((d: string) => d !== day)
-      : [...(editedTask.selectedDays || []), day];
-
-    setEditedTask({...editedTask, selectedDays: updatedDays});
-  };
-
-  const handleMonthSelection = (month: string) => {
-    const updatedMonths = editedTask.selectedMonths?.includes(month)
-      ? editedTask.selectedMonths.filter((m: string) => m !== month)
-      : [...(editedTask.selectedMonths || []), month];
-
-    setEditedTask({...editedTask, selectedMonths: updatedMonths});
-  };
-
   const handleTaskLongPress = (taskId: string) => {
     setTaskToDelete(taskId);
     setDeleteModalVisible(true);
@@ -283,47 +267,8 @@ const AllTaskListScreen = () => {
       </View>
     </Modal>
   );
-  // তারিখ টগল করার লজিক - টাইপ সংযোজন করুন
-  const toggleDateSelection = (date: number) => {
-    const updatedDates = editedTask.selectedDates?.includes(date)
-      ? editedTask.selectedDates.filter((d: number) => d !== date)
-      : [...(editedTask.selectedDates || []), date];
+ 
 
-    setEditedTask({
-      ...editedTask,
-      selectedDates: updatedDates.sort((a: number, b: number) => a - b), // এখানে টাইপ ডিক্লেয়ার করুন
-    });
-  };
-
-  // ১-৩১ তারিখের লিস্ট কম্পোনেন্ট
-  const DateGridList = () => (
-    <ScrollView
-      horizontal={false}
-      style={tw`max-h-40`}
-      showsVerticalScrollIndicator={false}>
-      <View style={tw`flex-row flex-wrap justify-between`}>
-        {Array.from({length: 31}, (_, i) => i + 1).map(date => (
-          <TouchableOpacity
-            key={date}
-            style={tw`w-8 h-8 m-1 rounded-full items-center justify-center ${
-              editedTask.selectedDates?.includes(date)
-                ? 'bg-blue-500'
-                : 'bg-gray-200'
-            }`}
-            onPress={() => toggleDateSelection(date)}>
-            <Text
-              style={tw`${
-                editedTask.selectedDates?.includes(date)
-                  ? 'text-white font-bold'
-                  : 'text-gray-700'
-              }`}>
-              {date}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
-  );
   return (
     <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
       <DeleteConfirmationModal />
