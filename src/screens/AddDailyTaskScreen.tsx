@@ -90,6 +90,9 @@ const AddDailyTaskScreen = () => {
   const [isDateSeletorVisible, setIsDateSeletorVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<number[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
+  const [tempSelectedDate, setTempSelectedDate] = useState<number>(1);
+  const [tempSelectedMonth, setTempSelectedMonth] = useState<string>('January');
+
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
   const [selectedDayOnType, setSelectedDayOnType] = useState<string | null>(
@@ -428,7 +431,8 @@ const AddDailyTaskScreen = () => {
               }}>
               <View
                 style={[
-                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,{width:94,height:94},
+                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
+                  {width: 94, height: 94},
                   selectedCategory === category
                     ? tw`border-blue-500 border-4 `
                     : tw`border-gray-200`,
@@ -584,7 +588,8 @@ const AddDailyTaskScreen = () => {
                       editable={isSpecificForEnabled}
                     />
 
-                    <View style={tw`flex-row bg-blue-100 rounded-full p-1 mx-1`}>
+                    <View
+                      style={tw`flex-row bg-blue-100 rounded-full p-1 mx-1`}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
 
@@ -684,7 +689,8 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`flex-row bg-blue-100 w-48 rounded-full p-1 mx-1 left-32`}>
+                <View
+                  style={tw`flex-row bg-blue-100 w-48 rounded-full p-1 mx-1 left-32`}>
                   {/* Weekly Button */}
                   <TouchableOpacity
                     onPress={handleWeeklyClick}
@@ -769,7 +775,6 @@ const AddDailyTaskScreen = () => {
                     }}
                   />
                 )}
-
                 {isDatePickerVisible && (
                   <DatePicker
                     selectedDate={selectedDate}
@@ -783,33 +788,50 @@ const AddDailyTaskScreen = () => {
                     }}
                   />
                 )}
-
                 {isDateSeletorVisible && (
                   <DateSelector
                     selectedDates={selectedDates}
                     selectedMonths={selectedMonths}
-                    onSelectDate={(date: number) => setSelectedDates([date])}
+                    onSelectDate={(date: number) => setTempSelectedDate(date)}
                     onSelectMonth={(month: string) =>
-                      setSelectedMonths([month])
+                      setTempSelectedMonth(month)
                     }
-                    onCancel={() => {
-                      setIsDateSeletorVisible(false);
-                      setSelectedDates([]);
-                      setSelectedMonths([]);
-                    }}
-                    onAddDay={() => {
-                      setIsDateSeletorVisible(false);
-                    }}
-                    onRemoveDay={(index: number) => {
-                      // Create new arrays without the item at the specified index
-                      const newDates = [...selectedDates];
-                      const newMonths = [...selectedMonths];
+                    onCancel={() => setIsDateSeletorVisible(false)}
+                    onAddDay={addedDates => {
+                      // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
+                      const uniqueDates = addedDates.filter(
+                        ({date, month}, index) =>
+                          addedDates.findIndex(
+                            d => d.date === date && d.month === month,
+                          ) === index,
+                      );
 
-                      newDates.splice(index, 1);
-                      newMonths.splice(index, 1);
+                      // এক্সিস্টিং ডাটার সাথে মিলিয়ে চেক
+                      const newEntries = uniqueDates.filter(
+                        ({date, month}) =>
+                          !selectedDates.some(
+                            (d, i) => d === date && selectedMonths[i] === month,
+                          ),
+                      );
 
-                      setSelectedDates(newDates);
-                      setSelectedMonths(newMonths);
+                      // স্টেট আপডেট
+                      setSelectedDates(prev => [
+                        ...prev,
+                        ...newEntries.map(e => e.date),
+                      ]);
+                      setSelectedMonths(prev => [
+                        ...prev,
+                        ...newEntries.map(e => e.month),
+                      ]);
+                      setIsDateSeletorVisible(false);
+                    }}
+                    onRemoveDay={index => {
+                      setSelectedDates(prev =>
+                        prev.filter((_, i) => i !== index),
+                      );
+                      setSelectedMonths(prev =>
+                        prev.filter((_, i) => i !== index),
+                      );
                     }}
                   />
                 )}

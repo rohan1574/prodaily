@@ -19,24 +19,7 @@ const MyCalenderFutureTaskScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const toggleStar = async (taskId: string) => {
-    try {
-      const storedTasks = await AsyncStorage.getItem('tasks');
-      const taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
-      const updatedList = taskList.map((task: any) => {
-        if (task.id === taskId) {
-          return {...task, isStarred: !task.isStarred};
-        }
-        return task;
-      });
-
-      await AsyncStorage.setItem('tasks', JSON.stringify(updatedList));
-      setTasks(updatedList); // Update UI
-    } catch (error) {
-      console.error('Error toggling star:', error);
-    }
-  };
   // টাস্ক ফিল্টারিং হেল্পার ফাংশন
   const isTaskVisible = (task: any, currentDate: Date): boolean => {
     currentDate.setHours(0, 0, 0, 0);
@@ -75,16 +58,20 @@ const MyCalenderFutureTaskScreen = () => {
     }
 
     // Yearly (25 April)
-    if (task.selectedDates?.length > 0 && task.selectedMonths?.length > 0) {
-      const day = currentDate.getDate();
-      const month = currentDate.toLocaleString('en', {month: 'short'});
-      return (
-        task.selectedDates.includes(day) && task.selectedMonths.includes(month)
-      );
-    }
+  if (task.selectedDates?.length > 0 && task.selectedMonths?.length > 0) {
+    const day = currentDate.getDate();
+    const month = currentDate.toLocaleString('en', { month: 'long' });
+    
+    // একই ইনডেক্সে তারিখ এবং মাসের মিল চেক করুন
+    return task.selectedDates.some(
+      (selectedDate: number, index: number) => 
+        selectedDate === day && 
+        task.selectedMonths[index] === month
+    );
+  }
 
-    return false;
-  };
+  return false;
+};
 
   // টাস্ক ফিল্টারিং ইফেক্ট
   useEffect(() => {

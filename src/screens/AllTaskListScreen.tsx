@@ -762,34 +762,40 @@ const AllTaskListScreen = () => {
                           <View>
                             <View style={tw`flex-row flex-wrap mb-2`}>
                               {[
-                                'Jan',
-                                'Feb',
-                                'Mar',
-                                'Apr',
-                                'May',
-                                'Jun',
-                                'Jul',
-                                'Aug',
-                                'Sep',
-                                'Oct',
-                                'Nov',
-                                'Dec',
-                              ].map(month => (
+                                ['Jan', 'January'],
+                                ['Feb', 'February'],
+                                ['Mar', 'March'],
+                                ['Apr', 'April'],
+                                ['May', 'May'],
+                                ['Jun', 'June'],
+                                ['Jul', 'July'],
+                                ['Aug', 'August'],
+                                ['Sep', 'September'],
+                                ['Oct', 'October'],
+                                ['Nov', 'November'],
+                                ['Dec', 'December'],
+                              ].map(([monthAbbr, monthFull]) => (
                                 <TouchableOpacity
-                                  key={month}
+                                  key={monthFull}
                                   style={tw`px-3 py-1 mx-1 my-1 rounded ${
-                                    editedTask.selectedMonths?.includes(month)
+                                    editedTask.selectedMonths?.includes(
+                                      monthFull,
+                                    )
                                       ? 'bg-blue-500'
                                       : 'bg-gray-200'
                                   }`}
-                                  onPress={() => handleMonthSelection(month)}>
+                                  onPress={() =>
+                                    handleMonthSelection(monthFull)
+                                  }>
                                   <Text
                                     style={tw`${
-                                      editedTask.selectedMonths?.includes(month)
+                                      editedTask.selectedMonths?.includes(
+                                        monthFull,
+                                      )
                                         ? 'text-white'
                                         : 'text-gray-700'
                                     }`}>
-                                    {month}
+                                    {monthAbbr}
                                   </Text>
                                 </TouchableOpacity>
                               ))}
