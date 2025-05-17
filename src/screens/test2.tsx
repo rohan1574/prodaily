@@ -67,9 +67,9 @@ const AllTaskListScreen = () => {
   const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
   const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
+ const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
+const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
   // মোডাল টাইমার
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -182,22 +182,22 @@ const AllTaskListScreen = () => {
   };
 
   const handleWeeklyClick = () => {
-    setIsDayPickerVisible(true);
-    setIsDatePickerVisible(false);
-    setIsDateSelectorVisible(false);
-  };
+  setIsDayPickerVisible(true);
+  setIsDatePickerVisible(false);
+  setIsDateSelectorVisible(false);
+};
 
-  const handleMonthlyClick = () => {
-    setIsDatePickerVisible(true);
-    setIsDayPickerVisible(false);
-    setIsDateSelectorVisible(false);
-  };
+const handleMonthlyClick = () => {
+  setIsDatePickerVisible(true);
+  setIsDayPickerVisible(false);
+  setIsDateSelectorVisible(false);
+};
 
-  const handleYearlyClick = () => {
-    setIsDateSelectorVisible(true);
-    setIsDayPickerVisible(false);
-    setIsDatePickerVisible(false);
-  };
+const handleYearlyClick = () => {
+  setIsDateSelectorVisible(true);
+  setIsDayPickerVisible(false);
+  setIsDatePickerVisible(false);
+};
 
   const toggleSpecificDayOn = () => {
     const newState = !isSpecificDayOnSelected;
@@ -638,8 +638,7 @@ const AllTaskListScreen = () => {
                         Specific Day On
                       </Text>
                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                      <View
-                        style={tw`flex-row bg-blue-100 rounded-full p-1 ml-2`}>
+                       <View style={tw`flex-row bg-blue-100 rounded-full p-1 ml-2`}>
                         {['Weekly', 'Monthly', 'Yearly'].map(type => {
                           const isSelected = editedTask.specTarget === type;
                           return (
@@ -647,53 +646,56 @@ const AllTaskListScreen = () => {
                               key={type}
                               style={[
                                 tw`px-3 py-1 rounded-full mx-1`,
-                                isSelected
-                                  ? tw`bg-white border border-blue-500`
-                                  : tw`bg-transparent`,
-                                !isSpecificDayOnSelected && tw`opacity-50`,
+                                isSelected ? tw`bg-white border border-blue-500` : tw`bg-transparent`,
+                                !isSpecificDayOnSelected && tw`opacity-50`
                               ]}
                               disabled={!isSpecificDayOnSelected}
                               onPress={() => {
                                 const handler = {
                                   Weekly: handleWeeklyClick,
                                   Monthly: handleMonthlyClick,
-                                  Yearly: handleYearlyClick,
+                                  Yearly: handleYearlyClick
                                 }[type];
-
+                                
                                 handler?.();
                                 setEditedTask({
                                   ...editedTask,
                                   specTarget: type,
-                                  ...(type === 'Weekly' && {
-                                    selectedDate: [],
-                                    selectedDates: [],
-                                    selectedMonths: [],
-                                  }),
-                                  ...(type === 'Monthly' && {
-                                    selectedDays: [],
-                                    selectedDates: [],
-                                    selectedMonths: [],
-                                  }),
-                                  ...(type === 'Yearly' && {
-                                    selectedDays: [],
-                                    selectedDate: [],
-                                  }),
+                                  ...(type === 'Weekly' && { selectedDate: [], selectedDates: [], selectedMonths: [] }),
+                                  ...(type === 'Monthly' && { selectedDays: [], selectedDates: [], selectedMonths: [] }),
+                                  ...(type === 'Yearly' && { selectedDays: [], selectedDate: [] }),
                                 });
                               }}>
-                              <Text
-                                style={tw`text-sm ${
-                                  isSelected
-                                    ? 'text-blue-500 font-semibold'
-                                    : 'text-gray-500'
-                                }`}>
+                              <Text style={tw`text-sm ${isSelected ? 'text-blue-500 font-semibold' : 'text-gray-500'}`}>
                                 {type}
                               </Text>
                             </TouchableOpacity>
                           );
                         })}
                       </View>
+                    
                     </View>
+                 {isSpecificDayOnSelected && (
+                      <View style={tw`ml-8`}>
+                        {editedTask.specTarget === 'Weekly' && (
+                          <Text style={tw`text-gray-600 mb-2`}>
+                            Selected Days: {editedTask.selectedDays?.join(', ') || 'None'}
+                          </Text>
+                        )}
+                        {editedTask.specTarget === 'Monthly' && (
+                          <Text style={tw`text-gray-600 mb-2`}>
+                            Selected Dates: {editedTask.selectedDate?.join(', ') || 'None'}
+                          </Text>
+                        )}
+                        {editedTask.specTarget === 'Yearly' && (
+                          <Text style={tw`text-gray-600 mb-2`}>
+                            Selected: {editedTask.selectedMonths?.join(', ')} {editedTask.selectedDates?.join(', ')}
+                          </Text>
+                        )}
+                      </View>
+                    )}
                   </View>
+
                   {/* Action Buttons */}
                   <View style={tw`flex-row justify-between `}>
                     <TouchableOpacity
@@ -720,14 +722,13 @@ const AllTaskListScreen = () => {
             </TouchableOpacity>
           ))}
         </ScrollView>
+        
       )}
-      {/* Modals */}
+   {/* Modals */}
       {isDayPickerVisible && (
         <DayPicker
           selectedDays={editedTask.selectedDays || []}
-          onSelectDays={days =>
-            setEditedTask({...editedTask, selectedDays: days})
-          }
+          onSelectDays={(days) => setEditedTask({...editedTask, selectedDays: days})}
           onCancel={() => setIsDayPickerVisible(false)}
           onAddDay={() => setIsDayPickerVisible(false)}
         />
@@ -736,9 +737,7 @@ const AllTaskListScreen = () => {
       {isDatePickerVisible && (
         <DatePicker
           selectedDate={editedTask.selectedDate || []}
-          onSelectDate={dates =>
-            setEditedTask({...editedTask, selectedDate: dates})
-          }
+          onSelectDate={(dates) => setEditedTask({...editedTask, selectedDate: dates})}
           onCancel={() => setIsDatePickerVisible(false)}
           onAddDay={() => setIsDatePickerVisible(false)}
         />
@@ -748,28 +747,24 @@ const AllTaskListScreen = () => {
         <DateSelector
           selectedDates={editedTask.selectedDates || []}
           selectedMonths={editedTask.selectedMonths || []}
-          onSelectDate={date =>
-            setEditedTask({
-              ...editedTask,
-              selectedDates: [...(editedTask.selectedDates || []), date],
-            })
-          }
-          onSelectMonth={month =>
-            setEditedTask({
-              ...editedTask,
-              selectedMonths: [...(editedTask.selectedMonths || []), month],
-            })
-          }
+          onSelectDate={(date) => setEditedTask({
+            ...editedTask,
+            selectedDates: [...(editedTask.selectedDates || []), date]
+          })}
+          onSelectMonth={(month) => setEditedTask({
+            ...editedTask,
+            selectedMonths: [...(editedTask.selectedMonths || []), month]
+          })}
           onCancel={() => setIsDateSelectorVisible(false)}
-          onAddDay={newDates => {
+          onAddDay={(newDates) => {
             setEditedTask({
               ...editedTask,
               selectedDates: newDates.map(d => d.date),
-              selectedMonths: newDates.map(d => d.month),
+              selectedMonths: newDates.map(d => d.month)
             });
             setIsDateSelectorVisible(false);
           }}
-          onRemoveDay={index => {
+          onRemoveDay={(index) => {
             const newDates = [...editedTask.selectedDates];
             const newMonths = [...editedTask.selectedMonths];
             newDates.splice(index, 1);
@@ -777,11 +772,12 @@ const AllTaskListScreen = () => {
             setEditedTask({
               ...editedTask,
               selectedDates: newDates,
-              selectedMonths: newMonths,
+              selectedMonths: newMonths
             });
           }}
         />
       )}
+
 
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
