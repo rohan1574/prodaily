@@ -98,7 +98,7 @@ const MyCalenderFutureTaskScreen = () => {
 
   return (
     <View style={[tw`flex-1 `,{backgroundColor:"#F7FAFF"}]}>
-      <View style={tw`mb-4 top-2 left-4 `}>
+      <View style={tw`mb-8 top-2 left-4 `}>
       <Text style={tw`text-xl font-bold `}>My Calendar</Text>
       <Text style={[tw` `,{fontSize:16,color:"#8D99AE"}]}>Your added tasks on the selected calendar day.</Text>
       </View>
@@ -136,8 +136,8 @@ const MyCalenderFutureTaskScreen = () => {
                 {/* টাস্ক নাম ও স্টার আইকন */}
                 {task.icon && (
                   <View style={tw`flex-row items-center p-2`}>
-                    <Image source={task.icon} style={[tw`left-2`,{width: 32, height: 32}]} />
-                    <Text style={[tw`text-base font-medium left-6`,{color:"#2B2D42"}]}>{task.name}</Text>
+                    <Image source={task.icon} style={[tw`left-2`,{width: 30, height: 30}]} />
+                    <Text style={[tw`text-sm font-medium left-6`,{color:"#2B2D42"}]}>{task.name}</Text>
                   </View>
                 )}
 
