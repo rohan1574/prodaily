@@ -322,9 +322,7 @@ const TodaysTaskToDoScreen = () => {
 
                       {task.dailyTarget && (
                         <View style={tw`flex-row items-center ml-2`}>
-                          <Text style={tw`mr-2 font-semibold`}>
-                            {task.dailyTarget}
-                          </Text>
+                          
                           <View
                             style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
                             <TouchableOpacity
@@ -341,6 +339,9 @@ const TodaysTaskToDoScreen = () => {
                               <Text style={tw`text-gray-700`}>+</Text>
                             </TouchableOpacity>
                           </View>
+                          <Text style={tw` font-medium`}>
+                            ={task.dailyTarget}
+                          </Text>
                         </View>
                       )}
                     </View>
