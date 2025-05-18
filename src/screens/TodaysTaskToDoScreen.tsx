@@ -34,9 +34,17 @@ interface Task {
   selectedMonths?: string[]; // বার্ষিক মাস (যেমন: ['January', 'December'])
 }
 const TodaysTaskToDoScreen = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  // time
+  const selectedDate = new Date(); // অথবা আপনার নির্দিষ্ট তারিখ
+
+  const month = selectedDate.toLocaleString('en-US', {month: 'long'});
+  const day = selectedDate.getDate();
+  const weekday = selectedDate.toLocaleString('en-US', {weekday: 'long'});
+
+  const formattedDate = `${month} ${day}, ${weekday}`;
+
   // প্রোগ্রেস বাড়ানোর ফাংশন
   const incrementProgress = async (taskId: string) => {
     try {
@@ -204,7 +212,7 @@ const TodaysTaskToDoScreen = () => {
       {/* Header */}
       <ImageBackground
         source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
-        style={tw` rounded-lg m-4 h-44`}
+        style={[tw`rounded-lg mx-4 top-4 h-44`, {}]}
         imageStyle={tw`rounded-lg`}>
         {/* Overlay for better text visibility */}
         <View style={tw`absolute inset-0 bg-black bg-opacity-30 `}></View>
@@ -214,11 +222,14 @@ const TodaysTaskToDoScreen = () => {
           <View style={tw`flex-row justify-between items-start `}>
             {/* Left Side - Date */}
             <View style={tw`top-4`}>
-              <Text style={tw`text-xl font-normal text-white `}>Today</Text>
-              <Text style={tw`text-base text-gray-200`}>
-                {' '}
-                {selectedDate.toDateString()}
-              </Text>
+              <Text
+                style={[
+                  tw`text-xl font-medium text-white `,
+                  {color: '#DEEAFF'},
+                ]}>
+                Today
+              </Text>{' '}
+              <Text style={tw`text-base text-gray-200`}>{formattedDate}</Text>
             </View>
 
             {/* Right Side - Profile with Image */}
@@ -238,8 +249,13 @@ const TodaysTaskToDoScreen = () => {
           </View>
 
           {/* Quote Section */}
-          <View style={tw`absolute top-32 left-4 right-4 `}>
-            <Text style={tw`text-center italic text-white shadow-md`}>
+          <View style={tw`flex-row items-center space-x-2 px-4`}>
+            <Image
+              source={require('../../assets/images/vector.png')}
+              style={tw`w-6 h-6`}
+              resizeMode="contain"
+            />
+            <Text style={tw`italic text-white text-sm`}>
               "Time is the most valuable thing a man can spend."
             </Text>
           </View>
@@ -249,7 +265,7 @@ const TodaysTaskToDoScreen = () => {
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
       ) : (
-        <ScrollView contentContainerStyle={tw` px-4`}>
+        <ScrollView contentContainerStyle={tw`mx-4 top-8`}>
           {tasks.length === 0 ? (
             <Text style={tw`text-center text-gray-500`}>
               No tasks for today. Enjoy your day!
@@ -258,7 +274,7 @@ const TodaysTaskToDoScreen = () => {
             tasks.map((task: any) => (
               <View
                 key={task.id}
-                style={tw`p-4  rounded-lg  ${
+                style={tw`p-3 mb-2 rounded-lg  ${
                   task.completed ? 'bg-green-100' : 'bg-gray-100'
                 }`}>
                 <View style={tw`flex-row items-center justify-between`}>
