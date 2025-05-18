@@ -513,7 +513,7 @@ const AddDailyTaskScreen = () => {
                   }
                   style={[
                     tw`bottom-2 h-auto mt-4 mr-6`,
-                    {tintColor: selectedColor, width: 32, height: 32},
+                    {tintColor: selectedColor, width: 30, height: 30},
                   ]}
                 />
 
