@@ -6,7 +6,7 @@ const tasksData: Record<string, any> = {
     Running: require('../../assets/images/Fitness/run.png'),
     Swimming: require('../../assets/images/Fitness/swimming.png'),
     Cycling: require('../../assets/images/Fitness/cycling.png'),
-    Hiking: require('../../assets/images/Fitness/prac.png'),
+    // Hiking: require('../../assets/images/Fitness/prac.png'),
     Yoga: require('../../assets/images/Fitness/yoga.png'),
     "Strength Workout": require('../../assets/images/Fitness/trength.png'),
     Stretching: require('../../assets/images/Fitness/stretching.png'),
@@ -131,7 +131,7 @@ Sleep: {
     Sunbathing: require('../../assets/images/SelfCare/sunbath.png'),
     "Doctor Visit": require('../../assets/images/SelfCare/visit-doctor.png'),
     "Health diagnosis": require('../../assets/images/SelfCare/diagnosis.png'),
-    "Routine Health Checkup": require('../../assets/images/SelfCare/health.png')
+    "Routine Health Checkup": require('../../assets/images/SelfCare/healthcup.png')
   },
   Financials: {
     Budgeting: require('../../assets/images/Financials/budget.png'),
@@ -190,7 +190,6 @@ Sleep: {
     "Note-Taking": require('../../assets/images/Academic/note-taking.png'),
     "Self Learning": require('../../assets/images/Academic/self-lear.png'),
     "Model Test": require('../../assets/images/Academic/model-test.png'),
-    // "Practical Project": require('../../assets/images/Academic/project.png')
   },
   Spiritual: {
     Prayer: require('../../assets/images/Spiritual/prayer.png'),

@@ -108,7 +108,7 @@ const MyCalenderFutureTaskScreen = () => {
         onDateChange={(date: Date) => setSelectedDate(date)}
         selectedStartDate={selectedDate}
         allowRangeSelection={false}
-        selectedDayColor="#3f51b5"
+        selectedDayColor="#3580FF"
         selectedDayTextColor="#fff"
         scaleFactor={375}
         textStyle={{fontFamily: 'Roboto'}}
