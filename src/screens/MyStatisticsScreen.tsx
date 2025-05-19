@@ -30,7 +30,7 @@ type CircularProgressProps = {
 const CircularProgress = ({
   percentage = 0,
   radius = 50,
-  strokeWidth = 6,
+  strokeWidth = 8,
 }: CircularProgressProps) => {
   const size = radius * 2;
   const circumference = 2 * Math.PI * radius;
@@ -54,7 +54,7 @@ const CircularProgress = ({
           cx={radius}
           cy={radius}
           r={radius - strokeWidth / 2}
-          stroke="blue"
+          stroke="#3580FF"
           strokeWidth={strokeWidth}
           fill="none"
           strokeDasharray={`${progress} ${circumference}`}
@@ -63,16 +63,26 @@ const CircularProgress = ({
           transform={`rotate(-90, ${radius}, ${radius})`}
         />
 
-        {/* Percentage Text */}
+        {/* Number */}
         <SvgText
           x={radius}
-          y={radius}
+          y={radius - 5} // উপরে রাখতে
           textAnchor="middle"
-          dy="5"
-          fontSize="20"
+          fontSize="24"
           fontWeight="bold"
           fill="black">
-          {percentage}%
+          {percentage}
+        </SvgText>
+
+        {/* % Symbol নিচে */}
+        <SvgText
+          x={radius}
+          y={radius + 15} // নিচে রাখতে
+          textAnchor="middle"
+          fontSize="14"
+          fontWeight="normal"
+          fill="gray">
+          %
         </SvgText>
       </Svg>
     </View>
@@ -81,6 +91,7 @@ const CircularProgress = ({
 
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+  const [selectedTab, setSelectedTab] = React.useState('Monthly');
 
   const [selectedDayOnType, setSelectedDayOnType] = useState<
     'weekly' | 'monthly' | 'yearly'
@@ -135,63 +146,67 @@ const MyStatisticsScreen = () => {
     <View style={tw`flex-1 bg-gray-200`}>
       <ScrollView contentContainerStyle={tw`p-4`}>
         {/* হেডার সেকশন */}
-        <Text style={tw`text-lg font-bold text-black`}>My Statistics</Text>
+        <Text style={tw`text-xl font-bold text-black`}>My Statistics</Text>
         <Text style={[tw`text-gray-500 mb-4`, {color: '#8D99AE'}]}>
           Your task progress and habit report
         </Text>
 
         {/* টপ স্ট্যাটিস্টিক্স */}
         <View style={tw`flex-row justify-between h-32`}>
-          <View style={[tw`bg-blue-500 p-4 rounded-lg w-44`, {width: 164}]}>
-            <Text style={tw`text-white text-sm`}>All Time Completed</Text>
-            <Text style={tw`text-white text-2xl font-bold`}>
+          <View
+            style={[
+              tw`bg-blue-500 p-4 rounded-lg w-44`,
+              {width: 164, height: 109},
+            ]}>
+            <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
+              All Time Completed
+            </Text>
+            <Text style={tw`text-white text-2xl font-bold left-12 top-8`}>
               {statsData.allTimeCompleted}
             </Text>
           </View>
-          <View style={[tw`bg-blue-500 p-4 rounded-lg `, {width: 164}]}>
-            <Text style={tw`text-white text-sm`}>Daily Task Into Habit</Text>
-            <Text style={tw`text-white text-2xl font-bold`}>
+          <View
+            style={[
+              tw`bg-blue-500 p-4 rounded-lg w-44`,
+              {width: 164, height: 109},
+            ]}>
+            <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
+              Daily Task Into Habit
+            </Text>
+            <Text style={tw`text-white text-2xl font-bold left-8 top-8`}>
               {statsData.dailyHabit}
             </Text>
           </View>
         </View>
 
         {/* প্রোগ্রেস সার্কেল */}
-        <View style={tw`items-center mt-6 bg-white `}>
-          <Text style={tw`mb-4 my-4 font-bold`}>Overall Score</Text>
+        <View style={tw`items-center h-44 rounded-lg bg-white `}>
+          <Text style={tw`mb-4 my-4 font-medium text-sm`}>Overall Score</Text>
           <CircularProgress percentage={statsData.successScore} />
         </View>
-
-       <View style={tw`bg-`}>
-         <View style={tw`flex-row bg-white my-2 rounded-full p-1`}>
-          {['Weekly', 'Monthly', 'Yearly'].map(label => {
-            const key = label.toLowerCase() as 'weekly' | 'monthly' | 'yearly';
-            const isSelected = selectedDayOnType === key;
-
-            return (
+        <View style={tw`bg-white h-24 rounded-lg my-4`}>
+          <View
+            style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
+            {['Weekly', 'Monthly', 'Yearly'].map(tab => (
               <TouchableOpacity
-                key={key}
-                onPress={() => setSelectedDayOnType(key)}
-                disabled={!isSpecificDayOnSelected}
-                style={[
-                  tw`flex-1 items-center  py-2 rounded-full`,
-                  isSelected && isSpecificDayOnSelected
-                    ? tw`bg-blue-500`
-                    : tw``,
-                ]}>
+                key={tab}
+                onPress={() => setSelectedTab(tab)}
+                style={tw`flex-1 p-3 rounded-full ${
+                  selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
+                }`}>
                 <Text
-                  style={tw`text-sm ${
-                    isSelected && isSpecificDayOnSelected
-                      ? 'text-white font-semibold'
-                      : 'text-gray-500'
-                  }`}>
-                  {label}
+                  style={[
+                    tw`text-center text-sm font-normal`,
+                    selectedTab === tab
+                      ? tw`text-white font-semibold`
+                      : {color: '#8D99AE'},
+                  ]}>
+                  {tab}
                 </Text>
               </TouchableOpacity>
-            );
-          })}
+            ))}
+          </View>
         </View>
-       </View>
 
         {/* কারেন্ট প্রোগ্রেস সেকশন */}
         <View style={tw`bg-white shadow-lg rounded-lg p-4 mb-4`}>
