@@ -144,7 +144,7 @@ const MyStatisticsScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-gray-200`}>
-      <ScrollView contentContainerStyle={tw`p-4`}>
+      <ScrollView contentContainerStyle={tw`p-4 pb-20`}>
         {/* হেডার সেকশন */}
         <Text style={tw`text-xl font-bold text-black`}>My Statistics</Text>
         <Text style={[tw`text-gray-500 mb-4`, {color: '#8D99AE'}]}>
@@ -161,7 +161,7 @@ const MyStatisticsScreen = () => {
             <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
               All Time Completed
             </Text>
-            <Text style={tw`text-white text-2xl font-bold left-12 top-8`}>
+            <Text style={tw`text-white text-2xl font-bold left-12 top-6`}>
               {statsData.allTimeCompleted}
             </Text>
           </View>
@@ -173,7 +173,7 @@ const MyStatisticsScreen = () => {
             <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
               Daily Task Into Habit
             </Text>
-            <Text style={tw`text-white text-2xl font-bold left-8 top-8`}>
+            <Text style={tw`text-white text-2xl font-bold left-8 top-6`}>
               {statsData.dailyHabit}
             </Text>
           </View>
@@ -210,54 +210,74 @@ const MyStatisticsScreen = () => {
 
         {/* কারেন্ট প্রোগ্রেস সেকশন */}
         <View style={tw`bg-white shadow-lg rounded-lg p-4 mb-4`}>
-          <Text style={tw`text-gray-800 font-bold text-lg mb-2`}>
-            Current Progress
+          <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
+            Last Month
           </Text>
           <View style={tw`flex-row items-center justify-between`}>
             <CircularProgress percentage={statsData.successScore} radius={40} />
             <View style={tw`ml-4`}>
-              <Text style={tw`text-gray-800 font-bold text-sm`}>
-                Task Completed
+              <Text style={tw`text-gray-800 font-medium text-sm`}>
+                Task{'\n'} Completed
               </Text>
-              <Text style={tw`text-gray-500 text-xs`}>
+              <Text style={tw`text-gray-500 left-1 text-xs`}>
                 {statsData.completed} of {statsData.totalTasks}
               </Text>
             </View>
             <View style={tw`flex-1 ml-4`}>
-              <Text style={tw`text-gray-600 text-xs mb-2`}>
+              <Text
+                style={[
+                  tw`text-gray-600 font-normal text-center text-xs mb-2`,
+                  {fontSize: 10},
+                ]}>
                 {statsData.successScore > 70
                   ? "You're doing great! 🚀 Keep it up!"
-                  : 'Stay focused! 💪 You can do better!'}
+                  : 'You improve a lot, To keep it up; Stay focus. Follow ExpandTimes '}
               </Text>
+              <TouchableOpacity
+                style={tw`bg-blue-100 p-3 rounded-xl mt-2 items-center`}>
+                <Text style={tw`text-blue-500 font-medium font-xs`}>
+                  Follow
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
         {/* হ্যাবিট সামারি */}
         <View style={tw`p-4 bg-gray-100 rounded-lg`}>
-          <Text style={tw`text-gray-600 mb-2`}>Habits Summary</Text>
+          <View style={tw`flex-row justify-between mb-6`}>
+            <View>
+              <Text style={tw`text-black text-base font-medium `}>Habits</Text>
+              <Text style={tw`text-gray-400 right-1 font-normal`}> Summary</Text>
+            </View>
+            <View>
+              <Text style={tw`text-gray-400 text-xs font-medium`}>More Details</Text>
+            </View>
+          </View>
           <View style={tw`flex-row justify-between flex-wrap`}>
-            <View style={tw`w-1/2 mb-4`}>
-              <Text style={tw`text-gray-800`}>Success Score</Text>
-              <Text style={tw`text-blue-500 text-lg font-bold`}>
+            <View style={tw`w-1/4 items-center`}>
+              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Success Score</Text>
+              <Text style={tw`text-gray-600 text-lg font-bold`}>
                 {statsData.successScore}%
               </Text>
             </View>
-            <View style={tw`w-1/2 mb-4`}>
-              <Text style={tw`text-gray-800`}>Completed</Text>
-              <Text style={tw`text-blue-500 text-lg font-bold`}>
+            <View style={tw`w-1/4 items-center`}>
+              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Completed</Text>
+              <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.completed}
               </Text>
             </View>
-            <View style={tw`w-1/2`}>
-              <Text style={tw`text-gray-800`}>Failed</Text>
-              <Text style={tw`text-blue-500 text-lg font-bold`}>
+            <View style={tw`w-1/4 items-center`}>
+              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Failed</Text>
+              <Text style={tw`text-black text-lg font-bold`}>
                 {statsData.totalTasks - statsData.completed}
               </Text>
             </View>
-            <View style={tw`w-1/2`}>
-              <Text style={tw`text-gray-800`}>Best Streak Day</Text>
-              <Text style={tw`text-blue-500 text-lg font-bold`}>
+            <View style={tw`w-1/4 items-center`}>
+              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>
+                Best Streak
+              </Text>
+              <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.bestStreak}
               </Text>
             </View>
