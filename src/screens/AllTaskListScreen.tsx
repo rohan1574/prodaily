@@ -583,7 +583,7 @@ const AllTaskListScreen = () => {
                       </Text>
                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
                       <View
-                        style={tw`flex-row bg-blue-100 rounded-full p-1 ml-2`}>
+                        style={tw`flex-row bg-blue-100 rounded-full ml-2`}>
                         {['Weekly', 'Monthly', 'Yearly'].map(type => {
                           const isSelected = editedTask.specTarget === type;
                           return (
@@ -592,7 +592,7 @@ const AllTaskListScreen = () => {
                               style={[
                                 tw`px-3 py-1 rounded-full mx-1`,
                                 isSelected
-                                  ? tw`bg-white border border-blue-500`
+                                  ? tw`bg-blue-700  border border-blue-500`
                                   : tw`bg-transparent`,
                                 !isSpecificDayOnSelected && tw`opacity-50`,
                               ]}
@@ -627,7 +627,7 @@ const AllTaskListScreen = () => {
                               <Text
                                 style={tw`text-sm ${
                                   isSelected
-                                    ? 'text-blue-500 font-semibold'
+                                    ? 'text-white font-semibold'
                                     : 'text-gray-500'
                                 }`}>
                                 {type}
