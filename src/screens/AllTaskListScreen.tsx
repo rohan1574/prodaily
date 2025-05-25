@@ -274,7 +274,7 @@ const AllTaskListScreen = () => {
       <DeleteConfirmationModal />
       <View style={tw`mb-4 top-2 left-4 mx-2`}>
         <Text style={tw`text-2xl font-bold `}>Manage My Task </Text>
-        <Text style={[tw` `, {fontSize: 16, color: '#8D99AE'}]}>
+        <Text style={[tw`font-normal `, {fontSize: 14, color: '#8D99AE'}]}>
           Your all the added running tasks list.
         </Text>
       </View>
@@ -282,23 +282,23 @@ const AllTaskListScreen = () => {
       {loading ? (
         <Text style={tw`text-center text-gray-500`}>Loading...</Text>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={tw`pb-20`}>
           {tasks.map(task => (
             <TouchableOpacity
               key={task.id}
               onLongPress={() => handleTaskLongPress(task.id)}
               activeOpacity={0.8}
-              style={tw`bg-white p-3 mx-4 mb-3 top-6 rounded-lg`}>
+              style={tw`bg-white p-2 mx-4 mb-3 top-6 rounded-lg`}>
               <View style={tw`flex-row justify-between items-center`}>
                 {/* Left Section - Image & Name */}
                 <View style={tw`flex-row items-center flex-shrink`}>
                   {task.icon && (
                     <Image
                       source={task.icon}
-                      style={[tw`mr-6`, {width: 28, height: 28}]}
+                      style={[tw`mr-4`, {width: 30, height: 30}]}
                     />
                   )}
-                  <Text style={tw`text-lg font-semibold`}>{task.name}</Text>
+                  <Text style={tw`text-sm font-medium`}>{task.name}</Text>
                 </View>
 
                 {/* Right Section - Tags & Icons */}
@@ -306,39 +306,38 @@ const AllTaskListScreen = () => {
                   {/* Daily Tags */}
                   <View style={tw`flex-row items-center right-4`}>
                     {/* ডেইলি রুটিন ট্যাগ */}
-                    {/* ডেইলি রুটিন ট্যাগ */}
                     {!task.specificForValue && // এই লাইনটি যোগ করুন
                       !task.scheduleType &&
                       !task.endDate &&
                       !task.selectedDays?.length &&
-                      !task.selectedDate?.length &&
+                      !task.selectedDate?.length && 
                       !task.selectedDates?.length &&
                       !task.selectedMonths?.length && (
-                        <Text style={tw`text-sm text-green-700`}>Daily</Text>
+                        <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Daily</Text>
                       )}
                     {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
                     {task.specificFor && task.specificForValue && (
-                      <Text style={tw`text-sm text-gray-600 mb-1`}>
+                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>
                         F_ {task.specificForValue}_ {task.specificFor}
                       </Text>
                     )}
 
                     {/* সাপ্তাহিক দিন */}
                     {task.selectedDays?.length > 0 && (
-                      <Text style={tw`text-sm text-gray-600`}>
+                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>
                         {task.selectedDays.join(', ')}_E_Week
                       </Text>
                     )}
 
                     {/* মাসিক তারিখ */}
                     {task.selectedDate?.length > 0 && (
-                      <Text style={tw`text-sm text-gray-600`}>Monthly</Text>
+                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Monthly</Text>
                     )}
 
                     {/* বার্ষিক তারিখ */}
                     {task.selectedDates?.length > 0 &&
                       task.selectedMonths?.length > 0 && (
-                        <Text style={tw`text-sm text-gray-600`}>Yearly</Text>
+                        <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Yearly</Text>
                       )}
                   </View>
 

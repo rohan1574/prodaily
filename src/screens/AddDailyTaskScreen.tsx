@@ -589,23 +589,23 @@ const AddDailyTaskScreen = () => {
                     />
 
                     <View
-                      style={tw`flex-row bg-blue-100 rounded-full p-1 mx-1`}>
+                      style={tw`flex-row bg-blue-100 rounded-full mx-1`}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
 
                         return (
                           <TouchableOpacity
                             key={type}
-                            style={tw`px-2 py-1 mx- rounded-full ${
+                            style={tw`px-2 p-1 rounded-full ${
                               isSelected
-                                ? 'bg-white border border-blue-500'
+                                ? 'bg-blue-700 border border-blue-500'
                                 : ''
                             }`}
                             onPress={() => setSpecificFor(type)}>
                             <Text
                               style={tw`text-sm ${
                                 isSelected
-                                  ? 'text-blue-500 font-semibold'
+                                  ? 'text-white font-semibold'
                                   : 'text-gray-500'
                               }`}>
                               {type}
@@ -642,23 +642,23 @@ const AddDailyTaskScreen = () => {
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
                     <View
-                      style={tw`flex-row bg-blue-100 rounded-full p-1 left-4 mt-2`}>
+                      style={tw`flex-row bg-blue-100 rounded-full left-4 mt-2`}>
                       {options.map(type => {
                         const isSelected = targetType === type;
 
                         return (
                           <TouchableOpacity
                             key={type}
-                            style={tw`px-2 py-1 mx-1 rounded-full ${
+                            style={tw`px-2 py-1 rounded-full ${
                               isSelected
-                                ? 'bg-white border border-blue-500'
+                                ? 'bg-blue-700 border border-blue-500'
                                 : ''
                             }`}
                             onPress={() => setTargetType(type)}>
                             <Text
                               style={tw`text-sm ${
                                 isSelected
-                                  ? 'text-blue-500 font-semibold'
+                                  ? 'text-white font-semibold'
                                   : 'text-gray-500'
                               }`}>
                               {type}
@@ -698,9 +698,9 @@ const AddDailyTaskScreen = () => {
                     style={[
                       tw`px-2 py-1 rounded-full mx-1`,
                       !isSpecificDayOnSelected
-                        ? tw`bg-white border border-blue-500`
+                        ? tw``
                         : selectedDayOnType === 'weekly'
-                        ? tw`bg-white border border-blue-500`
+                        ? tw`bg-blue-700 border border-blue-500`
                         : tw`bg-white border border-blue-500`,
                     ]}>
                     <Text
@@ -723,14 +723,14 @@ const AddDailyTaskScreen = () => {
                       !isSpecificDayOnSelected
                         ? tw``
                         : selectedDayOnType === 'monthly'
-                        ? tw`bg-white border border-blue-500`
+                        ? tw`bg-blue-700 border border-blue-500`
                         : tw`bg-white border border-blue-500`,
                     ]}>
                     <Text
                       style={tw`text-sm ${
                         selectedDayOnType === 'monthly' &&
                         isSpecificDayOnSelected
-                          ? 'text-blue-500 font-semibold'
+                          ? 'text-white font-semibold'
                           : 'text-gray-500'
                       }`}>
                       Month
