@@ -237,17 +237,17 @@ const AddDailyTaskScreen = () => {
 
     // রিসেট লজিক এবং মোডাল ভিজিবিলিটি
     switch (type) {
-      case 'weekly':
+      case 'week':
         setIsDayPickerVisible(true);
         setSelectedDates([]); // মাস এবং তারিখ রিসেট
         setSelectedMonths([]);
         break;
-      case 'monthly':
+      case 'month':
         setIsDatePickerVisible(true);
         setSelectedDays([]); // সপ্তাহের দিন এবং মাস রিসেট
         setSelectedMonths([]);
         break;
-      case 'yearly':
+      case 'year':
         setIsDateSeletorVisible(true); // বছরভিত্তিক সিলেক্টর
         setSelectedDays([]); // সপ্তাহ এবং তারিখ রিসেট
         setSelectedDates([]);
@@ -688,9 +688,9 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`bg-gray-200 mx-2 rounded-full shadow-sm my-4`}>
+                <View style={tw`bg-gray-200 mx-2 rounded-full shadow-sm w-48 left-32`}>
                   <View style={tw`flex-row`}>
-                    {['Weekly', 'Monthly', 'Yearly'].map(type => {
+                    {['Week', 'Month', 'Year'].map(type => {
                       // টাইপের নাম পরিবর্তন
                       const isSelected =
                         selectedDayOnType === type.toLowerCase();
@@ -700,7 +700,7 @@ const AddDailyTaskScreen = () => {
                           onPress={() => handleDayTypeClick(type.toLowerCase())}
                           disabled={!isSpecificDayOnSelected}
                           style={[
-                            tw`flex-1 p-3 rounded-full`,
+                            tw`flex-1 p-2 rounded-full`,
                             isSelected && tw`bg-blue-500`,
                             !isSpecificDayOnSelected && tw`opacity-50`,
                           ]}>
