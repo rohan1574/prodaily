@@ -458,7 +458,7 @@ const AllTaskListScreen = () => {
                         editable={isSpecificForEnabled}
                         placeholder="0"
                       />
-                      <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                      <View style={tw`flex-row bg-blue-100 rounded-full`}>
                         {['Days', 'Weeks', 'Months'].map(type => {
                           const isSelected =
                             editedTask.specificFor === type &&
@@ -468,7 +468,7 @@ const AllTaskListScreen = () => {
                               key={type}
                               style={tw`px-2 py-1 mx- rounded-full ${
                                 isSelected
-                                  ? 'bg-white border border-blue-500'
+                                  ? 'bg-blue-700 border border-blue-500'
                                   : ''
                               }`}
                               onPress={() =>
@@ -482,7 +482,7 @@ const AllTaskListScreen = () => {
                               <Text
                                 style={tw`text-sm ${
                                   isSelected
-                                    ? 'text-blue-500 font-semibold'
+                                    ? 'text-white font-semibold'
                                     : 'text-gray-500'
                                 }`}>
                                 {type}
@@ -531,7 +531,7 @@ const AllTaskListScreen = () => {
                         editable={isDailyTargetEnabled}
                         placeholder="0"
                       />
-                      <View style={tw`flex-row bg-blue-100 rounded-full p-1`}>
+                      <View style={tw`flex-row bg-blue-100 rounded-full`}>
                         {['Minutes', 'Times'].map(type => {
                           const isSelected =
                             editedTask.targetType === type &&
@@ -540,10 +540,10 @@ const AllTaskListScreen = () => {
                           return (
                             <TouchableOpacity
                               key={type}
-                              style={tw`px-3 py-1 mx-1 rounded-full ${
+                              style={tw`px-3 py-1 rounded-full ${
                                 isSelected
-                                  ? 'bg-white border border-blue-500'
-                                  : 'bg-gray-200'
+                                  ? 'bg-blue-700 border border-blue-500'
+                                  : ''
                               }`}
                               onPress={() =>
                                 isDailyTargetEnabled &&
@@ -553,7 +553,7 @@ const AllTaskListScreen = () => {
                               <Text
                                 style={tw`text-sm ${
                                   isSelected
-                                    ? 'text-blue-500 font-semibold'
+                                    ? 'text-white font-semibold'
                                     : 'text-gray-500'
                                 }`}>
                                 {type}
@@ -590,7 +590,7 @@ const AllTaskListScreen = () => {
                             <TouchableOpacity
                               key={type}
                               style={[
-                                tw`px-3 py-1 rounded-full mx-1`,
+                                tw`px-3 py-1 rounded-full`,
                                 isSelected
                                   ? tw`bg-blue-700  border border-blue-500`
                                   : tw`bg-transparent`,
