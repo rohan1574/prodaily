@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Modal,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { usePoints } from '../context/PointsContext';
+
 interface Task {
   id: string;
   isStarred: boolean;
@@ -37,6 +40,8 @@ interface Task {
 const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState(false);
+   const { addPoints } = usePoints();
   // time
   const selectedDate = new Date(); // অথবা আপনার নির্দিষ্ট তারিখ
 
@@ -182,6 +187,13 @@ const TodaysTaskToDoScreen = () => {
       console.error('Error toggling star:', error);
     }
   };
+  useEffect(() => {
+    if (tasks.length > 0 && tasks.every(task => task.completed)) {
+      setShowModal(true);
+    } else {
+      setShowModal(false);
+    }
+  }, [tasks]);
 
   // টাস্ক ফিল্টার করার সময় currentProgress ইনিশিয়ালাইজ করুন
   useEffect(() => {
@@ -322,7 +334,6 @@ const TodaysTaskToDoScreen = () => {
 
                       {task.dailyTarget && (
                         <View style={tw`flex-row items-center ml-2`}>
-                          
                           <View
                             style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
                             <TouchableOpacity
@@ -347,8 +358,7 @@ const TodaysTaskToDoScreen = () => {
                     </View>
 
                     <TouchableOpacity onPress={() => toggleStar(task.id)}>
-                      <View
-                        style={tw`right-2`}>
+                      <View style={tw`right-2`}>
                         <Icon
                           name={task.isStarred ? 'star' : 'star-outline'}
                           size={24}
@@ -363,6 +373,51 @@ const TodaysTaskToDoScreen = () => {
           </ScrollView>
         )}
       </View>
+      <Modal
+        visible={showModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowModal(false)}>
+        <SafeAreaView
+          style={tw`flex-1 bg-blue-500 items-center justify-center`}>
+          {/* Back Button */}
+          <TouchableOpacity
+            style={tw`absolute top-4 left-4`}
+            onPress={() => setShowModal(false)}>
+            <Icon name="chevron-back" size={24} color="white" />
+          </TouchableOpacity>
+
+          {/* Badge and Glow */}
+          <View style={tw`items-center justify-center mb-8`}>
+            <View
+              style={tw`w-32 h-32 rounded-full bg-yellow-400 items-center justify-center shadow-lg`}>
+              <Text style={tw`text-3xl font-bold text-white`}>10</Text>
+            </View>
+          </View>
+
+          {/* Congrats Text */}
+          <Text style={tw`text-white text-2xl font-bold mb-2`}>Congrats!</Text>
+          <Text style={tw`text-white text-base mb-4`}>
+            All the Daily Task Done!
+          </Text>
+
+          {/* Description */}
+          <Text style={tw`text-center text-white text-xs px-8 mb-10`}>
+            You deserve this badge for your commitment to yourself. Stay with us
+            and earn more Points to get rewards.
+          </Text>
+
+          {/* Claim Button */}
+          <TouchableOpacity
+    onPress={() => {
+      addPoints(10);
+      setShowModal(false);
+    }}
+    style={tw`bg-white rounded-full px-8 py-3`}>
+    <Text style={tw`text-blue-500 font-semibold`}>Claim</Text>
+  </TouchableOpacity>
+        </SafeAreaView>
+      </Modal>
 
       {/* Fixed Bottom Navigation */}
       <View style={tw`absolute bottom-0 w-full`}>

@@ -27,7 +27,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('TodaysTaskToDoScreen')}>
         <Image
           source={require('../../assets/images/Nab/home.png')}
-          style={[tw``,{width:20,height:20}]}
+          style={[tw``,{width:24,height:26}]}
         />
       </TouchableOpacity>
       <TouchableOpacity

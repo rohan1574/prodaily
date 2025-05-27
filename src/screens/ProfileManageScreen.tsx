@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {ColorContext} from '../context/ColorContext';
 import BottomNavigation from './BottomNavigation';
-
+import {usePoints} from '../context/PointsContext';
 // Define the navigation type
 type RootStackParamList = {
   TodaysTaskToDoScreen: undefined;
@@ -37,6 +37,8 @@ const ProfileManageScreen = () => {
   }
 
   const {setSelectedColor} = context;
+  const {points} = usePoints();
+
   return (
     <View style={tw`flex-1 bg-gray-200 `}>
       {/* Fixed Header Section */}
@@ -92,8 +94,10 @@ const ProfileManageScreen = () => {
           <View style={tw`bg-white rounded-xl px-4 py-3 w-[48%] shadow-sm`}>
             <Text style={tw`text-gray-600 font-medium`}>Point Collected</Text>
             <View style={tw`flex-row items-center mt-1`}>
-              <Text style={tw`text-yellow-400 text-2xl font-bold`}>🏅322</Text>
-              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
+              <Text style={tw`text-yellow-400 text-2xl font-bold`}>
+                🏅{points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
+              </Text>
+              <Text style={tw`text-gray-500 ml-2`}>next 50</Text>
             </View>
           </View>
         </View>
