@@ -34,12 +34,12 @@ const BottomNavigation: React.FC = () => {
         style={tw`top-4 left-4`}
         onPress={() => navigation.navigate('MyStatisticsScreen')}>
          <Image
-          source={require('../../assets/images/Nab/bar-chart.png')}
+          source={require('../../assets/images/Nab/analytics.png')}
           style={[tw``,{width:24,height:26}]}
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={tw`bg-blue-500 rounded-full p-4 bottom border-2 bottom-6 border-gray-200`}
+        style={tw`bg-blue-500 rounded-full p-4 bottom border-2 bottom-10 border-gray-200`}
         onPress={() => navigation.navigate('AddDailyTaskScreen')}>
         <Icon name="add" size={28} color="white" />
       </TouchableOpacity>
@@ -47,15 +47,15 @@ const BottomNavigation: React.FC = () => {
         style={tw`top-4 right-4`}
         onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}>
          <Image
-          source={require('../../assets/images/Nab/calendar.png')}
-          style={[tw``,{width:24,height:26}]}
+          source={require('../../assets/images/Nab/calender.png')}
+          style={[tw``,{width:26,height:26}]}
         />
       </TouchableOpacity>
       <TouchableOpacity
         style={tw`top-4 right-6`}
         onPress={() => navigation.navigate('ProfileManageScreen')}>
          <Image
-          source={require('../../assets/images/Nab/settings.png')}
+          source={require('../../assets/images/Nab/profile.png')}
           style={[tw``,{width:24,height:26}]}
         />
       </TouchableOpacity>

@@ -97,7 +97,7 @@ const ProfileManageScreen = () => {
               <Text style={tw`text-yellow-400 text-2xl font-bold`}>
                 🏅{points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
               </Text>
-              <Text style={tw`text-gray-500 ml-2`}>next 50</Text>
+              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
             </View>
           </View>
         </View>

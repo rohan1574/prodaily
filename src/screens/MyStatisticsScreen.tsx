@@ -211,7 +211,7 @@ const MyStatisticsScreen = () => {
         {/* কারেন্ট প্রোগ্রেস সেকশন */}
         <View style={tw`bg-white shadow-lg rounded-lg p-4 mb-4`}>
           <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
-            Last Month
+            Last
           </Text>
           <View style={tw`flex-row items-center justify-between`}>
             <CircularProgress percentage={statsData.successScore} radius={40} />
@@ -226,16 +226,16 @@ const MyStatisticsScreen = () => {
             <View style={tw`flex-1 ml-4`}>
               <Text
                 style={[
-                  tw`text-gray-600 font-normal text-center text-xs mb-2`,
-                  {fontSize: 10},
+                  tw`text-gray-600 font-normal text-center mb-2`,
+                  {fontSize: 12},
                 ]}>
                 {statsData.successScore > 70
                   ? "You're doing great! 🚀 Keep it up!"
                   : 'You improve a lot, To keep it up; Stay focus. Follow ExpandTimes '}
               </Text>
               <TouchableOpacity
-                style={tw`bg-blue-100 p-3 rounded-xl mt-2 items-center`}>
-                <Text style={tw`text-blue-500 font-medium font-xs`}>
+                style={tw`bg-blue-100 p-3 rounded-xl mx-4 mt-2 items-center`}>
+                <Text style={tw`text-blue-500 font-medium font-xs `}>
                   Follow
                 </Text>
               </TouchableOpacity>

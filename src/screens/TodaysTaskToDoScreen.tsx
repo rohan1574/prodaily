@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,15 @@ import {
   Image,
   ImageBackground,
   Modal,
+  TextInput,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { usePoints } from '../context/PointsContext';
-
+import {usePoints} from '../context/PointsContext';
+import {Keyboard} from 'react-native';
 interface Task {
   id: string;
   isStarred: boolean;
@@ -41,7 +42,59 @@ const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState(false);
-   const { addPoints } = usePoints();
+  const {addPoints} = usePoints();
+
+  // Add this state
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  // Add this useEffect
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const inputRefs = useRef<{[key: string]: TextInput | null}>({});
+
+  // ইনপুট ফোকাস হ্যান্ডলার
+  const handleFocus = (taskId: string) => {
+    inputRefs.current[taskId]?.focus();
+  };
+
+  // ইনপুট ব্লার হ্যান্ডলার
+  const handleBlur = async (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    let finalValue = task.currentProgress;
+    if (finalValue > task.dailyTarget || isNaN(finalValue)) {
+      finalValue = task.dailyTarget;
+    }
+    if (finalValue < 0) finalValue = 0;
+
+    const updatedTasks = tasks.map(t => ({
+      ...t,
+      currentProgress: t.id === taskId ? finalValue : t.currentProgress,
+    }));
+
+    setTasks(updatedTasks);
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    inputRefs.current[taskId]?.blur();
+  };
   // time
   const selectedDate = new Date(); // অথবা আপনার নির্দিষ্ট তারিখ
 
@@ -50,6 +103,37 @@ const TodaysTaskToDoScreen = () => {
   const weekday = selectedDate.toLocaleString('en-US', {weekday: 'long'});
 
   const formattedDate = `${month} ${day}, ${weekday}`;
+
+  const handleProgressInputChange = (taskId: string, text: string) => {
+    const numericValue = parseInt(text, 10) || 0;
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        return {...task, currentProgress: numericValue};
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  };
+
+  const handleProgressBlur = async (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    let finalValue = task.currentProgress;
+    if (finalValue > task.dailyTarget) {
+      finalValue = task.dailyTarget;
+    } else if (finalValue < 0) {
+      finalValue = 0;
+    }
+
+    const updatedTasks = tasks.map(t => ({
+      ...t,
+      currentProgress: t.id === taskId ? finalValue : t.currentProgress,
+    }));
+
+    setTasks(updatedTasks);
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  };
 
   // প্রোগ্রেস বাড়ানোর ফাংশন
   const incrementProgress = async (taskId: string) => {
@@ -258,7 +342,7 @@ const TodaysTaskToDoScreen = () => {
               </Text>
               <Text
                 style={[
-                  tw`text-xs font-light text-gray-400 bottom-2`,
+                  tw`text-xs font-light text-white bottom-2`,
                   {letterSpacing: 1},
                 ]}>
                 mrony@gmail.com
@@ -274,8 +358,8 @@ const TodaysTaskToDoScreen = () => {
             />
             <Text
               style={[
-                tw`text-xs font-light left-2`,
-                {color: '#DEEAFF', letterSpacing: 0.7},
+                tw` font-light left-2`,
+                {color: '#DEEAFF', letterSpacing: 0.7,fontSize:10},
               ]}>
               Time is the most valuable thing a man can spend.
             </Text>
@@ -289,7 +373,7 @@ const TodaysTaskToDoScreen = () => {
           <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
         ) : (
           <ScrollView
-            contentContainerStyle={tw`pb-24 mx-4 top-4`} // pb-20 adds padding for bottom navigation
+            contentContainerStyle={tw`pb-28 mx-4 top-4`} // pb-20 adds padding for bottom navigation
             style={tw`mt-4`}>
             {tasks.length === 0 ? (
               <Text style={tw`text-center text-gray-500`}>
@@ -329,30 +413,74 @@ const TodaysTaskToDoScreen = () => {
                       )}
 
                       <Text style={tw`text-sm font-medium flex-1 left-2`}>
-                        {task.name}
+                        {task.name.slice(0, 15) +
+                          (task.name.length > 15 ? '...' : '')}
                       </Text>
 
                       {task.dailyTarget && (
-                        <View style={tw`flex-row items-center ml-2`}>
-                          <View
-                            style={tw`flex-row items-center border border-gray-400 rounded-lg`}>
-                            <TouchableOpacity
-                              onPress={() => decrementProgress(task.id)}
-                              style={tw`px-3 py-1 bg-gray-100 rounded-l-lg`}>
-                              <Text style={tw`text-gray-700`}>-</Text>
-                            </TouchableOpacity>
-                            <Text style={tw`px-3 py-1 bg-white`}>
-                              {task.currentProgress}
+                        <View style={[tw`flex-row items-center right-4`]}>
+                          {!task.completed ? (
+                            // শো করবে যখন টাস্ক কমপ্লিট নয়
+                            <View style={tw`flex-row items-center rounded-lg`}>
+                              <TouchableOpacity
+                                onPress={() => decrementProgress(task.id)}
+                                style={tw`right-1`}>
+                                <Text style={tw`text-gray-700 text-base`}>
+                                  -
+                                </Text>
+                              </TouchableOpacity>
+
+                              <TextInput
+                                style={[
+                                  tw`px-1 py-1 border rounded text-center`,
+                                  {
+                                    borderColor: '#E3E8F1',
+                                    width: 32,
+                                    height: 23,
+                                    fontSize: 12,
+                                  },
+                                ]}
+                                value={String(task.currentProgress)}
+                                onChangeText={text =>
+                                  handleProgressInputChange(task.id, text)
+                                }
+                                keyboardType="numeric"
+                                onBlur={() => handleProgressBlur(task.id)}
+                                maxLength={3}
+                              />
+
+                              <TouchableOpacity
+                                onPress={() => incrementProgress(task.id)}
+                                style={tw`left-1`}>
+                                <Text style={tw`text-gray-700 text-sm`}>+</Text>
+                              </TouchableOpacity>
+                              <Text
+                                style={[
+                                  tw`text-gray-400 font-medium left-2`,
+                                  {fontSize: 10},
+                                ]}>
+                                /{task.dailyTarget}
+                                {task.targetType
+                                  ? task.targetType.charAt(0).toLowerCase()
+                                  : ''}
+                              </Text>
+                            </View>
+                          ) : (
+                            // শো করবে যখন টাস্ক কমপ্লিট
+                            <Text
+                              style={[
+                                tw`text-gray-700 font-medium left-2`,
+                                {fontSize: 12},
+                              ]}>
+                              {task.currentProgress}/<Text  style={[
+                                tw`text-gray-500 font-medium `,
+                                {fontSize: 10},
+                              ]}>{task.dailyTarget}
+                              {task.targetType
+                                ? task.targetType.charAt(0).toLowerCase()
+                                : ''}</Text>
                             </Text>
-                            <TouchableOpacity
-                              onPress={() => incrementProgress(task.id)}
-                              style={tw`px-3 py-1 bg-gray-100 rounded-r-lg`}>
-                              <Text style={tw`text-gray-700`}>+</Text>
-                            </TouchableOpacity>
-                          </View>
-                          <Text style={tw` font-medium`}>
-                            ={task.dailyTarget}
-                          </Text>
+                          )}
                         </View>
                       )}
                     </View>
@@ -409,19 +537,19 @@ const TodaysTaskToDoScreen = () => {
 
           {/* Claim Button */}
           <TouchableOpacity
-    onPress={() => {
-      addPoints(10);
-      setShowModal(false);
-    }}
-    style={tw`bg-white rounded-full px-8 py-3`}>
-    <Text style={tw`text-blue-500 font-semibold`}>Claim</Text>
-  </TouchableOpacity>
+            onPress={() => {
+              addPoints(10);
+              setShowModal(false);
+            }}
+            style={tw`bg-white rounded-full px-8 py-3`}>
+            <Text style={tw`text-blue-500 font-semibold`}>Claim</Text>
+          </TouchableOpacity>
         </SafeAreaView>
       </Modal>
 
       {/* Fixed Bottom Navigation */}
       <View style={tw`absolute bottom-0 w-full`}>
-        <BottomNavigation />
+        {!isKeyboardVisible && <BottomNavigation />}
       </View>
     </SafeAreaView>
   );

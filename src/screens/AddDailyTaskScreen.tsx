@@ -92,12 +92,9 @@ const AddDailyTaskScreen = () => {
   const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const [tempSelectedDate, setTempSelectedDate] = useState<number>(1);
   const [tempSelectedMonth, setTempSelectedMonth] = useState<string>('January');
-
+  const [selectedDayOnType, setSelectedDayOnType] = useState<string>('week'); // প্রথমে 'week' সেট করুন
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
-  const [selectedDayOnType, setSelectedDayOnType] = useState<string | null>(
-    null,
-  );
   const [dayOnError, setDayOnError] = useState<string | null>(null);
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
@@ -282,18 +279,16 @@ const AddDailyTaskScreen = () => {
 
     setIsSpecificForEnabled(newSpecificForState);
   };
-
   const toggleSpecificDayOn = () => {
     const newSpecificDayOnState = !isSpecificDayOnSelected;
 
-    // যদি নতুন স্টেট ON হয় (চালু করা হয়)
     if (newSpecificDayOnState) {
-      setIsSpecificForEnabled(false); // Add Specific For বন্ধ করুন
-      setSpecificForValue(''); // Specific For এর ইনপুট রিসেট
-      setSpecificFor('Days'); // ডিফল্ট ইউনিট সেট
+      setIsSpecificForEnabled(false);
+      setSpecificForValue('');
+      setSpecificFor('Days');
+      setSelectedDayOnType('week'); // এখানে ডিফল্ট 'week' সেট করুন
     }
 
-    // নিজের স্টেট টগল করুন
     setIsSpecificDayOnSelected(newSpecificDayOnState);
   };
   const handleSaveTask = async () => {
@@ -407,13 +402,13 @@ const AddDailyTaskScreen = () => {
           horizontal
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
-          snapToInterval={98 + 8} // w-24 (96px) + mr-2 (8px)
+          snapToInterval={94 + 8} // Item width (94) + margin (8)
           snapToAlignment="start"
           decelerationRate="fast"
-          contentContainerStyle={tw`pr-4`}
+          contentContainerStyle={tw`pl-2`} // Left padding for first item
           onScroll={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
-            const selectedIndex = Math.round(offsetX / (96 + 8));
+            const selectedIndex = Math.round(offsetX / (94 + 8));
             const category = allCategories[selectedIndex];
             if (category) setSelectedCategory(category);
           }}
@@ -421,11 +416,11 @@ const AddDailyTaskScreen = () => {
           {allCategories.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={tw`items-center mr-2 ${index === 0 ? 'ml-0' : ''}`}
+              style={tw`items-center mr-2`} // Consistent margin for all items
               onPress={() => {
                 setSelectedCategory(category);
                 scrollViewRef.current?.scrollTo({
-                  x: index * (96 + 8),
+                  x: index * (94 + 8), // Match snap interval
                   animated: true,
                 });
               }}>
@@ -688,20 +683,23 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View style={tw`bg-gray-200 mx-2 rounded-full shadow-sm w-48 left-32`}>
+                {/* Add Specific Day On বাটন গ্রুপ */}
+                <View
+                  style={tw`bg-gray-200 mx-2 rounded-full shadow-sm w-48 left-32`}>
                   <View style={tw`flex-row`}>
                     {['Week', 'Month', 'Year'].map(type => {
-                      // টাইপের নাম পরিবর্তন
-                      const isSelected =
-                        selectedDayOnType === type.toLowerCase();
+                      const lowerType = type.toLowerCase();
+                      const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
+
                       return (
                         <TouchableOpacity
                           key={type}
-                          onPress={() => handleDayTypeClick(type.toLowerCase())}
+                          onPress={() => handleDayTypeClick(lowerType)}
                           disabled={!isSpecificDayOnSelected}
                           style={[
                             tw`flex-1 p-2 rounded-full`,
-                            isSelected && tw`bg-blue-500`,
+                            isSelected &&
+                              tw`bg-blue-700 border border-blue-500`, // সিলেক্টেড স্টাইল
                             !isSpecificDayOnSelected && tw`opacity-50`,
                           ]}>
                           <Text

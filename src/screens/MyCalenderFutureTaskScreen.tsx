@@ -3,10 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  TextInput,
   Image,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
@@ -100,7 +96,7 @@ const MyCalenderFutureTaskScreen = () => {
     <View style={[tw`flex-1 `,{backgroundColor:"#F7FAFF"}]}>
       <View style={tw`mb-8 top-2 left-4 `}>
       <Text style={tw`text-xl font-bold `}>My Calendar</Text>
-      <Text style={[tw` `,{fontSize:16,color:"#8D99AE"}]}>Your added tasks on the selected calendar day.</Text>
+      <Text style={[tw` `,{fontSize:11,color:"#8D99AE"}]}>Your added tasks on the selected calendar day.</Text>
       </View>
       {/* ক্যালেন্ডার সেকশন */}
     <View style={tw`bg-white mb-2 mx-2 rounded-lg`}>
