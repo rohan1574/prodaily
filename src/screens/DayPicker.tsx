@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal, FlatList } from 'react-native';
-import { s as tw } from 'react-native-wind';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Modal} from 'react-native';
+import {s as tw} from 'react-native-wind';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type DayPickerProps = {
   selectedDays: string[];
@@ -17,6 +18,8 @@ const DayPicker: React.FC<DayPickerProps> = ({
   onCancel,
   onAddDay,
 }) => {
+  const [showNextDay, setShowNextDay] = useState(true);
+
   const toggleDaySelection = (day: string) => {
     const updatedSelectedDays = selectedDays.includes(day)
       ? selectedDays.filter(d => d !== day)
@@ -26,57 +29,88 @@ const DayPicker: React.FC<DayPickerProps> = ({
 
   return (
     <Modal transparent={true} visible={true}>
-      <View style={tw`flex-1 justify-center items-center  bg-black bg-opacity-30`}>
-        <View style={tw`bg-white p-6 rounded-2xl h-80 shadow-xl`}>
-          <Text style={tw`text-2xl font-bold bottom-4 text-gray-800 text-center`}>
-            Select Days
-          </Text>
-          
-          <FlatList
-            data={WeekDays}
-            numColumns={3}
-            columnWrapperStyle={tw`justify-between`}
-            contentContainerStyle={tw``}
-            renderItem={({ item }) => {
-              const isSelected = selectedDays.includes(item);
+      <View
+        style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        <View style={tw`bg-white rounded-xl shadow-lg w-11/12`}>
+          {/* Header */}
+          <View
+            style={[
+              tw`bg-gray-400 rounded-lg  py-3`,
+              {backgroundColor: '#8D99AE'},
+            ]}>
+            <Text style={tw`text-white text-center text-sm font-medium`}>
+              Select Days of the week
+            </Text>
+          </View>
+
+          {/* Days Row */}
+          <View style={tw`flex-row justify-around py-4 mx-4`}>
+            {WeekDays.map((day, index) => {
+              const isSelected = selectedDays.includes(day);
               return (
                 <TouchableOpacity
-                  onPress={() => toggleDaySelection(item)}
+                  key={index}
+                  onPress={() => toggleDaySelection(day)}
                   style={[
-                    tw`w-24 mr-1 mb-3 p-3 rounded-xl items-center justify-center 
-                       border-2 transition-colors duration-200`,
-                    isSelected 
-                      ? tw`border-blue-500 bg-blue-50`
-                      : tw`border-gray-200 bg-white`
-                  ]}
-                >
-                  <Text style={[
-                    tw`text-lg font-medium`,
-                    isSelected ? tw`text-blue-600` : tw`text-gray-600`
+                    tw`rounded-full items-center justify-center`,
+                    {
+                      backgroundColor: isSelected
+                        ? '#3580FF' /* Tailwind's blue-500 */
+                        : '#DEEAFF',
+                      width: 40,
+                      height: 40,
+                    },
                   ]}>
-                    {item}
+                  <Text
+                    style={
+                      isSelected
+                        ? tw`text-white font-bold`
+                        : tw`text-gray-500 font-bold`
+                    }>
+                    {day}
                   </Text>
                 </TouchableOpacity>
               );
-            }}
-            keyExtractor={(item) => item}
-          />
+            })}
+          </View>
 
-          <View style={tw`flex-row justify-between top-2`}>
-            <TouchableOpacity 
-              onPress={onCancel}
-              style={tw`flex-1 mr-2 px-6 py-3 border-2 border-red-100 rounded-xl 
-                        bg-red-50 active:bg-red-100`}
-            >
-              <Text style={tw`text-center text-red-600 font-medium`}>Cancel</Text>
+          {/* Buttons */}
+          <View style={tw`flex-row justify-between px-3 pb-4`}>
+            {/* Radio Option */}
+            <TouchableOpacity
+              onPress={() => setShowNextDay(!showNextDay)}
+              style={tw`flex-row items-center pb-3`}>
+              <Ionicons
+                name={
+                  showNextDay
+                    ? 'radio-button-on-outline'
+                    : 'radio-button-on-outline'
+                }
+                size={20}
+                color={showNextDay ? '#9CA3AF' : '#3B82F6'} // Tailwind's blue-500 / gray-400
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-gray-500 text-xs font-normal`}>
+                Show next day too {'\n'} if not Completed
+              </Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
+              onPress={onCancel}
+              style={[
+                tw`bg-gray-400 top-3 items-center justify-center rounded-md`,
+                {width: 72, height: 35},
+              ]}>
+              <Text style={tw`text-white font-medium text-xs`}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               onPress={onAddDay}
-              style={tw`flex-1 ml-2 px-6 py-3 rounded-xl bg-blue-500 
-                        active:bg-blue-600 shadow-sm`}
-            >
-              <Text style={tw`text-center text-white font-medium`}>Add Day</Text>
+              style={[
+                tw`bg-blue-400 top-3 items-center justify-center rounded-md`,
+                {width: 92, height: 35},
+              ]}>
+              <Text style={tw`text-white font-medium text-xs`}>Add Day</Text>
             </TouchableOpacity>
           </View>
         </View>
