@@ -38,6 +38,7 @@ const ProfileManageScreen = () => {
 
   const {setSelectedColor} = context;
   const {points} = usePoints();
+  const [showBottomInfo, setShowBottomInfo] = useState(true); // New state for text visibility
 
   return (
     <View style={tw`flex-1 bg-gray-200 `}>
@@ -103,18 +104,26 @@ const ProfileManageScreen = () => {
         </View>
 
         {/* Bottom Info Text */}
-        <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
-          <Text style={tw`text-gray-500 text-center text-sm`}>
-            Be regular, collect points, Stick with ProDAILY time{'\n'}
-            consciousness journey. You'll get rewards.
-          </Text>
-        </View>
+         {showBottomInfo && (
+          <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
+            <Text style={tw`text-gray-500 text-center text-sm`}>
+              Be regular, collect points, Stick with ProDAILY time{'\n'}
+              consciousness journey. You'll get rewards.
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Scrollable Menu Options */}
-      <ScrollView
-        style={tw`flex-1 mt-4 px-4 `}
-        contentContainerStyle={tw`pb-20`}>
+        <ScrollView
+        style={tw`flex-1 mt-4 px-4`}
+        contentContainerStyle={tw`pb-20`}
+        onScroll={({nativeEvent}) => {
+          // Hide text when scrolled beyond 5px, show when at top
+          setShowBottomInfo(nativeEvent.contentOffset.y <= 10);
+        }}
+        scrollEventThrottle={16} // Controls event frequency
+      >
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon name="home-outline" size={24} color="gray" style={tw`mr-4`} />

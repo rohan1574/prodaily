@@ -384,20 +384,23 @@ const AddDailyTaskScreen = () => {
   return (
     <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
       {/* Header */}
-      <View style={tw` left-4`}>
-        <Text style={[tw` font-bold text-black `, {fontSize: 28}]}>
-          Add Daily Task
+      <View style={tw`mx-4`}>
+        <Text style={[tw` font-bold text-black top-2`, {fontSize: 28}]}>
+          Add Task
         </Text>
-        <Text style={[tw`font-light text-black`, {fontSize: 16}]}>
-          Add task, which you want to include in your daily routine. Make them
-          Compulsory to make your every day productive .
+        <Text
+          style={[tw`font-light text-black top-2`, {fontSize: 12,lineHeight:18,letterSpacing:1}]}>
+          Add task, which you want to include in your daily or custom routine.
+          Make them compulsory to make your every day productive. This app will
+          help to turn them into habit.
         </Text>
-        <Text style={tw`text-base top-2 font-bold text-zinc-800`}>
+
+        <Text style={tw`text-base top-4 font-bold text-zinc-800`}>
           Categories
         </Text>
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`top-2 `}>
+      <View style={tw`top-6 `}>
         <ScrollView
           horizontal
           ref={scrollViewRef}
