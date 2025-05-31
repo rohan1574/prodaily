@@ -41,17 +41,21 @@ const ProfileManageScreen = () => {
   const [showBottomInfo, setShowBottomInfo] = useState(true); // New state for text visibility
 
   return (
-    <View style={tw`flex-1 bg-gray-200 `}>
+    <View style={tw`flex-1 bg-gray-100 `}>
       {/* Fixed Header Section */}
-      <View style={tw`bg-gray-200`}>
+      <View style={tw`bg-gray-100`}>
         <ImageBackground
           source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
           style={tw`bg-blue-500 rounded-b-3xl pt-12 pb-8 px-4`}
           imageStyle={tw`rounded-lg`}>
           <View style={tw`flex-row items-center`}>
             <Text style={tw`text-white text-xl font-bold mr-2`}>Profile</Text>
-            <View style={tw`bg-white px-2 py-0.5 rounded`}>
-              <Text style={tw`text-xs text-blue-500 font-medium`}>Free</Text>
+            <View
+              style={[
+                tw` px-2 py-0.5 rounded`,
+                {backgroundColor: '#DEEAFF4D'},
+              ]}>
+              <Text style={tw`text-xs text-white font-normal`}>Free</Text>
             </View>
           </View>
         </ImageBackground>
@@ -63,13 +67,15 @@ const ProfileManageScreen = () => {
             style={tw`w-24 h-24 rounded-full border-4 border-white`}
           />
           <View style={tw`items-center `}>
-            <Text style={tw`text-lg font-semibold text-gray-800`}>Mr Rony</Text>
+            <Text style={tw`text-lg font-medium text-gray-800`}>Mr Rony</Text>
 
             <View style={tw`flex-row items-center left-12`}>
-              <Text style={tw`text-gray-500 mr-2`}>mrrony1574@gmail.com</Text>
+              <Text style={tw`text-gray-500 mr-2 font-light bottom-1`}>
+                mrrony1574@gmail.com
+              </Text>
 
               <TouchableOpacity
-                style={tw`bg-white px-2 py-1 rounded-lg border border-blue-500 bottom-16`}>
+                style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}>
                 <Text style={tw`text-blue-500 text-xs font-semibold`}>
                   Try Premium
                 </Text>
@@ -85,26 +91,35 @@ const ProfileManageScreen = () => {
         <View style={tw`flex-row justify-between`}>
           {/* Building Habit Card */}
           <View style={tw`bg-white rounded-xl px-4 py-3 w-40 shadow-sm`}>
-            <Text style={tw`text-gray-600 font-medium`}>Building Habit</Text>
-            <Text style={tw`text-2xl font-bold text-black mt-1`}>
-              143 <Text style={tw`text-sm text-gray-500`}>Days</Text>
+            <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
+              Building Habit
+            </Text>
+            <Text style={tw`text-2xl font-semi-bold text-black mt-1 left-6`}>
+              143 <Text style={tw`text-xs text-gray-500 font-light`}>Days</Text>
             </Text>
           </View>
 
           {/* Point Collected Card */}
           <View style={tw`bg-white rounded-xl px-4 py-3 w-[48%] shadow-sm`}>
-            <Text style={tw`text-gray-600 font-medium`}>Point Collected</Text>
-            <View style={tw`flex-row items-center mt-1`}>
-              <Text style={tw`text-yellow-400 text-2xl font-bold`}>
-                🏅{points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
-              </Text>
-              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
+            <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
+              Point Collected
+            </Text>
+            <View style={tw`flex-row items-center`}>
+              <View style={[tw`flex-row items-center mt-1 bg-orange-400 rounded-lg`,{backgroundColor:"#FFF3DA"}]}>
+                <Text style={[tw`w-4 h-4`, {width: 16, height: 20}]}>🏅</Text>
+                <Text style={[tw`text-yellow-400 text-2xl font-semibold`,{color:"#FEA800"}]}>
+                  {points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
+                </Text>
+              </View>
+              <View>
+                <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
+              </View>
             </View>
           </View>
         </View>
 
         {/* Bottom Info Text */}
-         {showBottomInfo && (
+        {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
             <Text style={tw`text-gray-500 text-center text-sm`}>
               Be regular, collect points, Stick with ProDAILY time{'\n'}
@@ -115,7 +130,7 @@ const ProfileManageScreen = () => {
       </View>
 
       {/* Scrollable Menu Options */}
-        <ScrollView
+      <ScrollView
         style={tw`flex-1 mt-4 px-4`}
         contentContainerStyle={tw`pb-20`}
         onScroll={({nativeEvent}) => {
