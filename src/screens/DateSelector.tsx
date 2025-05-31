@@ -74,7 +74,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   useEffect(() => {
     const dayIndex = Days.indexOf(selectedDate);
     const monthIndex = Months.indexOf(selectedMonth);
-    
+
     if (dayIndex !== -1 && dayScrollRef.current) {
       // Scroll to middle section of extended array
       dayScrollRef.current.scrollTo({
@@ -108,7 +108,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   const handleDayScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y;
     let index = Math.round(offsetY / ITEM_HEIGHT);
-    
+
     // Handle circular scrolling
     if (index < Days.length) {
       // If in first section, adjust to middle section
@@ -125,9 +125,12 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         animated: false,
       });
     }
-    
+
     const dayIndex = index % Days.length;
-    if (Days[dayIndex] !== undefined && Days[dayIndex] !== selectedDateRef.current) {
+    if (
+      Days[dayIndex] !== undefined &&
+      Days[dayIndex] !== selectedDateRef.current
+    ) {
       handleDateChange(Days[dayIndex]);
     }
   };
@@ -135,7 +138,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   const handleMonthScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y;
     let index = Math.round(offsetY / ITEM_HEIGHT);
-    
+
     // Handle circular scrolling
     if (index < Months.length) {
       // If in first section, adjust to middle section
@@ -152,9 +155,12 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         animated: false,
       });
     }
-    
+
     const monthIndex = index % Months.length;
-    if (Months[monthIndex] !== undefined && Months[monthIndex] !== selectedMonthRef.current) {
+    if (
+      Months[monthIndex] !== undefined &&
+      Months[monthIndex] !== selectedMonthRef.current
+    ) {
       handleMonthChange(Months[monthIndex]);
     }
   };
@@ -186,19 +192,23 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
   return (
     <Modal transparent={true} visible={true}>
-      <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
-        <View style={tw`bg-white rounded-xl p-4 w-11/12`}>
+      <View
+        style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        <View style={tw`bg-white rounded-xl p-4 w-11/12 `}>
           {/* Header */}
-          <View style={tw`bg-blue-700 rounded-lg py-3 mb-4`}>
+          <View
+            style={[
+              tw`bg-gray-400 bottom-4 rounded-lg right-4 py-3 `,
+              {backgroundColor: '#8D99AE',width:352},
+            ]}>
             <Text style={tw`text-white text-center text-sm font-medium`}>
               Select Date for Every Year
             </Text>
           </View>
 
-          <View style={tw`flex-row mt-4`}>
+          <View style={tw`flex-row `}>
             {/* Left Column - Added Dates */}
-            <View style={tw`w-1/2 pr-4 border-r border-gray-200`}>
-              <Text style={tw`text-gray-700 font-medium mb-2`}>Selected Dates</Text>
+            <View style={tw`w-1/2 pr-4 border-r border-gray-200 right-2`}>
               <ScrollView style={tw`h-36`}>
                 {addedDates.map((item, index) => (
                   <View
@@ -215,25 +225,31 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
               <TouchableOpacity
                 onPress={handleSaveDates}
-                style={tw`bg-green-500 py-2 rounded-xl mt-3`}>
+                style={tw`bg-gray-400 py-2 rounded-xl top-2 w-20 left-8`}>
                 <Text style={tw`text-white text-center font-medium`}>Save</Text>
               </TouchableOpacity>
             </View>
-            
+
             {/* Right Column - Date Pickers */}
             <View style={tw`flex-1 pl-4`}>
-              <Text style={tw`text-gray-700 font-medium mb-2`}>Select Date</Text>
               <View style={tw`flex-row justify-between mb-4`}>
                 {/* Days Picker */}
-                <View style={[tw`flex-1 mx-1 relative overflow-hidden rounded-lg `, {height: SCROLL_HEIGHT}]}>
+                <View
+                  style={[
+                    tw`flex-1 mx-1 relative overflow-hidden rounded-lg `,
+                    {height: SCROLL_HEIGHT},
+                  ]}>
                   {/* Horizontal lines below each item */}
                   {extendedDays.map((_, index) => (
-                    <View 
+                    <View
                       key={`line-day-${index}`}
-                      style={[tw`absolute left-0 right-0 h-1 bg-gray-300`, {top: (index + 1) * ITEM_HEIGHT - 1}]} 
+                      style={[
+                        tw`absolute left-0 right-0  bg-gray-300`,
+                        {top: (index + 1) * ITEM_HEIGHT - 1,height:1},
+                      ]}
                     />
                   ))}
-                  
+
                   <ScrollView
                     ref={dayScrollRef}
                     showsVerticalScrollIndicator={false}
@@ -245,13 +261,17 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                     {extendedDays.map((day, index) => (
                       <View key={`${day}-${index}`} style={tw`relative`}>
                         <TouchableOpacity
-                          style={[tw`items-center justify-center`, {height: ITEM_HEIGHT}]}
+                          style={[
+                            tw`items-center justify-center`,
+                            {height: ITEM_HEIGHT},
+                          ]}
                           onPress={() => handleDateChange(day)}>
-                          <Text style={tw`${
-                            selectedDate === day 
-                              ? 'text-black font-bold text-xs' 
-                              : 'text-gray-400 text-xs'
-                          }`}>
+                          <Text
+                            style={tw`${
+                              selectedDate === day
+                                ? 'text-black font-bold text-xs'
+                                : 'text-gray-400 text-xs'
+                            }`}>
                             {day}
                           </Text>
                         </TouchableOpacity>
@@ -261,15 +281,22 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                 </View>
 
                 {/* Months Picker */}
-                <View style={[tw`flex-1 mx-1 relative overflow-hidden rounded-lg `, {height: SCROLL_HEIGHT}]}>
+                <View
+                  style={[
+                    tw`flex-1 mx-1 relative overflow-hidden rounded-lg  `,
+                    {height: SCROLL_HEIGHT},
+                  ]}>
                   {/* Horizontal lines below each item */}
                   {extendedMonths.map((_, index) => (
-                    <View 
+                    <View
                       key={`line-month-${index}`}
-                      style={[tw`absolute left-0 right-0 h-1 bg-gray-300`, {top: (index + 1) * ITEM_HEIGHT - 1}]} 
+                      style={[
+                        tw`absolute left-0 right-0  bg-gray-300 `,
+                        {top: (index + 1) * ITEM_HEIGHT - 1,height:1},
+                      ]}
                     />
                   ))}
-                  
+
                   <ScrollView
                     ref={monthScrollRef}
                     showsVerticalScrollIndicator={false}
@@ -281,13 +308,17 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                     {extendedMonths.map((month, index) => (
                       <View key={`${month}-${index}`} style={tw`relative`}>
                         <TouchableOpacity
-                          style={[tw`items-center justify-center`, {height: ITEM_HEIGHT}]}
+                          style={[
+                            tw`items-center justify-center`,
+                            {height: ITEM_HEIGHT},
+                          ]}
                           onPress={() => handleMonthChange(month)}>
-                          <Text style={tw`${
-                            selectedMonth === month 
-                              ? 'text-black font-bold text-xs' 
-                              : 'text-gray-400 text-xs'
-                          }`}>
+                          <Text
+                            style={tw`${
+                              selectedMonth === month
+                                ? 'text-black font-bold text-xs'
+                                : 'text-gray-400 text-xs font-normal'
+                            }`}>
                             {month}
                           </Text>
                         </TouchableOpacity>
@@ -298,11 +329,11 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               </View>
 
               {/* Buttons and Options */}
-              <View style={tw`mt-4`}>
-                <View style={tw`flex-row justify-between px-4 mb-3`}>
+              <View style={tw``}>
+                <View style={tw`flex-row items-center justify-center `}>
                   <TouchableOpacity
                     onPress={onCancel}
-                    style={tw`bg-blue-500 items-center justify-center rounded-md w-18 h-9`}>
+                    style={tw`bg-gray-400 items-center justify-center rounded-md w-16 h-8 right-2`}>
                     <Text style={tw`text-white font-medium text-xs`}>
                       Cancel
                     </Text>
@@ -310,7 +341,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
                   <TouchableOpacity
                     onPress={handleAddDate}
-                    style={tw`bg-blue-500 items-center justify-center rounded-md w-18 h-9`}>
+                    style={tw`bg-blue-500 items-center justify-center rounded-md w-16 h-8 left-2`}>
                     <Text style={tw`text-white font-medium text-xs`}>
                       Add Date
                     </Text>
@@ -319,15 +350,15 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
                 <TouchableOpacity
                   onPress={() => setShowNextDay(!showNextDay)}
-                  style={tw`flex-row items-center px-4`}>
+                  style={tw`flex-row items-center right-4 top-4`}>
                   <Ionicons
                     name={showNextDay ? 'radio-button-on' : 'radio-button-off'}
                     size={20}
                     color={showNextDay ? '#3B82F6' : '#9CA3AF'}
                     style={tw`mr-2`}
                   />
-                  <Text style={tw`text-gray-600 text-xs font-normal`}>
-                    Show Daily from start date{"\n"}Until Complete
+                  <Text style={tw`text-gray-400 text-xs font-normal`}>
+                    Show Daily from start date{'\n'}Until Complete
                   </Text>
                 </TouchableOpacity>
               </View>
