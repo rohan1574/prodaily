@@ -461,7 +461,7 @@ const AllTaskListScreen = () => {
                           })
                         }
                         editable={isSpecificForEnabled}
-                        placeholder="00"
+                        placeholder="0"
                       />
                       <View style={[tw`flex-row rounded-full left-4`,{width:170,height:30,backgroundColor:"#DEEAFF"}]}>
                         {['Days', 'Weeks', 'Months'].map(type => {
