@@ -39,6 +39,9 @@ const ProfileManageScreen = () => {
   const {setSelectedColor} = context;
   const {points} = usePoints();
   const [showBottomInfo, setShowBottomInfo] = useState(true); // New state for text visibility
+  const [selectedOption, setSelectedOption] = useState<
+    'App Issue' | 'Suggestion'
+  >('App Issue');
 
   return (
     <View style={tw`flex-1 bg-gray-100 `}>
@@ -90,7 +93,8 @@ const ProfileManageScreen = () => {
         {/* Two Card Row */}
         <View style={tw`flex-row justify-between`}>
           {/* Building Habit Card */}
-          <View style={tw`bg-white rounded-xl px-4 py-3 w-40 shadow-sm`}>
+          <View
+            style={[tw`bg-white rounded-xl px-4 py-3 shadow-sm`, {width: 170}]}>
             <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
               Building Habit
             </Text>
@@ -100,14 +104,26 @@ const ProfileManageScreen = () => {
           </View>
 
           {/* Point Collected Card */}
-          <View style={tw`bg-white rounded-xl px-4 py-3 w-[48%] shadow-sm`}>
+          <View
+            style={[
+              tw`bg-white rounded-xl px-4 py-3 w-44 shadow-sm`,
+              {width: 160},
+            ]}>
             <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
               Point Collected
             </Text>
             <View style={tw`flex-row items-center`}>
-              <View style={[tw`flex-row items-center mt-1 bg-orange-400 rounded-lg`,{backgroundColor:"#FFF3DA"}]}>
+              <View
+                style={[
+                  tw`flex-row items-center mt-1 bg-orange-400 rounded-lg`,
+                  {backgroundColor: '#FFF3DA'},
+                ]}>
                 <Text style={[tw`w-4 h-4`, {width: 16, height: 20}]}>🏅</Text>
-                <Text style={[tw`text-yellow-400 text-2xl font-semibold`,{color:"#FEA800"}]}>
+                <Text
+                  style={[
+                    tw`text-yellow-400 text-2xl font-semibold`,
+                    {color: '#FEA800'},
+                  ]}>
                   {points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
                 </Text>
               </View>
@@ -121,7 +137,7 @@ const ProfileManageScreen = () => {
         {/* Bottom Info Text */}
         {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
-            <Text style={tw`text-gray-500 text-center text-sm`}>
+            <Text style={tw`text-gray-500 text-center text-xs`}>
               Be regular, collect points, Stick with ProDAILY time{'\n'}
               consciousness journey. You'll get rewards.
             </Text>
@@ -141,13 +157,23 @@ const ProfileManageScreen = () => {
       >
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon name="home-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Icon
+            name="home-outline"
+            size={24}
+            color="#3580FF"
+            style={tw`mr-4`}
+          />
           <Text style={tw`text-gray-700 text-base`}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon name="star-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Icon
+            name="star-outline"
+            size={24}
+            color="#3580FF"
+            style={tw`mr-4`}
+          />
           <Text style={tw`text-gray-700 text-base`}>Get Premium</Text>
         </TouchableOpacity>
 
@@ -155,7 +181,12 @@ const ProfileManageScreen = () => {
         <TouchableOpacity
           onPress={() => setShowSignOut(!showSignOut)}
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon name="person-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Icon
+            name="person-outline"
+            size={24}
+            color="#3580FF"
+            style={tw`mr-4`}
+          />
           <Text style={tw`text-gray-700 text-base`}>Account</Text>
         </TouchableOpacity>
         {showSignOut && (
@@ -171,7 +202,7 @@ const ProfileManageScreen = () => {
           <Icon
             name="color-palette-outline"
             size={24}
-            color="gray"
+            color="#3580FF"
             style={tw`mr-4`}
           />
           <Text style={tw`text-gray-700 text-base mr-4`}>Themes</Text>
@@ -198,7 +229,7 @@ const ProfileManageScreen = () => {
           <Icon
             name="bar-chart-outline"
             size={24}
-            color="gray"
+            color="#3580FF"
             style={tw`mr-4`}
           />
           <Text style={tw`text-gray-700 text-base`}>Statistics</Text>
@@ -209,7 +240,7 @@ const ProfileManageScreen = () => {
           <Icon
             name="calendar-outline"
             size={24}
-            color="gray"
+            color="#3580FF"
             style={tw`mr-4`}
           />
           <Text style={tw`text-gray-700 text-base`}>My Calendar</Text>
@@ -221,7 +252,7 @@ const ProfileManageScreen = () => {
           <Icon
             name="clipboard-outline"
             size={24}
-            color="gray"
+            color="#3580FF"
             style={tw`mr-4`}
           />
           <Text
@@ -233,47 +264,59 @@ const ProfileManageScreen = () => {
 
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon name="cloud-outline" size={24} color="gray" style={tw`mr-4`} />
+          <Icon
+            name="cloud-outline"
+            size={24}
+            color="#3580FF"
+            style={tw`mr-4`}
+          />
           <Text style={tw`text-gray-700 text-base`}>Sync Data</Text>
         </TouchableOpacity>
 
         {/* Support Section */}
-        <View style={tw`bg-white p-4 rounded-xl shadow mt-4`}>
-          <Text style={tw`text-gray-700 text-base font-bold mb-2`}>
-            Support
-          </Text>
-          <View style={tw`flex-row justify-between items-center mb-2`}>
-            {/* Left: App Issue */}
-            <TouchableOpacity style={tw`flex-row items-center`}>
-              <Icon
-                name="alert-circle-outline"
-                size={24}
-                color="gray"
-                style={tw`mr-2`}
-              />
-              <Text style={tw`text-gray-700 text-base`}>App Issue</Text>
-            </TouchableOpacity>
-
-            {/* Right: Suggestion */}
-            <TouchableOpacity style={tw`flex-row items-center`}>
-              <Icon
-                name="chatbubble-outline"
-                size={24}
-                color="gray"
-                style={tw`mr-2`}
-              />
-              <Text style={tw`text-gray-700 text-base`}>Suggestion</Text>
-            </TouchableOpacity>
+        <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md`]}>
+          {/* Toggle: App Issue / Suggestion */}
+          <View
+            style={tw`flex-row justify-around border-b  border-white pb-3`}>
+            {['App Issue', 'Suggestion'].map(option => (
+              <TouchableOpacity
+                key={option}
+                onPress={() =>
+                  setSelectedOption(option as 'App Issue' | 'Suggestion')
+                }
+                style={tw`flex-row items-center`}>
+                <Icon
+                  name={
+                    selectedOption === option
+                      ? 'radio-button-on'
+                      : 'radio-button-off'
+                  }
+                  size={18}
+                  color={selectedOption === option ? '#3b82f6' : 'gray'}
+                />
+                <Text style={tw`ml-2 text-sm text-gray-700`}>{option}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
 
+          {/* Contact Us Button */}
           <TouchableOpacity
-            style={tw`bg-blue-500 p-3 rounded-xl mt-2 items-center`}>
-            <Text style={tw`text-white font-bold`}>Contact Us</Text>
+            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-20 w-32`}>
+            <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
+
+          {/* Info Text */}
+          <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
+            Please let us know any issue or suggestion.
+            {'\n'}Our dedicated developers are ready to fix your issue ASAP.
+          </Text>
         </View>
+        {/* Google Play Button */}
         <TouchableOpacity
-          style={tw`bg-gray-400 p-3 rounded-xl mt-2 items-center`}>
-          <Text style={tw`text-white font-bold`}>Rate Us on Google Play</Text>
+          style={tw`bg-blue-500 mt-5 rounded-full py-2 items-center mx-4`}>
+          <Text style={tw`text-white font-normal text-base`}>
+            Rate Us on Google Play
+          </Text>
         </TouchableOpacity>
       </ScrollView>
 
