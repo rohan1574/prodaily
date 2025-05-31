@@ -389,7 +389,10 @@ const AddDailyTaskScreen = () => {
           Add Task
         </Text>
         <Text
-          style={[tw`font-light text-black top-2`, {fontSize: 12,lineHeight:18,letterSpacing:1}]}>
+          style={[
+            tw`font-light text-black top-2`,
+            {fontSize: 12, lineHeight: 18, letterSpacing: 1}
+          ]}>
           Add task, which you want to include in your daily or custom routine.
           Make them compulsory to make your every day productive. This app will
           help to turn them into habit.
@@ -534,7 +537,7 @@ const AddDailyTaskScreen = () => {
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
               <View
-                style={tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`}>
+                style={[tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`,{height:310}]}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-12`}>
                   <Image
@@ -560,7 +563,7 @@ const AddDailyTaskScreen = () => {
                   </View>
                 </View>
                 {/* Add Specific For */}
-                <View style={tw``}>
+                <View style={tw`bottom-4`}>
                   <View style={tw`flex-row items-center mb-4`}>
                     <TouchableOpacity onPress={handleToggleSpecificFor}>
                       <Icon
@@ -573,12 +576,20 @@ const AddDailyTaskScreen = () => {
                         color={isSpecificForEnabled ? 'blue' : 'gray'}
                       />
                     </TouchableOpacity>
-                    <Text style={tw`text-xs font-bold text-gray-500`}>
+                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
                       Add specific for
                     </Text>
 
                     <TextInput
-                      style={tw`border border-gray-500 p-2 rounded w-8 h-8 text-xs ml-2 `}
+                      style={[
+                        tw`px-1 py-1 border rounded text-center left-1`,
+                        {
+                          borderColor: '#E3E8F1',
+                          width: 32,
+                          height: 30,
+                          fontSize: 12,
+                        },
+                      ]}
                       keyboardType="numeric"
                       placeholder="00"
                       value={specificForValue}
@@ -586,7 +597,7 @@ const AddDailyTaskScreen = () => {
                       editable={isSpecificForEnabled}
                     />
 
-                    <View style={tw`flex-row bg-blue-100 rounded-full mx-1`}>
+                    <View style={[tw`flex-row rounded-full mx-2`,{width:170,height:34,backgroundColor:"#DEEAFF"}]}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
 
@@ -613,61 +624,9 @@ const AddDailyTaskScreen = () => {
                     </View>
                   </View>
                 </View>
-                {/* Set Daily Target */}
-                <View style={tw``}>
-                  <View style={tw`flex-row items-center `}>
-                    <TouchableOpacity onPress={toggleDailyTarget}>
-                      <Icon
-                        name={
-                          isDailyTargetEnabled
-                            ? 'radio-button-on'
-                            : 'radio-button-off'
-                        }
-                        size={20}
-                        color={isDailyTargetEnabled ? 'blue' : 'gray'}
-                      />
-                    </TouchableOpacity>
-                    <Text style={tw`text-xs font-bold text-gray-500`}>
-                      Set Daily Target for
-                    </Text>
-                    <TextInput
-                      style={tw`border border-gray-500 p-2 left-2 rounded w-8 text-xs mt-2`}
-                      keyboardType="numeric"
-                      placeholder="00"
-                      value={dailyTarget}
-                      onChangeText={setDailyTarget}
-                      editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
-                    />
-                    <View
-                      style={tw`flex-row bg-blue-100 rounded-full left-4 mt-2`}>
-                      {options.map(type => {
-                        const isSelected = targetType === type;
 
-                        return (
-                          <TouchableOpacity
-                            key={type}
-                            style={tw`px-2 py-1 rounded-full ${
-                              isSelected
-                                ? 'bg-blue-700 border border-blue-500'
-                                : ''
-                            }`}
-                            onPress={() => setTargetType(type)}>
-                            <Text
-                              style={tw`text-sm ${
-                                isSelected
-                                  ? 'text-white font-semibold'
-                                  : 'text-gray-500'
-                              }`}>
-                              {type}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                  </View>
-                </View>
                 {/* Add Specific Day On */}
-                <View style={tw`top-6`}>
+                <View style={tw`bottom-2`}>
                   <TouchableOpacity
                     onPress={toggleSpecificDayOn}
                     style={tw`flex-row items-center`}>
@@ -680,15 +639,14 @@ const AddDailyTaskScreen = () => {
                       size={20}
                       color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                     />
-                    <Text style={tw`text-xs font-bold text-gray-500`}>
+                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
                       Add Specific day on
                     </Text>
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                {/* Add Specific Day On বাটন গ্রুপ */}
                 <View
-                  style={tw`bg-gray-200 mx-2 rounded-full shadow-sm w-48 left-32`}>
+                  style={[tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,{width:178,height:34,backgroundColor:"#DEEAFF"}]}>
                   <View style={tw`flex-row`}>
                     {['Week', 'Month', 'Year'].map(type => {
                       const lowerType = type.toLowerCase();
@@ -719,7 +677,67 @@ const AddDailyTaskScreen = () => {
                     })}
                   </View>
                 </View>
+                {/* Set Daily Target */}
+                <View style={tw`bottom-3`}>
+                  <View style={tw`flex-row items-center `}>
+                    <TouchableOpacity onPress={toggleDailyTarget}>
+                      <Icon
+                        name={
+                          isDailyTargetEnabled
+                            ? 'checkbox-outline'
+                            : 'square-outline'
+                        }
+                        size={20}
+                        color={isDailyTargetEnabled ? 'blue' : 'gray'}
+                      />
+                    </TouchableOpacity>
+                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                      Set Daily Target for
+                    </Text>
+                    <TextInput
+                      style={[
+                        tw`px-1 py-1 border rounded text-center left-3`,
+                        {
+                          borderColor: '#E3E8F1',
+                          width: 43,
+                          height: 30,
+                          fontSize: 12,
+                        },
+                      ]}
+                      keyboardType="numeric"
+                      placeholder="000"
+                      value={dailyTarget}
+                      onChangeText={setDailyTarget}
+                      editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
+                    />
+                    <View
+                      style={tw`flex-row bg-blue-100 rounded-full left-4 `}>
+                      {options.map(type => {
+                        const isSelected = targetType === type;
 
+                        return (
+                          <TouchableOpacity
+                            key={type}
+                            style={tw`px-2 py-1 rounded-full ${
+                              isSelected
+                                ? 'bg-blue-700 border border-blue-500'
+                                : ''
+                            }`}
+                            onPress={() => setTargetType(type)}>
+                            <Text
+                              style={tw`text-sm ${
+                                isSelected
+                                  ? 'text-white font-semibold'
+                                  : 'text-gray-500'
+                              }`}>
+                              {type}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </View>
+                </View>
                 {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
                 {isDayPickerVisible && (
                   <DayPicker
