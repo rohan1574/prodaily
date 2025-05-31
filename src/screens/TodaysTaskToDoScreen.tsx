@@ -7,7 +7,7 @@ import {
   Image,
   ImageBackground,
   Modal,
-  TextInput,
+  TextInput
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,22 +21,17 @@ interface Task {
   isStarred: boolean;
   completed: boolean;
   name: string;
-
-  // Existing properties
-
   specificFor?: string;
   specificForValue?: string;
-  // নতুন প্রপার্টি
   dailyTarget?: number;
   currentProgress?: number;
   targetType?: string;
-  // নতুন প্রপার্টি যোগ করুন
-  scheduleType?: string; // 'daily', 'weekly', 'monthly', 'yearly' ইত্যাদি
-  endDate?: string; // তারিখ স্ট্রিং হিসেবে (যেমন: '2024-05-30')
-  selectedDays?: string[]; // সাপ্তাহিক দিনের নাম (যেমন: ['Monday', 'Friday'])
-  selectedDate?: number[]; // মাসিক তারিখ (যেমন: [5, 15, 25])
-  selectedDates?: number[]; // বার্ষিক তারিখ (যেমন: [15]
-  selectedMonths?: string[]; // বার্ষিক মাস (যেমন: ['January', 'December'])
+  scheduleType?: string;
+  endDate?: string;
+  selectedDays?: string[];
+  selectedDate?: number[];
+  selectedDates?: number[];
+  selectedMonths?: string[];
 }
 const TodaysTaskToDoScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -44,10 +39,8 @@ const TodaysTaskToDoScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const {addPoints} = usePoints();
 
-  // Add this state
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-  // Add this useEffect
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -70,12 +63,10 @@ const TodaysTaskToDoScreen = () => {
 
   const inputRefs = useRef<{[key: string]: TextInput | null}>({});
 
-  // ইনপুট ফোকাস হ্যান্ডলার
   const handleFocus = (taskId: string) => {
     inputRefs.current[taskId]?.focus();
   };
 
-  // ইনপুট ব্লার হ্যান্ডলার
   const handleBlur = async (taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
@@ -95,8 +86,7 @@ const TodaysTaskToDoScreen = () => {
     await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
     inputRefs.current[taskId]?.blur();
   };
-  // time
-  const selectedDate = new Date(); // অথবা আপনার নির্দিষ্ট তারিখ
+  const selectedDate = new Date();
 
   const month = selectedDate.toLocaleString('en-US', {month: 'long'});
   const day = selectedDate.getDate();
@@ -135,7 +125,6 @@ const TodaysTaskToDoScreen = () => {
     await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
 
-  // প্রোগ্রেস বাড়ানোর ফাংশন
   const incrementProgress = async (taskId: string) => {
     try {
       const updatedTasks = tasks.map(task => {
@@ -156,7 +145,6 @@ const TodaysTaskToDoScreen = () => {
     }
   };
 
-  // প্রোগ্রেস কমানোর ফাংশন
   const decrementProgress = async (taskId: string) => {
     try {
       const updatedTasks = tasks.map(task => {
@@ -173,7 +161,6 @@ const TodaysTaskToDoScreen = () => {
     }
   };
 
-  // Sorting helper function
   const sortTasks = (tasks: any[]) => {
     const group1 = tasks.filter(task => task.isStarred && !task.completed);
     const group2 = tasks.filter(task => !task.isStarred && !task.completed);
@@ -182,12 +169,10 @@ const TodaysTaskToDoScreen = () => {
     return [...group1, ...group2, ...group3, ...group4];
   };
 
-  // Toggle completion with sorting and persistence
   const filterTasksForToday = (taskList: Task[]): Task[] => {
     const currentDate = new Date();
 
     return taskList.filter((task: Task) => {
-      // Daily Routine টাস্ক (কোনো সিডিউল না থাকলে)
       if (
         !task.scheduleType &&
         !task.endDate &&
@@ -199,27 +184,23 @@ const TodaysTaskToDoScreen = () => {
         return true;
       }
 
-      // দিনভিত্তিক টাস্ক (endDate পর্যন্ত)
       if (task.endDate) {
         const taskEndDate = new Date(task.endDate);
         return taskEndDate >= currentDate;
       }
 
-      // সাপ্তাহিক টাস্ক চেক
       if ((task.selectedDays?.length ?? 0) > 0) {
         const todayName = currentDate.toLocaleDateString('en-US', {
           weekday: 'short',
         });
-        return task.selectedDays?.includes(todayName) ?? false; // Optional Chaining + Nullish Coalescing
+        return task.selectedDays?.includes(todayName) ?? false;
       }
 
-      // মাসিক টাস্ক চেক
       if ((task.selectedDate?.length ?? 0) > 0) {
         const todayDate = currentDate.getDate();
         return task.selectedDate?.includes(todayDate) ?? false;
       }
 
-      // বার্ষিক টাস্কের জন্য সংশোধিত কোড
       if (
         (task.selectedDates?.length ?? 0) > 0 &&
         (task.selectedMonths?.length ?? 0) > 0
@@ -237,7 +218,6 @@ const TodaysTaskToDoScreen = () => {
     });
   };
 
-  // টগল ফাংশনগুলিতে ফিল্টারিং যোগ করুন
   const toggleComplete = async (id: string) => {
     try {
       const storedTasks = await AsyncStorage.getItem('tasks');
@@ -247,9 +227,9 @@ const TodaysTaskToDoScreen = () => {
         task.id === id ? {...task, completed: !task.completed} : task,
       );
 
-      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
+      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList));
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList));
-      setTasks(sortedAndFiltered); // শুধুমাত্র ফিল্টার্ড টাস্ক সেট করুন
+      setTasks(sortedAndFiltered);
     } catch (error) {
       console.error('Error toggling completion:', error);
     }
@@ -264,9 +244,9 @@ const TodaysTaskToDoScreen = () => {
         task.id === taskId ? {...task, isStarred: !task.isStarred} : task,
       );
 
-      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList)); // ফিল্টার যোগ
+      const sortedAndFiltered = filterTasksForToday(sortTasks(taskList));
       await AsyncStorage.setItem('tasks', JSON.stringify(taskList));
-      setTasks(sortedAndFiltered); // শুধুমাত্র ফিল্টার্ড টাস্ক সেট করুন
+      setTasks(sortedAndFiltered);
     } catch (error) {
       console.error('Error toggling star:', error);
     }
@@ -279,14 +259,12 @@ const TodaysTaskToDoScreen = () => {
     }
   }, [tasks]);
 
-  // টাস্ক ফিল্টার করার সময় currentProgress ইনিশিয়ালাইজ করুন
   useEffect(() => {
     const fetchAndFilterTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('tasks');
         let taskList: Task[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-        // currentProgress ইনিশিয়ালাইজ করুন
         taskList = taskList.map(task => ({
           ...task,
           currentProgress: task.currentProgress || 0,
@@ -359,7 +337,7 @@ const TodaysTaskToDoScreen = () => {
             <Text
               style={[
                 tw` font-light left-2`,
-                {color: '#DEEAFF', letterSpacing: 0.7,fontSize:10},
+                {color: '#DEEAFF', letterSpacing: 0.7, fontSize: 10},
               ]}>
               Time is the most valuable thing a man can spend.
             </Text>
@@ -373,7 +351,7 @@ const TodaysTaskToDoScreen = () => {
           <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
         ) : (
           <ScrollView
-            contentContainerStyle={tw`pb-28 mx-4 top-4`} // pb-20 adds padding for bottom navigation
+            contentContainerStyle={tw`pb-28 mx-4 top-4`}
             style={tw`mt-4`}>
             {tasks.length === 0 ? (
               <Text style={tw`text-center text-gray-500`}>
@@ -420,7 +398,6 @@ const TodaysTaskToDoScreen = () => {
                       {task.dailyTarget && (
                         <View style={[tw`flex-row items-center right-4`]}>
                           {!task.completed ? (
-                            // শো করবে যখন টাস্ক কমপ্লিট নয়
                             <View style={tw`flex-row items-center rounded-lg`}>
                               <TouchableOpacity
                                 onPress={() => decrementProgress(task.id)}
@@ -466,19 +443,22 @@ const TodaysTaskToDoScreen = () => {
                               </Text>
                             </View>
                           ) : (
-                            // শো করবে যখন টাস্ক কমপ্লিট
                             <Text
                               style={[
                                 tw`text-gray-700 font-medium left-2`,
                                 {fontSize: 12},
                               ]}>
-                              {task.currentProgress}/<Text  style={[
-                                tw`text-gray-500 font-medium `,
-                                {fontSize: 10},
-                              ]}>{task.dailyTarget}
-                              {task.targetType
-                                ? task.targetType.charAt(0).toLowerCase()
-                                : ''}</Text>
+                              {task.currentProgress}/
+                              <Text
+                                style={[
+                                  tw`text-gray-500 font-medium `,
+                                  {fontSize: 10},
+                                ]}>
+                                {task.dailyTarget}
+                                {task.targetType
+                                  ? task.targetType.charAt(0).toLowerCase()
+                                  : ''}
+                              </Text>
                             </Text>
                           )}
                         </View>

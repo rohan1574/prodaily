@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,11 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-// AllTaskListScreen.tsx
 import DayPicker from './DayPicker';
 import DatePicker from './DatePicker';
 import DateSelector from './DateSelector';
-// Add at the top with other imports
 import {Keyboard} from 'react-native';
+
 interface Task {
   id: string;
   name: string;
@@ -34,10 +33,36 @@ interface Task {
   targetType?: 'Minutes' | 'Times';
   specTarget?: 'Weekly' | 'Monthly' | 'Yearly';
 }
+
 const AllTaskListScreen = () => {
-  // Add this state
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  // Add this useEffect
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [editedTask, setEditedTask] = useState<any>({});
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
+  const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
+  const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
+  const [successAction, setSuccessAction] = useState<
+    'updated' | 'deleted' | null
+  >(null);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showSuccessModal) {
+      timer = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [showSuccessModal]);
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -57,29 +82,7 @@ const AllTaskListScreen = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
-  const [editedTask, setEditedTask] = useState<any>({});
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
-  const [isSpecificForEnabled, setIsSpecificForEnabled] = useState(false);
-  const [isDailyTargetEnabled, setIsDailyTargetEnabled] = useState(false);
-  const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [isDayPickerVisible, setIsDayPickerVisible] = useState(false);
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const [isDateSelectorVisible, setIsDateSelectorVisible] = useState(false);
-  // মোডাল টাইমার
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (showSuccessModal) {
-      timer = setTimeout(() => {
-        setShowSuccessModal(false);
-      }, 1000); // 10 seconds
-    }
-    return () => clearTimeout(timer);
-  }, [showSuccessModal]);
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -103,11 +106,37 @@ const AllTaskListScreen = () => {
     setTasks(updatedTasks);
   };
 
+  // Check if the edited task has changes compared to the original
+  const hasChanges = useMemo(() => {
+    if (!expandedTaskId) return false;
+
+    const originalTask = tasks.find(t => t.id === expandedTaskId);
+    if (!originalTask) return false;
+
+    const fieldsToCompare = [
+      'specificForValue',
+      'specificFor',
+      'selectedDays',
+      'selectedDate',
+      'selectedDates',
+      'selectedMonths',
+      'dailyTarget',
+      'targetType',
+      'specTarget',
+    ];
+
+    return fieldsToCompare.some(field => {
+      return (
+        JSON.stringify(originalTask[field]) !==
+        JSON.stringify(editedTask[field])
+      );
+    });
+  }, [editedTask, expandedTaskId, tasks]);
+
   const toggleExpansion = (taskId: string) => {
     setExpandedTaskId(prev => (prev === taskId ? null : taskId));
     const task = tasks.find(t => t.id === taskId);
     if (task) {
-      // Determine specTarget based on existing data
       let specTarget = task.specTarget;
       if (!specTarget) {
         if (task.selectedDays?.length) specTarget = 'Weekly';
@@ -118,7 +147,7 @@ const AllTaskListScreen = () => {
 
       setEditedTask({
         ...task,
-        specTarget, // Add inferred specTarget
+        specTarget,
       });
 
       setIsSpecificForEnabled(!!task.specificForValue);
@@ -131,7 +160,7 @@ const AllTaskListScreen = () => {
       );
     }
   };
-  // সেভ বাটনের হ্যান্ডলারে যোগ করুন
+
   const handleUpdateTask = async (taskId: string) => {
     try {
       const updatedTasks = tasks.map(task =>
@@ -140,27 +169,23 @@ const AllTaskListScreen = () => {
       await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
       setTasks(updatedTasks);
       setExpandedTaskId(null);
-      setShowSuccessModal(true); // মোডাল দেখান
+      setSuccessAction('updated');
+      setShowSuccessModal(true);
     } catch (error) {
       console.error('Error updating task:', error);
     }
   };
 
-  // রেডিও বাটন টগল লজিক আপডেট করুন
   const toggleSpecificFor = () => {
     const newState = !isSpecificForEnabled;
-
-    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
     setIsSpecificDayOnSelected(false);
 
     setEditedTask((prev: Task) => ({
       ...prev,
-      // ডেইলি টার্গেট এবং স্পেসিফিক ডে অন ডেটা রিসেট
       selectedDays: [],
       selectedDate: [],
       selectedDates: [],
       selectedMonths: [],
-      // বর্তমান সেকশনের ডেটা আপডেট
       specificForValue: newState ? prev.specificForValue : '',
       specificFor: newState ? prev.specificFor : 'Days',
     }));
@@ -201,17 +226,14 @@ const AllTaskListScreen = () => {
 
   const toggleSpecificDayOn = () => {
     const newState = !isSpecificDayOnSelected;
-
-    // অন্য সেকশন ডিসেবল করুন এবং ডেটা রিসেট করুন
     setIsSpecificForEnabled(false);
+
     setEditedTask((prev: Task) => ({
       ...prev,
-      // স্পেসিফিক ফর এবং ডেইলি টার্গেট ডেটা রিসেট
       specificForValue: '',
       specificFor: 'Days',
       dailyTarget: 0,
       targetType: 'Minutes',
-      // বর্তমান সেকশনের ডেটা আপডেট
       selectedDays: newState ? prev.selectedDays : [],
       selectedDate: newState ? prev.selectedDate : [],
       selectedDates: newState ? prev.selectedDates : [],
@@ -225,7 +247,7 @@ const AllTaskListScreen = () => {
     setTaskToDelete(taskId);
     setDeleteModalVisible(true);
   };
-  // ডিলিট কনফার্মেশন মোডাল
+
   const DeleteConfirmationModal = () => (
     <Modal
       visible={deleteModalVisible}
@@ -258,6 +280,7 @@ const AllTaskListScreen = () => {
                 );
                 setTasks(updatedTasks);
                 setDeleteModalVisible(false);
+                setSuccessAction('deleted');
                 setShowSuccessModal(true);
               }}>
               <Text style={tw`text-white text-center`}>Yes</Text>
@@ -267,11 +290,41 @@ const AllTaskListScreen = () => {
       </View>
     </Modal>
   );
- 
 
   return (
     <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
       <DeleteConfirmationModal />
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowSuccessModal(false)}>
+        <View
+           style={[tw`flex-1 justify-center items-center`, {backgroundColor: 'rgba(53, 128, 255, 0.2)'}]}>
+          <View
+            style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
+            <Icon
+              name="checkmark-circle-outline"
+              size={28}
+              color="white"
+              style={tw`mr-3`}
+            />
+            <View>
+              <Text style={tw`text-white font-semibold text-base`}>
+                {successAction === 'updated'
+                  ? 'Task Updated!'
+                  : 'Task Removed!'}
+              </Text>
+              <Text style={tw`text-white text-xs`}>
+                {successAction === 'updated'
+                  ? 'Your changes have been applied'
+                  : 'The task has been deleted'}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={tw`mb-4 top-6 left-4 mx-2`}>
         <Text style={tw`text-2xl font-bold `}>Manage My Task </Text>
         <Text style={[tw`font-normal `, {fontSize: 14, color: '#8D99AE'}]}>
@@ -310,34 +363,45 @@ const AllTaskListScreen = () => {
                       !task.scheduleType &&
                       !task.endDate &&
                       !task.selectedDays?.length &&
-                      !task.selectedDate?.length && 
+                      !task.selectedDate?.length &&
                       !task.selectedDates?.length &&
                       !task.selectedMonths?.length && (
-                        <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Daily</Text>
+                        <Text
+                          style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
+                          Daily
+                        </Text>
                       )}
                     {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
                     {task.specificFor && task.specificForValue && (
-                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>
+                      <Text
+                        style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                         F_ {task.specificForValue}_ {task.specificFor}
                       </Text>
                     )}
 
                     {/* সাপ্তাহিক দিন */}
                     {task.selectedDays?.length > 0 && (
-                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>
+                      <Text
+                        style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                         {task.selectedDays.join(', ')}_E_Week
                       </Text>
                     )}
 
                     {/* মাসিক তারিখ */}
                     {task.selectedDate?.length > 0 && (
-                      <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Monthly</Text>
+                      <Text
+                        style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
+                        Monthly
+                      </Text>
                     )}
 
                     {/* বার্ষিক তারিখ */}
                     {task.selectedDates?.length > 0 &&
                       task.selectedMonths?.length > 0 && (
-                        <Text style={[tw`text-xs font-normal`,{color:"#2B2D42"}]}>Yearly</Text>
+                        <Text
+                          style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
+                          Yearly
+                        </Text>
                       )}
                   </View>
 
@@ -364,59 +428,7 @@ const AllTaskListScreen = () => {
                   </View>
                 </View>
               </View>
-              <Modal
-                visible={showSuccessModal}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setShowSuccessModal(false)}>
-                <View
-                  style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
-                  <View
-                    style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
-                    <Icon
-                      name="checkmark-circle-outline"
-                      size={28}
-                      color="white"
-                      style={tw`mr-3`}
-                    />
-                    <View>
-                      <Text style={tw`text-white font-semibold text-base`}>
-                        Update Saved!
-                      </Text>
-                      <Text style={tw`text-white text-xs`}>
-                        Your changes have been applied successfully
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </Modal>
-              {/* Move this outside of the ScrollView/map loop */}
-              <Modal
-                visible={showSuccessModal}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setShowSuccessModal(false)}>
-                <View
-                  style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
-                  <View
-                    style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
-                    <Icon
-                      name="checkmark-circle-outline"
-                      size={28}
-                      color="white"
-                      style={tw`mr-3`}
-                    />
-                    <View>
-                      <Text style={tw`text-white font-semibold text-base`}>
-                        Action Successful!
-                      </Text>
-                      <Text style={tw`text-white text-xs`}>
-                        Your changes have been applied
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </Modal>
+
               {expandedTaskId === task.id && (
                 <View style={tw`mt-4`}>
                   {/* Specific For Section */}
@@ -433,7 +445,11 @@ const AllTaskListScreen = () => {
                           color={isSpecificForEnabled ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
-                      <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
                         Add Specific for
                       </Text>
                       <TextInput
@@ -441,12 +457,12 @@ const AllTaskListScreen = () => {
                           tw`px-1 py-1 border rounded text-center left-2 ${
                             !isSpecificForEnabled ? 'bg-gray-100' : ''
                           }`,
-                            {
-                          borderColor: '#E3E8F1',
-                          width: 32,
-                          height: 30,
-                          fontSize: 10,
-                        }
+                          {
+                            borderColor: '#E3E8F1',
+                            width: 32,
+                            height: 30,
+                            fontSize: 10,
+                          },
                         ]}
                         keyboardType="numeric"
                         value={
@@ -463,7 +479,11 @@ const AllTaskListScreen = () => {
                         editable={isSpecificForEnabled}
                         placeholder="0"
                       />
-                      <View style={[tw`flex-row rounded-full left-4`,{width:170,height:30,backgroundColor:"#DEEAFF"}]}>
+                      <View
+                        style={[
+                          tw`flex-row rounded-full left-4`,
+                          {width: 170, height: 30, backgroundColor: '#DEEAFF'},
+                        ]}>
                         {['Days', 'Weeks', 'Months'].map(type => {
                           const isSelected =
                             editedTask.specificFor === type &&
@@ -498,7 +518,7 @@ const AllTaskListScreen = () => {
                       </View>
                     </View>
                   </View>
-                   {/* Specific Day On Section */}
+                  {/* Specific Day On Section */}
                   <View style={tw`mb-6`}>
                     <View style={tw`flex-row items-center mb-4`}>
                       <TouchableOpacity onPress={toggleSpecificDayOn}>
@@ -512,12 +532,19 @@ const AllTaskListScreen = () => {
                           color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
-                      <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
                         Specific Day On
                       </Text>
                       {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
                       <View
-                        style={[tw`flex-row rounded-full ml-2`,{backgroundColor:"#DEEAFF"}]}>
+                        style={[
+                          tw`flex-row rounded-full ml-2`,
+                          {backgroundColor: '#DEEAFF'},
+                        ]}>
                         {['Weekly', 'Monthly', 'Yearly'].map(type => {
                           const isSelected = editedTask.specTarget === type;
                           return (
@@ -586,19 +613,23 @@ const AllTaskListScreen = () => {
                           color={isDailyTargetEnabled ? 'blue' : 'gray'}
                         />
                       </TouchableOpacity>
-                      <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
                         Set Daily Target
                       </Text>
                       <TextInput
                         style={[
                           tw`px-1 py-1 border rounded text-center left-2
                           ${!isDailyTargetEnabled ? 'bg-gray-100' : ''}`,
-                            {
-                          borderColor: '#E3E8F1',
-                          width: 43,
-                          height: 30,
-                          fontSize: 10,
-                        }
+                          {
+                            borderColor: '#E3E8F1',
+                            width: 43,
+                            height: 30,
+                            fontSize: 10,
+                          },
                         ]}
                         keyboardType="numeric"
                         value={
@@ -613,9 +644,13 @@ const AllTaskListScreen = () => {
                           })
                         }
                         editable={isDailyTargetEnabled}
-                       placeholder="000"
+                        placeholder="000"
                       />
-                      <View style={[tw`flex-row rounded-full left-6`,{backgroundColor:"#DEEAFF"}]}>
+                      <View
+                        style={[
+                          tw`flex-row rounded-full left-6`,
+                          {backgroundColor: '#DEEAFF'},
+                        ]}>
                         {['Minutes', 'Times'].map(type => {
                           const isSelected =
                             editedTask.targetType === type &&
@@ -648,13 +683,26 @@ const AllTaskListScreen = () => {
                       </View>
                     </View>
                   </View>
-                 
+
                   {/* Action Buttons */}
                   <View style={tw`flex-row justify-between `}>
                     <TouchableOpacity
-                      style={tw`bg-blue-500 px-24 py-2 rounded-full left-12`}
-                      onPress={() => handleUpdateTask(task.id)}>
-                      <Text style={tw`text-white font-bold`}>Skip</Text>
+                      style={[
+                        tw`py-2 rounded-full left-8`,
+                        hasChanges
+                          ? tw`bg-blue-500 px-24`
+                          : tw`bg-blue-500 px-28`,
+                      ]}
+                      onPress={() => {
+                        if (hasChanges) {
+                          handleUpdateTask(task.id);
+                        } else {
+                          setExpandedTaskId(null);
+                        }
+                      }}>
+                      <Text style={tw`text-white font-bold`}>
+                        {hasChanges ? 'Update Task' : 'Skip'}
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={tw`top-4`}

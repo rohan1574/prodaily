@@ -391,7 +391,7 @@ const AddDailyTaskScreen = () => {
         <Text
           style={[
             tw`font-light text-black top-2`,
-            {fontSize: 12, lineHeight: 18, letterSpacing: 1}
+            {fontSize: 12, lineHeight: 18, letterSpacing: 1},
           ]}>
           Add task, which you want to include in your daily or custom routine.
           Make them compulsory to make your every day productive. This app will
@@ -537,7 +537,10 @@ const AddDailyTaskScreen = () => {
             {/* Expanded Tasks Options */}
             {expandedTask === task && (
               <View
-                style={[tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`,{height:310}]}>
+                style={[
+                  tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`,
+                  {height: 310},
+                ]}>
                 {/* Header */}
                 <View style={tw`flex-row items-center mb-12`}>
                   <Image
@@ -576,7 +579,11 @@ const AddDailyTaskScreen = () => {
                         color={isSpecificForEnabled ? 'blue' : 'gray'}
                       />
                     </TouchableOpacity>
-                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                    <Text
+                      style={[
+                        tw`font-normal text-gray-500`,
+                        {fontSize: 12, letterSpacing: 1},
+                      ]}>
                       Add specific for
                     </Text>
 
@@ -597,7 +604,11 @@ const AddDailyTaskScreen = () => {
                       editable={isSpecificForEnabled}
                     />
 
-                    <View style={[tw`flex-row rounded-full mx-2`,{width:170,height:34,backgroundColor:"#DEEAFF"}]}>
+                    <View
+                      style={[
+                        tw`flex-row rounded-full mx-2`,
+                        {width: 170, height: 34, backgroundColor: '#DEEAFF'},
+                      ]}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
 
@@ -639,14 +650,21 @@ const AddDailyTaskScreen = () => {
                       size={20}
                       color={isSpecificDayOnSelected ? 'blue' : 'gray'}
                     />
-                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                    <Text
+                      style={[
+                        tw`font-normal text-gray-500`,
+                        {fontSize: 12, letterSpacing: 1},
+                      ]}>
                       Add Specific day on
                     </Text>
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
                 <View
-                  style={[tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,{width:178,height:34,backgroundColor:"#DEEAFF"}]}>
+                  style={[
+                    tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,
+                    {width: 178, height: 34, backgroundColor: '#DEEAFF'},
+                  ]}>
                   <View style={tw`flex-row`}>
                     {['Week', 'Month', 'Year'].map(type => {
                       const lowerType = type.toLowerCase();
@@ -691,7 +709,11 @@ const AddDailyTaskScreen = () => {
                         color={isDailyTargetEnabled ? 'blue' : 'gray'}
                       />
                     </TouchableOpacity>
-                    <Text style={[tw`font-normal text-gray-500`,{fontSize: 12,letterSpacing: 1}]}>
+                    <Text
+                      style={[
+                        tw`font-normal text-gray-500`,
+                        {fontSize: 12, letterSpacing: 1},
+                      ]}>
                       Set Daily Target for
                     </Text>
                     <TextInput
@@ -710,8 +732,7 @@ const AddDailyTaskScreen = () => {
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
-                    <View
-                      style={tw`flex-row bg-blue-100 rounded-full left-4 `}>
+                    <View style={tw`flex-row bg-blue-100 rounded-full left-4 `}>
                       {options.map(type => {
                         const isSelected = targetType === type;
 
@@ -839,7 +860,7 @@ const AddDailyTaskScreen = () => {
                 {showDuplicateAlert && (
                   <Modal transparent visible={showDuplicateAlert}>
                     <View
-                      style={tw`flex-1 justify-center items-center bg-black/50`}>
+                      style={tw`flex-1 justify-center items-center bg-gray-500`}>
                       <View
                         style={tw`bg-red-500 p-6 rounded-2xl w-3/4 items-center shadow-lg`}>
                         <Text style={tw`text-white text-xl font-bold mb-2`}>
@@ -865,7 +886,10 @@ const AddDailyTaskScreen = () => {
                   animationType="fade"
                   onRequestClose={() => setShowSuccessModal(false)}>
                   <View
-                    style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+                    style={[
+                      tw`flex-1 justify-center items-center`,
+                      {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+                    ]}>
                     <View
                       style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
                       <Icon
