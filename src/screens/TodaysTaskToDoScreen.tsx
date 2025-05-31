@@ -375,7 +375,7 @@ const TodaysTaskToDoScreen = () => {
                         />
                       ) : (
                         <Image
-                          source={require('../../assets/images/Circle.png')}
+                          source={require('../../assets/images/circle.png')}
                           style={{width: 24, height: 24, tintColor: 'gray'}}
                           resizeMode="contain"
                         />

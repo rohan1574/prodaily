@@ -27,7 +27,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('TodaysTaskToDoScreen')}>
         <Image
           source={require('../../assets/images/Nab/home.png')}
-          style={[tw``,{width:24,height:26}]}
+          style={[tw``,{width:22,height:22}]}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -35,7 +35,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('MyStatisticsScreen')}>
          <Image
           source={require('../../assets/images/Nab/analytics.png')}
-          style={[tw``,{width:24,height:26}]}
+          style={[tw``,{width:22,height:22}]}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -48,7 +48,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('MyCalenderFutureTaskScreen')}>
          <Image
           source={require('../../assets/images/Nab/calender.png')}
-          style={[tw``,{width:26,height:26}]}
+          style={[tw``,{width:22,height:22}]}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -56,7 +56,7 @@ const BottomNavigation: React.FC = () => {
         onPress={() => navigation.navigate('ProfileManageScreen')}>
          <Image
           source={require('../../assets/images/Nab/profile.png')}
-          style={[tw``,{width:24,height:26}]}
+          style={[tw``,{width:22,height:22}]}
         />
       </TouchableOpacity>
     </View>

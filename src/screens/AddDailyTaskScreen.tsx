@@ -390,8 +390,8 @@ const AddDailyTaskScreen = () => {
         </Text>
         <Text
           style={[
-            tw`font-light text-black top-2`,
-            {fontSize: 12, lineHeight: 18, letterSpacing: 1},
+            tw`font-light top-2`,
+            {fontSize: 11, lineHeight: 18, letterSpacing: 1,color:"#8D99AE"},
           ]}>
           Add task, which you want to include in your daily or custom routine.
           Make them compulsory to make your every day productive. This app will
