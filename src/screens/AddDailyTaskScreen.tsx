@@ -431,14 +431,14 @@ const AddDailyTaskScreen = () => {
               <View
                 style={[
                   tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
-                  {width: 94, height: 94},
+                  {width: 74, height: 74},
                   selectedCategory === category
                     ? tw`border-blue-500 border-4 `
                     : tw`border-gray-200`,
                 ]}>
                 <Image
                   source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={{width: 56, height: 56}}
+                  style={{width: 48, height: 48}}
                 />
               </View>
               <Text
@@ -548,7 +548,7 @@ const AddDailyTaskScreen = () => {
                     }
                     style={[tw`mr-3`, {width: 32, height: 32}]} // সংশোধিত লাইন
                   />
-                  <Text style={tw`text-sm font-medium text-black ml-2`}>
+                  <Text style={[tw`text-sm font-medium text-black ml-2`,{letterSpacing: 1}]}>
                     {expandedTask}
                   </Text>
                   {/* star icon */}
@@ -590,8 +590,8 @@ const AddDailyTaskScreen = () => {
                         tw`px-1 py-1 border rounded text-center left-1`,
                         {
                           borderColor: '#E3E8F1',
-                          width: 32,
-                          height: 30,
+                          width: 30,
+                          height: 23,
                           fontSize: 12,
                         },
                       ]}
@@ -605,7 +605,7 @@ const AddDailyTaskScreen = () => {
                     <View
                       style={[
                         tw`flex-row rounded-full mx-2`,
-                        {width: 170, height: 34, backgroundColor: '#DEEAFF'},
+                        {width: 170, height: 30, backgroundColor: '#DEEAFF'},
                       ]}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
@@ -615,7 +615,7 @@ const AddDailyTaskScreen = () => {
                             key={type}
                             style={tw`px-2 p-1 rounded-full ${
                               isSelected
-                                ? 'bg-blue-700 border border-blue-500'
+                                ? 'bg-blue-500 border border-blue-500'
                                 : ''
                             }`}
                             onPress={() => setSpecificFor(type)}>
@@ -661,9 +661,9 @@ const AddDailyTaskScreen = () => {
                 <View
                   style={[
                     tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,
-                    {width: 178, height: 34, backgroundColor: '#DEEAFF'},
+                    {width: 178, height: 30, backgroundColor: '#DEEAFF'},
                   ]}>
-                  <View style={tw`flex-row`}>
+                  <View style={tw`flex-row  `}>
                     {['Week', 'Month', 'Year'].map(type => {
                       const lowerType = type.toLowerCase();
                       const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
@@ -674,16 +674,16 @@ const AddDailyTaskScreen = () => {
                           onPress={() => handleDayTypeClick(lowerType)}
                           disabled={!isSpecificDayOnSelected}
                           style={[
-                            tw`flex-1 p-2 rounded-full`,
+                            tw`flex-1 p-1.5 rounded-full`,
                             isSelected &&
-                              tw`bg-blue-700 border border-blue-500`, // সিলেক্টেড স্টাইল
+                              tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
                             !isSpecificDayOnSelected && tw`opacity-50`,
                           ]}>
                           <Text
                             style={[
                               tw`text-center text-sm font-normal`,
                               isSelected
-                                ? tw`text-white font-semibold`
+                                ? tw`text-white font-semibold `
                                 : {color: '#8D99AE'},
                             ]}>
                             {type}
@@ -719,8 +719,8 @@ const AddDailyTaskScreen = () => {
                         tw`px-1 py-1 border rounded text-center left-3`,
                         {
                           borderColor: '#E3E8F1',
-                          width: 43,
-                          height: 30,
+                          width: 40,
+                          height: 23,
                           fontSize: 12,
                         },
                       ]}
@@ -739,7 +739,7 @@ const AddDailyTaskScreen = () => {
                             key={type}
                             style={tw`px-2 py-1 rounded-full ${
                               isSelected
-                                ? 'bg-blue-700 border border-blue-500'
+                                ? 'bg-blue-500 border border-blue-500'
                                 : ''
                             }`}
                             onPress={() => setTargetType(type)}>
