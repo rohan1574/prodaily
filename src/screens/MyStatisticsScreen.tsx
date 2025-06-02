@@ -6,6 +6,10 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import Svg, {Circle, Text as SvgText} from 'react-native-svg';
 import BottomNavigation from './BottomNavigation';
+import {Dimensions} from 'react-native';
+
+const {width} = Dimensions.get('window');
+
 // Navigation টাইপ ডেফিনিশন
 type RootStackParamList = {
   TodaysTaskToDoScreen: undefined;
@@ -152,39 +156,42 @@ const MyStatisticsScreen = () => {
         </Text>
 
         {/* টপ স্ট্যাটিস্টিক্স */}
-        <View style={tw`flex-row justify-between h-32`}>
-          <View
-            style={[
-              tw`bg-blue-500 p-4 rounded-lg w-44`,
-              {width: 164, height: 109},
-            ]}>
-            <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
-              All Time Completed
-            </Text>
-            <Text style={tw`text-white text-2xl font-bold left-12 top-6`}>
-              {statsData.allTimeCompleted}
-            </Text>
+        <View style={tw`rounded-lg bg-white `}>
+          <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
+            <View
+              style={[
+                tw`bg-blue-500 p-4 rounded-lg `,
+                {width: width * 0.42, height: width * 0.3},
+              ]}>
+              <Text style={[tw`l font-normal text-xs`, {color: '#DEEAFF'}]}>
+                All Time Completed
+              </Text>
+              <Text style={tw`text-white text-2xl font-bold left-12 top-6`}>
+                {statsData.allTimeCompleted}
+              </Text>
+            </View>
+            <View
+              style={[
+                tw`bg-blue-500 p-4 rounded-lg `,
+                {width: width * 0.42, height: width * 0.3},
+              ]}>
+              <Text
+                style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
+                Daily Task Into Habit
+              </Text>
+              <Text style={tw`text-white text-2xl font-bold left-8 top-6`}>
+                {statsData.dailyHabit}
+              </Text>
+            </View>
           </View>
-          <View
-            style={[
-              tw`bg-blue-500 p-4 rounded-lg w-44`,
-              {width: 164, height: 109},
-            ]}>
-            <Text style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
-              Daily Task Into Habit
-            </Text>
-            <Text style={tw`text-white text-2xl font-bold left-8 top-6`}>
-              {statsData.dailyHabit}
-            </Text>
+          {/* প্রোগ্রেস সার্কেল */}
+          <View style={tw`items-center h-44 `}>
+            <Text style={tw`mb-4 my-4 font-medium text-sm`}>Overall Score</Text>
+            <CircularProgress percentage={statsData.successScore} />
           </View>
         </View>
-
-        {/* প্রোগ্রেস সার্কেল */}
-        <View style={tw`items-center h-44 rounded-lg bg-white `}>
-          <Text style={tw`mb-4 my-4 font-medium text-sm`}>Overall Score</Text>
-          <CircularProgress percentage={statsData.successScore} />
-        </View>
-        <View style={tw`bg-white h-24 rounded-lg my-4`}>
+      <View style={tw`bg-white`}>
+          <View style={tw`bg-white h-24 rounded-lg my-4`}>
           <View
             style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
             {['Weekly', 'Monthly', 'Yearly'].map(tab => (
@@ -207,7 +214,6 @@ const MyStatisticsScreen = () => {
             ))}
           </View>
         </View>
-
         {/* কারেন্ট প্রোগ্রেস সেকশন */}
         <View style={tw`bg-white shadow-lg rounded-lg p-4 mb-4`}>
           <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
@@ -242,39 +248,51 @@ const MyStatisticsScreen = () => {
             </View>
           </View>
         </View>
+      </View>
 
         {/* হ্যাবিট সামারি */}
         <View style={tw`p-4 bg-gray-100 rounded-lg`}>
           <View style={tw`flex-row justify-between mb-6`}>
             <View>
               <Text style={tw`text-black text-base font-medium `}>Habits</Text>
-              <Text style={tw`text-gray-400 right-1 font-normal`}> Summary</Text>
+              <Text style={tw`text-gray-400 right-1 font-normal`}>
+                {' '}
+                Summary
+              </Text>
             </View>
             <View>
-              <Text style={tw`text-gray-400 text-xs font-medium`}>More Details</Text>
+              <Text style={tw`text-gray-400 text-xs font-medium`}>
+                More Details
+              </Text>
             </View>
           </View>
           <View style={tw`flex-row justify-between flex-wrap`}>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Success Score</Text>
+              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
+                Success Score
+              </Text>
               <Text style={tw`text-gray-600 text-lg font-bold`}>
                 {statsData.successScore}%
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Completed</Text>
+              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
+                Completed
+              </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.completed}
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>Failed</Text>
+              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
+                Failed
+              </Text>
               <Text style={tw`text-black text-lg font-bold`}>
                 {statsData.totalTasks - statsData.completed}
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`,{fontSize:10}]}>
+              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
                 Best Streak
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
