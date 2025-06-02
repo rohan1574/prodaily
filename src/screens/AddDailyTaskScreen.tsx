@@ -22,6 +22,7 @@ import {Modal} from 'react-native';
 import {ColorContext} from '../context/ColorContext';
 // Add at the top with other imports
 import {Keyboard} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 // List of categories
 type Category =
@@ -382,18 +383,30 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
-    <View style={[tw`flex-1 bg-red-50`,{backgroundColor: '#FAFAFA'}]}>
+    <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
       {/* Header */}
       <View style={tw``}>
-        <Text style={[tw`font-bold font-sans text-black top-2 left-3`, {fontSize: 20}]}>
+        <Text
+          style={[
+            tw`font-bold font-sans text-black top-2 left-3`,
+            {fontSize: 20},
+          ]}>
           Add Task
         </Text>
         <Text
           style={[
             tw`font-light top-2 mx-3`,
-            {fontSize: 12, lineHeight: 18, letterSpacing: 1,color:"#8D99AE",fontFamily:"Poppins"},
+            {
+              fontSize: 12,
+              lineHeight: 18,
+              letterSpacing: 1,
+              color: '#8D99AE',
+              fontFamily: 'Poppins',
+            },
           ]}>
-          Add tasks that you want to include in your routine. Make them compulsory to make your everyday life productive. So, it becomes a habit.
+          Add tasks that you want to include in your routine. Make them
+          compulsory to make your everyday life productive. So, it becomes a
+          habit.
         </Text>
 
         {/* <Text style={tw`text-base top-4 font-bold text-zinc-800`}>
@@ -430,17 +443,26 @@ const AddDailyTaskScreen = () => {
               }}>
               <View
                 style={[
-                  tw`w-24 h-24 rounded-full flex items-center justify-center bg-white`,
-                  {width: 74, height: 74},
+                  tw`rounded-full items-center justify-center bg-white`,
+                  {
+                    width: 74,
+                    height: 74,
+                    shadowColor: '#5B86CD',
+                    shadowOffset: {width: 1, height: 1},
+                    shadowOpacity: 0.2, // 10% opacity
+                    shadowRadius: 5,
+                    elevation: 5, // Android approximation
+                  },
                   selectedCategory === category
-                    ? tw`border-blue-500 border-4 `
-                    : tw`border-gray-200`,
+                    ? tw`border-blue-500 border-4`
+                    : tw`border-gray-200 border`,
                 ]}>
                 <Image
                   source={mergedIcons[category as keyof typeof mergedIcons]}
                   style={{width: 48, height: 48}}
                 />
               </View>
+
               <Text
                 style={tw`mt-1 font-bold ${
                   selectedCategory === category
@@ -536,23 +558,48 @@ const AddDailyTaskScreen = () => {
             {expandedTask === task && (
               <View
                 style={[
-                  tw`p-4 bg-white rounded-2xl shadow-md w-84 top-2 mb-2`,
-                  {height: 310},
+                  tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-84 top-2 mb-2`,
+                  {
+                    height: 265,
+                    // iOS shadow
+                    shadowColor: '#5B86CD',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 6,
+                    elevation: 5, // for Android
+                    shadowContainer: {
+                      backgroundColor: 'transparent',
+                      borderRadius: 100, // same as inner
+                      shadowColor: '#5B86CD',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.1,
+                      shadowRadius: 10,
+                      elevation: 8, // Android shadow
+                    },
+                    innerBox: {
+                      borderRadius: 16, // match shadow radius
+                      overflow: 'hidden', // prevent sharp shadow overflow
+                    },
+                  },
                 ]}>
                 {/* Header */}
-                <View style={tw`flex-row items-center mb-12`}>
+                <View style={tw`flex-row items-center mb-6`}>
                   <Image
                     source={
                       tasksData[selectedCategory]?.[expandedTask] ||
                       customTasksData[selectedCategory]?.[expandedTask]
                     }
-                    style={[tw`mr-3`, {width: 32, height: 32}]} // সংশোধিত লাইন
+                    style={[tw`mr-3`, {width: 30, height: 30,tintColor: selectedColor}]} // সংশোধিত লাইন
                   />
-                  <Text style={[tw`text-sm font-medium text-black ml-2`,{letterSpacing: 1}]}>
-                    {expandedTask}
+                  <Text
+                    style={[
+                      tw`text-sm font-medium text-black ml-2`,
+                      {letterSpacing: 1},
+                    ]}>
+                    {expandedTask.slice(0,6) + (expandedTask.length> 6 ? '...':'')}
                   </Text>
                   {/* star icon */}
-                  <View style={tw`left-48`}>
+                  <View style={[tw``,{left:185}]}>
                     <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
                       <Icon
                         name={isStarred ? 'star' : 'star-outline'}
@@ -601,11 +648,13 @@ const AddDailyTaskScreen = () => {
                       onChangeText={setSpecificForValue}
                       editable={isSpecificForEnabled}
                     />
-
-                    <View
+                    <LinearGradient
+                      colors={['#F7FAFF', '#DEEAFF']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}
                       style={[
                         tw`flex-row rounded-full mx-2`,
-                        {width: 170, height: 30, backgroundColor: '#DEEAFF'},
+                        {width: 170, height: 30},
                       ]}>
                       {['Days', 'Weeks', 'Months'].map(type => {
                         const isSelected = specificFor === type;
@@ -630,10 +679,9 @@ const AddDailyTaskScreen = () => {
                           </TouchableOpacity>
                         );
                       })}
-                    </View>
+                    </LinearGradient>
                   </View>
                 </View>
-
                 {/* Add Specific Day On */}
                 <View style={tw`bottom-2`}>
                   <TouchableOpacity
@@ -658,10 +706,13 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
                 {/* Buttons */}
-                <View
+                <LinearGradient
+                  colors={['#F7FAFF', '#DEEAFF']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}
                   style={[
                     tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,
-                    {width: 178, height: 30, backgroundColor: '#DEEAFF'},
+                    {width: 178, height: 30, backgroundColor: '#F7FAFF'},
                   ]}>
                   <View style={tw`flex-row  `}>
                     {['Week', 'Month', 'Year'].map(type => {
@@ -692,7 +743,7 @@ const AddDailyTaskScreen = () => {
                       );
                     })}
                   </View>
-                </View>
+                </LinearGradient>
                 {/* Set Daily Target */}
                 <View style={tw`bottom-3`}>
                   <View style={tw`flex-row items-center `}>
@@ -730,7 +781,11 @@ const AddDailyTaskScreen = () => {
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
                     />
-                    <View style={tw`flex-row bg-blue-100 rounded-full left-4 `}>
+                    <LinearGradient
+                      colors={['#F7FAFF', '#DEEAFF']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}
+                      style={[tw`flex-row rounded-full left-4 `]}>
                       {options.map(type => {
                         const isSelected = targetType === type;
 
@@ -740,7 +795,7 @@ const AddDailyTaskScreen = () => {
                             style={tw`px-2 py-1 rounded-full ${
                               isSelected
                                 ? 'bg-blue-500 border border-blue-500'
-                                : ''
+                                : '#F7FAFF'
                             }`}
                             onPress={() => setTargetType(type)}>
                             <Text
@@ -754,7 +809,7 @@ const AddDailyTaskScreen = () => {
                           </TouchableOpacity>
                         );
                       })}
-                    </View>
+                    </LinearGradient>
                   </View>
                 </View>
                 {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
@@ -845,7 +900,7 @@ const AddDailyTaskScreen = () => {
                     onPress={() =>
                       setExpandedTask(expandedTask === task ? null : task)
                     }
-                    style={tw`p-3 rounded-lg left-72 `}>
+                    style={tw`p-3 rounded-lg left-72 bottom-2`}>
                     <Icon
                       name={
                         expandedTask === task ? 'chevron-up' : 'chevron-down'
