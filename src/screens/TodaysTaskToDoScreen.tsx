@@ -402,7 +402,7 @@ const TodaysTaskToDoScreen = () => {
                               <TouchableOpacity
                                 onPress={() => decrementProgress(task.id)}
                                 style={tw`right-1`}>
-                                <Text style={[tw`text-gray-700 font-bold`,{fontSize:20}]}>
+                                <Text style={[tw`text-gray-700 `,{fontSize:20}]}>—
                                 </Text>
                               </TouchableOpacity>
 
@@ -428,7 +428,7 @@ const TodaysTaskToDoScreen = () => {
                               <TouchableOpacity
                                 onPress={() => incrementProgress(task.id)}
                                 style={tw`left-1`}>
-                                <Text style={tw`text-gray-700 text-sm`}>+</Text>
+                                <Icon name="add" size={20} color="#2B2D42" />
                               </TouchableOpacity>
                               <Text
                                 style={[

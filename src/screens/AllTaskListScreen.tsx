@@ -301,7 +301,10 @@ const AllTaskListScreen = () => {
         animationType="fade"
         onRequestClose={() => setShowSuccessModal(false)}>
         <View
-           style={[tw`flex-1 justify-center items-center`, {backgroundColor: 'rgba(53, 128, 255, 0.2)'}]}>
+          style={[
+            tw`flex-1 justify-center items-center`,
+            {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+          ]}>
           <View
             style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
             <Icon
@@ -351,7 +354,10 @@ const AllTaskListScreen = () => {
                       style={[tw`mr-4`, {width: 30, height: 30}]}
                     />
                   )}
-                  <Text style={tw`text-sm font-medium`}>{task.name}</Text>
+                  <Text
+                    style={[tw`font-medium`, {color: '#2B2D42', fontSize: 14}]}>
+                    {task.name}
+                  </Text>
                 </View>
 
                 {/* Right Section - Tags & Icons */}
@@ -359,7 +365,7 @@ const AllTaskListScreen = () => {
                   {/* Daily Tags */}
                   <View style={tw`flex-row items-center right-4`}>
                     {/* ডেইলি রুটিন ট্যাগ */}
-                    {!task.specificForValue && // এই লাইনটি যোগ করুন
+                    {/* {!task.specificForValue && // এই লাইনটি যোগ করুন
                       !task.scheduleType &&
                       !task.endDate &&
                       !task.selectedDays?.length &&
@@ -370,39 +376,39 @@ const AllTaskListScreen = () => {
                           style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                           Daily
                         </Text>
-                      )}
+                      )} */}
                     {/* স্পেসিফিক ফর (শুধু ভ্যালু থাকলে) */}
-                    {task.specificFor && task.specificForValue && (
+                    {/* {task.specificFor && task.specificForValue && (
                       <Text
                         style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                         F_ {task.specificForValue}_ {task.specificFor}
                       </Text>
-                    )}
+                    )} */}
 
                     {/* সাপ্তাহিক দিন */}
-                    {task.selectedDays?.length > 0 && (
+                    {/* {task.selectedDays?.length > 0 && (
                       <Text
                         style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                         {task.selectedDays.join(', ')}_E_Week
                       </Text>
-                    )}
+                    )} */}
 
                     {/* মাসিক তারিখ */}
-                    {task.selectedDate?.length > 0 && (
+                    {/* {task.selectedDate?.length > 0 && (
                       <Text
                         style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                         Monthly
                       </Text>
-                    )}
+                    )} */}
 
                     {/* বার্ষিক তারিখ */}
-                    {task.selectedDates?.length > 0 &&
+                    {/* {task.selectedDates?.length > 0 &&
                       task.selectedMonths?.length > 0 && (
                         <Text
                           style={[tw`text-xs font-normal`, {color: '#2B2D42'}]}>
                           Yearly
                         </Text>
-                      )}
+                      )} */}
                   </View>
 
                   {/* Edit & Star Icons */}
@@ -416,14 +422,17 @@ const AllTaskListScreen = () => {
                         />
                       </TouchableOpacity>
                     )}
-                    <TouchableOpacity onPress={() => toggleExpansion(task.id)}>
-                      <Icon
-                        name={
-                          expandedTaskId === task.id ? '' : 'create-outline'
-                        }
-                        size={24}
-                        color="#4b5563"
-                      />
+                    <TouchableOpacity
+                      onPress={() => toggleExpansion(task.id)}
+                      style={tw`right-2`}>
+                      {expandedTaskId === task.id ? (
+                        <Icon name="" size={20} color="#DFDFDF" />
+                      ) : (
+                        <Image
+                          source={require('../../assets/images/edit.png')}
+                          style={{width: 20, height: 20, tintColor: '#8D99AE'}}
+                        />
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
