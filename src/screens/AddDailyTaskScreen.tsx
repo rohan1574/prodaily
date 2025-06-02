@@ -415,17 +415,17 @@ const AddDailyTaskScreen = () => {
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
       <View style={tw`top-6 `}>
-        <ScrollView
+          <ScrollView
           horizontal
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
-          snapToInterval={94 + 8} // Item width (94) + margin (8)
+          snapToInterval={82} // Changed to actual item width (74 + 8 margin)
           snapToAlignment="start"
           decelerationRate="fast"
-          contentContainerStyle={tw`pl-2`} // Left padding for first item
+          contentContainerStyle={tw`pl-1`} // REMOVED LEFT PADDING
           onScroll={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
-            const selectedIndex = Math.round(offsetX / (94 + 8));
+            const selectedIndex = Math.round(offsetX / 82); // Use 82 instead of 102
             const category = allCategories[selectedIndex];
             if (category) setSelectedCategory(category);
           }}
@@ -433,11 +433,12 @@ const AddDailyTaskScreen = () => {
           {allCategories.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={tw`items-center mr-2`} // Consistent margin for all items
+              style={tw`items-center mr-2`}
               onPress={() => {
                 setSelectedCategory(category);
+                // SCROLL TO LEFT EDGE WITHOUT CENTERING
                 scrollViewRef.current?.scrollTo({
-                  x: index * (94 + 8), // Match snap interval
+                  x: index * 82, // Use consistent 82px width
                   animated: true,
                 });
               }}>
@@ -454,7 +455,7 @@ const AddDailyTaskScreen = () => {
                     elevation: 5, // Android approximation
                   },
                   selectedCategory === category
-                    ? tw`border-blue-500 border-4`
+                    ? tw`border-blue-500 border-2`
                     : tw`border-gray-200 border`,
                 ]}>
                 <Image
@@ -483,10 +484,11 @@ const AddDailyTaskScreen = () => {
             }}
             style={tw`items-center mr-2`}>
             <View
-              style={tw`w-24 h-24 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`}>
-              <Icon name="add" size={32} color="#6B7280" />
+              style={[tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`,{width: 74,
+                    height: 74,}]}>
+              <Icon name="add" size={30} color="#6B7280" />
             </View>
-            <Text style={tw`text-xs mt-1 font-bold text-gray-600`}>
+            <Text style={tw`text-black text-xs font-medium top-1`}>
               Add Custom
             </Text>
           </TouchableOpacity>
@@ -976,7 +978,7 @@ const AddDailyTaskScreen = () => {
           style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
             <Icon name="add-circle-outline" size={32} color={selectedColor} />
-            <Text style={[tw`text-sm font-medium`, {color: selectedColor}]}>
+            <Text style={[tw`text-sm font-medium left-6`, {color: selectedColor}]}>
               Add Custom Task
             </Text>
           </View>

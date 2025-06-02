@@ -4,7 +4,7 @@ const categoryIcons: Record<
   | 'Work'
   | 'Nutrition'
   | 'Sleep'
-  | 'Personal Growth'
+  | 'Personal'
   | 'Household'
   | 'FnF'
   | 'Self-Care'
@@ -21,7 +21,7 @@ const categoryIcons: Record<
   Work: require('../../assets/images/Category/Work.png'),
   Nutrition: require('../../assets/images/Category/Nutrition.png'),
   Sleep: require('../../assets/images/Category/Sleep.png'),
-  'Personal Growth': require('../../assets/images/Category/PersonalGrowth.png'),
+  'Personal': require('../../assets/images/Category/PersonalGrowth.png'),
   Household: require('../../assets/images/Category/HouseHold.png'),
   // FnF: require('../../assets/images/Category/Fnf.png'),
   'Self-Care': require('../../assets/images/Category/Self-Care.png'),

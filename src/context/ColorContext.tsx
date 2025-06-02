@@ -14,7 +14,7 @@ interface ColorProviderProps {
 }
 
 const ColorProvider = ({ children }: ColorProviderProps) => {
-  const [selectedColor, setSelectedColor] = useState<string>('blue'); // default color
+  const [selectedColor, setSelectedColor] = useState<string>('#3580FF'); // default color
 
   return (
     <ColorContext.Provider value={{ selectedColor, setSelectedColor }}>

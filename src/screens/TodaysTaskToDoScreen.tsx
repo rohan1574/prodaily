@@ -287,7 +287,7 @@ const TodaysTaskToDoScreen = () => {
       {/* Header - Fixed at top */}
       <ImageBackground
         source={require('../../assets/images/vec.png')}
-        style={[tw`rounded-lg mx-4 top-4`, {height: 138}]}
+        style={[tw`rounded-lg mx-2 top-4`, {height: 138}]}
         imageStyle={tw`rounded-lg`}>
         <View style={tw`absolute inset-0 bg-black bg-opacity-30`}></View>
 
@@ -402,8 +402,7 @@ const TodaysTaskToDoScreen = () => {
                               <TouchableOpacity
                                 onPress={() => decrementProgress(task.id)}
                                 style={tw`right-1`}>
-                                <Text style={tw`text-gray-700 text-base`}>
-                                  -
+                                <Text style={[tw`text-gray-700 font-bold`,{fontSize:20}]}>
                                 </Text>
                               </TouchableOpacity>
 
