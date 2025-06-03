@@ -429,7 +429,7 @@ const AllTaskListScreen = () => {
                         <Icon name="" size={20} color="#DFDFDF" />
                       ) : (
                         <Image
-                          source={require('../../assets/images/edit.png')}
+                          source={require('../../assets/images/EditTaskIcon.png')}
                           style={{width: 20, height: 20, tintColor: '#8D99AE'}}
                         />
                       )}

@@ -14,6 +14,9 @@ import type {StackNavigationProp} from '@react-navigation/stack';
 import {ColorContext} from '../context/ColorContext';
 import BottomNavigation from './BottomNavigation';
 import {usePoints} from '../context/PointsContext';
+import {Dimensions} from 'react-native';
+const {width} = Dimensions.get('window');
+const cardWidth = width * 0.45;
 // Define the navigation type
 type RootStackParamList = {
   TodaysTaskToDoScreen: undefined;
@@ -94,11 +97,14 @@ const ProfileManageScreen = () => {
         <View style={tw`flex-row justify-between`}>
           {/* Building Habit Card */}
           <View
-            style={[tw`bg-white rounded-xl px-4 py-3 shadow-sm`, {width: 170}]}>
+            style={[
+              tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
+              {width: cardWidth},
+            ]}>
             <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
               Building Habit
             </Text>
-            <Text style={tw`text-2xl font-semi-bold text-black mt-1 left-6`}>
+            <Text style={tw`text-2xl font-semibold text-black mt-1 left-6`}>
               143 <Text style={tw`text-xs text-gray-500 font-light`}>Days</Text>
             </Text>
           </View>
@@ -106,8 +112,8 @@ const ProfileManageScreen = () => {
           {/* Point Collected Card */}
           <View
             style={[
-              tw`bg-white rounded-xl px-4 py-3 w-44 shadow-sm`,
-              {width: 160},
+              tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
+              {width: cardWidth},
             ]}>
             <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
               Point Collected
@@ -115,25 +121,24 @@ const ProfileManageScreen = () => {
             <View style={tw`flex-row items-center`}>
               <View
                 style={[
-                  tw`flex-row items-center mt-1 bg-orange-400 rounded-lg`,
+                  tw`flex-row items-center mt-1 rounded-lg`,
                   {backgroundColor: '#FFF3DA'},
                 ]}>
-                <Text style={[tw`w-4 h-4`, {width: 16, height: 20}]}>🏅</Text>
+                <Text style={{width: 16, height: 20}}>🏅</Text>
                 <Text
-                  style={[
-                    tw`text-yellow-400 text-2xl font-semibold`,
-                    {color: '#FEA800'},
-                  ]}>
-                  {points || 0} {/* ডিফল্ট 0 দেখানোর জন্য */}
+                  style={{
+                    color: '#FEA800',
+                    fontSize: 24,
+                    fontWeight: '600',
+                    marginLeft: 4,
+                  }}>
+                  {points || 0}
                 </Text>
               </View>
-              <View>
-                <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
-              </View>
+              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
             </View>
           </View>
         </View>
-
         {/* Bottom Info Text */}
         {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
@@ -276,8 +281,7 @@ const ProfileManageScreen = () => {
         {/* Support Section */}
         <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md`]}>
           {/* Toggle: App Issue / Suggestion */}
-          <View
-            style={tw`flex-row justify-around border-b  border-white pb-3`}>
+          <View style={tw`flex-row justify-around border-b  border-white pb-3`}>
             {['App Issue', 'Suggestion'].map(option => (
               <TouchableOpacity
                 key={option}
