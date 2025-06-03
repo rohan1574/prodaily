@@ -167,9 +167,9 @@ const ProfileManageScreen = () => {
             name="home-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Home</Text>
+          <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -178,9 +178,9 @@ const ProfileManageScreen = () => {
             name="star-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Get Premium</Text>
+          <Text style={tw`text-black text-base`}>Get Premium</Text>
         </TouchableOpacity>
 
         {/* Account Section with Toggle */}
@@ -191,9 +191,9 @@ const ProfileManageScreen = () => {
             name="person-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Account</Text>
+          <Text style={tw`text-black text-base`}>Account</Text>
         </TouchableOpacity>
         {showSignOut && (
           <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
@@ -208,12 +208,12 @@ const ProfileManageScreen = () => {
           onPress={() => setThemes(!themes)}
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
-              name="color-palette-outline"
+              name="moon-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Themes</Text>
+          <Text style={tw`text-black text-base `}>Themes</Text>
         </TouchableOpacity>
         {themes && (
           <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
@@ -243,9 +243,9 @@ const ProfileManageScreen = () => {
             name="bar-chart-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Statistics</Text>
+          <Text style={tw`text-black text-base`}>Statistics</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -254,9 +254,9 @@ const ProfileManageScreen = () => {
             name="calendar-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>My Calendar</Text>
+          <Text style={tw`text-black text-base`}>My Calendar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -266,10 +266,10 @@ const ProfileManageScreen = () => {
             name="clipboard-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
           <Text
-            style={tw`text-gray-700 text-base`}
+            style={tw`text-black text-base`}
             onPress={() => navigation.navigate('AllTaskListScreen')}>
             Manage Tasks
           </Text>
@@ -281,9 +281,9 @@ const ProfileManageScreen = () => {
             name="cloud-outline"
             size={24}
             color="#3580FF"
-            style={tw`mr-4`}
+            style={tw`mr-2`}
           />
-          <Text style={tw`text-gray-700 text-base`}>Sync Data</Text>
+          <Text style={tw`text-black text-base`}>Sync Data</Text>
         </TouchableOpacity>
 
         {/* Support Section */}
