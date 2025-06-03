@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-} from 'react-native';
-import { s as tw } from 'react-native-wind';
+import React, {useEffect, useState} from 'react';
+import {View, Text, ScrollView, Image} from 'react-native';
+import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
 import BottomNavigation from './BottomNavigation';
@@ -56,11 +51,10 @@ const MyCalenderFutureTaskScreen = () => {
     // Yearly
     if (task.selectedDates?.length > 0 && task.selectedMonths?.length > 0) {
       const day = currentDate.getDate();
-      const month = currentDate.toLocaleString('en', { month: 'long' });
+      const month = currentDate.toLocaleString('en', {month: 'long'});
       return task.selectedDates.some(
         (selectedDate: number, index: number) =>
-          selectedDate === day &&
-          task.selectedMonths[index] === month
+          selectedDate === day && task.selectedMonths[index] === month,
       );
     }
 
@@ -75,7 +69,7 @@ const MyCalenderFutureTaskScreen = () => {
         const taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
         const filtered = taskList.filter((task: any) =>
-          isTaskVisible(task, new Date(selectedDate))
+          isTaskVisible(task, new Date(selectedDate)),
         );
 
         setTasks(filtered);
@@ -90,40 +84,44 @@ const MyCalenderFutureTaskScreen = () => {
   }, [selectedDate]);
 
   return (
-    <View style={[tw`flex-1`, { backgroundColor: '#F7FAFF' }]}>
+    <View style={[tw`flex-1`, {backgroundColor: '#F7FAFF'}]}>
       {/* Header */}
       <View style={tw`mb-8 top-2 left-4`}>
         <Text style={tw`text-xl font-bold`}>My Calendar</Text>
-        <Text style={[tw``, { fontSize: 11, color: '#8D99AE' }]}>
+        <Text style={[tw``, {fontSize: 11, color: '#8D99AE'}]}>
           Your added tasks on the selected calendar day.
         </Text>
       </View>
 
-     {/* Calendar */}
-<View style={[tw`bg-white mb-2 mx-4 rounded-lg`, { paddingVertical: 10, alignItems: 'center' }]}>
-  <CalendarPicker
-    onDateChange={(date: Date) => setSelectedDate(date)}
-    selectedStartDate={selectedDate}
-    allowRangeSelection={false}
-    selectedDayColor="#3580FF"
-    selectedDayTextColor="#fff"
-    scaleFactor={375}
-    weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
-    width={300}
-    textStyle={{
-      fontFamily: 'Roboto',
-      fontWeight:700,
-      fontSize: 15,
-      letterSpacing: -0.5,
-      color: '#2B2D42',
-    }}
-    // Corrected prop name below
-    dayLabelsWrapper={{
-      borderTopWidth: 0,    // Remove top border
-      borderBottomWidth: 0, // Remove bottom border
-    }}
-  />
-</View>
+      {/* Calendar */}
+      <View
+        style={[
+          tw`bg-white mb-2 mx-4 rounded-lg`,
+          {paddingVertical: 10, alignItems: 'center'},
+        ]}>
+        <CalendarPicker
+          onDateChange={(date: Date) => setSelectedDate(date)}
+          selectedStartDate={selectedDate}
+          allowRangeSelection={false}
+          selectedDayColor="#3580FF"
+          selectedDayTextColor="#fff"
+          scaleFactor={375}
+          weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
+          width={300}
+          textStyle={{
+            fontFamily: 'Roboto',
+            fontWeight: 600,
+            fontSize: 16,
+            letterSpacing: -0.5,
+            color: '#2B2D42',
+          }}
+          // Corrected prop name below
+          dayLabelsWrapper={{
+            borderTopWidth: 0, // Remove top border
+            borderBottomWidth: 0, // Remove bottom border
+          }}
+        />
+      </View>
 
       {/* Task List */}
       {loading ? (
@@ -138,13 +136,12 @@ const MyCalenderFutureTaskScreen = () => {
             tasks.map((task: any) => (
               <View
                 key={task.id}
-                style={[tw`bg-white mx-4 mb-2 rounded-lg relative`]}
-              >
+                style={[tw`bg-white mx-4 mb-2 rounded-lg relative`]}>
                 <View style={tw`flex-row items-center p-2`}>
                   {task.icon ? (
                     <Image
                       source={task.icon}
-                      style={[tw`left-2`, { width: 30, height: 30 }]}
+                      style={[tw`left-2`, {width: 30, height: 30}]}
                     />
                   ) : (
                     <Icon
@@ -154,7 +151,11 @@ const MyCalenderFutureTaskScreen = () => {
                       style={tw`left-2`}
                     />
                   )}
-                  <Text style={[tw`text-sm font-medium left-6`, { color: '#2B2D42' }]}>
+                  <Text
+                    style={[
+                      tw`text-sm font-medium left-6`,
+                      {color: '#2B2D42'},
+                    ]}>
                     {task.name}
                   </Text>
                 </View>
