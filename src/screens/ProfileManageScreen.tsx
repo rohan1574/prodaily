@@ -34,6 +34,7 @@ type NavigationProp = StackNavigationProp<
 const ProfileManageScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [showSignOut, setShowSignOut] = useState(false);
+  const [themes, setThemes] = useState(false);
   const context = useContext(ColorContext);
   if (!context) {
     throw new Error('ColorContext is not available');
@@ -142,7 +143,7 @@ const ProfileManageScreen = () => {
         {/* Bottom Info Text */}
         {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
-            <Text style={tw`text-gray-500 text-center text-xs`}>
+            <Text style={[tw`text-gray-500 text-center text-xs`,{color:"#8D99AE",letterSpacing:.5}]}>
               Be regular, collect points, Stick with ProDAILY time{'\n'}
               consciousness journey. You'll get rewards.
             </Text>
@@ -201,26 +202,31 @@ const ProfileManageScreen = () => {
             </Text>
           </TouchableOpacity>
         )}
+       
         {/* Themes Section with Colors */}
-        <View
-          style={tw`p-4 bg-white mb-2 rounded-xl shadow flex-row items-center`}>
+         <TouchableOpacity
+          onPress={() => setThemes(!themes)}
+          style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
-            name="color-palette-outline"
+              name="color-palette-outline"
             size={24}
             color="#3580FF"
             style={tw`mr-4`}
           />
-          <Text style={tw`text-gray-700 text-base mr-4`}>Themes</Text>
-
-          {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
+          <Text style={tw`text-gray-700 text-base`}>Themes</Text>
+        </TouchableOpacity>
+        {themes && (
+          <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
+            <Text style={tw`text-gray-700 text-base text-center`}>
+               {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
             <TouchableOpacity
               key={color}
               onPress={() => setSelectedColor(color)}
-              style={tw`items-center mx-1`}>
+              style={tw`items-center `}>
               {/* Color Circle */}
               <View
                 style={[
-                  tw`w-6 h-6 rounded-full mb-1`,
+                  tw`w-6 h-6 rounded-full mb-1 mx-1`,
                   {backgroundColor: color},
                 ]}
               />
@@ -228,7 +234,9 @@ const ProfileManageScreen = () => {
               {/* <Text style={{color, fontSize: 10}}>bg {color}</Text> */}
             </TouchableOpacity>
           ))}
-        </View>
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
