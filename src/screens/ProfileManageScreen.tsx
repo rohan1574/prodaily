@@ -287,7 +287,7 @@ const ProfileManageScreen = () => {
         </TouchableOpacity>
 
         {/* Support Section */}
-        <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md`]}>
+        <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md top-4`]}>
           {/* Toggle: App Issue / Suggestion */}
           <View style={tw`flex-row justify-around border-b  border-white pb-3`}>
             {['App Issue', 'Suggestion'].map(option => (

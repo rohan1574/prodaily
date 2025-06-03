@@ -468,7 +468,7 @@ const AddDailyTaskScreen = () => {
                 style={tw`mt-1 font-bold ${
                   selectedCategory === category
                     ? 'text-blue-500 text-sm'
-                    : 'text-black text-xs font-medium'
+                    : 'text-black text-xs font-medium '
                 }`}>
                 {category}
               </Text>
@@ -486,10 +486,13 @@ const AddDailyTaskScreen = () => {
             <View
               style={[tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`,{width: 74,
                     height: 74,}]}>
-              <Icon name="add" size={30} color="#6B7280" />
+               <Image
+                        source={require('../../assets/images/CustomCategory.png')}
+                        style={[tw``,{width:44,height:42}]}
+                      />
             </View>
-            <Text style={tw`text-black text-xs font-medium top-1`}>
-              Add Custom
+            <Text style={[tw`text-black text-xs font-medium top-1`,{fontSize:12,color:"#27282A"}]}>
+              Add Category
             </Text>
           </TouchableOpacity>
         </ScrollView>
