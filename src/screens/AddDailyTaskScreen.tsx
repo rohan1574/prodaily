@@ -1074,6 +1074,82 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
+        <Modal
+          visible={isCustomCategoryModalVisible}
+          transparent={true}
+          animationType="slide">
+          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+              <Text style={tw`text-lg font-bold mb-4`}>
+                Create Custom Category
+              </Text>
+
+              <TextInput
+                placeholder="Enter Category Name"
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+                style={tw`border p-2 rounded mb-4`}
+                placeholderTextColor="#9CA3AF"
+              />
+
+              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {Object.entries(tasksData).map(([category, tasks]) =>
+                  Object.entries(tasks).map(([taskName, iconSource]) => (
+                    <TouchableOpacity
+                      key={`${category}-${taskName}`}
+                      onPress={() => setSelectedCategoryIcon(iconSource)}
+                      style={tw`p-2 mx-1 rounded-lg ${
+                        selectedCategoryIcon === iconSource
+                          ? 'bg-blue-100'
+                          : 'bg-gray-100'
+                      }`}>
+                      <Image
+                        source={iconSource as ImageSourcePropType}
+                        style={tw`w-10 h-10`}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )),
+                )}
+
+                {/* Add custom task icons */}
+                {Object.entries(customTasksData).map(([category, tasks]) =>
+                  Object.entries(tasks).map(([taskName, iconSource]) => (
+                    <TouchableOpacity
+                      key={`custom-${category}-${taskName}`}
+                      onPress={() => setSelectedCategoryIcon(iconSource)}
+                      style={tw`p-2 mx-1 rounded-lg ${
+                        selectedCategoryIcon === iconSource
+                          ? 'bg-blue-100'
+                          : 'bg-gray-100'
+                      }`}>
+                      <Image
+                        source={iconSource}
+                        style={tw`w-10 h-10`}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )),
+                )}
+              </ScrollView>
+
+              <View style={tw`flex-row justify-between mt-6 gap-3`}>
+                <TouchableOpacity
+                  onPress={() => setIsCustomCategoryModalVisible(false)}
+                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={saveCustomCategory}
+                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                  <Text style={tw`text-white font-medium`}>Save Category</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
