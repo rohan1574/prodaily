@@ -54,7 +54,7 @@ const ProfileManageScreen = () => {
           source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
           style={tw`bg-blue-500 rounded-b-3xl pt-12 pb-8 px-4`}
           imageStyle={tw`rounded-lg`}>
-          <View style={tw`flex-row items-center`}>
+          <View style={tw`flex-row items-center bottom-4`}>
             <Text style={tw`text-white text-xl font-bold mr-2`}>Profile</Text>
             <View
               style={[
@@ -73,11 +73,11 @@ const ProfileManageScreen = () => {
             style={tw`w-24 h-24 rounded-full border-4 border-white`}
           />
           <View style={tw`items-center `}>
-            <Text style={tw`text-lg font-medium text-gray-800`}>Mr Rony</Text>
+            <Text style={[tw` font-medium `,,{fontSize:20,letterSpacing:1,color:"#2B2D42"}]}>Mr Rony</Text>
 
             <View style={tw`flex-row items-center left-12`}>
               <Text style={tw`text-gray-500 mr-2 font-light bottom-1`}>
-                mrrony1574@gmail.com
+                mrrony@gmail.com
               </Text>
 
               <TouchableOpacity
@@ -101,11 +101,11 @@ const ProfileManageScreen = () => {
               tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
               {width: cardWidth},
             ]}>
-            <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
+            <Text style={[tw`font-medium left-6`,{fontSize:14,letterSpacing:1,color:"#2B2D42"}]}>
               Building Habit
             </Text>
-            <Text style={tw`text-2xl font-semibold text-black mt-1 left-6`}>
-              143 <Text style={tw`text-xs text-gray-500 font-light`}>Days</Text>
+            <Text style={tw`text-2xl font-semibold text-black mt-1 left-8`}>
+              143 <Text style={[tw` font-light`,{fontSize:12,letterSpacing:1,color:"#8D9094"}]}>Days</Text>
             </Text>
           </View>
 
@@ -115,14 +115,14 @@ const ProfileManageScreen = () => {
               tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
               {width: cardWidth},
             ]}>
-            <Text style={tw`text-gray-600 font-medium text-xs left-6`}>
+            <Text style={[tw`text-gray-600 font-medium text-xs left-4`,{fontSize:14,letterSpacing:1,color:"#2B2D42"}]}>
               Point Collected
             </Text>
-            <View style={tw`flex-row items-center`}>
+            <View style={tw`flex-row items-center left-4`}>
               <View
                 style={[
                   tw`flex-row items-center mt-1 rounded-lg`,
-                  {backgroundColor: '#FFF3DA'},
+                  {backgroundColor: '#FFF3DA',width:65},
                 ]}>
                 <Text style={{width: 16, height: 20}}>🏅</Text>
                 <Text
@@ -135,7 +135,7 @@ const ProfileManageScreen = () => {
                   {points || 0}
                 </Text>
               </View>
-              <Text style={tw`text-gray-500 ml-2`}>next 500</Text>
+              <Text style={[tw`left-1 font-light`,{fontSize:12,letterSpacing:1,color:"#8D9094"}]}>next 500</Text>
             </View>
           </View>
         </View>
