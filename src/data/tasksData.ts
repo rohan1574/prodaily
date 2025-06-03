@@ -73,18 +73,18 @@ Sleep: {
   "Safety Checking": require('../../assets/images/Sleep/safety-check.png'),
   "Write Next Day Plan": require('../../assets/images/Sleep/day-plan.png')
 },
- "Personal Growth": {
-    // Reading: require('../../assets/images/Growth/reading.png'),
-    // "Online Course": require('../../assets/images/Growth/courses.png'),
-    // "Watch Podcast": require('../../assets/images/Growth/podcast.png'),
-    // "Listen Audiobook": require('../../assets/images/Growth/audio_book.png'),
-    // "Language Learning": require('../../assets/images/Growth/language.png'),
-    // Writing: require('../../assets/images/Growth/writing.png'),
-    // "Skill Practice": require('../../assets/images/Growth/skill_practice.png'),
-    // "Creative Writing/Blogging": require('../../assets/images/Growth/blogging.png'),
-    // "Financial Awareness": require('../../assets/images/Growth/finan_aware.png'),
-    // "Eyes on News": require('../../assets/images/Growth/news.png'),
-    // "Tech Update": require('../../assets/images/Growth/tech.png')
+ "Personal": {
+    Reading: require('../../assets/images/Growth/reading.png'),
+    "Online Course": require('../../assets/images/Growth/courses.png'),
+    "Watch Podcast": require('../../assets/images/Growth/podcast.png'),
+    "Listen Audiobook": require('../../assets/images/Growth/audio_book.png'),
+    "Language Learning": require('../../assets/images/Growth/language.png'),
+    Writing: require('../../assets/images/Growth/writing.png'),
+    "Skill Practice": require('../../assets/images/Growth/skill_practice.png'),
+    "Creative Writing/Blogging": require('../../assets/images/Growth/blogging.png'),
+    "Financial Awareness": require('../../assets/images/Growth/finan_aware.png'),
+    "Eyes on News": require('../../assets/images/Growth/news.png'),
+    "Tech Update": require('../../assets/images/Growth/tech.png')
   },
   Household: {
     Cleaning: require('../../assets/images/Household/cleaning.png'),
@@ -120,17 +120,17 @@ Sleep: {
   },
 
   "Self-Care": {
-    // Skincare: require('../../assets/images/SelfCare/skincare.png'),
-    // "Hair Care": require('../../assets/images/SelfCare/haircare.png'),
-    // "Nail Care": require('../../assets/images/SelfCare/nailcare.png'),
-    // "Taking Shower": require('../../assets/images/SelfCare/taking-shower.png'),
-    // "Doing Hobbies": require('../../assets/images/SelfCare/hobbies.png'),
-    // Relaxation: require('../../assets/images/SelfCare/relaxation.png'),
-    // "Deep Breathing": require('../../assets/images/SelfCare/deep-breath.png'),
-    // Sunbathing: require('../../assets/images/SelfCare/sunbath.png'),
-    // "Doctor Visit": require('../../assets/images/SelfCare/visit-doctor.png'),
-    // "Health diagnosis": require('../../assets/images/SelfCare/diagnosis.png'),
-    // "Routine Health Checkup": require('../../assets/images/SelfCare/healthcup.png')
+    Skincare: require('../../assets/images/SelfCare/skincare.png'),
+    "Hair Care": require('../../assets/images/SelfCare/haircare.png'),
+    "Nail Care": require('../../assets/images/SelfCare/nailcare.png'),
+    "Taking Shower": require('../../assets/images/SelfCare/taking-shower.png'),
+    "Doing Hobbies": require('../../assets/images/SelfCare/hobbies.png'),
+    Relaxation: require('../../assets/images/SelfCare/relaxation.png'),
+    "Deep Breathing": require('../../assets/images/SelfCare/deep-breath.png'),
+    Sunbathing: require('../../assets/images/SelfCare/sunbath.png'),
+    "Doctor Visit": require('../../assets/images/SelfCare/visit-doctor.png'),
+    "Health diagnosis": require('../../assets/images/SelfCare/diagnosis.png'),
+    "Routine Health Checkup": require('../../assets/images/SelfCare/healthcup.png')
   },
   Financials: {
     Budgeting: require('../../assets/images/Financials/budget.png'),
@@ -191,30 +191,30 @@ Sleep: {
     "Model Test": require('../../assets/images/Academic/model-test.png'),
   },
   Spiritual: {
-    // Prayer: require('../../assets/images/Spiritual/prayer.png'),
-    // "Read Sacred Texts": require('../../assets/images/Spiritual/sacred-text.png'),
-    // "Attend Religious Program": require('../../assets/images/Spiritual/religious-program.png'),
-    // "Spiritual Meditation": require('../../assets/images/Spiritual/spimeditat.png'),
-    // "Religious Fasting": require('../../assets/images/Spiritual/religious-fasting.png'),
-    // "Spiritual Journaling": require('../../assets/images/Spiritual/spiritual-Journ.png'),
-    // "Community Service": require('../../assets/images/Spiritual/community-ser.png'),
-    // "Donations/Charity": require('../../assets/images/Spiritual/donations.png'),
-    // "Going Church/Mosque": require('../../assets/images/Spiritual/gochurch.png'),
-    // "Learning other Religion": require('../../assets/images/Spiritual/learn-religion.png'),
-    // "Watching Lectures": require('../../assets/images/Spiritual/watching-lect.png')
+    Prayer: require('../../assets/images/Spiritual/prayer.png'),
+    "Read Sacred Texts": require('../../assets/images/Spiritual/sacred-text.png'),
+    "Attend Religious Program": require('../../assets/images/Spiritual/religious-program.png'),
+    "Spiritual Meditation": require('../../assets/images/Spiritual/spimeditat.png'),
+    "Religious Fasting": require('../../assets/images/Spiritual/religious-fasting.png'),
+    "Spiritual Journaling": require('../../assets/images/Spiritual/spiritual-Journ.png'),
+    "Community Service": require('../../assets/images/Spiritual/community-ser.png'),
+    "Donations/Charity": require('../../assets/images/Spiritual/donations.png'),
+    "Going Church/Mosque": require('../../assets/images/Spiritual/gochurch.png'),
+    "Learning other Religion": require('../../assets/images/Spiritual/learn-religion.png'),
+    "Watching Lectures": require('../../assets/images/Spiritual/watching-lect.png')
   },
   Pet: {
-    // "Walk Pet": require('../../assets/images/Pet/walk-pet.png'),
-    // "Feed Pet": require('../../assets/images/Pet/feed-pet.png'),
-    // "Groom Pet": require('../../assets/images/Pet/groom-pets.png'),
-    // "Train Pet": require('../../assets/images/Pet/train-pet.png'),
-    // "Bathing Pet": require('../../assets/images/Pet/bath-pet.png'),
-    // "Vet Visit": require('../../assets/images/Pet/vet-app.png'),
-    // "Play with pet": require('../../assets/images/Pet/play-pet.png'),
-    // "Surprising pet": require('../../assets/images/Pet/gift-pet.png'),
-    // "Pet Health Checkup": require('../../assets/images/Pet/health.png'),
-    // "Pet Nutrition": require('../../assets/images/Pet/nutrition.png'),
-    // "Cleaning Pet": require('../../assets/images/Pet/clean-pet.png')
+    "Walk Pet": require('../../assets/images/Pet/walk-pet.png'),
+    "Feed Pet": require('../../assets/images/Pet/feed-pet.png'),
+    "Groom Pet": require('../../assets/images/Pet/groom-pets.png'),
+    "Train Pet": require('../../assets/images/Pet/train-pet.png'),
+    "Bathing Pet": require('../../assets/images/Pet/bath-pet.png'),
+    "Vet Visit": require('../../assets/images/Pet/vet-app.png'),
+    "Play with pet": require('../../assets/images/Pet/play-pet.png'),
+    "Surprising pet": require('../../assets/images/Pet/gift-pet.png'),
+    "Pet Health Checkup": require('../../assets/images/Pet/health.png'),
+    "Pet Nutrition": require('../../assets/images/Pet/nutrition.png'),
+    "Cleaning Pet": require('../../assets/images/Pet/clean-pet.png')
   },
 };
 export default tasksData;
