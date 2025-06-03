@@ -4,7 +4,7 @@ import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import Svg, {Circle, Text as SvgText} from 'react-native-svg';
+import Svg, {Circle, Text as SvgText, TSpan} from 'react-native-svg';
 import BottomNavigation from './BottomNavigation';
 import {Dimensions} from 'react-native';
 
@@ -18,7 +18,12 @@ type RootStackParamList = {
   ProfileManageScreen: undefined;
   AddDailyTaskScreen: undefined;
 };
-
+type TimeFrameStats = {
+  completed: number;
+  total: number;
+  percentage: number;
+  textColor?: string; 
+};
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'MyStatisticsScreen'
@@ -29,6 +34,7 @@ type CircularProgressProps = {
   percentage?: number;
   radius?: number;
   strokeWidth?: number;
+  
 };
 
 const CircularProgress = ({
@@ -41,55 +47,54 @@ const CircularProgress = ({
   const progress = (percentage / 100) * circumference;
 
   return (
-    <View style={tw`flex items-center justify-center bottom-2`}>
-      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {/* Background Circle */}
-        <Circle
-          cx={radius}
-          cy={radius}
-          r={radius - strokeWidth / 2}
-          stroke="#D3E3FC"
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
+   <View style={tw`flex items-center justify-center bottom-2`}>
+  <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    {/* Background Circle */}
+    <Circle
+      cx={radius}
+      cy={radius}
+      r={radius - strokeWidth / 2}
+      stroke="#D3E3FC"
+      strokeWidth={strokeWidth}
+      fill="none"
+    />
 
-        {/* Progress Circle */}
-        <Circle
-          cx={radius}
-          cy={radius}
-          r={radius - strokeWidth / 2}
-          stroke="#3580FF"
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeDasharray={`${progress} ${circumference}`}
-          strokeDashoffset={circumference - progress}
-          strokeLinecap="round"
-          transform={`rotate(-90, ${radius}, ${radius})`}
-        />
+    {/* Progress Circle */}
+    <Circle
+      cx={radius}
+      cy={radius}
+      r={radius - strokeWidth / 2}
+      stroke="#3580FF"
+      strokeWidth={strokeWidth}
+      fill="none"
+      strokeDasharray={`${progress} ${circumference}`}
+      strokeDashoffset={circumference - progress}
+      strokeLinecap="round"
+      transform={`rotate(-90, ${radius}, ${radius})`}
+    />
 
-        {/* Number */}
-        <SvgText
-          x={radius}
-          y={radius - 5} // উপরে রাখতে
-          textAnchor="middle"
-          fontSize="24"
-          fontWeight="bold"
-          fill="black">
-          {percentage}
-        </SvgText>
-
-        {/* % Symbol নিচে */}
-        <SvgText
-          x={radius}
-          y={radius + 15} // নিচে রাখতে
-          textAnchor="middle"
-          fontSize="14"
-          fontWeight="normal"
-          fill="gray">
-          %
-        </SvgText>
-      </Svg>
-    </View>
+    {/* Number and % symbol side by side */}
+    <SvgText
+      x={radius}
+      y={radius + 5} // উলম্ব সেন্টারিং
+      textAnchor="middle"
+      fontSize="24"
+      fontWeight="bold"
+      fill="black"
+    >
+      {percentage}
+      <TSpan // % চিহ্নের জন্য
+        fontSize="14"
+        fontWeight="normal"
+        fill="gray"
+        dx="-8" // সংখ্যা থেকে স্পেস
+        dy="" // উলম্ব অ্যালাইনমেন্ট ঠিক করতে
+      >
+        %
+      </TSpan>
+    </SvgText>
+  </Svg>
+</View>
   );
 };
 
@@ -148,15 +153,15 @@ const MyStatisticsScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-gray-200`}>
-      <ScrollView contentContainerStyle={tw`p-4 pb-20`}>
+      <ScrollView contentContainerStyle={tw`p-4 pb-28`}>
         {/* হেডার সেকশন */}
         <Text style={tw`text-xl font-bold text-black`}>My Statistics</Text>
-        <Text style={[tw`text-gray-500 mb-4`, {color: '#8D99AE'}]}>
+        <Text style={[tw``, {color: '#8D99AE',lineHeight:20,letterSpacing:1,fontSize:11}]}>
           Your task progress and habit report
         </Text>
 
         {/* টপ স্ট্যাটিস্টিক্স */}
-        <View style={tw`rounded-lg bg-white `}>
+        <View style={tw`rounded-lg bg-white top-4 `}>
           <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
             <View
               style={[
@@ -185,13 +190,13 @@ const MyStatisticsScreen = () => {
             </View>
           </View>
           {/* প্রোগ্রেস সার্কেল */}
-          <View style={tw`items-center h-44 `}>
-            <Text style={tw`mb-4 my-4 font-medium text-sm`}>Overall Score</Text>
+          <View style={tw`items-center h-44 top-4`}>
+            <Text style={tw` my-4 font-medium text-sm`}>Overall Score</Text>
             <CircularProgress percentage={statsData.successScore} />
           </View>
         </View>
-      <View style={tw`bg-white`}>
-          <View style={tw`bg-white h-24 rounded-lg my-4`}>
+      <View style={tw`bg-white top-12 rounded-lg`}>
+          <View style={tw`bg-white h-24 rounded-lg`}>
           <View
             style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
             {['Weekly', 'Monthly', 'Yearly'].map(tab => (
@@ -215,12 +220,12 @@ const MyStatisticsScreen = () => {
           </View>
         </View>
         {/* কারেন্ট প্রোগ্রেস সেকশন */}
-        <View style={tw`bg-white shadow-lg rounded-lg p-4 mb-4`}>
+        <View style={tw`bg-white shadow-lg rounded-lg p-4`}>
           <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
             Last
           </Text>
           <View style={tw`flex-row items-center justify-between`}>
-            <CircularProgress percentage={statsData.successScore} radius={40} />
+            <CircularProgress  percentage={statsData.successScore} radius={40} />
             <View style={tw`ml-4`}>
               <Text style={tw`text-gray-800 font-medium text-sm`}>
                 Task{'\n'} Completed
@@ -240,8 +245,8 @@ const MyStatisticsScreen = () => {
                   : 'You improve a lot, To keep it up; Stay focus. Follow ExpandTimes '}
               </Text>
               <TouchableOpacity
-                style={tw`bg-blue-100 p-3 rounded-xl mx-4 mt-2 items-center`}>
-                <Text style={tw`text-blue-500 font-medium font-xs `}>
+                style={[tw`p-3 rounded-xl mx-4 mt-2 items-center`,{backgroundColor:"#F1F7FF"}]}>
+                <Text style={[tw`font-medium font-xs `,{color:"#3580FF"}]}>
                   Follow
                 </Text>
               </TouchableOpacity>
@@ -251,17 +256,16 @@ const MyStatisticsScreen = () => {
       </View>
 
         {/* হ্যাবিট সামারি */}
-        <View style={tw`p-4 bg-gray-100 rounded-lg`}>
+        <View style={tw`p-4 bg-gray-100 rounded-lg top-16`}>
           <View style={tw`flex-row justify-between mb-6`}>
             <View>
-              <Text style={tw`text-black text-base font-medium `}>Habits</Text>
-              <Text style={tw`text-gray-400 right-1 font-normal`}>
-                {' '}
+              <Text style={[tw`text-black font-medium `,{fontSize:16,letterSpacing:1,lineHeight:20}]}>Habits</Text>
+              <Text style={[tw`text-gray-400  font-normal`,{fontSize:12,letterSpacing:0,lineHeight:20,left:1}]}>
                 Summary
               </Text>
             </View>
             <View>
-              <Text style={tw`text-gray-400 text-xs font-medium`}>
+              <Text style={[tw`text-gray-400 text-xs font-normal`,{letterSpacing:1}]}>
                 More Details
               </Text>
             </View>
@@ -292,8 +296,8 @@ const MyStatisticsScreen = () => {
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
-                Best Streak
+              <Text style={[tw`text-gray-500 font-semibold `, {fontSize: 9}]}>
+                BEST STREAK DAY
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.bestStreak}
