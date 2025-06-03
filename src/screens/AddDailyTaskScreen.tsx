@@ -415,7 +415,7 @@ const AddDailyTaskScreen = () => {
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
       <View style={tw`top-6 `}>
-          <ScrollView
+        <ScrollView
           horizontal
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
@@ -484,14 +484,20 @@ const AddDailyTaskScreen = () => {
             }}
             style={tw`items-center mr-2`}>
             <View
-              style={[tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`,{width: 74,
-                    height: 74,}]}>
-               <Image
-                        source={require('../../assets/images/CustomCategory.png')}
-                        style={[tw``,{width:44,height:42}]}
-                      />
+              style={[
+                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`,
+                {width: 74, height: 74},
+              ]}>
+              <Image
+                source={require('../../assets/images/CustomCategory.png')}
+                style={[tw``, {width: 44, height: 42}]}
+              />
             </View>
-            <Text style={[tw`text-black text-xs font-medium top-1`,{fontSize:12,color:"#27282A"}]}>
+            <Text
+              style={[
+                tw`text-black text-xs font-medium top-1`,
+                {fontSize: 12, color: '#27282A'},
+              ]}>
               Add Category
             </Text>
           </TouchableOpacity>
@@ -594,17 +600,21 @@ const AddDailyTaskScreen = () => {
                       tasksData[selectedCategory]?.[expandedTask] ||
                       customTasksData[selectedCategory]?.[expandedTask]
                     }
-                    style={[tw`mr-3`, {width: 30, height: 30,tintColor: selectedColor}]} // সংশোধিত লাইন
+                    style={[
+                      tw`mr-3`,
+                      {width: 30, height: 30, tintColor: selectedColor},
+                    ]} // সংশোধিত লাইন
                   />
                   <Text
                     style={[
                       tw`text-sm font-medium text-black ml-2`,
                       {letterSpacing: 1},
                     ]}>
-                    {expandedTask.slice(0,6) + (expandedTask.length> 6 ? '...':'')}
+                    {expandedTask.slice(0, 6) +
+                      (expandedTask.length > 6 ? '...' : '')}
                   </Text>
                   {/* star icon */}
-                  <View style={[tw``,{left:185}]}>
+                  <View style={[tw``, {left: 185}]}>
                     <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
                       <Icon
                         name={isStarred ? 'star' : 'star-outline'}
@@ -980,8 +990,11 @@ const AddDailyTaskScreen = () => {
           }}
           style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
           <View style={tw`flex-row items-center`}>
-            <Icon name="add-circle-outline" size={32} color={selectedColor} />
-            <Text style={[tw`text-sm font-medium left-6`, {color: selectedColor}]}>
+            <Image
+              source={require('../../assets/images/CustomTask.png')}
+              style={[tw``, {width: 30, height: 30}]}
+            />
+            <Text style={[tw`text-sm font-medium text-black left-8`]}>
               Add Custom Task
             </Text>
           </View>
