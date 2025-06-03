@@ -386,7 +386,7 @@ const TodaysTaskToDoScreen = () => {
                       {task.icon && (
                         <Image
                           source={task.icon}
-                          style={[tw`mr-2`, {width: 30, height: 30}]}
+                          style={[tw`mr-4`, {width: 30, height: 30}]}
                         />
                       )}
 
