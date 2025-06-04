@@ -231,7 +231,11 @@ const ProfileManageScreen = () => {
                   elevation: 10, // for Android shadow
                 },
               ]}>
-              <Text style={[tw`text-sm font-medium text-gray-700`,{lineHeight:20}]}>
+              <Text
+                style={[
+                  tw`text-sm font-medium text-gray-700`,
+                  {lineHeight: 20},
+                ]}>
                 Sign Out
               </Text>
             </TouchableOpacity>
@@ -239,43 +243,47 @@ const ProfileManageScreen = () => {
         </View>
 
         {/* Themes Section with Colors */}
-       <View style={tw`bg-white rounded-xl shadow mb-2`}>
-         <TouchableOpacity
-          onPress={() => setThemes(!themes)}
-          style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon
-            name="moon-outline"
-            size={24}
-            color="#3580FF"
-            style={tw`mr-2`}
-          />
-          <Text style={tw`text-black text-base `}>Themes</Text>
-        </TouchableOpacity>
-        {themes && (
-          <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
-            <Text style={tw`text-gray-700 text-base text-center`}>
-              {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(
-                color => (
-                  <TouchableOpacity
-                    key={color}
-                    onPress={() => setSelectedColor(color)}
-                    style={tw`items-center `}>
-                    {/* Color Circle */}
-                    <View
-                      style={[
-                        tw`w-6 h-6 rounded-full mb-1 mx-1`,
-                        {backgroundColor: color},
-                      ]}
-                    />
-                    {/* Color Text */}
-                    {/* <Text style={{color, fontSize: 10}}>bg {color}</Text> */}
-                  </TouchableOpacity>
-                ),
-              )}
-            </Text>
+        <View style={tw`bg-white rounded-xl shadow mb-2`}>
+          <TouchableOpacity
+            onPress={() => setThemes(!themes)}
+            style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
+            <Icon
+              name="moon-outline"
+              size={24}
+              color="#3580FF"
+              style={tw`mr-2`}
+            />
+            <Text style={tw`text-black text-base `}>Themes</Text>
           </TouchableOpacity>
-        )}
-       </View>
+          {themes && (
+            <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
+              <View style={tw`flex-row justify-center flex-wrap`}>
+                {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(
+                  color => (
+                    <TouchableOpacity
+                      key={color}
+                      onPress={() => setSelectedColor(color)}
+                      style={tw`items-center mx-2 my-1`}>
+                      <View
+                        style={[
+                          tw`w-6 h-6 rounded-full`,
+                          {
+                            backgroundColor: color,
+                            shadowColor: '#4A90E2',
+                            shadowOffset: {width: 0, height: 3},
+                            shadowOpacity: 0.15,
+                            shadowRadius: 6,
+                            elevation: 4, // Android shadow
+                          },
+                        ]}
+                      />
+                    </TouchableOpacity>
+                  ),
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
