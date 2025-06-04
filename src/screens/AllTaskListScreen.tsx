@@ -548,7 +548,6 @@ const AllTaskListScreen = () => {
                       </LinearGradient>
                     </View>
                   </View>
-
                   {/* Add Specific Day On */}
                   <View style={tw`mb-2 bottom-2`}>
                     <View style={tw`flex-row items-center mb-4`}>
@@ -633,7 +632,6 @@ const AllTaskListScreen = () => {
                       </LinearGradient>
                     </View>
                   </View>
-
                   {/* Set Daily Target */}
                   <View style={tw`mb-3 bottom-4`}>
                     <View style={tw`flex-row items-center`}>
@@ -665,7 +663,7 @@ const AllTaskListScreen = () => {
                             borderWidth: 1,
                             borderColor: '#E3E8F1',
                             width: 40,
-                            height: 28,
+                            height: 23,
                             fontSize: 12,
                             fontWeight: 400,
                             color: isDailyTargetEnabled ? '#000' : '#999',
@@ -765,7 +763,7 @@ const AllTaskListScreen = () => {
                             ? 'chevron-down'
                             : 'create-outline'
                         }
-                        size={24}
+                        size={20}
                         color="#4b5563"
                       />
                     </TouchableOpacity>
