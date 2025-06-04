@@ -204,18 +204,29 @@ const ProfileManageScreen = () => {
           <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
         {/* Account Section with Toggle */}
-        <View style={[tw`bg-white mb-2 rounded-xl shadow`]}>
+        <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
             onPress={() => setShowSignOut(!showSignOut)}
-            style={tw`flex-row items-center p-4 bg-white rounded-xl`}>
+            style={tw`flex-row items-center justify-between p-4 bg-white rounded-xl`}>
+            <View style={tw`flex-row items-center`}>
+              <Icon
+                name="person-outline"
+                size={24}
+                color="#3580FF"
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-black text-base`}>Account</Text>
+            </View>
+
+            {/* Chevron toggle icon */}
             <Icon
-              name="person-outline"
-              size={24}
-              color="#3580FF"
-              style={tw`mr-2`}
+              name={showSignOut ? 'chevron-up' : 'chevron-down'}
+              size={20}
+              color="#DFDFDF"
             />
-            <Text style={tw`text-black text-base`}>Account</Text>
           </TouchableOpacity>
+
+          {/* Sign Out Button */}
           {showSignOut && (
             <TouchableOpacity
               style={[
@@ -224,11 +235,11 @@ const ProfileManageScreen = () => {
                   paddingVertical: 12,
                   paddingHorizontal: 32,
                   borderRadius: 9999,
-                  shadowColor: '#4A90E2', // Light blue glow
+                  shadowColor: '#4A90E2',
                   shadowOffset: {width: 0, height: 5},
                   shadowOpacity: 0.15,
                   shadowRadius: 20,
-                  elevation: 10, // for Android shadow
+                  elevation: 10,
                 },
               ]}>
               <Text
@@ -243,59 +254,60 @@ const ProfileManageScreen = () => {
         </View>
 
         {/* Themes Section with Colors */}
-       <View style={tw`bg-white rounded-xl shadow mb-2`}>
-  <TouchableOpacity
-    onPress={() => setThemes(!themes)} // এখানেই toggle হচ্ছে
-    style={tw`flex-row items-center justify-between p-4 bg-white mb-2 rounded-xl shadow`}>
-    
-    <View style={tw`flex-row items-center`}>
-      <Icon
-        name="moon-outline"
-        size={24}
-        color="#3580FF"
-        style={tw`mr-2`}
-      />
-      <Text style={tw`text-black text-base`}>Themes</Text>
-    </View>
-
-    {/* Chevron Icon toggle */}
-    <Icon
-      name={themes ? 'chevron-up' : 'chevron-down'}
-      size={20}
-      color="#DFDFDF"
-    />
-  </TouchableOpacity>
-
-  {/* Theme color options */}
-  {themes && (
-    <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
-      <View style={tw`flex-row justify-center flex-wrap`}>
-        {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
+        <View style={tw`bg-white rounded-xl shadow mb-2`}>
           <TouchableOpacity
-            key={color}
-            onPress={() => setSelectedColor(color)}
-            style={tw`items-center mx-1`}>
-            <View
-              style={[
-                tw`w-6 h-6 rounded-full`,
-                {
-                  backgroundColor: color,
-                  shadowColor: '#4A90E2',
-                  shadowOffset: { width: 0, height: 3 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 6,
-                  elevation: 4,
-                  width: 28,
-                  height: 28,
-                },
-              ]}
+            onPress={() => setThemes(!themes)} // এখানেই toggle হচ্ছে
+            style={tw`flex-row items-center justify-between p-4 bg-white mb-2 rounded-xl shadow`}>
+            <View style={tw`flex-row items-center`}>
+              <Icon
+                name="moon-outline"
+                size={24}
+                color="#3580FF"
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-black text-base`}>Themes</Text>
+            </View>
+
+            {/* Chevron Icon toggle */}
+            <Icon
+              name={themes ? 'chevron-up' : 'chevron-down'}
+              size={20}
+              color="#DFDFDF"
             />
           </TouchableOpacity>
-        ))}
-      </View>
-    </TouchableOpacity>
-  )}
-</View>
+
+          {/* Theme color options */}
+          {themes && (
+            <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
+              <View style={tw`flex-row justify-center flex-wrap`}>
+                {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(
+                  color => (
+                    <TouchableOpacity
+                      key={color}
+                      onPress={() => setSelectedColor(color)}
+                      style={tw`items-center mx-1`}>
+                      <View
+                        style={[
+                          tw`w-6 h-6 rounded-full`,
+                          {
+                            backgroundColor: color,
+                            shadowColor: '#4A90E2',
+                            shadowOffset: {width: 0, height: 3},
+                            shadowOpacity: 0.15,
+                            shadowRadius: 6,
+                            elevation: 4,
+                            width: 28,
+                            height: 28,
+                          },
+                        ]}
+                      />
+                    </TouchableOpacity>
+                  ),
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
 
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
