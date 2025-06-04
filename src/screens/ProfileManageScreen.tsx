@@ -257,7 +257,7 @@ const ProfileManageScreen = () => {
         <View style={tw`bg-white rounded-xl shadow mb-2`}>
           <TouchableOpacity
             onPress={() => setThemes(!themes)} // এখানেই toggle হচ্ছে
-            style={tw`flex-row items-center justify-between p-4 bg-white mb-2 rounded-xl shadow`}>
+            style={tw`flex-row items-center justify-between p-3 bg-white mb-2 rounded-xl shadow`}>
             <View style={tw`flex-row items-center`}>
               <Icon
                 name="moon-outline"
@@ -397,7 +397,7 @@ const ProfileManageScreen = () => {
         </View>
         {/* Google Play Button */}
         <TouchableOpacity
-          style={tw`bg-blue-500 mt-5 rounded-full py-2 items-center mx-4`}>
+          style={tw`bg-blue-500 mt-5 top-6 rounded-full py-2 items-center mx-4`}>
           <Text style={tw`text-white font-normal text-base`}>
             Rate Us on Google Play
           </Text>
