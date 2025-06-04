@@ -388,22 +388,23 @@ const AddDailyTaskScreen = () => {
       <View style={tw``}>
         <Text
           style={[
-            tw`font-bold font-sans text-black top-2 left-3`,
+            tw`font-bold font-sans text-black top-2 left-5`,
             {fontSize: 20},
           ]}>
           Add Task
         </Text>
         <Text
-          style={[
-            tw`font-light top-2 mx-3`,
-            {
-              fontSize: 12,
-              lineHeight: 18,
-              letterSpacing: 1,
-              color: '#8D99AE',
-              fontFamily: 'Poppins',
-            },
-          ]}>
+         style={[
+  tw`font-light top-2 px-5`, // px-5 means padding-left: 20px, padding-right: 20px
+  {
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 1,
+    color: '#8D99AE',
+    fontFamily: 'Poppins',
+  },
+]}
+>
           Add tasks that you want to include in your routine. Make them
           compulsory to make your everyday life productive. So, it becomes a
           habit.
@@ -414,7 +415,7 @@ const AddDailyTaskScreen = () => {
         </Text> */}
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`top-6 `}>
+      <View style={tw`top-8 left-3 `}>
         <ScrollView
           horizontal
           ref={scrollViewRef}
@@ -444,7 +445,7 @@ const AddDailyTaskScreen = () => {
               }}>
               <View
                 style={[
-                  tw`rounded-full items-center justify-center bg-white`,
+                  tw`rounded-full items-center justify-center bg-white `,
                   {
                     width: 74,
                     height: 74,
@@ -460,12 +461,12 @@ const AddDailyTaskScreen = () => {
                 ]}>
                 <Image
                   source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={{width: 48, height: 48}}
+                  style={{width: 40, height: 40}}
                 />
               </View>
 
               <Text
-                style={tw`mt-1 font-bold ${
+                style={tw`mt-3 font-bold ${
                   selectedCategory === category
                     ? 'text-blue-500 text-sm'
                     : 'text-black text-xs font-medium '
@@ -506,7 +507,7 @@ const AddDailyTaskScreen = () => {
 
       {/* Task List (Scrollable) */}
       <ScrollView
-        style={tw`flex-1 p-4 top-6`}
+        style={tw`flex-1 top-12 mx-4`}
         contentContainerStyle={tw`pb-20`}
         showsVerticalScrollIndicator={false}>
         {Object.keys({
@@ -619,7 +620,7 @@ const AddDailyTaskScreen = () => {
                       <Icon
                         name={isStarred ? 'star' : 'star-outline'}
                         size={24}
-                        color={isStarred ? 'gold' : 'gray'}
+                        color={isStarred ? '#3580FF' : 'gray'}
                         style={tw`mr-2`}
                       />
                     </TouchableOpacity>
@@ -627,7 +628,7 @@ const AddDailyTaskScreen = () => {
                 </View>
                 {/* Add Specific For */}
                 <View style={tw`bottom-4`}>
-                  <View style={tw`flex-row items-center mb-4`}>
+                  <View style={tw`flex-row items-center mb-4 right-1`}>
                     <TouchableOpacity onPress={handleToggleSpecificFor}>
                       <Icon
                         name={
@@ -635,8 +636,8 @@ const AddDailyTaskScreen = () => {
                             ? 'radio-button-on'
                             : 'radio-button-off'
                         }
-                        size={20}
-                        color={isSpecificForEnabled ? 'blue' : 'gray'}
+                        size={24}
+                        color={isSpecificForEnabled ? '#3580FF' : 'gray'}
                       />
                     </TouchableOpacity>
                     <Text
@@ -655,10 +656,13 @@ const AddDailyTaskScreen = () => {
                           width: 30,
                           height: 23,
                           fontSize: 12,
+                          letterSpacing: 1,
+                          color:""
                         },
                       ]}
                       keyboardType="numeric"
                       placeholder="00"
+                      placeholderTextColor="#8D99AE"
                       value={specificForValue}
                       onChangeText={setSpecificForValue}
                       editable={isSpecificForEnabled}
@@ -701,15 +705,15 @@ const AddDailyTaskScreen = () => {
                 <View style={tw`bottom-2`}>
                   <TouchableOpacity
                     onPress={toggleSpecificDayOn}
-                    style={tw`flex-row items-center`}>
+                    style={tw`flex-row items-center right-1`}>
                     <Icon
                       name={
                         isSpecificDayOnSelected
                           ? 'radio-button-on'
                           : 'radio-button-off'
                       }
-                      size={20}
-                      color={isSpecificDayOnSelected ? 'blue' : 'gray'}
+                      size={24}
+                      color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
                     />
                     <Text
                       style={[
@@ -761,7 +765,7 @@ const AddDailyTaskScreen = () => {
                 </LinearGradient>
                 {/* Set Daily Target */}
                 <View style={tw`bottom-3`}>
-                  <View style={tw`flex-row items-center `}>
+                  <View style={tw`flex-row items-center right-1`}>
                     <TouchableOpacity onPress={toggleDailyTarget}>
                       <Icon
                         name={
@@ -769,8 +773,8 @@ const AddDailyTaskScreen = () => {
                             ? 'checkbox-outline'
                             : 'square-outline'
                         }
-                        size={20}
-                        color={isDailyTargetEnabled ? 'blue' : 'gray'}
+                        size={24}
+                        color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
                       />
                     </TouchableOpacity>
                     <Text
@@ -788,10 +792,12 @@ const AddDailyTaskScreen = () => {
                           width: 40,
                           height: 23,
                           fontSize: 12,
+                          letterSpacing: 1,
                         },
                       ]}
                       keyboardType="numeric"
                       placeholder="000"
+                      placeholderTextColor="#8D99AE"
                       value={dailyTarget}
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
@@ -1153,6 +1159,7 @@ const AddDailyTaskScreen = () => {
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
+    
   );
 };
 

@@ -193,7 +193,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View
-        style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        style={[tw`flex-1 justify-center items-center bg-black bg-opacity-30`]}>
         <View style={tw`bg-white rounded-xl p-4 w-11/12 `}>
           {/* Header */}
           <View
@@ -225,14 +225,14 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
               <TouchableOpacity
                 onPress={handleSaveDates}
-                style={tw`bg-gray-400 py-2 rounded-xl top-2 w-20 left-8`}>
+                style={tw`bg-gray-400 py-2 rounded-xl w-20 left-8`}>
                 <Text style={tw`text-white text-center font-medium`}>Save</Text>
               </TouchableOpacity>
             </View>
 
             {/* Right Column - Date Pickers */}
             <View style={tw`flex-1 pl-4`}>
-              <View style={tw`flex-row justify-between mb-4`}>
+              <View style={tw`flex-row justify-between mb-4 bottom-4`}>
                 {/* Days Picker */}
                 <View
                   style={[
@@ -329,7 +329,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               </View>
 
               {/* Buttons and Options */}
-              <View style={tw``}>
+              <View style={tw`bottom-4`}>
                 <View style={tw`flex-row items-center justify-center `}>
                   <TouchableOpacity
                     onPress={onCancel}
