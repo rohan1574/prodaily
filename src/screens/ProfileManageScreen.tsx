@@ -239,7 +239,7 @@ const ProfileManageScreen = () => {
         </View>
 
         {/* Themes Section with Colors */}
-       <View style={tw``}>
+       <View style={tw`bg-white rounded-xl shadow mb-2`}>
          <TouchableOpacity
           onPress={() => setThemes(!themes)}
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
