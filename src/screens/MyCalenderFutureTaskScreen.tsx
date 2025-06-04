@@ -109,10 +109,9 @@ const MyCalenderFutureTaskScreen = () => {
           weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
           width={300}
           textStyle={{
-            fontFamily: 'Roboto',
+            fontFamily: 'Sora',
             fontWeight: 600,
-            fontSize: 16,
-            letterSpacing: -0.5,
+            fontSize: 15,
             color: '#2B2D42',
           }}
           // Corrected prop name below

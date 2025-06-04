@@ -469,7 +469,7 @@ const AddDailyTaskScreen = () => {
                 style={tw`mt-3 font-bold ${
                   selectedCategory === category
                     ? 'text-blue-500 text-sm'
-                    : 'text-black text-xs font-medium '
+                    : 'text-black text-sm font-semibold '
                 }`}>
                 {category}
               </Text>
@@ -483,10 +483,10 @@ const AddDailyTaskScreen = () => {
               setNewCategoryName('');
               setSelectedCategoryIcon(null);
             }}
-            style={tw`items-center mr-2`}>
+            style={tw`items-center `}>
             <View
               style={[
-                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white`,
+                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white right-2`,
                 {width: 74, height: 74},
               ]}>
               <Image
@@ -496,8 +496,8 @@ const AddDailyTaskScreen = () => {
             </View>
             <Text
               style={[
-                tw`text-black text-xs font-medium top-1`,
-                {fontSize: 12, color: '#27282A'},
+                tw`text-black text-sm font-semibold top-3 right-2`,
+                {color: '#27282A'},
               ]}>
               Add Category
             </Text>
@@ -595,7 +595,8 @@ const AddDailyTaskScreen = () => {
                   },
                 ]}>
                 {/* Header */}
-                <View style={tw`flex-row items-center mb-6`}>
+                <View style={tw`flex-row justify-between`}>
+                   <View style={tw`flex-row items-center mb-6`}>
                   <Image
                     source={
                       tasksData[selectedCategory]?.[expandedTask] ||
@@ -611,23 +612,25 @@ const AddDailyTaskScreen = () => {
                       tw`text-sm font-medium text-black ml-2`,
                       {letterSpacing: 1},
                     ]}>
-                    {expandedTask.slice(0, 6) +
-                      (expandedTask.length > 6 ? '...' : '')}
+                    {expandedTask}
                   </Text>
                   {/* star icon */}
-                  <View style={[tw``, {left: 185}]}>
+                 
+                </View>
+                 <View style={[tw``, ]}>
                     <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
                       <Icon
                         name={isStarred ? 'star' : 'star-outline'}
-                        size={24}
+                        size={20}
                         color={isStarred ? '#3580FF' : 'gray'}
                         style={tw`mr-2`}
                       />
                     </TouchableOpacity>
                   </View>
                 </View>
+               
                 {/* Add Specific For */}
-                <View style={tw`bottom-4`}>
+                <View style={tw`bottom-3`}>
                   <View style={tw`flex-row items-center mb-4 right-1`}>
                     <TouchableOpacity onPress={handleToggleSpecificFor}>
                       <Icon
@@ -666,6 +669,7 @@ const AddDailyTaskScreen = () => {
                       value={specificForValue}
                       onChangeText={setSpecificForValue}
                       editable={isSpecificForEnabled}
+                      maxLength={2}
                     />
                     <LinearGradient
                       colors={['#F7FAFF', '#DEEAFF']}
@@ -801,6 +805,7 @@ const AddDailyTaskScreen = () => {
                       value={dailyTarget}
                       onChangeText={setDailyTarget}
                       editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
+                      maxLength={3}
                     />
                     <LinearGradient
                       colors={['#F7FAFF', '#DEEAFF']}
@@ -926,7 +931,7 @@ const AddDailyTaskScreen = () => {
                       name={
                         expandedTask === task ? 'chevron-up' : 'chevron-down'
                       }
-                      size={24}
+                      size={20}
                       color="#8D99AE" // Blue Color
                     />
                   </TouchableOpacity>

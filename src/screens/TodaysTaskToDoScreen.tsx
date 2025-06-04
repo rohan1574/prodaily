@@ -7,7 +7,7 @@ import {
   Image,
   ImageBackground,
   Modal,
-  TextInput
+  TextInput,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -287,21 +287,39 @@ const TodaysTaskToDoScreen = () => {
       {/* Header - Fixed at top */}
       <ImageBackground
         source={require('../../assets/images/vec.png')}
-        style={[tw`rounded-lg mx-2 top-4`, {height: 138}]}
+        style={[tw`rounded-lg mx-2 top-4`, {height: 155}]}
         imageStyle={tw`rounded-lg`}>
         <View style={tw`absolute inset-0 bg-black bg-opacity-30`}></View>
 
         <View style={tw`p-4`}>
           <View style={tw`flex-row justify-between items-start`}>
+            {/* Left Side - Today and Date */}
             <View style={tw`top-2`}>
               <Text style={[tw`text-xl font-medium`, {color: '#DEEAFF'}]}>
                 Today
               </Text>
-              <Text style={[tw`font-normal`, {color: '#DEEAFF', fontSize: 15}]}>
+              <Text
+                style={[
+                  tw`font-normal`,
+                  {color: '#FFFFFF', fontSize: 15, letterSpacing: 1},
+                ]}>
                 {formattedDate}
               </Text>
             </View>
 
+            {/* Divider */}
+            <View style={tw`mx-4 top-4`}>
+              <View
+                style={{
+                  width: 1,
+                  height: 70,
+                  backgroundColor: '#DEEAFF',
+                  opacity: 0.6,
+                }}
+              />
+            </View>
+
+            {/* Right Side - Profile */}
             <View style={tw`items-end z-10`}>
               <Image
                 source={require('../../assets/images/rony.png')}
@@ -328,7 +346,7 @@ const TodaysTaskToDoScreen = () => {
             </View>
           </View>
 
-          <View style={tw`flex-row items-center space-x-2`}>
+          <View style={tw`flex-row items-center space-x-2 top-4`}>
             <Image
               source={require('../../assets/images/vector.png')}
               style={[tw``, {width: 20, height: 22, color: '#DEEAFF'}]}
@@ -344,7 +362,6 @@ const TodaysTaskToDoScreen = () => {
           </View>
         </View>
       </ImageBackground>
-
       {/* Scrollable Content */}
       <View style={tw`flex-1`}>
         {loading ? (
@@ -402,7 +419,12 @@ const TodaysTaskToDoScreen = () => {
                               <TouchableOpacity
                                 onPress={() => decrementProgress(task.id)}
                                 style={tw`right-1`}>
-                                <Text style={[tw`text-gray-700 `,{fontSize:20}]}>—
+                                <Text
+                                  style={[
+                                    tw`text-black font-extrabold`,
+                                    {fontSize: 20},
+                                  ]}>
+                                  -
                                 </Text>
                               </TouchableOpacity>
 
@@ -427,8 +449,14 @@ const TodaysTaskToDoScreen = () => {
 
                               <TouchableOpacity
                                 onPress={() => incrementProgress(task.id)}
-                                style={tw`left-1`}>
-                                <Icon name="add" size={20} color="#2B2D42" />
+                                style={tw`left-1 font-bold`}>
+                                <Text
+                                  style={[
+                                    tw`text-gray-700 font-bold`,
+                                    {fontSize: 15},
+                                  ]}>
+                                  +
+                                </Text>
                               </TouchableOpacity>
                               <Text
                                 style={[
@@ -468,7 +496,7 @@ const TodaysTaskToDoScreen = () => {
                       <View style={tw`right-2`}>
                         <Icon
                           name={task.isStarred ? 'star' : 'star-outline'}
-                          size={24}
+                          size={20}
                           color={task.isStarred ? '#3580FF' : '#8D99AE'}
                         />
                       </View>

@@ -74,7 +74,14 @@ const ProfileManageScreen = () => {
             style={tw`w-24 h-24 rounded-full border-4 border-white`}
           />
           <View style={tw`items-center `}>
-            <Text style={[tw` font-medium `,,{fontSize:20,letterSpacing:1,color:"#2B2D42"}]}>Mr Rony</Text>
+            <Text
+              style={[
+                tw` font-medium `,
+                ,
+                {fontSize: 20, letterSpacing: 1, color: '#2B2D42'},
+              ]}>
+              Mr Rony
+            </Text>
 
             <View style={tw`flex-row items-center left-12`}>
               <Text style={tw`text-gray-500 mr-2 font-light bottom-1`}>
@@ -93,7 +100,7 @@ const ProfileManageScreen = () => {
       </View>
 
       {/* Fixed Stats Section */}
-      <View style={tw`px-4 bottom-4`}>
+      <View style={tw`px-4 bottom-6`}>
         {/* Two Card Row */}
         <View style={tw`flex-row justify-between`}>
           {/* Building Habit Card */}
@@ -102,11 +109,22 @@ const ProfileManageScreen = () => {
               tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
               {width: cardWidth},
             ]}>
-            <Text style={[tw`font-medium left-6`,{fontSize:14,letterSpacing:1,color:"#2B2D42"}]}>
+            <Text
+              style={[
+                tw`font-medium left-6`,
+                {fontSize: 14, letterSpacing: 1, color: '#2B2D42'},
+              ]}>
               Building Habit
             </Text>
             <Text style={tw`text-2xl font-semibold text-black mt-1 left-8`}>
-              143 <Text style={[tw` font-light`,{fontSize:12,letterSpacing:1,color:"#8D9094"}]}>Days</Text>
+              143{' '}
+              <Text
+                style={[
+                  tw` font-light`,
+                  {fontSize: 12, letterSpacing: 1, color: '#8D9094'},
+                ]}>
+                Days
+              </Text>
             </Text>
           </View>
 
@@ -116,14 +134,18 @@ const ProfileManageScreen = () => {
               tw`bg-white rounded-xl px-4 py-3 shadow-sm`,
               {width: cardWidth},
             ]}>
-            <Text style={[tw`text-gray-600 font-medium text-xs left-4`,{fontSize:14,letterSpacing:1,color:"#2B2D42"}]}>
+            <Text
+              style={[
+                tw`text-gray-600 font-medium text-xs left-4`,
+                {fontSize: 14, letterSpacing: 1, color: '#2B2D42'},
+              ]}>
               Point Collected
             </Text>
             <View style={tw`flex-row items-center left-4`}>
               <View
                 style={[
                   tw`flex-row items-center mt-1 rounded-lg`,
-                  {backgroundColor: '#FFF3DA',width:65},
+                  {backgroundColor: '#FFF3DA', width: 65},
                 ]}>
                 <Text style={{width: 16, height: 20}}>🏅</Text>
                 <Text
@@ -136,14 +158,24 @@ const ProfileManageScreen = () => {
                   {points || 0}
                 </Text>
               </View>
-              <Text style={[tw`left-1 font-light`,{fontSize:12,letterSpacing:1,color:"#8D9094"}]}>next 500</Text>
+              <Text
+                style={[
+                  tw`left-1 font-light`,
+                  {fontSize: 12, letterSpacing: 1, color: '#8D9094'},
+                ]}>
+                next 500
+              </Text>
             </View>
           </View>
         </View>
         {/* Bottom Info Text */}
         {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
-            <Text style={[tw`text-gray-500 text-center text-xs`,{color:"#8D99AE",letterSpacing:.5}]}>
+            <Text
+              style={[
+                tw`text-gray-500 text-center text-xs`,
+                {color: '#8D99AE', letterSpacing: 0.5},
+              ]}>
               Be regular, collect points, Stick with ProDAILY time{'\n'}
               consciousness journey. You'll get rewards.
             </Text>
@@ -153,7 +185,7 @@ const ProfileManageScreen = () => {
 
       {/* Scrollable Menu Options */}
       <ScrollView
-        style={tw`flex-1 mt-4 px-4`}
+        style={tw`flex-1  px-4`}
         contentContainerStyle={tw`pb-20`}
         onScroll={({nativeEvent}) => {
           // Hide text when scrolled beyond 5px, show when at top
@@ -171,44 +203,48 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon
-            name="star-outline"
-            size={24}
-            color="#3580FF"
-            style={tw`mr-2`}
-          />
-          <Text style={tw`text-black text-base`}>Get Premium</Text>
-        </TouchableOpacity>
-
         {/* Account Section with Toggle */}
-        <TouchableOpacity
-          onPress={() => setShowSignOut(!showSignOut)}
-          style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
-          <Icon
-            name="person-outline"
-            size={24}
-            color="#3580FF"
-            style={tw`mr-2`}
-          />
-          <Text style={tw`text-black text-base`}>Account</Text>
-        </TouchableOpacity>
-        {showSignOut && (
-          <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
-            <Text style={tw`text-gray-700 text-base text-center`}>
-              Sign Out
-            </Text>
+        <View style={[tw`bg-white mb-2 rounded-xl shadow`]}>
+          <TouchableOpacity
+            onPress={() => setShowSignOut(!showSignOut)}
+            style={tw`flex-row items-center p-4 bg-white rounded-xl`}>
+            <Icon
+              name="person-outline"
+              size={24}
+              color="#3580FF"
+              style={tw`mr-2`}
+            />
+            <Text style={tw`text-black text-base`}>Account</Text>
           </TouchableOpacity>
-        )}
-       
+          {showSignOut && (
+            <TouchableOpacity
+              style={[
+                tw`bg-white items-center justify-center bottom-4 mx-8 mt-4`,
+                {
+                  paddingVertical: 12,
+                  paddingHorizontal: 32,
+                  borderRadius: 9999,
+                  shadowColor: '#4A90E2', // Light blue glow
+                  shadowOffset: {width: 0, height: 5},
+                  shadowOpacity: 0.15,
+                  shadowRadius: 20,
+                  elevation: 10, // for Android shadow
+                },
+              ]}>
+              <Text style={[tw`text-sm font-medium text-gray-700`,{lineHeight:20}]}>
+                Sign Out
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
         {/* Themes Section with Colors */}
+       <View style={tw``}>
          <TouchableOpacity
           onPress={() => setThemes(!themes)}
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
-              name="moon-outline"
+            name="moon-outline"
             size={24}
             color="#3580FF"
             style={tw`mr-2`}
@@ -218,25 +254,28 @@ const ProfileManageScreen = () => {
         {themes && (
           <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
             <Text style={tw`text-gray-700 text-base text-center`}>
-               {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(color => (
-            <TouchableOpacity
-              key={color}
-              onPress={() => setSelectedColor(color)}
-              style={tw`items-center `}>
-              {/* Color Circle */}
-              <View
-                style={[
-                  tw`w-6 h-6 rounded-full mb-1 mx-1`,
-                  {backgroundColor: color},
-                ]}
-              />
-              {/* Color Text */}
-              {/* <Text style={{color, fontSize: 10}}>bg {color}</Text> */}
-            </TouchableOpacity>
-          ))}
+              {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(
+                color => (
+                  <TouchableOpacity
+                    key={color}
+                    onPress={() => setSelectedColor(color)}
+                    style={tw`items-center `}>
+                    {/* Color Circle */}
+                    <View
+                      style={[
+                        tw`w-6 h-6 rounded-full mb-1 mx-1`,
+                        {backgroundColor: color},
+                      ]}
+                    />
+                    {/* Color Text */}
+                    {/* <Text style={{color, fontSize: 10}}>bg {color}</Text> */}
+                  </TouchableOpacity>
+                ),
+              )}
             </Text>
           </TouchableOpacity>
         )}
+       </View>
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
