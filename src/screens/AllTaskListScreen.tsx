@@ -16,6 +16,7 @@ import DayPicker from './DayPicker';
 import DatePicker from './DatePicker';
 import DateSelector from './DateSelector';
 import {Keyboard} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface Task {
   id: string;
@@ -329,8 +330,12 @@ const AllTaskListScreen = () => {
         </View>
       </Modal>
       <View style={tw`mb-4 top-6 left-4 mx-2`}>
-        <Text style={tw`text-2xl font-bold `}>Manage My Task </Text>
-        <Text style={[tw`font-normal `, {fontSize: 14, color: '#8D99AE'}]}>
+        <Text style={tw`text-xl font-bold `}>Manage My Task </Text>
+        <Text
+          style={[
+            tw`font-normal `,
+            {fontSize: 11, color: '#8D99AE', lineHeight: 20, letterSpacing: 1},
+          ]}>
           Your all the added running tasks list.
         </Text>
       </View>
@@ -417,8 +422,8 @@ const AllTaskListScreen = () => {
                       <TouchableOpacity onPress={() => toggleStar(task.id)}>
                         <Icon
                           name={task.isStarred ? 'star' : 'star-outline'}
-                          size={24}
-                          color={task.isStarred ? 'gold' : 'gray'}
+                          size={20}
+                          color={task.isStarred ? '#3580FF' : 'gray'}
                         />
                       </TouchableOpacity>
                     )}
@@ -442,91 +447,100 @@ const AllTaskListScreen = () => {
                 <View style={tw`mt-4`}>
                   {/* Specific For Section */}
                   <View style={tw`mb-6`}>
-                    <View style={tw`flex-row items-center`}>
-                      <TouchableOpacity onPress={toggleSpecificFor}>
-                        <Icon
-                          name={
-                            isSpecificForEnabled
-                              ? 'radio-button-on'
-                              : 'radio-button-off'
-                          }
-                          size={20}
-                          color={isSpecificForEnabled ? 'blue' : 'gray'}
-                        />
-                      </TouchableOpacity>
-                      <Text
-                        style={[
-                          tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: 1},
-                        ]}>
-                        Add Specific for
-                      </Text>
-                      <TextInput
-                        style={[
-                          tw`px-1 py-1 border rounded text-center left-2 ${
-                            !isSpecificForEnabled ? 'bg-gray-100' : ''
-                          }`,
-                          {
-                            borderColor: '#E3E8F1',
-                            width: 32,
-                            height: 30,
-                            fontSize: 10,
-                          },
-                        ]}
-                        keyboardType="numeric"
-                        value={
-                          isSpecificForEnabled
-                            ? editedTask.specificForValue?.toString()
-                            : ''
-                        }
-                        onChangeText={v =>
-                          setEditedTask({
-                            ...editedTask,
-                            specificForValue: parseInt(v) || 0,
-                          })
-                        }
-                        editable={isSpecificForEnabled}
-                        placeholder="0"
-                      />
-                      <View
-                        style={[
-                          tw`flex-row rounded-full left-4`,
-                          {width: 170, height: 30, backgroundColor: '#DEEAFF'},
-                        ]}>
-                        {['Days', 'Weeks', 'Months'].map(type => {
-                          const isSelected =
-                            editedTask.specificFor === type &&
-                            isSpecificForEnabled;
-                          return (
-                            <TouchableOpacity
-                              key={type}
-                              style={tw`px-2 py-1 mx- rounded-full ${
-                                isSelected
-                                  ? 'bg-blue-700 border border-blue-500'
-                                  : ''
-                              }`}
-                              onPress={() =>
-                                isSpecificForEnabled &&
-                                setEditedTask({
-                                  ...editedTask,
-                                  specificFor: type,
-                                })
-                              }
-                              disabled={!isSpecificForEnabled}>
-                              <Text
-                                style={tw`text-sm ${
-                                  isSelected
-                                    ? 'text-white font-semibold'
-                                    : 'text-gray-500'
-                                }`}>
-                                {type}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </View>
-                    </View>
-                  </View>
+  <View style={tw`flex-row items-center mb-4`}>
+    {/* Radio Toggle */}
+    <TouchableOpacity onPress={toggleSpecificFor}>
+      <Icon
+        name={
+          isSpecificForEnabled ? 'radio-button-on' : 'radio-button-off'
+        }
+        size={24}
+        color={isSpecificForEnabled ? '#3580FF' : 'gray'}
+      />
+    </TouchableOpacity>
+
+    {/* Label */}
+    <Text
+      style={[
+        tw`font-normal text-gray-500 ml-1`,
+        { fontSize: 12, letterSpacing: 1 },
+      ]}>
+      Add specific for
+    </Text>
+
+    {/* Numeric Input */}
+    <TextInput
+      style={[
+        tw`ml-2 px-1 py-1 border rounded text-center`,
+        {
+          borderColor: '#E3E8F1',
+          width: 30,
+          height: 23,
+          fontSize: 12,
+          letterSpacing: 1,
+          backgroundColor: !isSpecificForEnabled ? '#F3F4F6' : 'white',
+          color: 'black',
+        },
+      ]}
+      keyboardType="numeric"
+      placeholder="00"
+      placeholderTextColor="#8D99AE"
+      value={
+        isSpecificForEnabled
+          ? editedTask.specificForValue?.toString()
+          : ''
+      }
+      onChangeText={v =>
+        setEditedTask({
+          ...editedTask,
+          specificForValue: parseInt(v) || 0,
+        })
+      }
+      editable={isSpecificForEnabled}
+      maxLength={2}
+    />
+
+    {/* Button Group */}
+    <LinearGradient
+      colors={['#F7FAFF', '#DEEAFF']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={[
+        tw`flex-row rounded-full ml-2`,
+        { width: 165, height: 30 },
+      ]}>
+      {['Days', 'Weeks', 'Months'].map(type => {
+        const isSelected =
+          editedTask.specificFor === type && isSpecificForEnabled;
+
+        return (
+          <TouchableOpacity
+            key={type}
+            style={tw`px-1 py-1 mx-1 rounded-full ${
+              isSelected
+                ? 'bg-blue-500 border border-blue-500'
+                : ''
+            }`}
+            onPress={() =>
+              isSpecificForEnabled &&
+              setEditedTask({ ...editedTask, specificFor: type })
+            }
+            disabled={!isSpecificForEnabled}>
+            <Text
+              style={tw`text-sm ${
+                isSelected
+                  ? 'text-white font-semibold'
+                  : 'text-gray-500'
+              }`}>
+              {type}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </LinearGradient>
+  </View>
+</View>
+
                   {/* Specific Day On Section */}
                   <View style={tw`mb-6`}>
                     <View style={tw`flex-row items-center mb-4`}>
