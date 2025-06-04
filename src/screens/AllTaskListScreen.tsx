@@ -510,8 +510,8 @@ const AllTaskListScreen = () => {
                         start={{x: 0, y: 0}}
                         end={{x: 0, y: 1}}
                         style={[
-                          tw`flex-row rounded-full ml-2`,
-                          {width: 165, height: 30},
+                          tw`flex-row rounded-full ml-1`,
+                          {width: 167, height: 30},
                         ]}>
                         {['Days', 'Weeks', 'Months'].map(type => {
                           const isSelected =
@@ -521,7 +521,7 @@ const AllTaskListScreen = () => {
                           return (
                             <TouchableOpacity
                               key={type}
-                              style={tw`px-1 py-1 mx-1 rounded-full ${
+                              style={tw`px-2 py-1 rounded-full ${
                                 isSelected
                                   ? 'bg-blue-500 border border-blue-500'
                                   : ''
@@ -550,7 +550,7 @@ const AllTaskListScreen = () => {
                   </View>
 
                   {/* Add Specific Day On */}
-                  <View style={tw`mb-2`}>
+                  <View style={tw`mb-2 bottom-2`}>
                     <View style={tw`flex-row items-center mb-4`}>
                       <TouchableOpacity onPress={toggleSpecificDayOn}>
                         <Icon
@@ -578,15 +578,15 @@ const AllTaskListScreen = () => {
                         start={{x: 0, y: 0}}
                         end={{x: 0, y: 1}}
                         style={[
-                          tw`flex-row rounded-full ml-`,
-                          {width: 185, height: 30, padding: 2},
+                          tw`flex-row rounded-full ml-1`,
+                          {width: 180, height: 30, padding: 1},
                         ]}>
                         {['Week', 'Month', 'Year'].map(type => {
                           const isSelected = editedTask.specTarget === type;
                           return (
                             <TouchableOpacity
                               key={type}
-                              style={tw`px-2 py-1 rounded-full ${
+                              style={tw`px-3 py-1 rounded-full ${
                                 isSelected
                                   ? 'bg-blue-500 border border-blue-500'
                                   : ''
@@ -635,7 +635,7 @@ const AllTaskListScreen = () => {
                   </View>
 
                   {/* Set Daily Target */}
-                  <View style={tw`mb-5`}>
+                  <View style={tw`mb-3 bottom-4`}>
                     <View style={tw`flex-row items-center`}>
                       <TouchableOpacity onPress={toggleDailyTarget}>
                         <Icon
@@ -651,7 +651,7 @@ const AllTaskListScreen = () => {
 
                       <Text
                         style={[
-                          tw`font-normal text-gray-500 ml-2`,
+                          tw`font-normal text-gray-500 ml-1`,
                           {fontSize: 12, letterSpacing: 1},
                         ]}>
                         Set Daily Target
@@ -660,7 +660,7 @@ const AllTaskListScreen = () => {
                       {/* Target Input */}
                       <TextInput
                         style={[
-                          tw`ml-3 text-center rounded`,
+                          tw`ml-2 text-center rounded`,
                           {
                             borderWidth: 1,
                             borderColor: '#E3E8F1',
@@ -700,7 +700,7 @@ const AllTaskListScreen = () => {
                         start={{x: 0, y: 0}}
                         end={{x: 0, y: 1}}
                         style={[
-                          tw`flex-row rounded-full ml-4 px-2`,
+                          tw`flex-row rounded-full ml-2`,
                           {height: 30, alignItems: 'center'},
                         ]}>
                         {['Minutes', 'Times'].map(type => {
