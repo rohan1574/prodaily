@@ -32,7 +32,7 @@ interface Task {
   selectedYears?: number[];
   dailyTarget?: number;
   targetType?: 'Minutes' | 'Times';
-  specTarget?: 'Weekly' | 'Monthly' | 'Yearly';
+  specTarget?: 'Week' | 'Month' | 'Year';
 }
 
 const AllTaskListScreen = () => {
@@ -140,10 +140,10 @@ const AllTaskListScreen = () => {
     if (task) {
       let specTarget = task.specTarget;
       if (!specTarget) {
-        if (task.selectedDays?.length) specTarget = 'Weekly';
-        else if (task.selectedDate?.length) specTarget = 'Monthly';
+        if (task.selectedDays?.length) specTarget = 'Week';
+        else if (task.selectedDate?.length) specTarget = 'Month';
         else if (task.selectedDates?.length && task.selectedMonths?.length)
-          specTarget = 'Yearly';
+          specTarget = 'Year';
       }
 
       setEditedTask({
@@ -446,103 +446,111 @@ const AllTaskListScreen = () => {
               {expandedTaskId === task.id && (
                 <View style={tw`mt-4`}>
                   {/* Specific For Section */}
-                  <View style={tw`mb-6`}>
-  <View style={tw`flex-row items-center mb-4`}>
-    {/* Radio Toggle */}
-    <TouchableOpacity onPress={toggleSpecificFor}>
-      <Icon
-        name={
-          isSpecificForEnabled ? 'radio-button-on' : 'radio-button-off'
-        }
-        size={24}
-        color={isSpecificForEnabled ? '#3580FF' : 'gray'}
-      />
-    </TouchableOpacity>
+                  <View style={tw`mb-2`}>
+                    <View style={tw`flex-row items-center mb-4`}>
+                      {/* Radio Toggle */}
+                      <TouchableOpacity onPress={toggleSpecificFor}>
+                        <Icon
+                          name={
+                            isSpecificForEnabled
+                              ? 'radio-button-on'
+                              : 'radio-button-off'
+                          }
+                          size={24}
+                          color={isSpecificForEnabled ? '#3580FF' : 'gray'}
+                        />
+                      </TouchableOpacity>
 
-    {/* Label */}
-    <Text
-      style={[
-        tw`font-normal text-gray-500 ml-1`,
-        { fontSize: 12, letterSpacing: 1 },
-      ]}>
-      Add specific for
-    </Text>
+                      {/* Label */}
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500 ml-1`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
+                        Add specific for
+                      </Text>
 
-    {/* Numeric Input */}
-    <TextInput
-      style={[
-        tw`ml-2 px-1 py-1 border rounded text-center`,
-        {
-          borderColor: '#E3E8F1',
-          width: 30,
-          height: 23,
-          fontSize: 12,
-          letterSpacing: 1,
-          backgroundColor: !isSpecificForEnabled ? '#F3F4F6' : 'white',
-          color: 'black',
-        },
-      ]}
-      keyboardType="numeric"
-      placeholder="00"
-      placeholderTextColor="#8D99AE"
-      value={
-        isSpecificForEnabled
-          ? editedTask.specificForValue?.toString()
-          : ''
-      }
-      onChangeText={v =>
-        setEditedTask({
-          ...editedTask,
-          specificForValue: parseInt(v) || 0,
-        })
-      }
-      editable={isSpecificForEnabled}
-      maxLength={2}
-    />
+                      {/* Numeric Input */}
+                      <TextInput
+                        style={[
+                          tw`ml-2 px-1 py-1 border rounded text-center`,
+                          {
+                            borderColor: '#E3E8F1',
+                            width: 30,
+                            height: 23,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            backgroundColor: !isSpecificForEnabled
+                              ? '#F3F4F6'
+                              : 'white',
+                            color: 'black',
+                          },
+                        ]}
+                        keyboardType="numeric"
+                        placeholder="00"
+                        placeholderTextColor="#8D99AE"
+                        value={
+                          isSpecificForEnabled
+                            ? editedTask.specificForValue?.toString()
+                            : ''
+                        }
+                        onChangeText={v =>
+                          setEditedTask({
+                            ...editedTask,
+                            specificForValue: parseInt(v) || 0,
+                          })
+                        }
+                        editable={isSpecificForEnabled}
+                        maxLength={2}
+                      />
 
-    {/* Button Group */}
-    <LinearGradient
-      colors={['#F7FAFF', '#DEEAFF']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      style={[
-        tw`flex-row rounded-full ml-2`,
-        { width: 165, height: 30 },
-      ]}>
-      {['Days', 'Weeks', 'Months'].map(type => {
-        const isSelected =
-          editedTask.specificFor === type && isSpecificForEnabled;
+                      {/* Button Group */}
+                      <LinearGradient
+                        colors={['#F7FAFF', '#DEEAFF']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                        style={[
+                          tw`flex-row rounded-full ml-2`,
+                          {width: 165, height: 30},
+                        ]}>
+                        {['Days', 'Weeks', 'Months'].map(type => {
+                          const isSelected =
+                            editedTask.specificFor === type &&
+                            isSpecificForEnabled;
 
-        return (
-          <TouchableOpacity
-            key={type}
-            style={tw`px-1 py-1 mx-1 rounded-full ${
-              isSelected
-                ? 'bg-blue-500 border border-blue-500'
-                : ''
-            }`}
-            onPress={() =>
-              isSpecificForEnabled &&
-              setEditedTask({ ...editedTask, specificFor: type })
-            }
-            disabled={!isSpecificForEnabled}>
-            <Text
-              style={tw`text-sm ${
-                isSelected
-                  ? 'text-white font-semibold'
-                  : 'text-gray-500'
-              }`}>
-              {type}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </LinearGradient>
-  </View>
-</View>
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-1 py-1 mx-1 rounded-full ${
+                                isSelected
+                                  ? 'bg-blue-500 border border-blue-500'
+                                  : ''
+                              }`}
+                              onPress={() =>
+                                isSpecificForEnabled &&
+                                setEditedTask({
+                                  ...editedTask,
+                                  specificFor: type,
+                                })
+                              }
+                              disabled={!isSpecificForEnabled}>
+                              <Text
+                                style={tw`text-sm ${
+                                  isSelected
+                                    ? 'text-white font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </LinearGradient>
+                    </View>
+                  </View>
 
-                  {/* Specific Day On Section */}
-                  <View style={tw`mb-6`}>
+                  {/* Add Specific Day On */}
+                  <View style={tw`mb-2`}>
                     <View style={tw`flex-row items-center mb-4`}>
                       <TouchableOpacity onPress={toggleSpecificDayOn}>
                         <Icon
@@ -551,58 +559,61 @@ const AllTaskListScreen = () => {
                               ? 'radio-button-on'
                               : 'radio-button-off'
                           }
-                          size={20}
-                          color={isSpecificDayOnSelected ? 'blue' : 'gray'}
+                          size={24}
+                          color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
                         />
                       </TouchableOpacity>
+
                       <Text
                         style={[
-                          tw`font-normal text-gray-500`,
+                          tw`font-normal text-gray-500 ml-1`,
                           {fontSize: 12, letterSpacing: 1},
                         ]}>
-                        Specific Day On
+                        Add Specific Day On
                       </Text>
-                      {/* Weekly, Monthly, Yearly বাটনগুলির জন্য কোড */}
-                      <View
+
+                      {/* Weekly, Monthly, Yearly Button Group */}
+                      <LinearGradient
+                        colors={['#F7FAFF', '#DEEAFF']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
                         style={[
-                          tw`flex-row rounded-full ml-2`,
-                          {backgroundColor: '#DEEAFF'},
+                          tw`flex-row rounded-full ml-`,
+                          {width: 185, height: 30, padding: 2},
                         ]}>
-                        {['Weekly', 'Monthly', 'Yearly'].map(type => {
+                        {['Week', 'Month', 'Year'].map(type => {
                           const isSelected = editedTask.specTarget === type;
                           return (
                             <TouchableOpacity
                               key={type}
-                              style={[
-                                tw`px-3 py-1 rounded-full`,
+                              style={tw`px-2 py-1 rounded-full ${
                                 isSelected
-                                  ? tw`bg-blue-700  border border-blue-500`
-                                  : tw`bg-transparent`,
-                                !isSpecificDayOnSelected && tw`opacity-50`,
-                              ]}
+                                  ? 'bg-blue-500 border border-blue-500'
+                                  : ''
+                              }`}
                               disabled={!isSpecificDayOnSelected}
                               onPress={() => {
                                 const handler = {
-                                  Weekly: handleWeeklyClick,
-                                  Monthly: handleMonthlyClick,
-                                  Yearly: handleYearlyClick,
+                                  Week: handleWeeklyClick,
+                                  Month: handleMonthlyClick,
+                                  Year: handleYearlyClick,
                                 }[type];
 
                                 handler?.();
                                 setEditedTask({
                                   ...editedTask,
                                   specTarget: type,
-                                  ...(type === 'Weekly' && {
+                                  ...(type === 'Week' && {
                                     selectedDate: [],
                                     selectedDates: [],
                                     selectedMonths: [],
                                   }),
-                                  ...(type === 'Monthly' && {
+                                  ...(type === 'Month' && {
                                     selectedDays: [],
                                     selectedDates: [],
                                     selectedMonths: [],
                                   }),
-                                  ...(type === 'Yearly' && {
+                                  ...(type === 'Year' && {
                                     selectedDays: [],
                                     selectedDate: [],
                                   }),
@@ -619,11 +630,12 @@ const AllTaskListScreen = () => {
                             </TouchableOpacity>
                           );
                         })}
-                      </View>
+                      </LinearGradient>
                     </View>
                   </View>
-                  {/* Daily Target Section */}
-                  <View style={tw`mb-4 bottom-4`}>
+
+                  {/* Set Daily Target */}
+                  <View style={tw`mb-5`}>
                     <View style={tw`flex-row items-center`}>
                       <TouchableOpacity onPress={toggleDailyTarget}>
                         <Icon
@@ -632,32 +644,44 @@ const AllTaskListScreen = () => {
                               ? 'checkbox-outline'
                               : 'square-outline'
                           }
-                          size={20}
-                          color={isDailyTargetEnabled ? 'blue' : 'gray'}
+                          size={24}
+                          color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
                         />
                       </TouchableOpacity>
+
                       <Text
                         style={[
-                          tw`font-normal text-gray-500`,
+                          tw`font-normal text-gray-500 ml-2`,
                           {fontSize: 12, letterSpacing: 1},
                         ]}>
                         Set Daily Target
                       </Text>
+
+                      {/* Target Input */}
                       <TextInput
                         style={[
-                          tw`px-1 py-1 border rounded text-center left-2
-                          ${!isDailyTargetEnabled ? 'bg-gray-100' : ''}`,
+                          tw`ml-3 text-center rounded`,
                           {
+                            borderWidth: 1,
                             borderColor: '#E3E8F1',
-                            width: 43,
-                            height: 30,
-                            fontSize: 10,
+                            width: 40,
+                            height: 28,
+                            fontSize: 12,
+                            fontWeight: 400,
+                            color: isDailyTargetEnabled ? '#000' : '#999',
+                            backgroundColor: isDailyTargetEnabled
+                              ? '#fff'
+                              : '#F3F4F6',
+                            paddingVertical: 0, // ✅ Remove extra space
+                            textAlignVertical: 'center', // ✅ Vertically center
                           },
                         ]}
                         keyboardType="numeric"
+                        placeholder="000"
+                        placeholderTextColor="#8D99AE"
                         value={
                           isDailyTargetEnabled
-                            ? editedTask.dailyTarget?.toString()
+                            ? editedTask.dailyTarget?.toString() ?? ''
                             : ''
                         }
                         onChangeText={v =>
@@ -667,12 +691,17 @@ const AllTaskListScreen = () => {
                           })
                         }
                         editable={isDailyTargetEnabled}
-                        placeholder="000"
+                        maxLength={3}
                       />
-                      <View
+
+                      {/* Type Selector */}
+                      <LinearGradient
+                        colors={['#F7FAFF', '#DEEAFF']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
                         style={[
-                          tw`flex-row rounded-full left-6`,
-                          {backgroundColor: '#DEEAFF'},
+                          tw`flex-row rounded-full ml-4 px-2`,
+                          {height: 30, alignItems: 'center'},
                         ]}>
                         {['Minutes', 'Times'].map(type => {
                           const isSelected =
@@ -684,7 +713,7 @@ const AllTaskListScreen = () => {
                               key={type}
                               style={tw`px-3 py-1 rounded-full ${
                                 isSelected
-                                  ? 'bg-blue-700 border border-blue-500'
+                                  ? 'bg-blue-500 border border-blue-500'
                                   : ''
                               }`}
                               onPress={() =>
@@ -703,7 +732,7 @@ const AllTaskListScreen = () => {
                             </TouchableOpacity>
                           );
                         })}
-                      </View>
+                      </LinearGradient>
                     </View>
                   </View>
 
