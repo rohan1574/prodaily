@@ -22,7 +22,7 @@ type TimeFrameStats = {
   completed: number;
   total: number;
   percentage: number;
-  textColor?: string; 
+  textColor?: string;
 };
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -34,7 +34,6 @@ type CircularProgressProps = {
   percentage?: number;
   radius?: number;
   strokeWidth?: number;
-  
 };
 
 const CircularProgress = ({
@@ -47,54 +46,53 @@ const CircularProgress = ({
   const progress = (percentage / 100) * circumference;
 
   return (
-   <View style={tw`flex items-center justify-center bottom-2`}>
-  <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-    {/* Background Circle */}
-    <Circle
-      cx={radius}
-      cy={radius}
-      r={radius - strokeWidth / 2}
-      stroke="#D3E3FC"
-      strokeWidth={strokeWidth}
-      fill="none"
-    />
+    <View style={tw`flex items-center justify-center bottom-2`}>
+      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {/* Background Circle */}
+        <Circle
+          cx={radius}
+          cy={radius}
+          r={radius - strokeWidth / 2}
+          stroke="#D3E3FC"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
 
-    {/* Progress Circle */}
-    <Circle
-      cx={radius}
-      cy={radius}
-      r={radius - strokeWidth / 2}
-      stroke="#3580FF"
-      strokeWidth={strokeWidth}
-      fill="none"
-      strokeDasharray={`${progress} ${circumference}`}
-      strokeDashoffset={circumference - progress}
-      strokeLinecap="round"
-      transform={`rotate(-90, ${radius}, ${radius})`}
-    />
+        {/* Progress Circle */}
+        <Circle
+          cx={radius}
+          cy={radius}
+          r={radius - strokeWidth / 2}
+          stroke="#3580FF"
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={`${progress} ${circumference}`}
+          strokeDashoffset={circumference - progress}
+          strokeLinecap="round"
+          transform={`rotate(-90, ${radius}, ${radius})`}
+        />
 
-    {/* Number and % symbol side by side */}
-    <SvgText
-      x={radius}
-      y={radius + 5} // উলম্ব সেন্টারিং
-      textAnchor="middle"
-      fontSize="24"
-      fontWeight="bold"
-      fill="black"
-    >
-      {percentage}
-      <TSpan // % চিহ্নের জন্য
-        fontSize="14"
-        fontWeight="normal"
-        fill="gray"
-        dx="-8" // সংখ্যা থেকে স্পেস
-        dy="" // উলম্ব অ্যালাইনমেন্ট ঠিক করতে
-      >
-        %
-      </TSpan>
-    </SvgText>
-  </Svg>
-</View>
+        {/* Number and % symbol side by side */}
+        <SvgText
+          x={radius}
+          y={radius + 5} // উলম্ব সেন্টারিং
+          textAnchor="middle"
+          fontSize="24"
+          fontWeight="bold"
+          fill="black">
+          {percentage}
+          <TSpan // % চিহ্নের জন্য
+            fontSize="14"
+            fontWeight="normal"
+            fill="gray"
+            dx="-16" // সংখ্যা থেকে স্পেস
+            dy="" // উলম্ব অ্যালাইনমেন্ট ঠিক করতে
+          >
+            %
+          </TSpan>
+        </SvgText>
+      </Svg>
+    </View>
   );
 };
 
@@ -155,23 +153,37 @@ const MyStatisticsScreen = () => {
     <View style={tw`flex-1 bg-gray-200`}>
       <ScrollView contentContainerStyle={tw`p-4 pb-28`}>
         {/* হেডার সেকশন */}
-        <Text style={tw`text-xl font-bold text-black`}>My Statistics</Text>
-        <Text style={[tw``, {color: '#8D99AE',lineHeight:20,letterSpacing:1,fontSize:11}]}>
+        <Text
+          style={[
+            tw` font-bold`,
+            {fontSize: 20, letterSpacing: 1, color: '#000000'},
+          ]}>
+          My Statistics
+        </Text>
+        <Text
+          style={[
+            tw``,
+            {color: '#8D99AE', lineHeight: 20, letterSpacing: 1, fontSize: 11},
+          ]}>
           Your task progress and habit report
         </Text>
 
         {/* টপ স্ট্যাটিস্টিক্স */}
-        <View style={tw`rounded-lg bg-white top-4 `}>
+        <View style={[tw`rounded-lg bg-white top-4`, {height:300}]}>
           <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
             <View
               style={[
                 tw`bg-blue-500 p-4 rounded-lg `,
                 {width: width * 0.42, height: width * 0.3},
               ]}>
-              <Text style={[tw`l font-normal text-xs`, {color: '#DEEAFF'}]}>
+              <Text
+                style={[
+                  tw`font-normal text-xs`,
+                  {color: '#DEEAFF', letterSpacing: 1},
+                ]}>
                 All Time Completed
               </Text>
-              <Text style={tw`text-white text-2xl font-bold left-12 top-6`}>
+              <Text style={tw`text-white text-2xl font-bold left-12 top-5`}>
                 {statsData.allTimeCompleted}
               </Text>
             </View>
@@ -181,91 +193,116 @@ const MyStatisticsScreen = () => {
                 {width: width * 0.42, height: width * 0.3},
               ]}>
               <Text
-                style={[tw`left-3 font-normal text-xs`, {color: '#DEEAFF'}]}>
+                style={[
+                  tw`left- font-normal text-xs`,
+                  {color: '#DEEAFF', letterSpacing: 0.5},
+                ]}>
                 Daily Task Into Habit
               </Text>
-              <Text style={tw`text-white text-2xl font-bold left-8 top-6`}>
+              <Text style={tw`text-white text-2xl font-bold left-8 top-5`}>
                 {statsData.dailyHabit}
               </Text>
             </View>
           </View>
           {/* প্রোগ্রেস সার্কেল */}
           <View style={tw`items-center h-44 top-4`}>
-            <Text style={tw` my-4 font-medium text-sm`}>Overall Score</Text>
+            <Text style={[tw`font-medium mb-4`, {fontSize: 14, letterSpacing: 1}]}>
+              Overall Score
+            </Text>
             <CircularProgress percentage={statsData.successScore} />
           </View>
         </View>
-      <View style={tw`bg-white top-12 rounded-lg`}>
+        <View style={tw`bg-white top-8 rounded-lg`}>
           <View style={tw`bg-white h-24 rounded-lg`}>
-          <View
-            style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
-            {['Weekly', 'Monthly', 'Yearly'].map(tab => (
-              <TouchableOpacity
-                key={tab}
-                onPress={() => setSelectedTab(tab)}
-                style={tw`flex-1 p-3 rounded-full ${
-                  selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
-                }`}>
+            <View
+              style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
+              {['Weekly', 'Monthly', 'Yearly'].map(tab => (
+                <TouchableOpacity
+                  key={tab}
+                  onPress={() => setSelectedTab(tab)}
+                  style={tw`flex-1 p-3 rounded-full ${
+                    selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
+                  }`}>
+                  <Text
+                    style={[
+                      tw`text-center text-sm font-normal`,
+                      selectedTab === tab
+                        ? tw`text-white font-semibold`
+                        : {color: '#8D99AE'},
+                    ]}>
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          {/* কারেন্ট প্রোগ্রেস সেকশন */}
+          <View style={tw`bg-white shadow-lg rounded-lg p-4`}>
+            <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
+              Last
+            </Text>
+            <View style={tw`flex-row items-center justify-between`}>
+              <CircularProgress
+                percentage={statsData.successScore}
+                radius={40}
+              />
+              <View style={tw`ml-4`}>
+                <Text style={tw`text-gray-800 font-medium text-sm`}>
+                  Task{'\n'} Completed
+                </Text>
+                <Text style={tw`text-gray-500 left-1 text-xs`}>
+                  {statsData.completed} of {statsData.totalTasks}
+                </Text>
+              </View>
+              <View style={tw`flex-1 ml-4`}>
                 <Text
                   style={[
-                    tw`text-center text-sm font-normal`,
-                    selectedTab === tab
-                      ? tw`text-white font-semibold`
-                      : {color: '#8D99AE'},
+                    tw`text-gray-600 font-normal text-center mb-2`,
+                    {fontSize: 12},
                   ]}>
-                  {tab}
+                  {statsData.successScore > 70
+                    ? "You're doing great! 🚀 Keep it up!"
+                    : 'You improve a lot, To keep it up; Stay focus. Follow ExpandTimes '}
                 </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-        {/* কারেন্ট প্রোগ্রেস সেকশন */}
-        <View style={tw`bg-white shadow-lg rounded-lg p-4`}>
-          <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
-            Last
-          </Text>
-          <View style={tw`flex-row items-center justify-between`}>
-            <CircularProgress  percentage={statsData.successScore} radius={40} />
-            <View style={tw`ml-4`}>
-              <Text style={tw`text-gray-800 font-medium text-sm`}>
-                Task{'\n'} Completed
-              </Text>
-              <Text style={tw`text-gray-500 left-1 text-xs`}>
-                {statsData.completed} of {statsData.totalTasks}
-              </Text>
-            </View>
-            <View style={tw`flex-1 ml-4`}>
-              <Text
-                style={[
-                  tw`text-gray-600 font-normal text-center mb-2`,
-                  {fontSize: 12},
-                ]}>
-                {statsData.successScore > 70
-                  ? "You're doing great! 🚀 Keep it up!"
-                  : 'You improve a lot, To keep it up; Stay focus. Follow ExpandTimes '}
-              </Text>
-              <TouchableOpacity
-                style={[tw`p-3 rounded-xl mx-4 mt-2 items-center`,{backgroundColor:"#F1F7FF"}]}>
-                <Text style={[tw`font-medium font-xs `,{color:"#3580FF"}]}>
-                  Follow
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    tw`p-3 rounded-xl mx-4 mt-2 items-center`,
+                    {backgroundColor: '#F1F7FF'},
+                  ]}>
+                  <Text style={[tw`font-medium font-xs `, {color: '#3580FF'}]}>
+                    Follow
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
 
         {/* হ্যাবিট সামারি */}
         <View style={tw`p-4 bg-gray-100 rounded-lg top-16`}>
           <View style={tw`flex-row justify-between mb-6`}>
             <View>
-              <Text style={[tw`text-black font-medium `,{fontSize:16,letterSpacing:1,lineHeight:20}]}>Habits</Text>
-              <Text style={[tw`text-gray-400  font-normal`,{fontSize:12,letterSpacing:0,lineHeight:20,left:1}]}>
+              <Text
+                style={[
+                  tw`text-black font-medium `,
+                  {fontSize: 16, letterSpacing: 1, lineHeight: 20},
+                ]}>
+                Habits
+              </Text>
+              <Text
+                style={[
+                  tw`text-gray-400  font-normal`,
+                  {fontSize: 12, letterSpacing: 0, lineHeight: 20, left: 1},
+                ]}>
                 Summary
               </Text>
             </View>
             <View>
-              <Text style={[tw`text-gray-400 text-xs font-normal`,{letterSpacing:1}]}>
+              <Text
+                style={[
+                  tw`text-gray-400 text-xs font-normal`,
+                  {letterSpacing: 1},
+                ]}>
                 More Details
               </Text>
             </View>
