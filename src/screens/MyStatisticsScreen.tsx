@@ -215,7 +215,7 @@ const MyStatisticsScreen = () => {
         <View style={tw`bg-white top-8 rounded-lg`}>
           <View style={tw`bg-white h-24 rounded-lg`}>
             <View
-              style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-6`}>
+              style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-5`}>
               {['Weekly', 'Monthly', 'Yearly'].map(tab => (
                 <TouchableOpacity
                   key={tab}
@@ -237,9 +237,9 @@ const MyStatisticsScreen = () => {
             </View>
           </View>
           {/* কারেন্ট প্রোগ্রেস সেকশন */}
-          <View style={tw`bg-white shadow-lg rounded-lg p-4`}>
-            <Text style={tw`text-black font-medium text-base mb-2 bottom-2`}>
-              Last
+          <View style={tw`bg-white shadow-lg rounded-lg p-4 bottom-4`}>
+            <Text style={tw`text-black font-medium text-base mb-2 bottom-4`}>
+              Last Month
             </Text>
             <View style={tw`flex-row items-center justify-between`}>
               <CircularProgress
@@ -247,8 +247,8 @@ const MyStatisticsScreen = () => {
                 radius={40}
               />
               <View style={tw`ml-4`}>
-                <Text style={tw`text-gray-800 font-medium text-sm`}>
-                  Task{'\n'} Completed
+                <Text style={[tw`font-medium`,{fontSize:14,lineHeight:20,letterSpacing:1,color:"#2B2D42"}]}>
+                  Task{'\n'}Completed
                 </Text>
                 <Text style={tw`text-gray-500 left-1 text-xs`}>
                   {statsData.completed} of {statsData.totalTasks}
