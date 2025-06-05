@@ -538,7 +538,7 @@ const TodaysTaskToDoScreen = () => {
                 color: 'black',
                 fontWeight: 'bold',
               }}>
-              1
+              10
             </Text>
           </View>
 
