@@ -394,17 +394,16 @@ const AddDailyTaskScreen = () => {
           Add Task
         </Text>
         <Text
-         style={[
-  tw`font-light top-2 px-5`, // px-5 means padding-left: 20px, padding-right: 20px
-  {
-    fontSize: 12,
-    lineHeight: 18,
-    letterSpacing: 1,
-    color: '#8D99AE',
-    fontFamily: 'Poppins',
-  },
-]}
->
+          style={[
+            tw`font-light top-2 px-5`, 
+            {
+              fontSize: 12,
+              lineHeight: 18,
+              letterSpacing: 1,
+              color: '#8D99AE',
+              fontFamily: 'Poppins',
+            },
+          ]}>
           Add tasks that you want to include in your routine. Make them
           compulsory to make your everyday life productive. So, it becomes a
           habit.
@@ -596,28 +595,27 @@ const AddDailyTaskScreen = () => {
                 ]}>
                 {/* Header */}
                 <View style={tw`flex-row justify-between`}>
-                   <View style={tw`flex-row items-center mb-6`}>
-                  <Image
-                    source={
-                      tasksData[selectedCategory]?.[expandedTask] ||
-                      customTasksData[selectedCategory]?.[expandedTask]
-                    }
-                    style={[
-                      tw`mr-3`,
-                      {width: 30, height: 30, tintColor: selectedColor},
-                    ]} // সংশোধিত লাইন
-                  />
-                  <Text
-                    style={[
-                      tw`text-sm font-medium text-black ml-2`,
-                      {letterSpacing: 1},
-                    ]}>
-                    {expandedTask}
-                  </Text>
-                  {/* star icon */}
-                 
-                </View>
-                 <View style={[tw``, ]}>
+                  <View style={tw`flex-row items-center mb-6`}>
+                    <Image
+                      source={
+                        tasksData[selectedCategory]?.[expandedTask] ||
+                        customTasksData[selectedCategory]?.[expandedTask]
+                      }
+                      style={[
+                        tw`mr-3`,
+                        {width: 30, height: 30, tintColor: selectedColor},
+                      ]} // সংশোধিত লাইন
+                    />
+                    <Text
+                      style={[
+                        tw`text-sm font-medium text-black ml-2`,
+                        {letterSpacing: 1},
+                      ]}>
+                      {expandedTask}
+                    </Text>
+                    {/* star icon */}
+                  </View>
+                  <View style={[tw``]}>
                     <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
                       <Icon
                         name={isStarred ? 'star' : 'star-outline'}
@@ -628,7 +626,7 @@ const AddDailyTaskScreen = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-               
+
                 {/* Add Specific For */}
                 <View style={tw`bottom-3`}>
                   <View style={tw`flex-row items-center mb-4 right-1`}>
@@ -660,7 +658,7 @@ const AddDailyTaskScreen = () => {
                           height: 23,
                           fontSize: 12,
                           letterSpacing: 1,
-                          color:""
+                          color: '',
                         },
                       ]}
                       keyboardType="numeric"
@@ -1164,7 +1162,6 @@ const AddDailyTaskScreen = () => {
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
-    
   );
 };
 

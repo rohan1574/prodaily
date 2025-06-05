@@ -1,19 +1,43 @@
 import React from 'react';
-import { View, Image, Text } from 'react-native';
-import { s as tw } from 'react-native-wind'; 
+import {View, Image, Text} from 'react-native';
+import {s as tw} from 'react-native-wind';
+import LinearGradient from 'react-native-linear-gradient';
 
 const LogoSplashScreen = () => {
   return (
-    <View style={[tw`flex-1 bg-blue-700 justify-center items-center`]}>
-      <View style={[tw`w-48 h-48 rounded-full justify-center items-center`,{backgroundColor:"#3079F6"}]}>
-        <Image 
-          source={require('./assets/images/sun.png')} 
-          style={tw`w-20 h-20`} 
+    <LinearGradient
+      colors={['#3580FF', '#2066DD']}
+      start={{x: 0.5, y: 0}}
+      end={{x: 0.5, y: 1}}
+      style={tw`flex-1 justify-center items-center`}>
+      <View
+        style={[
+          tw`rounded-full justify-center items-center`,
+          {
+            backgroundColor: '#3079F6',
+            width: 148,
+            height: 148,
+            shadowColor: '#5B86CD',
+            shadowOffset: {width: 1, height: 1},
+            shadowOpacity: 0.2, // 10% opacity
+            shadowRadius: 5,
+            elevation: 5,
+          },
+        ]}>
+        <Image
+          source={require('./assets/images/sun.png')}
+          style={[tw``, {width: 54, height: 54}]}
           resizeMode="contain"
         />
-        <Text style={tw`text-white text-xl font-semibold mt-2`}>P r o D A I L Y</Text>
+        <Text
+          style={[
+            tw`text-white text-xl font-semibold mt-2`,
+            {fontSize: 18, letterSpacing: 4},
+          ]}>
+          ProDAILY
+        </Text>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
