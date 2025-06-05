@@ -269,7 +269,7 @@ const MyStatisticsScreen = () => {
                     tw`p-2 rounded-xl mx-4 top-3 items-center`,
                     {backgroundColor: '#F1F7FF'},
                   ]}>
-                  <Text style={[tw`font-medium font-xs `, {color: '#3580FF'}]}>
+                  <Text style={[tw`font-medium `, {color: '#3580FF',fontSize:11,letterSpacing:1}]}>
                     Follow
                   </Text>
                 </TouchableOpacity>
@@ -309,31 +309,30 @@ const MyStatisticsScreen = () => {
           </View>
           <View style={tw`flex-row justify-between flex-wrap`}>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
-                Success Score
+              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:.5,color:"#9B9BA1"}]}>
+                SUCCESS SCORE
               </Text>
               <Text style={tw`text-gray-600 text-lg font-bold`}>
                 {statsData.successScore}%
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
-                Completed
+              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:1,color:"#9B9BA1"}]}>COMPLETED
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.completed}
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-medium`, {fontSize: 10}]}>
-                Failed
+              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:1,color:"#9B9BA1"}]}>
+                FAILED
               </Text>
               <Text style={tw`text-black text-lg font-bold`}>
                 {statsData.totalTasks - statsData.completed}
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`text-gray-500 font-semibold `, {fontSize: 9}]}>
+              <Text style={[tw`font-semibold `, {fontSize: 8,lineHeight:16,letterSpacing:.5,color:"#9B9BA1"}]}>
                 BEST STREAK DAY
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
