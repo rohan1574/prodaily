@@ -532,24 +532,25 @@ const TodaysTaskToDoScreen = () => {
               style={{
                 position: 'absolute',
                 top: '46%',
-                left: 185,
+                left: 175,
                 transform: [{translateX: -10}, {translateY: -10}],
-                fontSize: 32,
-                color: 'black',
+                fontSize: 48,
+                color: '#FEA800',
                 fontWeight: 'bold',
+                lineHeight:56
               }}>
               10
             </Text>
           </View>
 
           {/* Congrats Text */}
-          <Text style={tw`text-white text-2xl font-bold mb-2`}>Congrats!</Text>
-          <Text style={tw`text-white text-base mb-4`}>
+          <Text style={[tw`text-white font-bold bottom-6`,{fontSize:42}]}>Congrats!</Text>
+          <Text style={[tw`text-white font-light bottom-6`,{fontSize:22}]}>
             All the Daily Task Done!
           </Text>
 
           {/* Description */}
-          <Text style={tw`text-center text-white text-xs px-8 mb-10`}>
+          <Text style={[tw`text-center text-white font-normal px-16 mb-10`,{fontSize:13,lineHeight:20}]}>
             You deserve this badge for your commitment to yourself. Stay with us
             and earn more Points to get rewards.
           </Text>
@@ -561,7 +562,7 @@ const TodaysTaskToDoScreen = () => {
               setShowModal(false);
             }}
             style={tw`bg-white rounded-full px-8 py-3`}>
-            <Text style={tw`text-blue-500 font-semibold`}>Claim</Text>
+            <Text style={[tw`font-normal`,{fontSize:16,color:"#3580FF"}]}>Claim</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </Modal>
