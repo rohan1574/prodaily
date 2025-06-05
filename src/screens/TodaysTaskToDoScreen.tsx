@@ -523,11 +523,23 @@ const TodaysTaskToDoScreen = () => {
           </TouchableOpacity>
 
           {/* Badge and Glow */}
-          <View style={tw`items-center justify-center mb-8`}>
-            <View
-              style={tw`w-32 h-32 rounded-full bg-yellow-400 items-center justify-center shadow-lg`}>
-              <Text style={tw`text-3xl font-bold text-white`}>10</Text>
-            </View>
+          <View style={{width: 392, height: 392, position: 'relative'}}>
+            <Image
+              source={require('../../assets/images/points.png')}
+              style={{width: 392, height: 392}}
+            />
+            <Text
+              style={{
+                position: 'absolute',
+                top: '46%',
+                left: 185,
+                transform: [{translateX: -10}, {translateY: -10}],
+                fontSize: 32,
+                color: 'black',
+                fontWeight: 'bold',
+              }}>
+              10
+            </Text>
           </View>
 
           {/* Congrats Text */}
