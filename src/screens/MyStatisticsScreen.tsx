@@ -35,7 +35,6 @@ type CircularProgressProps = {
   radius?: number;
   strokeWidth?: number;
 };
-
 const CircularProgress = ({
   percentage = 0,
   radius = 50,
@@ -72,29 +71,21 @@ const CircularProgress = ({
           transform={`rotate(-90, ${radius}, ${radius})`}
         />
 
-        {/* Number and % symbol side by side */}
+        {/* Centered Percentage */}
         <SvgText
           x={radius}
-          y={radius + 5} // উলম্ব সেন্টারিং
+          y={radius + 5}
           textAnchor="middle"
           fontSize="24"
           fontWeight="bold"
           fill="black">
-          {percentage}
-          <TSpan // % চিহ্নের জন্য
-            fontSize="14"
-            fontWeight="normal"
-            fill="gray"
-            dx="-16" // সংখ্যা থেকে স্পেস
-            dy="" // উলম্ব অ্যালাইনমেন্ট ঠিক করতে
-          >
-            %
-          </TSpan>
+          {`${percentage}%`}
         </SvgText>
       </Svg>
     </View>
   );
 };
+
 
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -169,7 +160,7 @@ const MyStatisticsScreen = () => {
         </Text>
 
         {/* টপ স্ট্যাটিস্টিক্স */}
-        <View style={[tw`rounded-lg bg-white top-4`, {height:300}]}>
+        <View style={[tw`rounded-lg bg-white top-4`, {height: 300}]}>
           <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
             <View
               style={[
@@ -206,7 +197,8 @@ const MyStatisticsScreen = () => {
           </View>
           {/* প্রোগ্রেস সার্কেল */}
           <View style={tw`items-center h-44 top-4`}>
-            <Text style={[tw`font-medium mb-4`, {fontSize: 14, letterSpacing: 1}]}>
+            <Text
+              style={[tw`font-medium mb-4`, {fontSize: 14, letterSpacing: 1}]}>
               Overall Score
             </Text>
             <CircularProgress percentage={statsData.successScore} />
@@ -237,7 +229,11 @@ const MyStatisticsScreen = () => {
             </View>
           </View>
           {/* কারেন্ট প্রোগ্রেস সেকশন */}
-          <View style={[tw`bg-white shadow-lg rounded-lg p-4 bottom-4`,{height:145}]}>
+          <View
+            style={[
+              tw`bg-white shadow-lg rounded-lg p-4 bottom-4`,
+              {height: 145},
+            ]}>
             <Text style={tw`text-black font-medium text-base mb-2 bottom-4`}>
               Last Month
             </Text>
@@ -247,7 +243,16 @@ const MyStatisticsScreen = () => {
                 radius={40}
               />
               <View style={tw`ml-4 bottom-2`}>
-                <Text style={[tw`font-medium`,{fontSize:14,lineHeight:20,letterSpacing:1,color:"#2B2D42"}]}>
+                <Text
+                  style={[
+                    tw`font-medium`,
+                    {
+                      fontSize: 14,
+                      lineHeight: 20,
+                      letterSpacing: 1,
+                      color: '#2B2D42',
+                    },
+                  ]}>
                   Task{'\n'}Completed
                 </Text>
                 <Text style={tw`text-gray-500 text-xs`}>
@@ -269,7 +274,11 @@ const MyStatisticsScreen = () => {
                     tw`p-2 rounded-xl mx-4 top-3 items-center`,
                     {backgroundColor: '#F1F7FF'},
                   ]}>
-                  <Text style={[tw`font-medium `, {color: '#3580FF',fontSize:11,letterSpacing:1}]}>
+                  <Text
+                    style={[
+                      tw`font-medium `,
+                      {color: '#3580FF', fontSize: 11, letterSpacing: 1},
+                    ]}>
                     Follow
                   </Text>
                 </TouchableOpacity>
@@ -309,7 +318,16 @@ const MyStatisticsScreen = () => {
           </View>
           <View style={tw`flex-row justify-between flex-wrap`}>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:.5,color:"#9B9BA1"}]}>
+              <Text
+                style={[
+                  tw`font-medium`,
+                  {
+                    fontSize: 9,
+                    lineHeight: 16,
+                    letterSpacing: 0.5,
+                    color: '#9B9BA1',
+                  },
+                ]}>
                 SUCCESS SCORE
               </Text>
               <Text style={tw`text-gray-600 text-lg font-bold`}>
@@ -317,14 +335,33 @@ const MyStatisticsScreen = () => {
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:1,color:"#9B9BA1"}]}>COMPLETED
+              <Text
+                style={[
+                  tw`font-medium`,
+                  {
+                    fontSize: 9,
+                    lineHeight: 16,
+                    letterSpacing: 1,
+                    color: '#9B9BA1',
+                  },
+                ]}>
+                COMPLETED
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
                 {statsData.completed}
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`font-medium`, {fontSize: 9,lineHeight:16,letterSpacing:1,color:"#9B9BA1"}]}>
+              <Text
+                style={[
+                  tw`font-medium`,
+                  {
+                    fontSize: 9,
+                    lineHeight: 16,
+                    letterSpacing: 1,
+                    color: '#9B9BA1',
+                  },
+                ]}>
                 FAILED
               </Text>
               <Text style={tw`text-black text-lg font-bold`}>
@@ -332,7 +369,16 @@ const MyStatisticsScreen = () => {
               </Text>
             </View>
             <View style={tw`w-1/4 items-center`}>
-              <Text style={[tw`font-semibold `, {fontSize: 8,lineHeight:16,letterSpacing:.5,color:"#9B9BA1"}]}>
+              <Text
+                style={[
+                  tw`font-semibold `,
+                  {
+                    fontSize: 8,
+                    lineHeight: 16,
+                    letterSpacing: 0.5,
+                    color: '#9B9BA1',
+                  },
+                ]}>
                 BEST STREAK DAY
               </Text>
               <Text style={tw`text-blue-400 text-lg font-bold`}>
