@@ -268,7 +268,7 @@ export default function PremiumPackage() {
                 tw`font-normal text-black mb-2`,
                 {fontSize: 16, letterSpacing: 1},
               ]}>
-              Lifetimes
+              Lifetime
             </Text>
             <Text style={[tw`font-bold text-white`, {fontSize: 22}]}>$20</Text>
             <Text style={[tw`font-light`, {fontSize: 10, color: '#2B2D42'}]}>
