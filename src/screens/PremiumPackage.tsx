@@ -281,7 +281,7 @@ export default function PremiumPackage() {
       {/* Continue Button */}
       <TouchableOpacity style={tw`mx-12 top-12 bg-blue-600 py-3 rounded-full`}>
         <Text style={[tw`text-center text-white  font-normal`, {fontSize: 14}]}>
-          Continue
+          Continues
         </Text>
       </TouchableOpacity>
     </ScrollView>
