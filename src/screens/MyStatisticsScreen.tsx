@@ -76,7 +76,7 @@ const CircularProgress = ({
           x={radius}
           y={radius + 5}
           textAnchor="middle"
-          fontSize="24"
+          fontSize="20"
           fontWeight="bold"
           fill="black">
           {`${percentage}%`}
@@ -241,6 +241,7 @@ const MyStatisticsScreen = () => {
               <CircularProgress
                 percentage={statsData.successScore}
                 radius={40}
+                
               />
               <View style={tw`ml-4 bottom-2`}>
                 <Text
