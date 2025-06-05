@@ -279,7 +279,7 @@ const MyStatisticsScreen = () => {
         </View>
 
         {/* হ্যাবিট সামারি */}
-        <View style={tw`p-4 bg-gray-100 rounded-lg top-16`}>
+        <View style={tw`p-4 bg-white rounded-lg top-12`}>
           <View style={tw`flex-row justify-between mb-6`}>
             <View>
               <Text
