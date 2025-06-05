@@ -220,7 +220,7 @@ const MyStatisticsScreen = () => {
                 <TouchableOpacity
                   key={tab}
                   onPress={() => setSelectedTab(tab)}
-                  style={tw`flex-1 p-3 rounded-full ${
+                  style={tw`flex-1 p-2 rounded-full ${
                     selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
                   }`}>
                   <Text
