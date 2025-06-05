@@ -41,7 +41,7 @@ export default function App() {
               component={AllTaskListScreen}
             />
             <Stack.Screen
-              name="ProfileManageScreen"
+              name="ProfileManageScree"
               component={ProfileManageScreen}
             />
           </Stack.Navigator>
