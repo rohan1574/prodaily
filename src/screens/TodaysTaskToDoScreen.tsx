@@ -517,9 +517,21 @@ const TodaysTaskToDoScreen = () => {
           style={tw`flex-1 bg-blue-500 items-center justify-center`}>
           {/* Back Button */}
           <TouchableOpacity
-            style={tw`absolute top-4 left-4`}
+            style={[
+              tw`absolute top-4 left-4`,
+              {
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 4,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 4,
+              },
+            ]}
             onPress={() => setShowModal(false)}>
-            <Icon name="chevron-back" size={24} color="white" />
+            <Icon name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
 
           {/* Badge and Glow */}
@@ -537,20 +549,26 @@ const TodaysTaskToDoScreen = () => {
                 fontSize: 48,
                 color: '#FEA800',
                 fontWeight: 'bold',
-                lineHeight:56
+                lineHeight: 56,
               }}>
               10
             </Text>
           </View>
 
           {/* Congrats Text */}
-          <Text style={[tw`text-white font-bold bottom-6`,{fontSize:42}]}>Congrats!</Text>
-          <Text style={[tw`text-white font-light bottom-6`,{fontSize:22}]}>
+          <Text style={[tw`text-white font-bold bottom-6`, {fontSize: 42}]}>
+            Congrats!
+          </Text>
+          <Text style={[tw`text-white font-light bottom-6`, {fontSize: 22}]}>
             All the Daily Task Done!
           </Text>
 
           {/* Description */}
-          <Text style={[tw`text-center text-white font-normal px-16 mb-10`,{fontSize:13,lineHeight:20}]}>
+          <Text
+            style={[
+              tw`text-center text-white font-normal px-16 mb-10`,
+              {fontSize: 13, lineHeight: 20},
+            ]}>
             You deserve this badge for your commitment to yourself. Stay with us
             and earn more Points to get rewards.
           </Text>
@@ -561,8 +579,14 @@ const TodaysTaskToDoScreen = () => {
               addPoints(10);
               setShowModal(false);
             }}
-            style={tw`bg-white rounded-full px-8 py-3`}>
-            <Text style={[tw`font-normal`,{fontSize:16,color:"#3580FF"}]}>Claim</Text>
+            style={[tw`bg-white rounded-full py-2`, {width: 300}]}>
+            <Text
+              style={[
+                tw`font-normal text-center`,
+                {fontSize: 16, color: '#3580FF'},
+              ]}>
+              Claim
+            </Text>
           </TouchableOpacity>
         </SafeAreaView>
       </Modal>
