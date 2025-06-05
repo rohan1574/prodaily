@@ -237,7 +237,7 @@ const MyStatisticsScreen = () => {
             </View>
           </View>
           {/* কারেন্ট প্রোগ্রেস সেকশন */}
-          <View style={tw`bg-white shadow-lg rounded-lg p-4 bottom-4`}>
+          <View style={[tw`bg-white shadow-lg rounded-lg p-4 bottom-4`,{height:145}]}>
             <Text style={tw`text-black font-medium text-base mb-2 bottom-4`}>
               Last Month
             </Text>
@@ -246,18 +246,18 @@ const MyStatisticsScreen = () => {
                 percentage={statsData.successScore}
                 radius={40}
               />
-              <View style={tw`ml-4`}>
+              <View style={tw`ml-4 bottom-2`}>
                 <Text style={[tw`font-medium`,{fontSize:14,lineHeight:20,letterSpacing:1,color:"#2B2D42"}]}>
                   Task{'\n'}Completed
                 </Text>
-                <Text style={tw`text-gray-500 left-1 text-xs`}>
+                <Text style={tw`text-gray-500 text-xs`}>
                   {statsData.completed} of {statsData.totalTasks}
                 </Text>
               </View>
               <View style={tw`flex-1 ml-4`}>
                 <Text
                   style={[
-                    tw`text-gray-600 font-normal text-center mb-2`,
+                    tw`text-gray-600 font-normal text-center top-1`,
                     {fontSize: 12},
                   ]}>
                   {statsData.successScore > 70
@@ -266,7 +266,7 @@ const MyStatisticsScreen = () => {
                 </Text>
                 <TouchableOpacity
                   style={[
-                    tw`p-3 rounded-xl mx-4 mt-2 items-center`,
+                    tw`p-2 rounded-xl mx-4 top-3 items-center`,
                     {backgroundColor: '#F1F7FF'},
                   ]}>
                   <Text style={[tw`font-medium font-xs `, {color: '#3580FF'}]}>
