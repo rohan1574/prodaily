@@ -18,7 +18,6 @@ export default function PremiumPackage() {
             style={tw`w-full h-80 rounded-b-3xl`}
             resizeMode="cover"
           />
-
           {/* Gradient from bottom (white) to transparent top */}
           <LinearGradient
             colors={['#FFFFFF', 'transparent']}

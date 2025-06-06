@@ -10,13 +10,13 @@ const OnboardingScreenOne = () => {
   const navigation = useNavigation<NavigationProp>();
 
   // Auto navigate after 2 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace("OnboardingScreenTwo");
-    }, 2000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     navigation.replace("OnboardingScreenTwo");
+  //   }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Navigate on button press
   const handleNext = () => {
