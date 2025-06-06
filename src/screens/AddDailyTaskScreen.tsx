@@ -23,6 +23,17 @@ import {ColorContext} from '../context/ColorContext';
 // Add at the top with other imports
 import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type RootStackParamList = {
+  // ... your other screens
+  PremiumScreen: undefined;
+};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'PremiumScreen'>;
+
+
 
 // List of categories
 type Category =
@@ -74,6 +85,8 @@ const AddDailyTaskScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0],
   );
+  // Then in your component:
+const navigation = useNavigation<NavigationProp>();
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
@@ -1202,15 +1215,15 @@ const checkPremiumStatus = async () => {
               </TouchableOpacity>
               
               <TouchableOpacity
-                onPress={() => {
-                  setShowPremiumModal(false);
-                  // navigation.navigate('Premium');
-                }}
-                style={tw`mt-4`}>
-                <Text style={tw`text-blue-500 text-center font-semibold`}>
-                  Upgrade to Premium
-                </Text>
-              </TouchableOpacity>
+  onPress={() => {
+    setShowPremiumModal(false);
+    navigation.navigate('PremiumScreen'); // Uncommented and corrected the screen name
+  }}
+  style={tw`mt-4`}>
+  <Text style={tw`text-blue-500 text-center font-semibold`}>
+    Upgrade to Premium
+  </Text>
+</TouchableOpacity>
             </View>
           </View>
         </Modal>

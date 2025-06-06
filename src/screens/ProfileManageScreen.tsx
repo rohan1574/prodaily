@@ -15,9 +15,10 @@ import {ColorContext} from '../context/ColorContext';
 import BottomNavigation from './BottomNavigation';
 import {usePoints} from '../context/PointsContext';
 import {Dimensions} from 'react-native';
+
 const {width} = Dimensions.get('window');
 const cardWidth = width * 0.45;
-// Define the navigation type
+
 type RootStackParamList = {
   TodaysTaskToDoScreen: undefined;
   MyCalenderFutureTaskScreen: undefined;
@@ -25,34 +26,37 @@ type RootStackParamList = {
   ProfileManageScreen: undefined;
   AddDailyTaskScreen: undefined;
   AllTaskListScreen: undefined;
+  PremiumScreen: undefined;
 };
 
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'TodaysTaskToDoScreen'
 >;
+
 const ProfileManageScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [showSignOut, setShowSignOut] = useState(false);
   const [themes, setThemes] = useState(false);
   const context = useContext(ColorContext);
+  
   if (!context) {
     throw new Error('ColorContext is not available');
   }
 
   const {setSelectedColor} = context;
   const {points} = usePoints();
-  const [showBottomInfo, setShowBottomInfo] = useState(true); // New state for text visibility
+  const [showBottomInfo, setShowBottomInfo] = useState(true);
   const [selectedOption, setSelectedOption] = useState<
     'App Issue' | 'Suggestion'
   >('App Issue');
 
   return (
-    <View style={tw`flex-1 bg-gray-100 `}>
+    <View style={tw`flex-1 bg-gray-100`}>
       {/* Fixed Header Section */}
       <View style={tw`bg-gray-100`}>
         <ImageBackground
-          source={require('../../assets/images/vec.png')} // আপনার ইমেজ পাথ দিন
+          source={require('../../assets/images/vec.png')}
           style={tw`bg-blue-500 rounded-b-3xl pt-12 pb-8 px-4`}
           imageStyle={tw`rounded-lg`}>
           <View style={tw`flex-row items-center bottom-4`}>
@@ -68,16 +72,15 @@ const ProfileManageScreen = () => {
         </ImageBackground>
 
         {/* Profile Image & Info */}
-        <View style={tw`items-center bottom-12 `}>
+        <View style={tw`items-center bottom-12`}>
           <Image
-            source={require('../../assets/images/rony.png')} // Replace with actual URL or local image
+            source={require('../../assets/images/rony.png')}
             style={tw`w-24 h-24 rounded-full border-4 border-white`}
           />
-          <View style={tw`items-center `}>
+          <View style={tw`items-center`}>
             <Text
               style={[
-                tw` font-medium `,
-                ,
+                tw`font-medium`,
                 {fontSize: 20, letterSpacing: 1, color: '#2B2D42'},
               ]}>
               Mr Rony
@@ -89,7 +92,8 @@ const ProfileManageScreen = () => {
               </Text>
 
               <TouchableOpacity
-                style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}>
+                style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}
+                onPress={() => navigation.navigate('PremiumScreen')}>
                 <Text style={tw`text-blue-500 text-xs font-semibold`}>
                   Try Premium
                 </Text>
@@ -120,7 +124,7 @@ const ProfileManageScreen = () => {
               143{' '}
               <Text
                 style={[
-                  tw` font-light`,
+                  tw`font-light`,
                   {fontSize: 12, letterSpacing: 1, color: '#8D9094'},
                 ]}>
                 Days
@@ -168,6 +172,7 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </View>
+        
         {/* Bottom Info Text */}
         {showBottomInfo && (
           <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
@@ -185,14 +190,13 @@ const ProfileManageScreen = () => {
 
       {/* Scrollable Menu Options */}
       <ScrollView
-        style={tw`flex-1  px-4`}
+        style={tw`flex-1 px-4`}
         contentContainerStyle={tw`pb-20`}
         onScroll={({nativeEvent}) => {
-          // Hide text when scrolled beyond 5px, show when at top
           setShowBottomInfo(nativeEvent.contentOffset.y <= 10);
         }}
-        scrollEventThrottle={16} // Controls event frequency
-      >
+        scrollEventThrottle={16}>
+        
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -203,6 +207,29 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
+        
+        {/* Premium Section */}
+        <View style={tw`bg-white mb-2 rounded-xl shadow`}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PremiumScreen')}
+            style={tw`flex-row items-center justify-between p-4 bg-white rounded-xl`}>
+            <View style={tw`flex-row items-center`}>
+              <Icon
+                name="sparkles-outline"
+                size={24}
+                color="#3580FF"
+                style={tw`mr-2`}
+              />
+              <Text style={tw`text-black text-base`}>Premium</Text>
+            </View>
+            <Icon
+              name="chevron-forward"
+              size={20}
+              color="#DFDFDF"
+            />
+          </TouchableOpacity>
+        </View>
+
         {/* Account Section with Toggle */}
         <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
@@ -217,8 +244,6 @@ const ProfileManageScreen = () => {
               />
               <Text style={tw`text-black text-base`}>Account</Text>
             </View>
-
-            {/* Chevron toggle icon */}
             <Icon
               name={showSignOut ? 'chevron-up' : 'chevron-down'}
               size={20}
@@ -253,10 +278,10 @@ const ProfileManageScreen = () => {
           )}
         </View>
 
-        {/* Themes Section with Colors */}
+        {/* Themes Section */}
         <View style={tw`bg-white rounded-xl shadow mb-2`}>
           <TouchableOpacity
-            onPress={() => setThemes(!themes)} // এখানেই toggle হচ্ছে
+            onPress={() => setThemes(!themes)}
             style={tw`flex-row items-center justify-between p-3 bg-white mb-2 rounded-xl shadow`}>
             <View style={tw`flex-row items-center`}>
               <Icon
@@ -267,8 +292,6 @@ const ProfileManageScreen = () => {
               />
               <Text style={tw`text-black text-base`}>Themes</Text>
             </View>
-
-            {/* Chevron Icon toggle */}
             <Icon
               name={themes ? 'chevron-up' : 'chevron-down'}
               size={20}
@@ -360,8 +383,7 @@ const ProfileManageScreen = () => {
 
         {/* Support Section */}
         <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md top-4`]}>
-          {/* Toggle: App Issue / Suggestion */}
-          <View style={tw`flex-row justify-around border-b  border-white pb-3`}>
+          <View style={tw`flex-row justify-around border-b border-white pb-3`}>
             {['App Issue', 'Suggestion'].map(option => (
               <TouchableOpacity
                 key={option}
@@ -383,18 +405,17 @@ const ProfileManageScreen = () => {
             ))}
           </View>
 
-          {/* Contact Us Button */}
           <TouchableOpacity
             style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-20 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
 
-          {/* Info Text */}
           <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
             Please let us know any issue or suggestion.
             {'\n'}Our dedicated developers are ready to fix your issue ASAP.
           </Text>
         </View>
+        
         {/* Google Play Button */}
         <TouchableOpacity
           style={tw`bg-blue-500 mt-5 top-6 rounded-full py-2 items-center mx-4`}>
@@ -405,7 +426,7 @@ const ProfileManageScreen = () => {
       </ScrollView>
 
       {/* Bottom Navigation Bar */}
-      <BottomNavigation></BottomNavigation>
+      <BottomNavigation />
     </View>
   );
 };
