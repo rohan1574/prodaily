@@ -117,6 +117,7 @@ const AddDailyTaskScreen = () => {
   const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const colorContext = useContext(ColorContext);
+ const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   if (!colorContext) {
     throw new Error(
@@ -163,6 +164,12 @@ const AddDailyTaskScreen = () => {
 
   // Save custom category
   const saveCustomCategory = async () => {
+      const isPremium = await checkPremiumStatus(); // You'll need to implement this function
+  
+  if (!isPremium) {
+    setShowPremiumModal(true);
+    return;
+  }
     if (!newCategoryName || !selectedCategoryIcon) {
       Alert.alert('Error', 'Please enter category name and select an icon');
       return;
@@ -202,6 +209,13 @@ const AddDailyTaskScreen = () => {
   }, []);
 
   const saveCustomTask = async () => {
+      const isPremium = await checkPremiumStatus(); // You'll need to implement this function
+  
+  if (!isPremium) {
+    setShowPremiumModal(true);
+    return;
+  }
+  
     if (!customTaskName || !selectedCustomIcon) {
       Alert.alert('Error', 'Please enter task name and select an icon');
       return;
@@ -228,7 +242,16 @@ const AddDailyTaskScreen = () => {
       console.error('Error saving custom task:', error);
     }
   };
-
+// Add this function to check premium status (you'll need to implement your actual check)
+const checkPremiumStatus = async () => {
+  try {
+    const premiumStatus = await AsyncStorage.getItem('isPremiumUser');
+    return premiumStatus === 'true';
+  } catch (error) {
+    console.error('Error checking premium status:', error);
+    return false;
+  }
+};
   const handleDayTypeClick = (type: string) => {
     setSelectedDayOnType(type);
     setDayOnError(null);
@@ -1156,6 +1179,38 @@ const AddDailyTaskScreen = () => {
                   <Text style={tw`text-white font-medium`}>Save Category</Text>
                 </TouchableOpacity>
               </View>
+            </View>
+          </View>
+        </Modal>
+        {/* Premium Feature Modal */}
+        <Modal
+          visible={showPremiumModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowPremiumModal(false)}>
+          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+            <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
+              <Text style={tw`text-lg font-bold mb-4 text-center`}>Premium Feature</Text>
+              <Text style={tw`text-center mb-6`}>
+                You need to be a premium user to save custom tasks and categories.
+              </Text>
+              
+              <TouchableOpacity
+                onPress={() => setShowPremiumModal(false)}
+                style={tw`bg-blue-500 py-2 rounded-full`}>
+                <Text style={tw`text-white text-center font-semibold`}>OK</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                onPress={() => {
+                  setShowPremiumModal(false);
+                  // navigation.navigate('Premium');
+                }}
+                style={tw`mt-4`}>
+                <Text style={tw`text-blue-500 text-center font-semibold`}>
+                  Upgrade to Premium
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>

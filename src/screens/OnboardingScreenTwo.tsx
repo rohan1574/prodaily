@@ -67,7 +67,7 @@ const OnboardingScreenTwo = () => {
             uri: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Imam9Ji2yK/qsv3kzf9_expires_30_days.png",
           }}
           resizeMode="stretch"
-          style={{ width: 2, height: 30 }}
+          style={{ width: 24, height: 30 }}
         />
       </TouchableOpacity>
     </View>
