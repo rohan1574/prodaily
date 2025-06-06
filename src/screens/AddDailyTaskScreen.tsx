@@ -23,17 +23,15 @@ import {ColorContext} from '../context/ColorContext';
 // Add at the top with other imports
 import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type RootStackParamList = {
   // ... your other screens
-  PremiumScreen: undefined;
+  PremiumPackage: undefined;
 };
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'PremiumScreen'>;
-
-
+type NavigationProp = StackNavigationProp<RootStackParamList, 'PremiumPackage'>;
 
 // List of categories
 type Category =
@@ -86,7 +84,7 @@ const AddDailyTaskScreen = () => {
     categories[0],
   );
   // Then in your component:
-const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<NavigationProp>();
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const [specificFor, setSpecificFor] = useState('Days'); // Default to 'Days'
@@ -130,7 +128,7 @@ const navigation = useNavigation<NavigationProp>();
   const [selectedCategoryIcon, setSelectedCategoryIcon] = useState<any>(null);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const colorContext = useContext(ColorContext);
- const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   if (!colorContext) {
     throw new Error(
@@ -177,12 +175,12 @@ const navigation = useNavigation<NavigationProp>();
 
   // Save custom category
   const saveCustomCategory = async () => {
-      const isPremium = await checkPremiumStatus(); // You'll need to implement this function
-  
-  if (!isPremium) {
-    setShowPremiumModal(true);
-    return;
-  }
+    const isPremium = await checkPremiumStatus(); // You'll need to implement this function
+
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
     if (!newCategoryName || !selectedCategoryIcon) {
       Alert.alert('Error', 'Please enter category name and select an icon');
       return;
@@ -222,13 +220,13 @@ const navigation = useNavigation<NavigationProp>();
   }, []);
 
   const saveCustomTask = async () => {
-      const isPremium = await checkPremiumStatus(); // You'll need to implement this function
-  
-  if (!isPremium) {
-    setShowPremiumModal(true);
-    return;
-  }
-  
+    const isPremium = await checkPremiumStatus(); // You'll need to implement this function
+
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+
     if (!customTaskName || !selectedCustomIcon) {
       Alert.alert('Error', 'Please enter task name and select an icon');
       return;
@@ -255,16 +253,16 @@ const navigation = useNavigation<NavigationProp>();
       console.error('Error saving custom task:', error);
     }
   };
-// Add this function to check premium status (you'll need to implement your actual check)
-const checkPremiumStatus = async () => {
-  try {
-    const premiumStatus = await AsyncStorage.getItem('isPremiumUser');
-    return premiumStatus === 'true';
-  } catch (error) {
-    console.error('Error checking premium status:', error);
-    return false;
-  }
-};
+  // Add this function to check premium status (you'll need to implement your actual check)
+  const checkPremiumStatus = async () => {
+    try {
+      const premiumStatus = await AsyncStorage.getItem('isPremiumUser');
+      return premiumStatus === 'true';
+    } catch (error) {
+      console.error('Error checking premium status:', error);
+      return false;
+    }
+  };
   const handleDayTypeClick = (type: string) => {
     setSelectedDayOnType(type);
     setDayOnError(null);
@@ -431,7 +429,7 @@ const checkPremiumStatus = async () => {
         </Text>
         <Text
           style={[
-            tw`font-light top-2 px-5`, 
+            tw`font-light top-2 px-5`,
             {
               fontSize: 12,
               lineHeight: 18,
@@ -1203,27 +1201,30 @@ const checkPremiumStatus = async () => {
           onRequestClose={() => setShowPremiumModal(false)}>
           <View style={tw`flex-1 justify-center items-center bg-black/50`}>
             <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
-              <Text style={tw`text-lg font-bold mb-4 text-center`}>Premium Feature</Text>
-              <Text style={tw`text-center mb-6`}>
-                You need to be a premium user to save custom tasks and categories.
+              <Text style={tw`text-lg font-bold mb-4 text-center`}>
+                Premium Feature
               </Text>
-              
+              <Text style={tw`text-center mb-6`}>
+                You need to be a premium user to save custom tasks and
+                categories.
+              </Text>
+
               <TouchableOpacity
                 onPress={() => setShowPremiumModal(false)}
                 style={tw`bg-blue-500 py-2 rounded-full`}>
                 <Text style={tw`text-white text-center font-semibold`}>OK</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
-  onPress={() => {
-    setShowPremiumModal(false);
-    navigation.navigate('PremiumScreen'); // Uncommented and corrected the screen name
-  }}
-  style={tw`mt-4`}>
-  <Text style={tw`text-blue-500 text-center font-semibold`}>
-    Upgrade to Premium
-  </Text>
-</TouchableOpacity>
+                onPress={() => {
+                  setShowPremiumModal(false);
+                  navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
+                }}
+                style={tw`mt-4`}>
+                <Text style={tw`text-blue-500 text-center font-semibold`}>
+                  Upgrade to Premium
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>

@@ -1,10 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useRef} from 'react';
+
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
   Image,
+  Animated,
   ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -26,6 +30,7 @@ type RootStackParamList = {
   ProfileManageScreen: undefined;
   AddDailyTaskScreen: undefined;
   AllTaskListScreen: undefined;
+  PremiumPackage: undefined;
   PremiumScreen: undefined;
 };
 
@@ -39,18 +44,32 @@ const ProfileManageScreen = () => {
   const [showSignOut, setShowSignOut] = useState(false);
   const [themes, setThemes] = useState(false);
   const context = useContext(ColorContext);
-  
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [showInfoText, setShowInfoText] = useState(true);
+  // Handle scroll events with animation
+  const handleScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        // Use a threshold to prevent flickering
+        if (offsetY > 20 && showInfoText) {
+          setShowInfoText(false);
+        } else if (offsetY <= 20 && !showInfoText) {
+          setShowInfoText(true);
+        }
+      },
+    },
+  );
   if (!context) {
     throw new Error('ColorContext is not available');
   }
-
   const {setSelectedColor} = context;
   const {points} = usePoints();
-  const [showBottomInfo, setShowBottomInfo] = useState(true);
   const [selectedOption, setSelectedOption] = useState<
     'App Issue' | 'Suggestion'
   >('App Issue');
-
   return (
     <View style={tw`flex-1 bg-gray-100`}>
       {/* Fixed Header Section */}
@@ -70,7 +89,6 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </ImageBackground>
-
         {/* Profile Image & Info */}
         <View style={tw`items-center bottom-12`}>
           <Image
@@ -85,12 +103,10 @@ const ProfileManageScreen = () => {
               ]}>
               Mr Rony
             </Text>
-
             <View style={tw`flex-row items-center left-12`}>
               <Text style={tw`text-gray-500 mr-2 font-light bottom-1`}>
                 mrrony@gmail.com
               </Text>
-
               <TouchableOpacity
                 style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}
                 onPress={() => navigation.navigate('PremiumScreen')}>
@@ -102,7 +118,6 @@ const ProfileManageScreen = () => {
           </View>
         </View>
       </View>
-
       {/* Fixed Stats Section */}
       <View style={tw`px-4 bottom-6`}>
         {/* Two Card Row */}
@@ -131,7 +146,6 @@ const ProfileManageScreen = () => {
               </Text>
             </Text>
           </View>
-
           {/* Point Collected Card */}
           <View
             style={[
@@ -172,31 +186,49 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </View>
-        
         {/* Bottom Info Text */}
-        {showBottomInfo && (
-          <View style={tw`bg-white mt-4 p-3 rounded-xl shadow-sm`}>
-            <Text
-              style={[
-                tw`text-gray-500 text-center text-xs`,
-                {color: '#8D99AE', letterSpacing: 0.5},
-              ]}>
-              Be regular, collect points, Stick with ProDAILY time{'\n'}
-              consciousness journey. You'll get rewards.
-            </Text>
-          </View>
-        )}
+        <Animated.View
+          style={[
+            tw`bg-white mt-4 p-3 rounded-xl shadow-sm mx-4`,
+            {
+              opacity: scrollY.interpolate({
+                inputRange: [0, 20],
+                outputRange: [1, 0],
+                extrapolate: 'clamp',
+              }),
+              transform: [
+                {
+                  translateY: scrollY.interpolate({
+                    inputRange: [0, 20],
+                    outputRange: [0, -20],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ],
+              height: showInfoText ? 'auto' : 0,
+              overflow: 'hidden',
+            },
+          ]}>
+          <Text
+            style={[
+              tw`text-gray-500 text-center text-xs`,
+              {color: '#8D99AE', letterSpacing: 0.5},
+            ]}>
+            Be regular, collect points, Stick with ProDAILY time{'\n'}
+            consciousness journey. You'll get rewards.
+          </Text>
+        </Animated.View>
       </View>
-
       {/* Scrollable Menu Options */}
-      <ScrollView
-        style={tw`flex-1 px-4`}
+      <Animated.ScrollView
+        style={tw`flex-1 px-4 `}
         contentContainerStyle={tw`pb-20`}
-        onScroll={({nativeEvent}) => {
-          setShowBottomInfo(nativeEvent.contentOffset.y <= 10);
-        }}
-        scrollEventThrottle={16}>
-        
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        // Add these props for better scroll performance
+        decelerationRate="normal"
+        showsVerticalScrollIndicator={false}
+        overScrollMode="never">
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -207,11 +239,10 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
-        
         {/* Premium Section */}
         <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PremiumScreen')}
+            onPress={() => navigation.navigate('PremiumPackage')}
             style={tw`flex-row items-center justify-between p-4 bg-white rounded-xl`}>
             <View style={tw`flex-row items-center`}>
               <Icon
@@ -222,14 +253,9 @@ const ProfileManageScreen = () => {
               />
               <Text style={tw`text-black text-base`}>Premium</Text>
             </View>
-            <Icon
-              name="chevron-forward"
-              size={20}
-              color="#DFDFDF"
-            />
+            <Icon name="chevron-forward" size={20} color="#DFDFDF" />
           </TouchableOpacity>
         </View>
-
         {/* Account Section with Toggle */}
         <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
@@ -250,7 +276,6 @@ const ProfileManageScreen = () => {
               color="#DFDFDF"
             />
           </TouchableOpacity>
-
           {/* Sign Out Button */}
           {showSignOut && (
             <TouchableOpacity
@@ -277,7 +302,6 @@ const ProfileManageScreen = () => {
             </TouchableOpacity>
           )}
         </View>
-
         {/* Themes Section */}
         <View style={tw`bg-white rounded-xl shadow mb-2`}>
           <TouchableOpacity
@@ -298,7 +322,6 @@ const ProfileManageScreen = () => {
               color="#DFDFDF"
             />
           </TouchableOpacity>
-
           {/* Theme color options */}
           {themes && (
             <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
@@ -331,7 +354,6 @@ const ProfileManageScreen = () => {
             </TouchableOpacity>
           )}
         </View>
-
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -342,7 +364,6 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>Statistics</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -353,7 +374,6 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>My Calendar</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           activeOpacity={0.8}
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
@@ -369,7 +389,6 @@ const ProfileManageScreen = () => {
             Manage Tasks
           </Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -380,7 +399,6 @@ const ProfileManageScreen = () => {
           />
           <Text style={tw`text-black text-base`}>Sync Data</Text>
         </TouchableOpacity>
-
         {/* Support Section */}
         <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md top-4`]}>
           <View style={tw`flex-row justify-around border-b border-white pb-3`}>
@@ -404,18 +422,15 @@ const ProfileManageScreen = () => {
               </TouchableOpacity>
             ))}
           </View>
-
           <TouchableOpacity
             style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-20 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
-
           <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
             Please let us know any issue or suggestion.
             {'\n'}Our dedicated developers are ready to fix your issue ASAP.
           </Text>
         </View>
-        
         {/* Google Play Button */}
         <TouchableOpacity
           style={tw`bg-blue-500 mt-5 top-6 rounded-full py-2 items-center mx-4`}>
@@ -423,8 +438,7 @@ const ProfileManageScreen = () => {
             Rate Us on Google Play
           </Text>
         </TouchableOpacity>
-      </ScrollView>
-
+      </Animated.ScrollView>
       {/* Bottom Navigation Bar */}
       <BottomNavigation />
     </View>

@@ -13,7 +13,7 @@ import OnboardingScreenOne from './src/screens/OnboardingScreenOne';
 import OnboardingScreenTwo from './src/screens/OnboardingScreenTwo';
 import {ColorProvider} from './src/context/ColorContext';
 import {PointsProvider} from './src/context/PointsContext';
-import PremiumScreen from './src/screens/PremiumScreen';
+import PremiumPackage from './src/screens/PremiumPackage';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,16 +25,43 @@ export default function App() {
           <Stack.Navigator
             initialRouteName="LogoSplashScreen"
             screenOptions={{headerShown: false}}>
-            <Stack.Screen name="LogoSplashScreen" component={LogoSplashScreen} />
-            <Stack.Screen name="OnboardingScreenOne" component={OnboardingScreenOne} />
-            <Stack.Screen name="OnboardingScreenTwo" component={OnboardingScreenTwo} />
-            <Stack.Screen name="PremiumScreen" component={PremiumScreen} />
-            <Stack.Screen name="AddDailyTaskScreen" component={AddDailyTaskScreen} />
-            <Stack.Screen name="TodaysTaskToDoScreen" component={TodaysTaskToDoScreen} />
-            <Stack.Screen name="MyCalenderFutureTaskScreen" component={MyCalenderFutureTaskScreen} />
-            <Stack.Screen name="MyStatisticsScreen" component={MyStatisticsScreen} />
-            <Stack.Screen name="AllTaskListScreen" component={AllTaskListScreen} />
-            <Stack.Screen name="ProfileManageScreen" component={ProfileManageScreen} />
+            <Stack.Screen
+              name="LogoSplashScreen"
+              component={LogoSplashScreen}
+            />
+            <Stack.Screen
+              name="OnboardingScreenOne"
+              component={OnboardingScreenOne}
+            />
+            <Stack.Screen
+              name="OnboardingScreenTwo"
+              component={OnboardingScreenTwo}
+            />
+            <Stack.Screen name="PremiumPackage" component={PremiumPackage} />
+            <Stack.Screen
+              name="AddDailyTaskScreen"
+              component={AddDailyTaskScreen}
+            />
+            <Stack.Screen
+              name="TodaysTaskToDoScreen"
+              component={TodaysTaskToDoScreen}
+            />
+            <Stack.Screen
+              name="MyCalenderFutureTaskScreen"
+              component={MyCalenderFutureTaskScreen}
+            />
+            <Stack.Screen
+              name="MyStatisticsScreen"
+              component={MyStatisticsScreen}
+            />
+            <Stack.Screen
+              name="AllTaskListScreen"
+              component={AllTaskListScreen}
+            />
+            <Stack.Screen
+              name="ProfileManageScreen"
+              component={ProfileManageScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </ColorProvider>

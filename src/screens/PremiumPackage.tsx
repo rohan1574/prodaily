@@ -4,15 +4,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import {s as tw} from 'react-native-wind';
 import Svg, {Defs, RadialGradient, Rect, Stop} from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function PremiumPackage() {
+   const navigation = useNavigation();
   return (
     <ScrollView style={tw`flex-1 bg-sky-50`}>
       <View style={tw`items-center`}>
         {/* Image with Gradient Overlay */}
         <View style={tw`relative w-full`}>
           <Image
-            source={require('./assets/images/su.jpg')}
+            source={require('../../assets/images/su.jpg')}
             style={tw`w-full h-80 rounded-b-3xl`}
             resizeMode="cover"
           />
@@ -46,6 +48,7 @@ export default function PremiumPackage() {
                 padding: 4,
               }}>
               <Icon
+              onPress={() => navigation.goBack()}
                 name="chevron-back"
                 size={40}
                 color="#000000" // black icon
@@ -101,7 +104,7 @@ export default function PremiumPackage() {
             Premium Features
           </Text>
           <Image
-            source={require('./assets/images/bage.png')}
+            source={require('../../assets/images/bage.png')}
             style={[tw`w-4 h-4`, {top: 8, width: 23, height: 21, right: 12}]}
           />
         </View>

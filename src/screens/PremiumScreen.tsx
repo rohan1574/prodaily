@@ -13,7 +13,9 @@ import {useNavigation} from '@react-navigation/native';
 
 const PremiumScreen = () => {
   const navigation = useNavigation();
-  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('monthly');
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>(
+    'monthly',
+  );
 
   const features = [
     'Unlimited custom tasks',
@@ -28,7 +30,7 @@ const PremiumScreen = () => {
     <ScrollView style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
       <View style={tw`bg-blue-500 pt-12 pb-8 px-6 rounded-b-3xl`}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={tw`absolute top-12 left-6 z-10`}>
           <Icon name="arrow-back" size={24} color="white" />
@@ -42,17 +44,19 @@ const PremiumScreen = () => {
       </View>
 
       {/* Pricing Toggle */}
-      <View style={tw`flex-row justify-center mt-8 mx-6 bg-white p-1 rounded-full`}>
+      <View
+        style={tw`flex-row justify-center mt-8 mx-6 bg-white p-1 rounded-full`}>
         <TouchableOpacity
           onPress={() => setSelectedPlan('monthly')}
           style={[
             tw`flex-1 py-3 rounded-full items-center`,
             selectedPlan === 'monthly' && tw`bg-blue-500`,
           ]}>
-          <Text style={[
-            tw`font-medium`,
-            selectedPlan === 'monthly' ? tw`text-white` : tw`text-gray-600`
-          ]}>
+          <Text
+            style={[
+              tw`font-medium`,
+              selectedPlan === 'monthly' ? tw`text-white` : tw`text-gray-600`,
+            ]}>
             Monthly
           </Text>
         </TouchableOpacity>
@@ -62,10 +66,11 @@ const PremiumScreen = () => {
             tw`flex-1 py-3 rounded-full items-center`,
             selectedPlan === 'yearly' && tw`bg-blue-500`,
           ]}>
-          <Text style={[
-            tw`font-medium`,
-            selectedPlan === 'yearly' ? tw`text-white` : tw`text-gray-600`
-          ]}>
+          <Text
+            style={[
+              tw`font-medium`,
+              selectedPlan === 'yearly' ? tw`text-white` : tw`text-gray-600`,
+            ]}>
             Yearly (Save 20%)
           </Text>
         </TouchableOpacity>
@@ -73,10 +78,11 @@ const PremiumScreen = () => {
 
       {/* Pricing Cards */}
       <View style={tw`px-6 mt-6`}>
-        <View style={[
-          tw`bg-white p-6 rounded-2xl shadow-md border-2 border-blue-400`,
-          styles.cardElevation
-        ]}>
+        <View
+          style={[
+            tw`bg-white p-6 rounded-2xl shadow-md border-2 border-blue-400`,
+            styles.cardElevation,
+          ]}>
           <View style={tw`flex-row items-end`}>
             <Text style={tw`text-3xl font-bold text-blue-500`}>
               {selectedPlan === 'monthly' ? '৳50' : '৳480'}
@@ -91,9 +97,7 @@ const PremiumScreen = () => {
 
           <TouchableOpacity
             style={tw`bg-blue-500 py-3 rounded-full mt-6 items-center`}>
-            <Text style={tw`text-white font-bold text-lg`}>
-              Get Premium
-            </Text>
+            <Text style={tw`text-white font-bold text-lg`}>Get Premium</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -114,9 +118,9 @@ const PremiumScreen = () => {
       {/* Payment Info */}
       <View style={tw`mt-8 px-6 pb-10`}>
         <Text style={tw`text-xs text-gray-500 text-center`}>
-          Payment will be charged to your Google Play account at confirmation of purchase.
-          Subscription automatically renews unless auto-renew is turned off at least
-          24 hours before the end of the current period.
+          Payment will be charged to your Google Play account at confirmation of
+          purchase. Subscription automatically renews unless auto-renew is
+          turned off at least 24 hours before the end of the current period.
         </Text>
         <TouchableOpacity style={tw`mt-4`}>
           <Text style={tw`text-blue-500 text-center text-xs`}>
@@ -135,7 +139,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 8,
-  }
+  },
 });
 
 export default PremiumScreen;
