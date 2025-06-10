@@ -19,7 +19,7 @@ const OnboardingScreenTwo = () => {
   
     // Navigate on button press
     const handleNext = () => {
-      navigation.replace("AddDailyTaskScreen");
+      navigation.replace("TodaysTaskToDoScreen");
     };
   return (
     <View style={{ flex: 1, backgroundColor: "#007AFF" }}>

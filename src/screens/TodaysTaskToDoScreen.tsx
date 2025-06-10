@@ -371,9 +371,18 @@ const TodaysTaskToDoScreen = () => {
             contentContainerStyle={tw`pb-28 mx-4 top-4`}
             style={tw`mt-4`}>
             {tasks.length === 0 ? (
-              <Text style={tw`text-center text-gray-500`}>
-                No tasks for today. Enjoy your day!
-              </Text>
+              <View style={tw`items-center mt-4`}>
+                <Image
+                  source={require('../../assets/images/NoTaskToday.png')}
+                  style={[tw``, {width: 242, height: 346,}]}
+                  resizeMode="contain"
+                />
+                <View style={[tw`bg-white top-12 rounded-lg border-2 right-8`,{width: 244, height: 80,borderColor:"#DEEAFF"}]}>
+                  <Text style={[tw`text-center top-4 text-black font-medium`,{fontSize:14}]}>
+                  No task added in your routine. Please, Add task
+                </Text>
+                </View>
+              </View>
             ) : (
               tasks.map((task: any) => (
                 <View

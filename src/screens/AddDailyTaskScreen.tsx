@@ -129,7 +129,16 @@ const AddDailyTaskScreen = () => {
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const colorContext = useContext(ColorContext);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  // ... existing state ...
+  const [editMode, setEditMode] = useState(false);
+  const [editingTask, setEditingTask] = useState<string | null>(null);
+  const [editedTaskName, setEditedTaskName] = useState('');
 
+  const handleLongPress = (task: string) => {
+    setEditMode(true);
+    setEditingTask(task);
+    setEditedTaskName(task);
+  };
   if (!colorContext) {
     throw new Error(
       'ColorContext is not available. Wrap your component in <ColorProvider>.',
@@ -567,6 +576,8 @@ const AddDailyTaskScreen = () => {
                 setExpandedTask(expandedTask === task ? null : task);
                 setTaskName(task);
               }}
+              onLongPress={() => handleLongPress(task)}
+              delayLongPress={500}
               style={[
                 tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
                 {bg: selectedColor},
@@ -1228,6 +1239,67 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
+        {/* Edit Task Modal */}
+        {editMode && (
+          <Modal
+            visible={editMode}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setEditMode(false)}>
+            <View
+              style={tw`flex-1 justify-center items-center bg-black/50 p-4`}>
+              <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+                <Text style={tw`text-lg font-bold mb-4`}>Edit Task</Text>
+
+                <TextInput
+                  placeholder="Task Name"
+                  value={editedTaskName}
+                  onChangeText={setEditedTaskName}
+                  style={tw`border p-2 rounded mb-4`}
+                  autoFocus={true}
+                />
+
+                <View style={tw`flex-row justify-between mt-4 gap-3`}>
+                  <TouchableOpacity
+                    onPress={() => setEditMode(false)}
+                    style={tw`flex-1 bg-red-500 px-4 py-2 rounded-lg`}>
+                    <Text style={tw`text-white text-center`}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={async () => {
+                      // Save the edited task
+                      if (editingTask && editedTaskName) {
+                        try {
+                          // Update in customTasksData
+                          const updatedTasks = {...customTasksData};
+                          if (updatedTasks[selectedCategory]?.[editingTask]) {
+                            const icon =
+                              updatedTasks[selectedCategory][editingTask];
+                            delete updatedTasks[selectedCategory][editingTask];
+                            updatedTasks[selectedCategory][editedTaskName] =
+                              icon;
+
+                            await AsyncStorage.setItem(
+                              CUSTOM_TASKS_KEY,
+                              JSON.stringify(updatedTasks),
+                            );
+                            setCustomTasksData(updatedTasks);
+                          }
+                          setEditMode(false);
+                        } catch (error) {
+                          console.error('Error editing task:', error);
+                        }
+                      }
+                    }}
+                    style={tw`flex-1 bg-blue-500 px-4 py-2 rounded-lg`}>
+                    <Text style={tw`text-white text-center`}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        )}
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
