@@ -32,7 +32,7 @@ const RateUsGooglePlayPopUp = () => {
       <Text style={tw`text-center text-sm text-gray-500 mb-4`}>Expecting 5/5</Text>
 
       {/* Button */}
-      <TouchableOpacity style={[tw`bg-blue-500 py-2.5 px-5 rounded-full`, { alignSelf: 'center' }]}>
+      <TouchableOpacity style={[tw`bg-blue-500 py-2.5 px-6 rounded-full`, { alignSelf: 'center' }]}>
         <Text style={tw`text-white text-sm font-semibold`}>Rate on Google Play</Text>
       </TouchableOpacity>
     </View>
