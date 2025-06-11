@@ -52,7 +52,7 @@ const OnboardingScreenTwo = () => {
   return (
     <View style={tw`flex-1 bg-blue-500 justify-between relative`}>
       {/* Top right circle */}
-      <View
+      {/* <View
         style={[
           tw`absolute  opacity-40`,
           {
@@ -64,10 +64,10 @@ const OnboardingScreenTwo = () => {
             backgroundColor: '#00A6FF',
           },
         ]}
-      />
+      /> */}
 
       {/* Middle left circle */}
-      <View
+      {/* <View
         style={[
           tw`absolute bg-blue-400 opacity-30`,
           {
@@ -79,7 +79,7 @@ const OnboardingScreenTwo = () => {
             backgroundColor: '#00A6FF',
           },
         ]}
-      />
+      /> */}
 
       {/* Top Text */}
       <View style={tw`px-6 pt-12`}>
@@ -113,7 +113,7 @@ const OnboardingScreenTwo = () => {
           ) : (
             <Image
               source={clipboardIcons[step].source}
-              style={{width: 54, height: 54}}
+              style={{width: 96, height: 96}}
               resizeMode="contain"
             />
           )}
