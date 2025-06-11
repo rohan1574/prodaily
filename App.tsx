@@ -14,6 +14,7 @@ import OnboardingScreenTwo from './src/screens/OnboardingScreenTwo';
 import {ColorProvider} from './src/context/ColorContext';
 import {PointsProvider} from './src/context/PointsContext';
 import PremiumPackage from './src/screens/PremiumPackage';
+import { StatusBar } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <PointsProvider>
       <ColorProvider>
+      <StatusBar backgroundColor="red" barStyle="light-content"/>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="LogoSplashScreen"
