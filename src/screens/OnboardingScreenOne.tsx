@@ -139,10 +139,10 @@ const OnboardingScreenOne = () => {
       {/* Icon with arrows and dynamic clipboard */}
       <View
         style={[
-          tw`absolute left-0 right-0 items-center`,
+          tw`absolute left-0 right-0 items-center `,
           {top: height * 0.35},
         ]}>
-        <View style={tw`flex-row items-center`}>
+        <View style={tw`flex-row items-center bottom-12`}>
           <TouchableOpacity style={tw`right-12`} onPress={handleBack}>
             <Icon name="caret-back-outline" size={24} color="white" />
           </TouchableOpacity>
@@ -152,7 +152,7 @@ const OnboardingScreenOne = () => {
             ) : (
               <Image
                 source={clipboardIcons[step].source}
-                style={{width: 54, height: 54}}
+                style={{width: 96, height: 96}}
                 resizeMode="contain"
               />
             )}
