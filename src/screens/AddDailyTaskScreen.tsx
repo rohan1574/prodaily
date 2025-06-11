@@ -129,16 +129,7 @@ const AddDailyTaskScreen = () => {
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const colorContext = useContext(ColorContext);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-  // ... existing state ...
-  const [editMode, setEditMode] = useState(false);
-  const [editingTask, setEditingTask] = useState<string | null>(null);
-  const [editedTaskName, setEditedTaskName] = useState('');
 
-  const handleLongPress = (task: string) => {
-    setEditMode(true);
-    setEditingTask(task);
-    setEditedTaskName(task);
-  };
   if (!colorContext) {
     throw new Error(
       'ColorContext is not available. Wrap your component in <ColorProvider>.',
@@ -147,6 +138,80 @@ const AddDailyTaskScreen = () => {
 
   const {selectedColor} = colorContext;
 
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState<{
+    category: string;
+    oldName: string;
+    newName: string;
+  } | null>(null);
+
+  // Function to handle long press (for editing)
+  const handleLongPress = (task: string, category: string) => {
+    setEditingTask({
+      category,
+      oldName: task,
+      newName: task,
+    });
+    setIsEditModalVisible(true);
+  };
+
+ // Save Function Edited Task
+const saveEditedTask = async () => {
+  if (!editingTask) return;
+  
+  const { category, oldName, newName } = editingTask;
+  
+  if (!newName.trim()) {
+    Alert.alert('Error', 'Task name cannot be empty');
+    return;
+  }
+  
+  // Check for duplicate tasks
+  const existingTasks = {
+    ...(tasksData[category] || {}),
+    ...(customTasksData[category] || {})
+  };
+  
+  if (existingTasks[newName] && newName !== oldName) {
+    Alert.alert('Error', 'Task with this name already exists');
+    return;
+  }
+  
+  try {
+    const updatedCustomTasks = { ...customTasksData };
+    
+    if (updatedCustomTasks[category]?.[oldName]) {
+      // Move to new name
+      updatedCustomTasks[category] = {
+        ...updatedCustomTasks[category],
+        [newName]: updatedCustomTasks[category][oldName]
+      };
+      
+      // Remove old name
+      delete updatedCustomTasks[category][oldName];
+      
+      // Update state and storage
+      setCustomTasksData(updatedCustomTasks);
+      await AsyncStorage.setItem(
+        CUSTOM_TASKS_KEY,
+        JSON.stringify(updatedCustomTasks)
+      );
+      
+      // Update expandedTask and taskName states
+      if (expandedTask === oldName) {
+        setTaskName(newName); // Update current task name
+        setExpandedTask(newName); // Keep the task expanded with new name
+      } else {
+        setExpandedTask(null); // Collapse if not editing expanded task
+      }
+    }
+    
+    setIsEditModalVisible(false);
+  } catch (error) {
+    console.error('Error saving edited task:', error);
+    Alert.alert('Error', 'Failed to save changes');
+  }
+};
   // Load custom data
   useEffect(() => {
     const loadData = async () => {
@@ -576,8 +641,7 @@ const AddDailyTaskScreen = () => {
                 setExpandedTask(expandedTask === task ? null : task);
                 setTaskName(task);
               }}
-              onLongPress={() => handleLongPress(task)}
-              delayLongPress={500}
+              onLongPress={() => handleLongPress(task, selectedCategory)}
               style={[
                 tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
                 {bg: selectedColor},
@@ -1239,67 +1303,42 @@ const AddDailyTaskScreen = () => {
             </View>
           </View>
         </Modal>
-        {/* Edit Task Modal */}
-        {editMode && (
-          <Modal
-            visible={editMode}
-            transparent={true}
-            animationType="slide"
-            onRequestClose={() => setEditMode(false)}>
-            <View
-              style={tw`flex-1 justify-center items-center bg-black/50 p-4`}>
-              <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
-                <Text style={tw`text-lg font-bold mb-4`}>Edit Task</Text>
+        
+        <Modal
+          visible={isEditModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsEditModalVisible(false)}>
+          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+            <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
+              <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
 
-                <TextInput
-                  placeholder="Task Name"
-                  value={editedTaskName}
-                  onChangeText={setEditedTaskName}
-                  style={tw`border p-2 rounded mb-4`}
-                  autoFocus={true}
-                />
+              <TextInput
+                value={editingTask?.newName || ''}
+                onChangeText={text =>
+                  editingTask && setEditingTask({...editingTask, newName: text})
+                }
+                style={tw`border p-3 rounded mb-6`}
+                placeholder="Enter new task name"
+                autoFocus={true}
+              />
 
-                <View style={tw`flex-row justify-between mt-4 gap-3`}>
-                  <TouchableOpacity
-                    onPress={() => setEditMode(false)}
-                    style={tw`flex-1 bg-red-500 px-4 py-2 rounded-lg`}>
-                    <Text style={tw`text-white text-center`}>Cancel</Text>
-                  </TouchableOpacity>
+              <View style={tw`flex-row justify-between`}>
+                <TouchableOpacity
+                  onPress={() => setIsEditModalVisible(false)}
+                  style={tw`px-4 py-2 bg-gray-200 rounded`}>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={async () => {
-                      // Save the edited task
-                      if (editingTask && editedTaskName) {
-                        try {
-                          // Update in customTasksData
-                          const updatedTasks = {...customTasksData};
-                          if (updatedTasks[selectedCategory]?.[editingTask]) {
-                            const icon =
-                              updatedTasks[selectedCategory][editingTask];
-                            delete updatedTasks[selectedCategory][editingTask];
-                            updatedTasks[selectedCategory][editedTaskName] =
-                              icon;
-
-                            await AsyncStorage.setItem(
-                              CUSTOM_TASKS_KEY,
-                              JSON.stringify(updatedTasks),
-                            );
-                            setCustomTasksData(updatedTasks);
-                          }
-                          setEditMode(false);
-                        } catch (error) {
-                          console.error('Error editing task:', error);
-                        }
-                      }
-                    }}
-                    style={tw`flex-1 bg-blue-500 px-4 py-2 rounded-lg`}>
-                    <Text style={tw`text-white text-center`}>Save</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  onPress={saveEditedTask}
+                  style={tw`px-4 py-2 bg-blue-500 rounded`}>
+                  <Text style={tw`text-white`}>Save</Text>
+                </TouchableOpacity>
               </View>
             </View>
-          </Modal>
-        )}
+          </View>
+        </Modal>
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>

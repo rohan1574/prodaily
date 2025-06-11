@@ -377,7 +377,7 @@ const TodaysTaskToDoScreen = () => {
                   style={[tw``, {width: 242, height: 346,}]}
                   resizeMode="contain"
                 />
-                <View style={[tw`bg-white top-12 rounded-lg border-2 right-8`,{width: 244, height: 80,borderColor:"#DEEAFF"}]}>
+                <View style={[tw`bg-white top-8 rounded-lg border-2 right-8`,{width: 244, height: 80,borderColor:"#DEEAFF"}]}>
                   <Text style={[tw`text-center top-4 text-black font-medium`,{fontSize:14}]}>
                   No task added in your routine. Please, Add task
                 </Text>
