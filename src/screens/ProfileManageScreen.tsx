@@ -44,24 +44,7 @@ const ProfileManageScreen = () => {
   const [showSignOut, setShowSignOut] = useState(false);
   const [themes, setThemes] = useState(false);
   const context = useContext(ColorContext);
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const [showInfoText, setShowInfoText] = useState(true);
-  // Handle scroll events with animation
-  const handleScroll = Animated.event(
-    [{nativeEvent: {contentOffset: {y: scrollY}}}],
-    {
-      useNativeDriver: false,
-      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        // Use a threshold to prevent flickering
-        if (offsetY > 20 && showInfoText) {
-          setShowInfoText(false);
-        } else if (offsetY <= 20 && !showInfoText) {
-          setShowInfoText(true);
-        }
-      },
-    },
-  );
+
   if (!context) {
     throw new Error('ColorContext is not available');
   }
@@ -186,27 +169,12 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </View>
-       
-        {/* <View
-          style={[
-            tw`bg-white mt-4 p-3 rounded-xl shadow-sm mx-4`,
-            
-          ]}>
-          <Text
-            style={[
-              tw`text-gray-500 text-center text-xs`,
-              {color: '#8D99AE', letterSpacing: 0.5},
-            ]}>
-            Be regular, collect points, Stick with ProDAILY time{'\n'}
-            consciousness journey. You'll get rewards.
-          </Text>
-        </View> */}
+
       </View>
       {/* Scrollable Menu Options */}
       <ScrollView
         style={tw`flex-1 px-4 `}
         contentContainerStyle={tw`pb-20`}
-        onScroll={handleScroll}
         scrollEventThrottle={16}
         // Add these props for better scroll performance
         decelerationRate="normal"
