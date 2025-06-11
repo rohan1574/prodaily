@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -17,32 +17,11 @@ type ClipboardIcon =
 const OnboardingScreenOne = () => {
   const [step, setStep] = useState(0); // 0 for text-1, 1 for text-2
   const navigation = useNavigation<NavigationProp>();
-
-  // Auto navigate after 2 seconds
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     navigation.replace("OnboardingScreenTwo");
-  //   }, 2000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // Navigate on button press
-  const handleNexts = () => {
-    navigation.replace('OnboardingScreenTwo');
-  };
-
-  const handleNext = () => {
-    setStep(prev => (prev + 1) % 2); // toggle between 0 and 1
-  };
-
-  const handleBack = () => {
-    setStep(prev => (prev - 1 + 2) % 2); // toggle between 0 and 1
-  };
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Ref for interval
 
   const clipboardIcons: ClipboardIcon[] = [
     {type: 'image', source: require('../../assets/images/sun.png')},
-     {type: 'image', source: require('../../assets/images/work.png')},
+    {type: 'image', source: require('../../assets/images/work.png')},
   ];
 
   const texts = [
@@ -50,10 +29,60 @@ const OnboardingScreenOne = () => {
     '...start every day with clarity. I am Rony Hossen, a developer,\nand an organized custom schedule.',
   ];
 
+  // Auto change step every 2 seconds
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setStep(prev => (prev + 1) % 2); // Toggle between steps
+    }, 2000);
+
+    // Clean up interval on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  // Handle manual navigation
+  const handleNext = () => {
+    // Reset interval when user interacts manually
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setStep(prev => (prev + 1) % 2);
+
+    // Restart auto change after manual interaction
+    intervalRef.current = setInterval(() => {
+      setStep(prev => (prev + 1) % 2);
+    }, 2000);
+  };
+
+  const handleBack = () => {
+    // Reset interval when user interacts manually
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setStep(prev => (prev - 1 + 2) % 2);
+
+    // Restart auto change after manual interaction
+    intervalRef.current = setInterval(() => {
+      setStep(prev => (prev + 1) % 2);
+    }, 2000);
+  };
+
+  // Navigate to next screen
+  const handleNexts = () => {
+    // Clear interval before navigating away
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    navigation.replace('OnboardingScreenTwo');
+  };
+
   return (
     <View style={tw`flex-1 bg-blue-500 justify-between relative`}>
       {/* Top right circle */}
-      <View
+      {/* <View
         style={[
           tw`absolute  opacity-40`,
           {
@@ -65,10 +94,10 @@ const OnboardingScreenOne = () => {
             backgroundColor: '#00A6FF',
           },
         ]}
-      />
+      /> */}
 
       {/* Middle left circle */}
-      <View
+      {/* <View
         style={[
           tw`absolute bg-blue-400 opacity-30`,
           {
@@ -80,7 +109,7 @@ const OnboardingScreenOne = () => {
             backgroundColor: '#00A6FF',
           },
         ]}
-      />
+      /> */}
 
       {/* Top Text */}
       <View style={tw`px-6 pt-12`}>
@@ -108,25 +137,30 @@ const OnboardingScreenOne = () => {
       </View>
 
       {/* Icon with arrows and dynamic clipboard */}
-      <View style={tw`flex-row justify-center items-center`}>
-        <TouchableOpacity onPress={handleBack}>
-          <Icon name="caret-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-        <View style={tw`mx-6`}>
-          {clipboardIcons[step].type === 'icon' ? (
-            <Icon name={clipboardIcons[step].name} size={50} color="white" />
-          ) : (
-            <Image
-              source={clipboardIcons[step].source}
-              style={{width: 54, height: 54}}
-              resizeMode="contain"
-            />
-          )}
+      <View
+        style={[
+          tw`absolute left-0 right-0 items-center`,
+          {top: height * 0.35},
+        ]}>
+        <View style={tw`flex-row items-center`}>
+          <TouchableOpacity onPress={handleBack}>
+            <Icon name="caret-back-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <View style={tw`mx-6`}>
+            {clipboardIcons[step].type === 'icon' ? (
+              <Icon name={clipboardIcons[step].name} size={50} color="white" />
+            ) : (
+              <Image
+                source={clipboardIcons[step].source}
+                style={{width: 54, height: 54}}
+                resizeMode="contain"
+              />
+            )}
+          </View>
+          <TouchableOpacity onPress={handleNext}>
+            <Icon name="caret-forward-outline" size={24} color="white" />
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity onPress={handleNext}>
-          <Icon name="caret-forward-outline" size={24} color="white" />
-        </TouchableOpacity>
       </View>
 
       {/* Bottom semicircle background */}
@@ -143,20 +177,19 @@ const OnboardingScreenOne = () => {
           },
         ]}
       />
-
-      {/* Bottom Text */}
-      <View style={tw`px-6  z-10`}>
-        <Text
-          style={[
-            tw`text-white text-2xl font-bold mb-2`,
-            {fontSize: 28, lineHeight: 42, letterSpacing: 1},
-          ]}>
-          Imagine a life where you...
-        </Text>
+      {/* Bottom Text fixed position */}
+      <Text
+        style={[
+          tw`text-white text-2xl font-bold top-12 px-6`,
+          {fontSize: 28, lineHeight: 42,width:343},
+        ]}>
+        Imagine a life where you...
+      </Text>
+      <View style={[tw`absolute bottom-48 px-6 w-full z-10`]}>
         <Text
           style={[
             tw`text-white font-normal italic`,
-            {fontSize: 14, lineHeight: 20, letterSpacing: 1},
+            {fontSize: 14, lineHeight: 20},
           ]}>
           {texts[step]}
         </Text>
