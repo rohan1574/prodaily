@@ -10,6 +10,8 @@ import {
   Image,
   Animated,
   ImageBackground,
+  Modal,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -44,6 +46,22 @@ const ProfileManageScreen = () => {
   const [showSignOut, setShowSignOut] = useState(false);
   const [themes, setThemes] = useState(false);
   const context = useContext(ColorContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedPremiumColor, setSelectedPremiumColor] = useState('');
+  const handleColorPress = (color: string) => {
+    if (color === 'blue' || color === 'black') {
+      setSelectedColor(color); // Apply directly for free colors
+    } else {
+      setSelectedPremiumColor(color);
+      setModalVisible(true); // Show modal for premium colors
+    }
+  };
+
+  // Handle premium confirmation
+  const handlePremiumConfirm = () => {
+    setModalVisible(false);
+    navigation.navigate('PremiumScreen');
+  };
 
   if (!context) {
     throw new Error('ColorContext is not available');
@@ -169,7 +187,6 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </View>
-
       </View>
       {/* Scrollable Menu Options */}
       <ScrollView
@@ -180,12 +197,9 @@ const ProfileManageScreen = () => {
         decelerationRate="normal"
         showsVerticalScrollIndicator={false}
         overScrollMode="never">
-          {/* Bottom Info Text */}
+        {/* Bottom Info Text */}
         <View
-          style={[
-            tw`bg-white mt-4 bottom-4 p-3 rounded-xl shadow-sm mx-4`,
-            
-          ]}>
+          style={[tw`bg-white mt-4 bottom-4 p-3 rounded-xl shadow-sm mx-4`]}>
           <Text
             style={[
               tw`text-gray-500 text-center text-xs`,
@@ -290,13 +304,13 @@ const ProfileManageScreen = () => {
           </TouchableOpacity>
           {/* Theme color options */}
           {themes && (
-            <TouchableOpacity style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
+            <View style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
               <View style={tw`flex-row justify-center flex-wrap`}>
-                {['#3580FF', 'black', 'red', 'green', 'yellow', 'pink'].map(
+                {['blue', 'black', 'red', 'green', 'yellow', 'pink'].map(
                   color => (
                     <TouchableOpacity
                       key={color}
-                      onPress={() => setSelectedColor(color)}
+                      onPress={() => handleColorPress(color)}
                       style={tw`items-center mx-1`}>
                       <View
                         style={[
@@ -317,7 +331,7 @@ const ProfileManageScreen = () => {
                   ),
                 )}
               </View>
-            </TouchableOpacity>
+            </View>
           )}
         </View>
         <TouchableOpacity
@@ -404,6 +418,65 @@ const ProfileManageScreen = () => {
             Rate Us on Google Play
           </Text>
         </TouchableOpacity>
+        {/* Premium Color Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <View
+            style={[
+              tw`items-center justify-center h-full`,
+              {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+            ]}>
+            <View
+              style={[
+                tw`bg-blue-500 rounded-full px-10 py-6 shadow-md`,
+                {width: 300, height: 92},
+              ]}>
+              <View style={tw`flex-row`}>
+                <View>
+                  <Image
+                    source={require('../../assets/images/PremiumFeature.png')}
+                    style={{width: 37, height: 50, right: 12}}
+                    resizeMode="contain"
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={[
+                      tw`text-white font-medium text-center bottom-3`,
+                      {fontSize: 20, letterSpacing: 1},
+                    ]}>
+                    Premium Feature!
+                  </Text>
+                  <Text
+                    style={[
+                      tw`text-white font-normal text-center bottom-2`,
+                      {fontSize: 10, color: '#C6CEDD', letterSpacing: 1},
+                    ]}>
+                    Only premium user can use this feature
+                  </Text>
+                </View>
+              </View>
+
+              <Pressable
+                style={tw`mt-4 bg-white rounded-md px-4 h-8 self-center bottom-3`}>
+                <Text
+                  onPress={() => {
+                    setModalVisible(false);
+                    navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
+                  }}
+                  style={[
+                    tw` font-medium top-2`,
+                    {fontSize: 12, color: '#3580FF', letterSpacing: 1},
+                  ]}>
+                  Discover
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
       {/* Bottom Navigation Bar */}
       <BottomNavigation />
