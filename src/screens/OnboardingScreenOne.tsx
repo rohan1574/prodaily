@@ -46,13 +46,13 @@ const OnboardingScreenOne = () => {
 
       {/* Top right circle */}
       <View style={[
-        tw`absolute bg-blue-400 opacity-40`,
+        tw`absolute  opacity-40`,
         {
           width: 300,
           height: 300,
           borderRadius: 175,
           top: -40,
-          right:200
+          right:200,backgroundColor:"#00A6FF"
         }
       ]} />
 
@@ -64,22 +64,23 @@ const OnboardingScreenOne = () => {
           height: 180,
           borderRadius: 90,
           top: height * 0.4,
-          left: 228,
+          left: 250,
+          backgroundColor:"#00A6FF"
         }
       ]} />
 
       {/* Top Text */}
       <View style={tw`px-6 pt-12`}>
-        <Text style={tw`text-white text-xl font-bold`}>Unlock!</Text>
-        <Text style={tw`text-white text-sm italic mt-1`}>
-          Your Potential Productivity: <Text style={tw`font-normal`}>By the Power of Routine Journaling</Text>
+        <Text style={[tw`text-white text-xl font-bold`,{fontSize:22,lineHeight:18,letterSpacing:1}]}>Unlock!</Text>
+        <Text style={[tw`text-white text-sm italic mt-1 font-semibold`,{fontSize:16,lineHeight:24,letterSpacing:1}]}>
+          Your Potential Productivity: <Text style={[tw`font-normal`,{fontSize:14,lineHeight:24,letterSpacing:1}]}>By the Power of Routine Journaling</Text>
         </Text>
       </View>
 
       {/* Icon with arrows and dynamic clipboard */}
       <View style={tw`flex-row justify-center items-center`}>
         <TouchableOpacity onPress={handleBack}>
-          <Icon name="chevron-back-outline" size={24} color="white" />
+          <Icon name="caret-back-outline" size={24} color="white" />
         </TouchableOpacity>
 
         <View style={tw`mx-6`}>
@@ -87,7 +88,7 @@ const OnboardingScreenOne = () => {
         </View>
 
         <TouchableOpacity onPress={handleNext}>
-          <Icon name="chevron-forward-outline" size={24} color="white" />
+          <Icon name="caret-forward-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -100,27 +101,28 @@ const OnboardingScreenOne = () => {
             height: width,
             borderTopLeftRadius: width,
             borderTopRightRadius: width,
-            backgroundColor: 'red',
+            backgroundColor: '#005EE280',
             left: -width / 2,
           },
         ]}
       />
 
       {/* Bottom Text */}
-      <View style={tw`px-6 pb-24 z-10`}>
-        <Text style={tw`text-white text-2xl font-bold mb-2`}>
+      <View style={tw`px-6  z-10`}>
+        <Text style={[tw`text-white text-2xl font-bold mb-2`,{fontSize:28,lineHeight:42,letterSpacing:1}]}>
           Imagine a life where you...
         </Text>
-        <Text style={tw`text-white text-sm italic`}>
+        <Text style={[tw`text-white font-normal italic`,{fontSize:14,lineHeight:20,letterSpacing:1}]}>
           {texts[step]}
         </Text>
       </View>
 
       {/* Next Button */}
-      <TouchableOpacity style={tw`self-center pb-8 z-10`} onPress={handleNexts}>
-        <Text style={tw`text-white text-base font-semibold`}>
-          Next <Icon name="arrow-forward-outline" size={16} color="white" />
+      <TouchableOpacity style={tw`flex-row items-center self-center bottom-12 z-10`} onPress={handleNexts}>
+        <Text style={tw`text-white text-base font-semibold `}>
+          Next 
         </Text>
+        <Icon name="chevron-forward-outline" size={18} color="white" />
       </TouchableOpacity>
     </View>
   );
