@@ -186,28 +186,11 @@ const ProfileManageScreen = () => {
             </View>
           </View>
         </View>
-        {/* Bottom Info Text */}
-        <Animated.View
+       
+        {/* <View
           style={[
             tw`bg-white mt-4 p-3 rounded-xl shadow-sm mx-4`,
-            {
-              opacity: scrollY.interpolate({
-                inputRange: [0, 20],
-                outputRange: [1, 0],
-                extrapolate: 'clamp',
-              }),
-              transform: [
-                {
-                  translateY: scrollY.interpolate({
-                    inputRange: [0, 20],
-                    outputRange: [0, -20],
-                    extrapolate: 'clamp',
-                  }),
-                },
-              ],
-              height: showInfoText ? 'auto' : 0,
-              overflow: 'hidden',
-            },
+            
           ]}>
           <Text
             style={[
@@ -217,10 +200,10 @@ const ProfileManageScreen = () => {
             Be regular, collect points, Stick with ProDAILY time{'\n'}
             consciousness journey. You'll get rewards.
           </Text>
-        </Animated.View>
+        </View> */}
       </View>
       {/* Scrollable Menu Options */}
-      <Animated.ScrollView
+      <ScrollView
         style={tw`flex-1 px-4 `}
         contentContainerStyle={tw`pb-20`}
         onScroll={handleScroll}
@@ -229,6 +212,21 @@ const ProfileManageScreen = () => {
         decelerationRate="normal"
         showsVerticalScrollIndicator={false}
         overScrollMode="never">
+          {/* Bottom Info Text */}
+        <View
+          style={[
+            tw`bg-white mt-4 bottom-4 p-3 rounded-xl shadow-sm mx-4`,
+            
+          ]}>
+          <Text
+            style={[
+              tw`text-gray-500 text-center text-xs`,
+              {color: '#8D99AE', letterSpacing: 0.5},
+            ]}>
+            Be regular, collect points, Stick with ProDAILY time{'\n'}
+            consciousness journey. You'll get rewards.
+          </Text>
+        </View>
         <TouchableOpacity
           style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
           <Icon
@@ -438,7 +436,7 @@ const ProfileManageScreen = () => {
             Rate Us on Google Play
           </Text>
         </TouchableOpacity>
-      </Animated.ScrollView>
+      </ScrollView>
       {/* Bottom Navigation Bar */}
       <BottomNavigation />
     </View>
