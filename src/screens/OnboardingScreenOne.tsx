@@ -143,7 +143,7 @@ const OnboardingScreenOne = () => {
           {top: height * 0.35},
         ]}>
         <View style={tw`flex-row items-center`}>
-          <TouchableOpacity onPress={handleBack}>
+          <TouchableOpacity style={tw`right-12`} onPress={handleBack}>
             <Icon name="caret-back-outline" size={24} color="white" />
           </TouchableOpacity>
           <View style={tw`mx-6`}>
