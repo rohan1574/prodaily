@@ -157,7 +157,7 @@ const OnboardingScreenOne = () => {
               />
             )}
           </View>
-          <TouchableOpacity onPress={handleNext}>
+          <TouchableOpacity style={tw`left-12`} onPress={handleNext}>
             <Icon name="caret-forward-outline" size={24} color="white" />
           </TouchableOpacity>
         </View>
