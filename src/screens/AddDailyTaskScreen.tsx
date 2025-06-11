@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   ImageSourcePropType,
+  Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -155,63 +156,63 @@ const AddDailyTaskScreen = () => {
     setIsEditModalVisible(true);
   };
 
- // Save Function Edited Task
-const saveEditedTask = async () => {
-  if (!editingTask) return;
-  
-  const { category, oldName, newName } = editingTask;
-  
-  if (!newName.trim()) {
-    Alert.alert('Error', 'Task name cannot be empty');
-    return;
-  }
-  
-  // Check for duplicate tasks
-  const existingTasks = {
-    ...(tasksData[category] || {}),
-    ...(customTasksData[category] || {})
-  };
-  
-  if (existingTasks[newName] && newName !== oldName) {
-    Alert.alert('Error', 'Task with this name already exists');
-    return;
-  }
-  
-  try {
-    const updatedCustomTasks = { ...customTasksData };
-    
-    if (updatedCustomTasks[category]?.[oldName]) {
-      // Move to new name
-      updatedCustomTasks[category] = {
-        ...updatedCustomTasks[category],
-        [newName]: updatedCustomTasks[category][oldName]
-      };
-      
-      // Remove old name
-      delete updatedCustomTasks[category][oldName];
-      
-      // Update state and storage
-      setCustomTasksData(updatedCustomTasks);
-      await AsyncStorage.setItem(
-        CUSTOM_TASKS_KEY,
-        JSON.stringify(updatedCustomTasks)
-      );
-      
-      // Update expandedTask and taskName states
-      if (expandedTask === oldName) {
-        setTaskName(newName); // Update current task name
-        setExpandedTask(newName); // Keep the task expanded with new name
-      } else {
-        setExpandedTask(null); // Collapse if not editing expanded task
-      }
+  // Save Function Edited Task
+  const saveEditedTask = async () => {
+    if (!editingTask) return;
+
+    const {category, oldName, newName} = editingTask;
+
+    if (!newName.trim()) {
+      Alert.alert('Error', 'Task name cannot be empty');
+      return;
     }
-    
-    setIsEditModalVisible(false);
-  } catch (error) {
-    console.error('Error saving edited task:', error);
-    Alert.alert('Error', 'Failed to save changes');
-  }
-};
+
+    // Check for duplicate tasks
+    const existingTasks = {
+      ...(tasksData[category] || {}),
+      ...(customTasksData[category] || {}),
+    };
+
+    if (existingTasks[newName] && newName !== oldName) {
+      Alert.alert('Error', 'Task with this name already exists');
+      return;
+    }
+
+    try {
+      const updatedCustomTasks = {...customTasksData};
+
+      if (updatedCustomTasks[category]?.[oldName]) {
+        // Move to new name
+        updatedCustomTasks[category] = {
+          ...updatedCustomTasks[category],
+          [newName]: updatedCustomTasks[category][oldName],
+        };
+
+        // Remove old name
+        delete updatedCustomTasks[category][oldName];
+
+        // Update state and storage
+        setCustomTasksData(updatedCustomTasks);
+        await AsyncStorage.setItem(
+          CUSTOM_TASKS_KEY,
+          JSON.stringify(updatedCustomTasks),
+        );
+
+        // Update expandedTask and taskName states
+        if (expandedTask === oldName) {
+          setTaskName(newName); // Update current task name
+          setExpandedTask(newName); // Keep the task expanded with new name
+        } else {
+          setExpandedTask(null); // Collapse if not editing expanded task
+        }
+      }
+
+      setIsEditModalVisible(false);
+    } catch (error) {
+      console.error('Error saving edited task:', error);
+      Alert.alert('Error', 'Failed to save changes');
+    }
+  };
   // Load custom data
   useEffect(() => {
     const loadData = async () => {
@@ -1274,36 +1275,60 @@ const saveEditedTask = async () => {
           transparent={true}
           animationType="fade"
           onRequestClose={() => setShowPremiumModal(false)}>
-          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-            <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
-              <Text style={tw`text-lg font-bold mb-4 text-center`}>
-                Premium Feature
-              </Text>
-              <Text style={tw`text-center mb-6`}>
-                You need to be a premium user to save custom tasks and
-                categories.
-              </Text>
+          <View
+            style={[
+              tw`items-center justify-center h-full`,
+              {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+            ]}>
+            <View
+              style={[
+                tw`bg-blue-500 rounded-full px-10 py-6 shadow-md`,
+                {width: 300, height: 92},
+              ]}>
+              <View style={tw`flex-row`}>
+                <View>
+                  <Image
+                    source={require('../../assets/images/PremiumFeature.png')}
+                    style={{width: 37, height: 50,right:12}}
+                    resizeMode="contain"
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={[
+                      tw`text-white font-medium text-center bottom-3`,
+                      {fontSize: 20, letterSpacing: 1},
+                    ]}>
+                    Premium Feature!
+                  </Text>
+                  <Text
+                    style={[
+                      tw`text-white font-normal text-center bottom-2`,
+                      {fontSize: 10, color: '#C6CEDD', letterSpacing: 1},
+                    ]}>
+                    Only premium user can use this feature
+                  </Text>
+                </View>
+              </View>
 
-              <TouchableOpacity
-                onPress={() => setShowPremiumModal(false)}
-                style={tw`bg-blue-500 py-2 rounded-full`}>
-                <Text style={tw`text-white text-center font-semibold`}>OK</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setShowPremiumModal(false);
-                  navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
-                }}
-                style={tw`mt-4`}>
-                <Text style={tw`text-blue-500 text-center font-semibold`}>
-                  Upgrade to Premium
+              <Pressable
+                style={tw`mt-4 bg-white rounded-md px-4 h-8 self-center bottom-3`}>
+                <Text
+                  onPress={() => {
+                    setShowPremiumModal(false);
+                    navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
+                  }}
+                  style={[
+                    tw` font-medium top-2`,
+                    {fontSize: 12, color: '#3580FF', letterSpacing: 1},
+                  ]}>
+                  Discover
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </Modal>
-        
+
         <Modal
           visible={isEditModalVisible}
           transparent={true}
