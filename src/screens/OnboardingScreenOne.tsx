@@ -118,14 +118,14 @@ const OnboardingScreenOne = () => {
             tw`text-white text-xl font-bold`,
             {fontSize: 22, lineHeight: 18, letterSpacing: 1},
           ]}>
-          
+          Unlock!
         </Text>
         <Text
           style={[
             tw`text-white text-sm italic mt-1 font-semibold`,
             {fontSize: 16, lineHeight: 24, letterSpacing: 1},
           ]}>
-          Your Potential Productivity:{' '}
+          Your Productivity:{' '}
           <Text
             style={[
               tw`font-normal`,
