@@ -26,7 +26,7 @@ const OnboardingScreenOne = () => {
 
   const texts = [
     '...start every day with clarity, purpose, and\nan organized custom schedule.',
-    '...start every day with clarity. I am Rony Hossen, a developer,\nand an organized custom schedule.',
+    '...start every day with clarity. I am Rony Hossen, a developer',
   ];
 
   // Auto change step every 2 seconds
@@ -112,10 +112,10 @@ const OnboardingScreenOne = () => {
       /> */}
 
       {/* Top Text */}
-      <View style={tw`px-6 pt-12`}>
+      <View style={tw`px-9 pt-12`}>
         <Text
           style={[
-            tw`text-white text-xl font-bold`,
+            tw`text-white text-xl bottom-4 font-bold`,
             {fontSize: 22, lineHeight: 18, letterSpacing: 1},
           ]}>
           Unlock!
@@ -123,9 +123,9 @@ const OnboardingScreenOne = () => {
         <Text
           style={[
             tw`text-white text-sm italic mt-1 font-semibold`,
-            {fontSize: 16, lineHeight: 24, letterSpacing: 1},
+            {fontSize: 18, lineHeight: 24, letterSpacing: 1},
           ]}>
-          Your Productivity:{' '}
+          Your Potential Productivity:{' '}
           <Text
             style={[
               tw`font-normal`,
@@ -143,7 +143,7 @@ const OnboardingScreenOne = () => {
           {top: height * 0.35},
         ]}>
         <View style={tw`flex-row items-center bottom-12`}>
-          <TouchableOpacity style={tw`right-12`} onPress={handleBack}>
+          <TouchableOpacity style={tw`right-12 top-10`} onPress={handleBack}>
             <Icon name="caret-back-outline" size={24} color="white" />
           </TouchableOpacity>
           <View style={tw`mx-6`}>
@@ -157,7 +157,7 @@ const OnboardingScreenOne = () => {
               />
             )}
           </View>
-          <TouchableOpacity style={tw`left-12`} onPress={handleNext}>
+          <TouchableOpacity style={tw`left-12 top-10`} onPress={handleNext}>
             <Icon name="caret-forward-outline" size={24} color="white" />
           </TouchableOpacity>
         </View>
