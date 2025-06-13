@@ -131,7 +131,7 @@ const OnboardingScreenOne = () => {
               tw`font-normal`,
               {fontSize: 14, lineHeight: 24, letterSpacing: 1},
             ]}>
-            By the Power of Routine Journaling
+            By the Power of Routine 
           </Text>
         </Text>
       </View>
