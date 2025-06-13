@@ -118,7 +118,7 @@ const OnboardingScreenOne = () => {
             tw`text-white text-xl font-bold`,
             {fontSize: 22, lineHeight: 18, letterSpacing: 1},
           ]}>
-          Unlock!
+          
         </Text>
         <Text
           style={[
@@ -131,7 +131,7 @@ const OnboardingScreenOne = () => {
               tw`font-normal`,
               {fontSize: 14, lineHeight: 24, letterSpacing: 1},
             ]}>
-            By the Power of Routine 
+            By the Power of Routine Journaling
           </Text>
         </Text>
       </View>
