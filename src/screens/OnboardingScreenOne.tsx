@@ -26,7 +26,7 @@ const OnboardingScreenOne = () => {
   ];
 
   const texts = [
-    '...start every day with clarity, purpose, and\nan organized custom schedule.',
+    '...start every day with clarity, purpose, and an organized custom schedule.',
     '...start every day with clarity. I am Rony Hossen, a developer',
   ];
 
@@ -166,7 +166,7 @@ const OnboardingScreenOne = () => {
 
       {/* Bottom semicircle background */}
       <LinearGradient
-        colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0.5)']}
+        colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0)']}
         style={[
           tw`absolute bottom-0`,
           {
@@ -181,16 +181,16 @@ const OnboardingScreenOne = () => {
       {/* Bottom Text fixed position */}
       <Text
         style={[
-          tw`text-white text-2xl font-bold top-12 px-6`,
-          {fontSize: 28, lineHeight: 42, width: 343},
+          tw`text-white  font-extrabold top-14 left-9`,
+          {fontSize: 28, lineHeight: 42, width: 343, letterSpacing: 1},
         ]}>
         Imagine a life where you...
       </Text>
-      <View style={[tw`absolute bottom-48 px-6 w-full z-10`]}>
+      <View style={[tw`absolute bottom-48  z-10`]}>
         <Text
           style={[
-            tw`text-white font-normal italic`,
-            {fontSize: 14, lineHeight: 20},
+            tw`text-white font-normal px-9`,
+            {fontSize: 14, lineHeight: 20, letterSpacing: 1, width: 353},
           ]}>
           {texts[step]}
         </Text>
@@ -200,8 +200,20 @@ const OnboardingScreenOne = () => {
       <TouchableOpacity
         style={tw`flex-row items-center self-center bottom-12 z-10`}
         onPress={handleNexts}>
-        <Text style={tw`text-white text-base font-semibold `}>Next</Text>
-        <Icon name="chevron-forward-outline" size={18} color="white" />
+        <Text style={[tw`text-base font-semibold mr-2`, {color: '#DEEAFF'}]}>
+          Next
+        </Text>
+        <Icon
+          name="chevron-forward-outline"
+          size={20}
+          color="#DEEAFF"
+          style={{
+            width: 7.4,
+            height: 20,
+            textAlign: 'center', // optional: aligns the icon in given width
+            lineHeight: 20, // ensures vertical alignment
+          }}
+        />
       </TouchableOpacity>
     </View>
   );
