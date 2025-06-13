@@ -5,6 +5,7 @@ import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigation';
+import LinearGradient from 'react-native-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 type NavigationProp = NativeStackNavigationProp<
@@ -164,7 +165,8 @@ const OnboardingScreenOne = () => {
       </View>
 
       {/* Bottom semicircle background */}
-      <View
+      <LinearGradient
+        colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0.5)']}
         style={[
           tw`absolute bottom-0`,
           {
@@ -172,7 +174,6 @@ const OnboardingScreenOne = () => {
             height: width,
             borderTopLeftRadius: width,
             borderTopRightRadius: width,
-            backgroundColor: '#005EE280',
             left: -width / 2,
           },
         ]}
@@ -181,7 +182,7 @@ const OnboardingScreenOne = () => {
       <Text
         style={[
           tw`text-white text-2xl font-bold top-12 px-6`,
-          {fontSize: 28, lineHeight: 42,width:343},
+          {fontSize: 28, lineHeight: 42, width: 343},
         ]}>
         Imagine a life where you...
       </Text>
