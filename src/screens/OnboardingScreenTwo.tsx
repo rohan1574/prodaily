@@ -5,6 +5,7 @@ import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigation';
+import LinearGradient from 'react-native-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 type NavigationProp = NativeStackNavigationProp<
@@ -82,7 +83,7 @@ const OnboardingScreenTwo = () => {
       /> */}
 
       {/* Top Text */}
-      <View style={tw`px-6 pt-12`}>
+      <View style={tw`px-9 pt-12`}>
         <Text
           style={[
             tw`text-white text-xl font-bold `,
@@ -121,22 +122,22 @@ const OnboardingScreenTwo = () => {
       </View>
 
       {/* Bottom semicircle background */}
-      <View
-        style={[
-          tw`absolute bottom-0`,
-          {
-            width: width * 2,
-            height: width,
-            borderTopLeftRadius: width,
-            borderTopRightRadius: width,
-            backgroundColor: '#005EE280',
-            left: -width / 2,
-          },
-        ]}
-      />
+       <LinearGradient
+             colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0)']}
+             style={[
+               tw`absolute bottom-0`,
+               {
+                 width: width * 2,
+                 height: width,
+                 borderTopLeftRadius: width,
+                 borderTopRightRadius: width,
+                 left: -width / 2,
+               },
+             ]}
+           />
 
       {/* Bottom Text */}
-      <View style={tw`px-6  z-10`}>
+      <View style={tw`px-9  z-10`}>
         <Text
           style={[
             tw`text-white text-2xl font-bold mb-2`,
@@ -147,7 +148,7 @@ const OnboardingScreenTwo = () => {
         <Text
           style={[
             tw`text-white font-normal italic`,
-            {fontSize: 14, lineHeight: 20, letterSpacing: 1},
+            {fontSize: 15, lineHeight: 20, letterSpacing: 1,color:"#DEEAFF"},
           ]}>
           {texts[step]}
         </Text>
@@ -157,8 +158,20 @@ const OnboardingScreenTwo = () => {
       <TouchableOpacity
         style={tw`flex-row items-center self-center bottom-12 z-10`}
         onPress={handleNexts}>
-        <Text style={tw`text-white text-base font-semibold `}>Next</Text>
-        <Icon name="chevron-forward-outline" size={18} color="white" />
+        <Text style={[tw`text-base font-semibold mr-2`, {color: '#DEEAFF'}]}>
+                  Next
+                </Text>
+                <Icon
+                  name="chevron-forward-outline"
+                  size={20}
+                  color="#DEEAFF"
+                  style={{
+                    width: 7.4,
+                    height: 20,
+                    textAlign: 'center', // optional: aligns the icon in given width
+                    lineHeight: 20, // ensures vertical alignment
+                  }}
+                />
       </TouchableOpacity>
     </View>
   );
