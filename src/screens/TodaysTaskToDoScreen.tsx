@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Modal,
   TextInput,
+  Animated,
 } from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,6 +35,24 @@ interface Task {
   selectedMonths?: string[];
 }
 const TodaysTaskToDoScreen = () => {
+  const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(bounceAnim, {
+          toValue: -5,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(bounceAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [bounceAnim]);
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState(false);
@@ -374,14 +393,38 @@ const TodaysTaskToDoScreen = () => {
               <View style={tw`items-center mt-4`}>
                 <Image
                   source={require('../../assets/images/NoTaskToday.png')}
-                  style={[tw``, {width: 242, height: 346,}]}
+                  style={[tw``, {width: 200, height: 346}]}
                   resizeMode="contain"
                 />
-                <View style={[tw`bg-white top-8 rounded-lg border-2 right-8`,{width: 244, height: 80,borderColor:"#DEEAFF"}]}>
-                  <Text style={[tw`text-center top-4 text-black font-medium`,{fontSize:14}]}>
-                  No task added in your routine. Please, Add task
-                </Text>
-                </View>
+                <Animated.View
+                  style={[
+                    tw`bg-white rounded-lg border-2 justify-center`,
+                    {
+                      width: 244,
+                      height: 80,
+                      borderColor: '#DEEAFF',
+                      alignItems: 'center',
+                      transform: [{translateY: bounceAnim}],
+                      marginTop: -10,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      tw`text-black font-medium text-center`,
+                      {fontSize: 14, paddingHorizontal: 8},
+                    ]}>
+                    No task added in your routine. Please, Add task
+                  </Text>
+                </Animated.View>
+
+                {/* Animated Down Icon */}
+                <Animated.View
+                  style={{
+                    transform: [{translateY: bounceAnim}],
+                    marginTop: -10,
+                  }}>
+                  <Icon name="chevron-down-outline" size={24} color="#DEEAFF" />
+                </Animated.View>
               </View>
             ) : (
               tasks.map((task: any) => (

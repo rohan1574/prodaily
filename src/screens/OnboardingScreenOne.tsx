@@ -147,7 +147,7 @@ const handleBack = () => {
         ]}>
         <View style={tw`flex-row items-center bottom-12`}>
           <TouchableOpacity style={tw`right-12 top-10`} onPress={handleBack}>
-            <Icon name="caret-back-outline" size={24} color="white" />
+            <Icon name="caret-back-outline" size={24} color="#DEEAFF" />
           </TouchableOpacity>
           <View style={tw`mx-6`}>
             {clipboardIcons[step].type === 'icon' ? (
@@ -161,7 +161,7 @@ const handleBack = () => {
             )}
           </View>
           <TouchableOpacity style={tw`left-12 top-10`} onPress={handleNext}>
-            <Icon name="caret-forward-outline" size={24} color="white" />
+            <Icon name="caret-forward-outline" size={24} color="#DEEAFF" />
           </TouchableOpacity>
         </View>
       </View>
