@@ -111,7 +111,7 @@ const ProfileManageScreen = () => {
               <TouchableOpacity
                 style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}
                 onPress={() => navigation.navigate('PremiumScreen')}>
-                <Text style={tw`text-blue-500 text-xs font-semibold`}>
+                <Text  onPress={() => navigation.navigate('PremiumPackage')} style={tw`text-blue-500 text-xs font-semibold`}>
                   Try Premium
                 </Text>
               </TouchableOpacity>
@@ -220,7 +220,7 @@ const ProfileManageScreen = () => {
           <Text style={tw`text-black text-base`}>Home</Text>
         </TouchableOpacity>
         {/* Premium Section */}
-        <View style={tw`bg-white mb-2 rounded-xl shadow`}>
+        {/* <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
             onPress={() => navigation.navigate('PremiumPackage')}
             style={tw`flex-row items-center justify-between p-4 bg-white rounded-xl`}>
@@ -235,7 +235,7 @@ const ProfileManageScreen = () => {
             </View>
             <Icon name="chevron-forward" size={20} color="#DFDFDF" />
           </TouchableOpacity>
-        </View>
+        </View> */}
         {/* Account Section with Toggle */}
         <View style={tw`bg-white mb-2 rounded-xl shadow`}>
           <TouchableOpacity
