@@ -263,7 +263,7 @@ const AllTaskListScreen = () => {
 
           <View style={tw`flex-row justify-between gap-3`}>
             <TouchableOpacity
-              style={tw`flex-1 bg-gray-300 py-2 rounded-lg`}
+              style={tw`flex-1 bg-gray-300 py-2  rounded-lg`}
               onPress={() => setDeleteModalVisible(false)}>
               <Text style={tw`text-center`}>Cancel</Text>
             </TouchableOpacity>
@@ -307,7 +307,7 @@ const AllTaskListScreen = () => {
             {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
           ]}>
           <View
-            style={tw`flex-row items-center bg-green-500 rounded-full px-6 py-3`}>
+            style={tw`flex-row items-center bg-blue-500 rounded-full px-6 py-3`}>
             <Icon
               name="checkmark-circle-outline"
               size={28}

@@ -235,12 +235,27 @@ const AddDailyTaskScreen = () => {
     if (showSuccessModal) {
       const timer = setTimeout(() => {
         setShowSuccessModal(false);
-      }, 1000); // 30 seconds
+      }, 1000);
 
       return () => clearTimeout(timer); // Cleanup on unmount or when modal hides
     }
   }, [showSuccessModal]);
+// Add this useEffect hook for the duplicate alert timeout
+useEffect(() => {
+  let timeoutId: NodeJS.Timeout | null = null;
+  
+  if (showDuplicateAlert) {
+    timeoutId = setTimeout(() => {
+      setShowDuplicateAlert(false);
+    }, 1000); 
+  }
 
+  return () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  };
+}, [showDuplicateAlert]);
   // Merge default and custom categories
   const mergedIcons: Record<string, ImageSourcePropType> = {
     ...categoryIcons,
@@ -1040,28 +1055,37 @@ const AddDailyTaskScreen = () => {
                         expandedTask === task ? 'chevron-up' : 'chevron-down'
                       }
                       size={20}
-                      color="#8D99AE" // Blue Color
+                      color="#8D99AE"
                     />
                   </TouchableOpacity>
                 </View>
                 {showDuplicateAlert && (
-                  <Modal transparent visible={showDuplicateAlert}>
+                  <Modal
+                    transparent={true}
+                    animationType="fade"
+                    visible={showDuplicateAlert}
+                    onRequestClose={() => setShowDuplicateAlert(false)}>
                     <View
-                      style={tw`flex-1 justify-center items-center bg-gray-500`}>
+                      style={[
+                        tw`flex-1 justify-center items-center`,
+                        {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+                      ]}>
                       <View
-                        style={tw`bg-red-500 p-6 rounded-2xl w-3/4 items-center shadow-lg`}>
-                        <Text style={tw`text-white text-xl font-bold mb-2`}>
-                          Task Already Exists
-                        </Text>
-                        <Text style={tw`text-white text-center mb-6`}>
-                          This task is already in your routine.
-                        </Text>
-
-                        <TouchableOpacity
-                          onPress={() => setShowDuplicateAlert(false)}
-                          style={tw`bg-white px-8 py-2 rounded-full`}>
-                          <Text style={tw`text-red-500 font-bold`}>OK</Text>
-                        </TouchableOpacity>
+                        style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
+                        <Icon
+                          name="checkmark-circle-outline"
+                          size={28}
+                          color="white"
+                          style={tw`mr-2`}
+                        />
+                        <View>
+                          <Text style={tw`text-white font-semibold text-base`}>
+                            Task Already
+                          </Text>
+                          <Text style={tw`text-white text-xs`}>
+                            Exist in your routine
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </Modal>
@@ -1289,7 +1313,7 @@ const AddDailyTaskScreen = () => {
                 <View>
                   <Image
                     source={require('../../assets/images/PremiumFeature.png')}
-                    style={{width: 37, height: 50,right:12}}
+                    style={{width: 37, height: 50, right: 12}}
                     resizeMode="contain"
                   />
                 </View>
