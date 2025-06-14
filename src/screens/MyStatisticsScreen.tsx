@@ -89,7 +89,7 @@ const CircularProgress = ({
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [selectedTab, setSelectedTab] = useState<
-    'Weekly' | 'Monthl' | 'Yearly'
+    'Weekly' | 'Monthly' | 'Yearly'
   >('Weekly');
 
   // Tab অনুযায়ী ডাইনামিক টেক্সট
