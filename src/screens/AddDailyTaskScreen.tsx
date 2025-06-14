@@ -240,22 +240,22 @@ const AddDailyTaskScreen = () => {
       return () => clearTimeout(timer); // Cleanup on unmount or when modal hides
     }
   }, [showSuccessModal]);
-// Add this useEffect hook for the duplicate alert timeout
-useEffect(() => {
-  let timeoutId: NodeJS.Timeout | null = null;
-  
-  if (showDuplicateAlert) {
-    timeoutId = setTimeout(() => {
-      setShowDuplicateAlert(false);
-    }, 1000); 
-  }
+  // Add this useEffect hook for the duplicate alert timeout
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
 
-  return () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+    if (showDuplicateAlert) {
+      timeoutId = setTimeout(() => {
+        setShowDuplicateAlert(false);
+      }, 1000);
     }
-  };
-}, [showDuplicateAlert]);
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [showDuplicateAlert]);
   // Merge default and custom categories
   const mergedIcons: Record<string, ImageSourcePropType> = {
     ...categoryIcons,
