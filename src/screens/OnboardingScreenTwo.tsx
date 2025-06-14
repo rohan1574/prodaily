@@ -42,8 +42,7 @@ const OnboardingScreenTwo = () => {
   };
 
   const clipboardIcons: ClipboardIcon[] = [
-    {type: 'image', source: require('../../assets/images/dependability.png')},
-    {type: 'image', source: require('../../assets/images/work.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/dependability.png')},
   ];
 
   const texts = [

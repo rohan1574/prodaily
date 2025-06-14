@@ -21,55 +21,57 @@ const OnboardingScreenOne = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // Ref for interval
 
   const clipboardIcons: ClipboardIcon[] = [
-    {type: 'image', source: require('../../assets/images/sun.png')},
-    {type: 'image', source: require('../../assets/images/work.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/work.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/Alldone.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/Calm.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/Regular.png')},
+    {type: 'image', source: require('../../assets/images/onboarding/Regulars.png')},
   ];
 
   const texts = [
     '...start every day with clarity, purpose, and an organized custom schedule.',
-    '...start every day with clarity. I am Rony Hossen, a developer',
+    '...are consistently achieving your goals and boosting your productivity.',
+    '...navigate challenges with calm and manage stress effectively.',
+    '...are confident in your decisions and completing daily tasks. ',
+    '...cultivate lasting positive habits and gratitude.',
   ];
 
   // Auto change step every 2 seconds
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setStep(prev => (prev + 1) % 2); // Toggle between steps
-    }, 2000);
+ useEffect(() => {
+  intervalRef.current = setInterval(() => {
+    setStep(prev => (prev + 1) % 5); // ৫টি স্টেপের জন্য
+  }, 2000);
 
-    // Clean up interval on unmount
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
+  return () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+}, []);
+
 
   // Handle manual navigation
   const handleNext = () => {
-    // Reset interval when user interacts manually
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    setStep(prev => (prev + 1) % 2);
+  if (intervalRef.current) {
+    clearInterval(intervalRef.current);
+  }
+  setStep(prev => (prev + 1) % 5);
 
-    // Restart auto change after manual interaction
-    intervalRef.current = setInterval(() => {
-      setStep(prev => (prev + 1) % 2);
-    }, 2000);
-  };
+  intervalRef.current = setInterval(() => {
+    setStep(prev => (prev + 1) % 5);
+  }, 2000);
+};
 
-  const handleBack = () => {
-    // Reset interval when user interacts manually
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    setStep(prev => (prev - 1 + 2) % 2);
+const handleBack = () => {
+  if (intervalRef.current) {
+    clearInterval(intervalRef.current);
+  }
+  setStep(prev => (prev - 1 + 5) % 5);
 
-    // Restart auto change after manual interaction
-    intervalRef.current = setInterval(() => {
-      setStep(prev => (prev + 1) % 2);
-    }, 2000);
-  };
+  intervalRef.current = setInterval(() => {
+    setStep(prev => (prev + 1) % 5);
+  }, 2000);
+};
 
   // Navigate to next screen
   const handleNexts = () => {
