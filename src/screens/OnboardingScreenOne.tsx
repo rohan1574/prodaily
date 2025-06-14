@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
@@ -83,6 +84,7 @@ const handleBack = () => {
   };
 
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={tw`flex-1 bg-blue-500 justify-between relative`}>
       {/* Top right circle */}
       {/* <View
@@ -218,6 +220,7 @@ const handleBack = () => {
         />
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 
