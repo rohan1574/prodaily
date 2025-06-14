@@ -122,19 +122,19 @@ const OnboardingScreenTwo = () => {
       </View>
 
       {/* Bottom semicircle background */}
-       <LinearGradient
-             colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0)']}
-             style={[
-               tw`absolute bottom-0`,
-               {
-                 width: width * 2,
-                 height: width,
-                 borderTopLeftRadius: width,
-                 borderTopRightRadius: width,
-                 left: -width / 2,
-               },
-             ]}
-           />
+      <LinearGradient
+        colors={['rgba(0, 94, 226, 0.5)', 'rgba(39, 143, 255, 0)']}
+        style={[
+          tw`absolute bottom-0`,
+          {
+            width: width * 2,
+            height: width,
+            borderTopLeftRadius: width,
+            borderTopRightRadius: width,
+            left: -width / 2,
+          },
+        ]}
+      />
 
       {/* Bottom Text */}
       <View style={tw`px-9  z-10`}>
@@ -148,7 +148,7 @@ const OnboardingScreenTwo = () => {
         <Text
           style={[
             tw`text-white font-normal italic`,
-            {fontSize: 15, lineHeight: 20, letterSpacing: 1,color:"#DEEAFF"},
+            {fontSize: 15, lineHeight: 20, letterSpacing: 1, color: '#DEEAFF'},
           ]}>
           {texts[step]}
         </Text>
@@ -159,19 +159,19 @@ const OnboardingScreenTwo = () => {
         style={tw`flex-row items-center self-center bottom-12 z-10`}
         onPress={handleNexts}>
         <Text style={[tw`text-base font-semibold mr-2`, {color: '#DEEAFF'}]}>
-                  Next
-                </Text>
-                <Icon
-                  name="chevron-forward-outline"
-                  size={20}
-                  color="#DEEAFF"
-                  style={{
-                    width: 7.4,
-                    height: 20,
-                    textAlign: 'center', // optional: aligns the icon in given width
-                    lineHeight: 20, // ensures vertical alignment
-                  }}
-                />
+          Next
+        </Text>
+        <Icon
+          name="chevron-forward-outline"
+          size={20}
+          color="#DEEAFF"
+          style={{
+            width: 7.4,
+            height: 20,
+            textAlign: 'center', // optional: aligns the icon in given width
+            lineHeight: 20, // ensures vertical alignment
+          }}
+        />
       </TouchableOpacity>
     </View>
   );
