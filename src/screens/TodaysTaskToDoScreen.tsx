@@ -42,12 +42,12 @@ const TodaysTaskToDoScreen = () => {
       Animated.sequence([
         Animated.timing(bounceAnim, {
           toValue: -5,
-          duration: 500,
+          duration: 1000,
           useNativeDriver: true,
         }),
         Animated.timing(bounceAnim, {
           toValue: 0,
-          duration: 500,
+          duration: 1000,
           useNativeDriver: true,
         }),
       ]),
@@ -398,7 +398,7 @@ const TodaysTaskToDoScreen = () => {
                 />
                 <Animated.View
                   style={[
-                    tw`bg-white rounded-lg border-2 justify-center`,
+                    tw`bg-white rounded-lg border-2 justify-center right-8`,
                     {
                       width: 244,
                       height: 80,
@@ -421,7 +421,7 @@ const TodaysTaskToDoScreen = () => {
                 <Animated.View
                   style={{
                     transform: [{translateY: bounceAnim}],
-                    marginTop: -10,
+                    left:18
                   }}>
                   <Icon name="chevron-down-outline" size={24} color="#DEEAFF" />
                 </Animated.View>
