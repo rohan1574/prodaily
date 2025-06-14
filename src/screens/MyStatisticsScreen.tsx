@@ -89,12 +89,21 @@ const CircularProgress = ({
 
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [selectedTab, setSelectedTab] = React.useState('Monthly');
+  const [selectedTab, setSelectedTab] = useState<'Weekly' | 'Monthly' | 'Yearly'>('Weekly');
 
-  const [selectedDayOnType, setSelectedDayOnType] = useState<
-    'weekly' | 'monthly' | 'yearly'
-  >('weekly');
-  const [isSpecificDayOnSelected, setIsSpecificDayOnSelected] = useState(true); // or false based on your logic
+ // Tab অনুযায়ী ডাইনামিক টেক্সট
+  const getLastPeriodText = () => {
+    switch (selectedTab) {
+      case 'Weekly':
+        return 'Last Week';
+      case 'Monthly':
+        return 'Last Month';
+      case 'Yearly':
+        return 'Last Year';
+      default:
+        return '';
+    }
+  };
 
   const [statsData, setStatsData] = useState({
     allTimeCompleted: 0,
@@ -206,27 +215,26 @@ const MyStatisticsScreen = () => {
         </View>
         <View style={tw`bg-white top-8 rounded-lg`}>
           <View style={tw`bg-white h-24 rounded-lg`}>
-            <View
-              style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-5`}>
-              {['Weekly', 'Monthly', 'Yearly'].map(tab => (
-                <TouchableOpacity
-                  key={tab}
-                  onPress={() => setSelectedTab(tab)}
-                  style={tw`flex-1 p-2 rounded-full ${
-                    selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
-                  }`}>
-                  <Text
-                    style={[
-                      tw`text-center text-sm font-normal`,
-                      selectedTab === tab
-                        ? tw`text-white font-semibold`
-                        : {color: '#8D99AE'},
-                    ]}>
-                    {tab}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <View style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-5`}>
+        {['Weekly', 'Monthly', 'Yearly'].map(tab => (
+          <TouchableOpacity
+            key={tab}
+            onPress={() => setSelectedTab(tab as 'Weekly' | 'Monthly' | 'Yearly')}
+            style={tw`flex-1 p-2 rounded-full ${
+              selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
+            }`}>
+            <Text
+              style={[
+                tw`text-center text-sm font-normal`,
+                selectedTab === tab
+                  ? tw`text-white font-semibold`
+                  : {color: '#8D99AE'},
+              ]}>
+              {tab}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
           </View>
           {/* কারেন্ট প্রোগ্রেস সেকশন */}
           <View
@@ -234,14 +242,14 @@ const MyStatisticsScreen = () => {
               tw`bg-white shadow-lg rounded-lg p-4 bottom-4`,
               {height: 145},
             ]}>
+              {/* last */}
             <Text style={tw`text-black font-medium text-base mb-2 bottom-4`}>
-              Last Month
+              {getLastPeriodText()}
             </Text>
             <View style={tw`flex-row items-center justify-between`}>
               <CircularProgress
                 percentage={statsData.successScore}
-                radius={40}
-                
+                radius={40}               
               />
               <View style={tw`ml-4 bottom-2`}>
                 <Text
