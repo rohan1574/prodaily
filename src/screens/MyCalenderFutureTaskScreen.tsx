@@ -84,9 +84,9 @@ const MyCalenderFutureTaskScreen = () => {
   }, [selectedDate]);
 
   return (
-    <View style={[tw`flex-1`, {backgroundColor: '#F7FAFF'}]}>
+    <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
       {/* Header */}
-      <View style={tw`mb-8 top-2 left-4`}>
+      <View style={tw`mb-8 top-4 left-4`}>
         <Text style={tw`text-xl font-bold`}>My Calendar</Text>
         <Text style={[tw``, {fontSize: 11, color: '#8D99AE'}]}>
           Your added tasks on the selected calendar day.

@@ -92,7 +92,6 @@ const MyStatisticsScreen = () => {
     'Weekly' | 'Monthly' | 'Yearly'
   >('Weekly');
 
-  // Tab অনুযায়ী ডাইনামিক টেক্সট
   const getLastPeriodText = () => {
     switch (selectedTab) {
       case 'Weekly':
