@@ -152,7 +152,7 @@ const MyStatisticsScreen = () => {
   }, [isFocused]);
 const { width } = useWindowDimensions();
   const isSmallScreen = width < 400;
-  const boxWidth = isSmallScreen ? 'w-1/2' : 'w-1/4'
+  const boxWidth = isSmallScreen ? 'w-1/4' : 'w-1/4'
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
       <View style={tw`flex-1 bg-gray-200`}>
