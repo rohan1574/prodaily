@@ -390,7 +390,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
                 <TouchableOpacity
                   onPress={() => setShowNextDay(!showNextDay)}
-                  style={tw`flex-row items-center right-4 top-4`}>
+                  style={tw`flex-row items-center right-4  top-4`}>
                   <Ionicons
                     name={showNextDay ? 'radio-button-on' : 'radio-button-off'}
                     size={20}
