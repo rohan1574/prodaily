@@ -540,7 +540,7 @@ const AddDailyTaskScreen = () => {
         </Text> */}
       </View>
       {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`top-8 left-3 `}>
+      <View style={tw`top-8 left-3  `}>
         <ScrollView
           horizontal
           ref={scrollViewRef}
@@ -548,7 +548,7 @@ const AddDailyTaskScreen = () => {
           snapToInterval={82} // Changed to actual item width (74 + 8 margin)
           snapToAlignment="start"
           decelerationRate="fast"
-          contentContainerStyle={tw`pl-1`} // REMOVED LEFT PADDING
+          contentContainerStyle={tw`pl-1 pr-6`} // REMOVED LEFT PADDING
           onScroll={event => {
             const offsetX = event.nativeEvent.contentOffset.x;
             const selectedIndex = Math.round(offsetX / 82); // Use 82 instead of 102
@@ -611,7 +611,7 @@ const AddDailyTaskScreen = () => {
             style={tw`items-center `}>
             <View
               style={[
-                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white right-2`,
+                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white right-1`,
                 {width: 74, height: 74},
               ]}>
               <Image

@@ -138,7 +138,7 @@ const OnboardingScreenTwo = () => {
       />
 
       {/* Bottom Text */}
-      <View style={tw`px-9  z-10`}>
+      <View style={tw`px-9 bottom-12 z-10`}>
         <Text
           style={[
             tw`text-white text-2xl font-bold mb-2`,

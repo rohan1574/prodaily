@@ -186,11 +186,11 @@ const handleBack = () => {
       <Text
         style={[
           tw`text-white  font-extrabold top-14 left-9`,
-          {fontSize: 28, lineHeight: 42, width: 343, letterSpacing: 1},
+          {fontSize: 30, lineHeight: 42, width: 343, letterSpacing: 1},
         ]}>
         Imagine a life where you...
       </Text>
-      <View style={[tw`absolute bottom-48  z-10`]}>
+      <View style={[tw`absolute bottom-56 z-10`]}>
         <Text
           style={[
             tw`text-white font-normal px-9`,
