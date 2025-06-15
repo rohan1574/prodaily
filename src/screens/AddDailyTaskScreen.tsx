@@ -26,7 +26,7 @@ import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 type RootStackParamList = {
   // ... your other screens
@@ -386,37 +386,38 @@ const AddDailyTaskScreen = () => {
   };
   // Existing code...
 
-  const handleToggleSpecificFor = () => {
-    const newSpecificForState = !isSpecificForEnabled;
+ // Update both toggle functions to reset the opposite state
+const handleToggleSpecificFor = () => {
+  const newState = !isSpecificForEnabled;
+  
+  // Reset specific day on when enabling specific for
+  if (newState && isSpecificDayOnSelected) {
+    setIsSpecificDayOnSelected(false);
+    // Reset day selection states
+    setSelectedDays([]);
+    setSelectedDates([]);
+    setSelectedMonths([]);
+  }
 
-    // যদি নতুন স্টেট ON হয় (চালু করা হয়)
-    if (newSpecificForState) {
-      setIsSpecificDayOnSelected(false); // Add Specific Day On বন্ধ করুন
-      setSelectedDays([]); // সিলেক্টেড দিন রিসেট
-      setSelectedDates([]); // সিলেক্টেড তারিখ রিসেট
-      setSelectedMonths([]); // সিলেক্টেড মাস রিসেট
-    }
+  // Reset input field when disabling
+  if (!newState) {
+    setSpecificForValue('');
+  }
 
-    // নিজের ইনপুট রিসেট (যদি বন্ধ করা হয়)
-    if (isSpecificForEnabled) {
-      setSpecificForValue('');
-      setSpecificFor('Days');
-    }
+  setIsSpecificForEnabled(newState);
+};
 
-    setIsSpecificForEnabled(newSpecificForState);
-  };
-  const toggleSpecificDayOn = () => {
-    const newSpecificDayOnState = !isSpecificDayOnSelected;
+const toggleSpecificDayOn = () => {
+  const newState = !isSpecificDayOnSelected;
 
-    if (newSpecificDayOnState) {
-      setIsSpecificForEnabled(false);
-      setSpecificForValue('');
-      setSpecificFor('Days');
-      setSelectedDayOnType('week'); // এখানে ডিফল্ট 'week' সেট করুন
-    }
+  // Reset specific for when enabling specific day on
+  if (newState && isSpecificForEnabled) {
+    setIsSpecificForEnabled(false);
+    setSpecificForValue('');
+  }
 
-    setIsSpecificDayOnSelected(newSpecificDayOnState);
-  };
+  setIsSpecificDayOnSelected(newState);
+};
   const handleSaveTask = async () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
@@ -509,564 +510,600 @@ const AddDailyTaskScreen = () => {
   };
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
-    <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
-      {/* Header */}
-      <View style={tw``}>
-        <Text
-          style={[
-            tw`font-bold font-sans text-black top-2 left-5`,
-            {fontSize: 20},
-          ]}>
-          Add Task
-        </Text>
-        <Text
-          style={[
-            tw`font-light top-2 px-5`,
-            {
-              fontSize: 12,
-              lineHeight: 18,
-              letterSpacing: 1,
-              color: '#8D99AE',
-              fontFamily: 'Poppins',
-            },
-          ]}>
-          Add tasks that you want to include in your routine. Make them
-          compulsory to make your everyday life productive. So, it becomes a
-          habit.
-        </Text>
+      <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
+        {/* Header */}
+        <View style={tw``}>
+          <Text
+            style={[
+              tw`font-bold font-sans text-black top-2 left-5`,
+              {fontSize: 20},
+            ]}>
+            Add Task
+          </Text>
+          <Text
+            style={[
+              tw`font-light top-2 px-5`,
+              {
+                fontSize: 12,
+                lineHeight: 18,
+                letterSpacing: 1,
+                color: '#8D99AE',
+                fontFamily: 'Poppins',
+              },
+            ]}>
+            Add tasks that you want to include in your routine. Make them
+            compulsory to make your everyday life productive. So, it becomes a
+            habit.
+          </Text>
 
-        {/* <Text style={tw`text-base top-4 font-bold text-zinc-800`}>
+          {/* <Text style={tw`text-base top-4 font-bold text-zinc-800`}>
           Categories
         </Text> */}
-      </View>
-      {/* Horizontal Scrollable Categories (Fixed) */}
-      <View style={tw`top-8 left-3  `}>
-        <ScrollView
-          horizontal
-          ref={scrollViewRef}
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={82} // Changed to actual item width (74 + 8 margin)
-          snapToAlignment="start"
-          decelerationRate="fast"
-          contentContainerStyle={tw`pl-1 pr-6`} // REMOVED LEFT PADDING
-          onScroll={event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
-            const selectedIndex = Math.round(offsetX / 82); // Use 82 instead of 102
-            const category = allCategories[selectedIndex];
-            if (category) setSelectedCategory(category);
-          }}
-          scrollEventThrottle={16}>
-          {allCategories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              style={tw`items-center mr-2`}
-              onPress={() => {
-                setSelectedCategory(category);
-                // SCROLL TO LEFT EDGE WITHOUT CENTERING
-                scrollViewRef.current?.scrollTo({
-                  x: index * 82, // Use consistent 82px width
-                  animated: true,
-                });
-              }}>
-              <View
-                style={[
-                  tw`rounded-full items-center justify-center bg-white `,
-                  {
-                    width: 74,
-                    height: 74,
-                    shadowColor: '#5B86CD',
-                    shadowOffset: {width: 1, height: 1},
-                    shadowOpacity: 0.2, // 10% opacity
-                    shadowRadius: 5,
-                    elevation: 5, // Android approximation
-                  },
-                  selectedCategory === category
-                    ? tw`border-blue-500 border-2`
-                    : tw`border-gray-200 border`,
-                ]}>
-                <Image
-                  source={mergedIcons[category as keyof typeof mergedIcons]}
-                  style={{width: 40, height: 40}}
-                />
-              </View>
-
-              <Text
-                style={tw`mt-3 font-bold ${
-                  selectedCategory === category
-                    ? 'text-blue-500 text-sm'
-                    : 'text-black text-sm font-semibold '
-                }`}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-
-          {/* Custom Category Button */}
-          <TouchableOpacity
-            onPress={() => {
-              setIsCustomCategoryModalVisible(true);
-              setNewCategoryName('');
-              setSelectedCategoryIcon(null);
+        </View>
+        {/* Horizontal Scrollable Categories (Fixed) */}
+        <View style={tw`top-8 left-3  `}>
+          <ScrollView
+            horizontal
+            ref={scrollViewRef}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={82} // Changed to actual item width (74 + 8 margin)
+            snapToAlignment="start"
+            decelerationRate="fast"
+            contentContainerStyle={tw`pl-1 pr-6`} // REMOVED LEFT PADDING
+            onScroll={event => {
+              const offsetX = event.nativeEvent.contentOffset.x;
+              const selectedIndex = Math.round(offsetX / 82); // Use 82 instead of 102
+              const category = allCategories[selectedIndex];
+              if (category) setSelectedCategory(category);
             }}
-            style={tw`items-center `}>
-            <View
-              style={[
-                tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white right-1`,
-                {width: 74, height: 74},
-              ]}>
-              <Image
-                source={require('../../assets/images/CustomCategory.png')}
-                style={[tw``, {width: 44, height: 42}]}
-              />
-            </View>
-            <Text
-              style={[
-                tw`text-black text-sm font-semibold top-3 right-2`,
-                {color: '#27282A'},
-              ]}>
-              Add Category
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-
-      {/* Task List (Scrollable) */}
-      <ScrollView
-        style={tw`flex-1 top-12 mx-4`}
-        contentContainerStyle={tw`pb-20`}
-        showsVerticalScrollIndicator={false}>
-        {Object.keys({
-          ...(tasksData[selectedCategory] || {}),
-          ...(customTasksData[selectedCategory] || {}),
-        }).map((task, index) => (
-          <View key={index} style={tw`mb-2`}>
-            <TouchableOpacity
-              onPress={() => {
-                if (expandedTask !== task) {
-                  setSelectedDays([]);
-                  setSelectedDates([]);
-                  setSelectedMonths([]);
-                  setSelectedYears([]);
-                  setSpecificForValue('');
-                  setSpecificFor('Days');
-                  setDailyTarget('');
-                  setTargetType('Minutes');
-                  setIsStarred(false);
-                  setIsSpecificForEnabled(false);
-                  setIsSpecificDayOnSelected(false);
-                  setIsDailyTargetEnabled(false);
-                }
-                setExpandedTask(expandedTask === task ? null : task);
-                setTaskName(task);
-              }}
-              onLongPress={() => handleLongPress(task, selectedCategory)}
-              style={[
-                tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
-                {bg: selectedColor},
-              ]}>
-              <View style={tw`flex-row items-center left-4`}>
-                <Image
-                  source={
-                    tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
-                    customTasksData[selectedCategory]?.[task]
-                  }
+            scrollEventThrottle={16}>
+            {allCategories.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={tw`items-center mr-2`}
+                onPress={() => {
+                  setSelectedCategory(category);
+                  // SCROLL TO LEFT EDGE WITHOUT CENTERING
+                  scrollViewRef.current?.scrollTo({
+                    x: index * 82, // Use consistent 82px width
+                    animated: true,
+                  });
+                }}>
+                <View
                   style={[
-                    tw`bottom-2 h-auto mt-4 mr-6`,
-                    {tintColor: selectedColor, width: 30, height: 30},
-                  ]}
-                />
-
-                <Text
-                  style={[
-                    tw`text-sm font-medium text-black`,
-                    // {color: selectedColor},
-                  ]}>
-                  {task}
-                </Text>
-              </View>
-              <Icon
-                style={tw`right-4`}
-                name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
-                size={20}
-                color="#DFDFDF"
-              />
-            </TouchableOpacity>
-
-            {/* Expanded Tasks Options */}
-            {expandedTask === task && (
-              <View
-                style={[
-                  tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-84 top-2 mb-2`,
-                  {
-                    height: 265,
-                    // iOS shadow
-                    shadowColor: '#5B86CD',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.1,
-                    shadowRadius: 6,
-                    elevation: 5, // for Android
-                    shadowContainer: {
-                      backgroundColor: 'transparent',
-                      borderRadius: 100, // same as inner
+                    tw`rounded-full items-center justify-center bg-white `,
+                    {
+                      width: 74,
+                      height: 74,
                       shadowColor: '#5B86CD',
-                      shadowOffset: {width: 0, height: 4},
-                      shadowOpacity: 0.1,
-                      shadowRadius: 10,
-                      elevation: 8, // Android shadow
+                      shadowOffset: {width: 1, height: 1},
+                      shadowOpacity: 0.2, // 10% opacity
+                      shadowRadius: 5,
+                      elevation: 5, // Android approximation
                     },
-                    innerBox: {
-                      borderRadius: 16, // match shadow radius
-                      overflow: 'hidden', // prevent sharp shadow overflow
-                    },
-                  },
-                ]}>
-                {/* Header */}
-                <View style={tw`flex-row justify-between`}>
-                  <View style={tw`flex-row items-center mb-6`}>
-                    <Image
-                      source={
-                        tasksData[selectedCategory]?.[expandedTask] ||
-                        customTasksData[selectedCategory]?.[expandedTask]
-                      }
-                      style={[
-                        tw`mr-3`,
-                        {width: 30, height: 30, tintColor: selectedColor},
-                      ]} // সংশোধিত লাইন
-                    />
-                    <Text
-                      style={[
-                        tw`text-sm font-medium text-black ml-2`,
-                        {letterSpacing: 1},
-                      ]}>
-                      {expandedTask}
-                    </Text>
-                    {/* star icon */}
-                  </View>
-                  <View style={[tw``]}>
-                    <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
-                      <Icon
-                        name={isStarred ? 'star' : 'star-outline'}
-                        size={20}
-                        color={isStarred ? '#3580FF' : 'gray'}
-                        style={tw`mr-2`}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                    selectedCategory === category
+                      ? tw`border-blue-500 border-2`
+                      : tw`border-gray-200 border`,
+                  ]}>
+                  <Image
+                    source={mergedIcons[category as keyof typeof mergedIcons]}
+                    style={{width: 40, height: 40}}
+                  />
                 </View>
 
-                {/* Add Specific For */}
-                <View style={tw`bottom-3`}>
-                  <View style={tw`flex-row items-center mb-4 right-1`}>
-                    <TouchableOpacity onPress={handleToggleSpecificFor}>
+                <Text
+                  style={tw`mt-3 font-bold ${
+                    selectedCategory === category
+                      ? 'text-blue-500 text-sm'
+                      : 'text-black text-sm font-semibold '
+                  }`}>
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+            {/* Custom Category Button */}
+            <TouchableOpacity
+              onPress={() => {
+                setIsCustomCategoryModalVisible(true);
+                setNewCategoryName('');
+                setSelectedCategoryIcon(null);
+              }}
+              style={tw`items-center `}>
+              <View
+                style={[
+                  tw`rounded-full flex items-center justify-center border-2 border-gray-200 bg-white right-1`,
+                  {width: 74, height: 74},
+                ]}>
+                <Image
+                  source={require('../../assets/images/CustomCategory.png')}
+                  style={[tw``, {width: 44, height: 42}]}
+                />
+              </View>
+              <Text
+                style={[
+                  tw`text-black text-sm font-semibold top-3 right-2`,
+                  {color: '#27282A'},
+                ]}>
+                Add Category
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+
+        {/* Task List (Scrollable) */}
+        <ScrollView
+          style={tw`flex-1 top-12 mx-4`}
+          contentContainerStyle={tw`pb-20`}
+          showsVerticalScrollIndicator={false}>
+          {Object.keys({
+            ...(tasksData[selectedCategory] || {}),
+            ...(customTasksData[selectedCategory] || {}),
+          }).map((task, index) => (
+            <View key={index} style={tw`mb-2`}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (expandedTask !== task) {
+                    setSelectedDays([]);
+                    setSelectedDates([]);
+                    setSelectedMonths([]);
+                    setSelectedYears([]);
+                    setSpecificForValue('');
+                    setSpecificFor('Days');
+                    setDailyTarget('');
+                    setTargetType('Minutes');
+                    setIsStarred(false);
+                    setIsSpecificForEnabled(false);
+                    setIsSpecificDayOnSelected(false);
+                    setIsDailyTargetEnabled(false);
+                  }
+                  setExpandedTask(expandedTask === task ? null : task);
+                  setTaskName(task);
+                }}
+                onLongPress={() => handleLongPress(task, selectedCategory)}
+                style={[
+                  tw`flex-row items-center justify-between bg-white h-12 rounded-lg`,
+                  {bg: selectedColor},
+                ]}>
+                <View style={tw`flex-row items-center left-4`}>
+                  <Image
+                    source={
+                      tasksData[selectedCategory]?.[task] || // 1. Optional Chaining ব্যবহার করুন
+                      customTasksData[selectedCategory]?.[task]
+                    }
+                    style={[
+                      tw`bottom-2 h-auto mt-4 mr-6`,
+                      {tintColor: selectedColor, width: 30, height: 30},
+                    ]}
+                  />
+
+                  <Text
+                    style={[
+                      tw`text-sm font-medium text-black`,
+                      // {color: selectedColor},
+                    ]}>
+                    {task}
+                  </Text>
+                </View>
+                <Icon
+                  style={tw`right-4`}
+                  name={expandedTask === task ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color="#DFDFDF"
+                />
+              </TouchableOpacity>
+
+              {/* Expanded Tasks Options */}
+              {expandedTask === task && (
+                <View
+                  style={[
+                    tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-84 top-2 mb-2`,
+                    {
+                      height: 270,
+                      // iOS shadow
+                      shadowColor: '#5B86CD',
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 0.1,
+                      shadowRadius: 6,
+                      elevation: 5, // for Android
+                      shadowContainer: {
+                        backgroundColor: 'transparent',
+                        borderRadius: 100, // same as inner
+                        shadowColor: '#5B86CD',
+                        shadowOffset: {width: 0, height: 4},
+                        shadowOpacity: 0.1,
+                        shadowRadius: 10,
+                        elevation: 8, // Android shadow
+                      },
+                      innerBox: {
+                        borderRadius: 16, // match shadow radius
+                        overflow: 'hidden', // prevent sharp shadow overflow
+                      },
+                    },
+                  ]}>
+                  {/* Header */}
+                  <View style={tw`flex-row justify-between`}>
+                    <View style={tw`flex-row items-center mb-6`}>
+                      <Image
+                        source={
+                          tasksData[selectedCategory]?.[expandedTask] ||
+                          customTasksData[selectedCategory]?.[expandedTask]
+                        }
+                        style={[
+                          tw`mr-3`,
+                          {width: 30, height: 30, tintColor: selectedColor},
+                        ]} // সংশোধিত লাইন
+                      />
+                      <Text
+                        style={[
+                          tw`text-sm font-medium text-black ml-2`,
+                          {letterSpacing: 1},
+                        ]}>
+                        {expandedTask}
+                      </Text>
+                      {/* star icon */}
+                    </View>
+                    <View style={[tw``]}>
+                      <TouchableOpacity
+                        onPress={() => setIsStarred(!isStarred)}>
+                        <Icon
+                          name={isStarred ? 'star' : 'star-outline'}
+                          size={20}
+                          color={isStarred ? '#3580FF' : 'gray'}
+                          style={tw`mr-2`}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* Add Specific For */}
+                  <View style={tw`bottom-3`}>
+                    <View style={tw`flex-row items-center mb-4 right-1`}>
+                      <TouchableOpacity onPress={handleToggleSpecificFor}>
+                        <Icon
+                          name={
+                            isSpecificForEnabled
+                              ? 'radio-button-on'
+                              : 'radio-button-off'
+                          }
+                          size={24}
+                          color={isSpecificForEnabled ? '#3580FF' : 'gray'}
+                        />
+                      </TouchableOpacity>
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
+                        Add specific for
+                      </Text>
+
+                      <TextInput
+                        style={[
+                          tw`px-1 py-1 border rounded text-center left-1`,
+                          {
+                            borderColor: '#E3E8F1',
+                            width: 30,
+                            height: 23,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            color: '',
+                          },
+                        ]}
+                        keyboardType="numeric"
+                        placeholder="00"
+                        placeholderTextColor="#8D99AE"
+                        value={specificForValue}
+                        onChangeText={setSpecificForValue}
+                        editable={isSpecificForEnabled}
+                        maxLength={2}
+                      />
+                      <LinearGradient
+                        colors={['#F7FAFF', '#DEEAFF']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                        style={[
+                          tw`flex-row rounded-full mx-2`,
+                          {width: 170, height: 30},
+                        ]}>
+                        {['Days', 'Weeks', 'Months'].map(type => {
+                          const isSelected = specificFor === type;
+
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-2 p-1 rounded-full ${
+                                isSelected
+                                  ? 'bg-blue-500 border border-blue-500'
+                                  : ''
+                              }`}
+                              onPress={() => setSpecificFor(type)}>
+                              <Text
+                                style={tw`text-sm ${
+                                  isSelected
+                                    ? 'text-white font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </LinearGradient>
+                    </View>
+                  </View>
+                  {/* Add Specific Day On */}
+                  <View style={tw`bottom-3`}>
+                    <TouchableOpacity
+                      onPress={toggleSpecificDayOn}
+                      style={tw`flex-row items-center right-1`}>
                       <Icon
                         name={
-                          isSpecificForEnabled
+                          isSpecificDayOnSelected
                             ? 'radio-button-on'
                             : 'radio-button-off'
                         }
                         size={24}
-                        color={isSpecificForEnabled ? '#3580FF' : 'gray'}
+                        color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
                       />
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
+                        Add Specific day on
+                      </Text>
                     </TouchableOpacity>
-                    <Text
-                      style={[
-                        tw`font-normal text-gray-500`,
-                        {fontSize: 12, letterSpacing: 1},
-                      ]}>
-                      Add specific for
-                    </Text>
-
-                    <TextInput
-                      style={[
-                        tw`px-1 py-1 border rounded text-center left-1`,
-                        {
-                          borderColor: '#E3E8F1',
-                          width: 30,
-                          height: 23,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                          color: '',
-                        },
-                      ]}
-                      keyboardType="numeric"
-                      placeholder="00"
-                      placeholderTextColor="#8D99AE"
-                      value={specificForValue}
-                      onChangeText={setSpecificForValue}
-                      editable={isSpecificForEnabled}
-                      maxLength={2}
-                    />
-                    <LinearGradient
-                      colors={['#F7FAFF', '#DEEAFF']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 0, y: 1}}
-                      style={[
-                        tw`flex-row rounded-full mx-2`,
-                        {width: 170, height: 30},
-                      ]}>
-                      {['Days', 'Weeks', 'Months'].map(type => {
-                        const isSelected = specificFor === type;
+                  </View>
+                  {/* Buttons */}
+                  <LinearGradient
+                    colors={['#F7FAFF', '#DEEAFF']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}
+                    style={[
+                      tw` mx-2 rounded-full shadow-sm  left-36 bottom-10`,
+                      {width: 178, height: 30, backgroundColor: '#F7FAFF'},
+                    ]}>
+                    <View style={tw`flex-row  `}>
+                      {['Week', 'Month', 'Year'].map(type => {
+                        const lowerType = type.toLowerCase();
+                        const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
 
                         return (
                           <TouchableOpacity
                             key={type}
-                            style={tw`px-2 p-1 rounded-full ${
-                              isSelected
-                                ? 'bg-blue-500 border border-blue-500'
-                                : ''
-                            }`}
-                            onPress={() => setSpecificFor(type)}>
+                            onPress={() => handleDayTypeClick(lowerType)}
+                            disabled={!isSpecificDayOnSelected}
+                            style={[
+                              tw`flex-1 p-1.5 rounded-full`,
+                              isSelected &&
+                                tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
+                              !isSpecificDayOnSelected && tw`opacity-50`,
+                            ]}>
                             <Text
-                              style={tw`text-sm ${
+                              style={[
+                                tw`text-center text-sm font-normal`,
                                 isSelected
-                                  ? 'text-white font-semibold'
-                                  : 'text-gray-500'
-                              }`}>
+                                  ? tw`text-white font-semibold `
+                                  : {color: '#8D99AE'},
+                              ]}>
                               {type}
                             </Text>
                           </TouchableOpacity>
                         );
                       })}
-                    </LinearGradient>
-                  </View>
-                </View>
-                {/* Add Specific Day On */}
-                <View style={tw`bottom-2`}>
-                  <TouchableOpacity
-                    onPress={toggleSpecificDayOn}
-                    style={tw`flex-row items-center right-1`}>
-                    <Icon
-                      name={
-                        isSpecificDayOnSelected
-                          ? 'radio-button-on'
-                          : 'radio-button-off'
-                      }
-                      size={24}
-                      color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
-                    />
-                    <Text
-                      style={[
-                        tw`font-normal text-gray-500`,
-                        {fontSize: 12, letterSpacing: 1},
-                      ]}>
-                      Add Specific day on
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                {/* Buttons */}
-                <LinearGradient
-                  colors={['#F7FAFF', '#DEEAFF']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}
-                  style={[
-                    tw` mx-2 rounded-full shadow-sm  left-36 bottom-8`,
-                    {width: 178, height: 30, backgroundColor: '#F7FAFF'},
-                  ]}>
-                  <View style={tw`flex-row  `}>
-                    {['Week', 'Month', 'Year'].map(type => {
-                      const lowerType = type.toLowerCase();
-                      const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
+                    </View>
+                  </LinearGradient>
+                  {/* Set Daily Target */}
+                  <View style={tw`bottom-`}>
+                    <View style={tw`flex-row items-center right-1`}>
+                      <TouchableOpacity onPress={toggleDailyTarget}>
+                        <Icon
+                          name={
+                            isDailyTargetEnabled
+                              ? 'checkbox-outline'
+                              : 'square-outline'
+                          }
+                          size={24}
+                          color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
+                        />
+                      </TouchableOpacity>
+                      <Text
+                        style={[
+                          tw`font-normal text-gray-500`,
+                          {fontSize: 12, letterSpacing: 1},
+                        ]}>
+                        Set Daily Target for
+                      </Text>
+                      <TextInput
+                        style={[
+                          tw`px-1 py-1 border rounded text-center left-3`,
+                          {
+                            borderColor: '#E3E8F1',
+                            width: 40,
+                            height: 23,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                          },
+                        ]}
+                        keyboardType="numeric"
+                        placeholder="000"
+                        placeholderTextColor="#8D99AE"
+                        value={dailyTarget}
+                        onChangeText={setDailyTarget}
+                        editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
+                        maxLength={3}
+                      />
+                      <LinearGradient
+                        colors={['#F7FAFF', '#DEEAFF']}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                        style={[tw`flex-row rounded-full left-4 `]}>
+                        {options.map(type => {
+                          const isSelected = targetType === type;
 
-                      return (
-                        <TouchableOpacity
-                          key={type}
-                          onPress={() => handleDayTypeClick(lowerType)}
-                          disabled={!isSpecificDayOnSelected}
-                          style={[
-                            tw`flex-1 p-1.5 rounded-full`,
-                            isSelected &&
-                              tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
-                            !isSpecificDayOnSelected && tw`opacity-50`,
-                          ]}>
-                          <Text
-                            style={[
-                              tw`text-center text-sm font-normal`,
-                              isSelected
-                                ? tw`text-white font-semibold `
-                                : {color: '#8D99AE'},
-                            ]}>
-                            {type}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
+                          return (
+                            <TouchableOpacity
+                              key={type}
+                              style={tw`px-2 py-1 rounded-full ${
+                                isSelected
+                                  ? 'bg-blue-500 border border-blue-500'
+                                  : '#F7FAFF'
+                              }`}
+                              onPress={() => setTargetType(type)}>
+                              <Text
+                                style={tw`text-sm ${
+                                  isSelected
+                                    ? 'text-white font-semibold'
+                                    : 'text-gray-500'
+                                }`}>
+                                {type}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </LinearGradient>
+                    </View>
                   </View>
-                </LinearGradient>
-                {/* Set Daily Target */}
-                <View style={tw`bottom-3`}>
-                  <View style={tw`flex-row items-center right-1`}>
-                    <TouchableOpacity onPress={toggleDailyTarget}>
+                  {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
+                  {isDayPickerVisible && (
+                    <DayPicker
+                      selectedDays={selectedDays}
+                      onSelectDays={setSelectedDays}
+                      onCancel={() => {
+                        setIsDayPickerVisible(false);
+                        setSelectedDays([]);
+                      }}
+                      onAddDay={() => {
+                        setIsDayPickerVisible(false);
+                      }}
+                    />
+                  )}
+                  {isDatePickerVisible && (
+                    <DatePicker
+                      selectedDate={selectedDate}
+                      onSelectDate={setSelectedDate}
+                      onCancel={() => {
+                        setIsDatePickerVisible(false);
+                        setSelectedDate([]);
+                      }}
+                      onAddDay={() => {
+                        setIsDatePickerVisible(false);
+                      }}
+                    />
+                  )}
+                  {isDateSeletorVisible && (
+                    <DateSelector
+                      selectedDates={selectedDates}
+                      selectedMonths={selectedMonths}
+                      onSelectDate={(date: number) => setTempSelectedDate(date)}
+                      onSelectMonth={(month: string) =>
+                        setTempSelectedMonth(month)
+                      }
+                      onCancel={() => setIsDateSeletorVisible(false)}
+                      onAddDay={addedDates => {
+                        // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
+                        const uniqueDates = addedDates.filter(
+                          ({date, month}, index) =>
+                            addedDates.findIndex(
+                              d => d.date === date && d.month === month,
+                            ) === index,
+                        );
+
+                        // এক্সিস্টিং ডাটার সাথে মিলিয়ে চেক
+                        const newEntries = uniqueDates.filter(
+                          ({date, month}) =>
+                            !selectedDates.some(
+                              (d, i) =>
+                                d === date && selectedMonths[i] === month,
+                            ),
+                        );
+
+                        // স্টেট আপডেট
+                        setSelectedDates(prev => [
+                          ...prev,
+                          ...newEntries.map(e => e.date),
+                        ]);
+                        setSelectedMonths(prev => [
+                          ...prev,
+                          ...newEntries.map(e => e.month),
+                        ]);
+                        setIsDateSeletorVisible(false);
+                      }}
+                      onRemoveDay={index => {
+                        setSelectedDates(prev =>
+                          prev.filter((_, i) => i !== index),
+                        );
+                        setSelectedMonths(prev =>
+                          prev.filter((_, i) => i !== index),
+                        );
+                      }}
+                    />
+                  )}
+                  <View>
+                    {/* Add to Routine Button */}
+                    <TouchableOpacity
+                      onPress={handleSaveTask}
+                      style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
+                      <Text style={tw`text-white text-center font-semibold `}>
+                        {isSpecificForEnabled || isSpecificDayOnSelected
+                          ? 'Add to Routine'
+                          : 'Add to Daily Routine'}
+                      </Text>
+                    </TouchableOpacity>
+                    {/* Toggle Button */}
+                    <TouchableOpacity
+                      onPress={() =>
+                        setExpandedTask(expandedTask === task ? null : task)
+                      }
+                      style={[tw`p-3 rounded-lg bottom-2`, {left: 320}]}>
                       <Icon
                         name={
-                          isDailyTargetEnabled
-                            ? 'checkbox-outline'
-                            : 'square-outline'
+                          expandedTask === task ? 'chevron-up' : 'chevron-down'
                         }
-                        size={24}
-                        color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
+                        size={20}
+                        color="#8D99AE"
                       />
                     </TouchableOpacity>
-                    <Text
-                      style={[
-                        tw`font-normal text-gray-500`,
-                        {fontSize: 12, letterSpacing: 1},
-                      ]}>
-                      Set Daily Target for
-                    </Text>
-                    <TextInput
-                      style={[
-                        tw`px-1 py-1 border rounded text-center left-3`,
-                        {
-                          borderColor: '#E3E8F1',
-                          width: 40,
-                          height: 23,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                        },
-                      ]}
-                      keyboardType="numeric"
-                      placeholder="000"
-                      placeholderTextColor="#8D99AE"
-                      value={dailyTarget}
-                      onChangeText={setDailyTarget}
-                      editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
-                      maxLength={3}
-                    />
-                    <LinearGradient
-                      colors={['#F7FAFF', '#DEEAFF']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 0, y: 1}}
-                      style={[tw`flex-row rounded-full left-4 `]}>
-                      {options.map(type => {
-                        const isSelected = targetType === type;
-
-                        return (
-                          <TouchableOpacity
-                            key={type}
-                            style={tw`px-2 py-1 rounded-full ${
-                              isSelected
-                                ? 'bg-blue-500 border border-blue-500'
-                                : '#F7FAFF'
-                            }`}
-                            onPress={() => setTargetType(type)}>
-                            <Text
-                              style={tw`text-sm ${
-                                isSelected
-                                  ? 'text-white font-semibold'
-                                  : 'text-gray-500'
-                              }`}>
-                              {type}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </LinearGradient>
                   </View>
-                </View>
-                {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
-                {isDayPickerVisible && (
-                  <DayPicker
-                    selectedDays={selectedDays}
-                    onSelectDays={setSelectedDays}
-                    onCancel={() => {
-                      setIsDayPickerVisible(false);
-                      setSelectedDays([]);
-                    }}
-                    onAddDay={() => {
-                      setIsDayPickerVisible(false);
-                    }}
-                  />
-                )}
-                {isDatePickerVisible && (
-                  <DatePicker
-                    selectedDate={selectedDate}
-                    onSelectDate={setSelectedDate}
-                    onCancel={() => {
-                      setIsDatePickerVisible(false);
-                      setSelectedDate([]);
-                    }}
-                    onAddDay={() => {
-                      setIsDatePickerVisible(false);
-                    }}
-                  />
-                )}
-                {isDateSeletorVisible && (
-                  <DateSelector
-                    selectedDates={selectedDates}
-                    selectedMonths={selectedMonths}
-                    onSelectDate={(date: number) => setTempSelectedDate(date)}
-                    onSelectMonth={(month: string) =>
-                      setTempSelectedMonth(month)
-                    }
-                    onCancel={() => setIsDateSeletorVisible(false)}
-                    onAddDay={addedDates => {
-                      // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
-                      const uniqueDates = addedDates.filter(
-                        ({date, month}, index) =>
-                          addedDates.findIndex(
-                            d => d.date === date && d.month === month,
-                          ) === index,
-                      );
-
-                      // এক্সিস্টিং ডাটার সাথে মিলিয়ে চেক
-                      const newEntries = uniqueDates.filter(
-                        ({date, month}) =>
-                          !selectedDates.some(
-                            (d, i) => d === date && selectedMonths[i] === month,
-                          ),
-                      );
-
-                      // স্টেট আপডেট
-                      setSelectedDates(prev => [
-                        ...prev,
-                        ...newEntries.map(e => e.date),
-                      ]);
-                      setSelectedMonths(prev => [
-                        ...prev,
-                        ...newEntries.map(e => e.month),
-                      ]);
-                      setIsDateSeletorVisible(false);
-                    }}
-                    onRemoveDay={index => {
-                      setSelectedDates(prev =>
-                        prev.filter((_, i) => i !== index),
-                      );
-                      setSelectedMonths(prev =>
-                        prev.filter((_, i) => i !== index),
-                      );
-                    }}
-                  />
-                )}
-                <View>
-                  {/* Add to Routine Button */}
-                  <TouchableOpacity
-                    onPress={handleSaveTask}
-                    style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
-                    <Text style={tw`text-white text-center font-semibold `}>
-                      Add to Daily Routine
-                    </Text>
-                  </TouchableOpacity>
-                  {/* Toggle Button */}
-                  <TouchableOpacity
-                    onPress={() =>
-                      setExpandedTask(expandedTask === task ? null : task)
-                    }
-                    style={tw`p-3 rounded-lg left-72 bottom-2`}>
-                    <Icon
-                      name={
-                        expandedTask === task ? 'chevron-up' : 'chevron-down'
-                      }
-                      size={20}
-                      color="#8D99AE"
-                    />
-                  </TouchableOpacity>
-                </View>
-                {showDuplicateAlert && (
+                  {showDuplicateAlert && (
+                    <Modal
+                      transparent={true}
+                      animationType="fade"
+                      visible={showDuplicateAlert}
+                      onRequestClose={() => setShowDuplicateAlert(false)}>
+                      <View
+                        style={[
+                          tw`flex-1 justify-center items-center`,
+                          {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+                        ]}>
+                        <View
+                          style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
+                          <Icon
+                            name="checkmark-circle-outline"
+                            size={28}
+                            color="white"
+                            style={tw`mr-2`}
+                          />
+                          <View>
+                            <Text
+                              style={tw`text-white font-semibold text-base`}>
+                              Task Already
+                            </Text>
+                            <Text style={tw`text-white text-xs`}>
+                              Exist in your routine
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </Modal>
+                  )}
+                  {/* modal */}
                   <Modal
+                    visible={showSuccessModal}
                     transparent={true}
                     animationType="fade"
-                    visible={showDuplicateAlert}
-                    onRequestClose={() => setShowDuplicateAlert(false)}>
+                    onRequestClose={() => setShowSuccessModal(false)}>
                     <View
                       style={[
                         tw`flex-1 justify-center items-center`,
@@ -1082,317 +1119,293 @@ const AddDailyTaskScreen = () => {
                         />
                         <View>
                           <Text style={tw`text-white font-semibold text-base`}>
-                            Task Already
+                            Task Saved!
                           </Text>
                           <Text style={tw`text-white text-xs`}>
-                            Exist in your routine
+                            to your routine Successfully
                           </Text>
                         </View>
                       </View>
                     </View>
                   </Modal>
-                )}
-                {/* modal */}
-                <Modal
-                  visible={showSuccessModal}
-                  transparent={true}
-                  animationType="fade"
-                  onRequestClose={() => setShowSuccessModal(false)}>
-                  <View
-                    style={[
-                      tw`flex-1 justify-center items-center`,
-                      {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
-                    ]}>
-                    <View
-                      style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
-                      <Icon
-                        name="checkmark-circle-outline"
-                        size={28}
-                        color="white"
-                        style={tw`mr-2`}
-                      />
-                      <View>
-                        <Text style={tw`text-white font-semibold text-base`}>
-                          Task Saved!
-                        </Text>
-                        <Text style={tw`text-white text-xs`}>
-                          to your routine Successfully
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </Modal>
-              </View>
-            )}
-          </View>
-        ))}
-        {/* Add Custom Task Button */}
-        <TouchableOpacity
-          onPress={() => {
-            setIsCustomTaskModalVisible(true);
-            setCustomTaskName('');
-            setSelectedCustomIcon(null);
-          }}
-          style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
-          <View style={tw`flex-row items-center`}>
-            <Image
-              source={require('../../assets/images/CustomTask.png')}
-              style={[tw``, {width: 30, height: 30}]}
-            />
-            <Text style={[tw`text-sm font-medium text-black left-8`]}>
-              Add Custom Task
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {/* কাস্টম টাস্ক মডাল */}
-        <Modal
-          visible={isCustomTaskModalVisible}
-          transparent={true}
-          animationType="slide">
-          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
-              <Text style={tw`text-lg font-bold mb-4`}>Create Custom Task</Text>
-
-              <TextInput
-                placeholder="Enter Task Name"
-                value={customTaskName}
-                onChangeText={setCustomTaskName}
-                style={tw`border p-2 rounded mb-4`}
-                placeholderTextColor="#9CA3AF"
-              />
-
-              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Object.entries(tasksData).map(([category, tasks]) =>
-                  Object.entries(tasks).map(([taskName, iconSource]) => (
-                    <TouchableOpacity
-                      key={`${category}-${taskName}`}
-                      onPress={() => setSelectedCustomIcon(iconSource)}
-                      style={tw`p-2 mx-1 rounded-lg ${
-                        selectedCustomIcon === iconSource
-                          ? 'bg-blue-100'
-                          : 'bg-gray-100'
-                      }`}>
-                      <Image
-                        source={iconSource as ImageSourcePropType} // Add type assertion here
-                        style={tw`w-10 h-10`}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  )),
-                )}
-
-                {/* সকল ক্যাটাগরির কাস্টম টাস্ক আইকন যোগ করুন */}
-                {Object.entries(customTasksData).map(([category, tasks]) =>
-                  Object.entries(tasks).map(([taskName, iconSource]) => (
-                    <TouchableOpacity
-                      key={`custom-${category}-${taskName}`}
-                      onPress={() => setSelectedCustomIcon(iconSource)}
-                      style={tw`p-2 mx-1 rounded-lg ${
-                        selectedCustomIcon === iconSource
-                          ? 'bg-blue-100'
-                          : 'bg-gray-100'
-                      }`}>
-                      <Image
-                        source={iconSource}
-                        style={tw`w-10 h-10`}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  )),
-                )}
-              </ScrollView>
-
-              <View style={tw`flex-row justify-between mt-6 gap-3`}>
-                <TouchableOpacity
-                  onPress={() => setIsCustomTaskModalVisible(false)}
-                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-cente`}>
-                  <Text style={tw`text-white font-medium`}>Cancel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={saveCustomTask}
-                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
-                  <Text style={tw`text-white font-medium`}>Save Task</Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              )}
             </View>
-          </View>
-        </Modal>
-        <Modal
-          visible={isCustomCategoryModalVisible}
-          transparent={true}
-          animationType="slide">
-          <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
-            <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
-              <Text style={tw`text-lg font-bold mb-4`}>
-                Create Custom Category
+          ))}
+          {/* Add Custom Task Button */}
+          <TouchableOpacity
+            onPress={() => {
+              setIsCustomTaskModalVisible(true);
+              setCustomTaskName('');
+              setSelectedCustomIcon(null);
+            }}
+            style={tw`flex-row items-center justify-between bg-white p-2 rounded-lg mb-2`}>
+            <View style={tw`flex-row items-center`}>
+              <Image
+                source={require('../../assets/images/CustomTask.png')}
+                style={[tw``, {width: 30, height: 30}]}
+              />
+              <Text style={[tw`text-sm font-medium text-black left-8`]}>
+                Add Custom Task
               </Text>
+            </View>
+          </TouchableOpacity>
+          {/* কাস্টম টাস্ক মডাল */}
+          <Modal
+            visible={isCustomTaskModalVisible}
+            transparent={true}
+            animationType="slide">
+            <View
+              style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+              <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+                <Text style={tw`text-lg font-bold mb-4`}>
+                  Create Custom Task
+                </Text>
 
-              <TextInput
-                placeholder="Enter Category Name"
-                value={newCategoryName}
-                onChangeText={setNewCategoryName}
-                style={tw`border p-2 rounded mb-4`}
-                placeholderTextColor="#9CA3AF"
-              />
+                <TextInput
+                  placeholder="Enter Task Name"
+                  value={customTaskName}
+                  onChangeText={setCustomTaskName}
+                  style={tw`border p-2 rounded mb-4`}
+                  placeholderTextColor="#9CA3AF"
+                />
 
-              <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Object.entries(tasksData).map(([category, tasks]) =>
-                  Object.entries(tasks).map(([taskName, iconSource]) => (
-                    <TouchableOpacity
-                      key={`${category}-${taskName}`}
-                      onPress={() => setSelectedCategoryIcon(iconSource)}
-                      style={tw`p-2 mx-1 rounded-lg ${
-                        selectedCategoryIcon === iconSource
-                          ? 'bg-blue-100'
-                          : 'bg-gray-100'
-                      }`}>
-                      <Image
-                        source={iconSource as ImageSourcePropType}
-                        style={tw`w-10 h-10`}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  )),
-                )}
+                <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {Object.entries(tasksData).map(([category, tasks]) =>
+                    Object.entries(tasks).map(([taskName, iconSource]) => (
+                      <TouchableOpacity
+                        key={`${category}-${taskName}`}
+                        onPress={() => setSelectedCustomIcon(iconSource)}
+                        style={tw`p-2 mx-1 rounded-lg ${
+                          selectedCustomIcon === iconSource
+                            ? 'bg-blue-100'
+                            : 'bg-gray-100'
+                        }`}>
+                        <Image
+                          source={iconSource as ImageSourcePropType} // Add type assertion here
+                          style={tw`w-10 h-10`}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    )),
+                  )}
 
-                {/* Add custom task icons */}
-                {Object.entries(customTasksData).map(([category, tasks]) =>
-                  Object.entries(tasks).map(([taskName, iconSource]) => (
-                    <TouchableOpacity
-                      key={`custom-${category}-${taskName}`}
-                      onPress={() => setSelectedCategoryIcon(iconSource)}
-                      style={tw`p-2 mx-1 rounded-lg ${
-                        selectedCategoryIcon === iconSource
-                          ? 'bg-blue-100'
-                          : 'bg-gray-100'
-                      }`}>
-                      <Image
-                        source={iconSource}
-                        style={tw`w-10 h-10`}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  )),
-                )}
-              </ScrollView>
+                  {/* সকল ক্যাটাগরির কাস্টম টাস্ক আইকন যোগ করুন */}
+                  {Object.entries(customTasksData).map(([category, tasks]) =>
+                    Object.entries(tasks).map(([taskName, iconSource]) => (
+                      <TouchableOpacity
+                        key={`custom-${category}-${taskName}`}
+                        onPress={() => setSelectedCustomIcon(iconSource)}
+                        style={tw`p-2 mx-1 rounded-lg ${
+                          selectedCustomIcon === iconSource
+                            ? 'bg-blue-100'
+                            : 'bg-gray-100'
+                        }`}>
+                        <Image
+                          source={iconSource}
+                          style={tw`w-10 h-10`}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    )),
+                  )}
+                </ScrollView>
 
-              <View style={tw`flex-row justify-between mt-6 gap-3`}>
-                <TouchableOpacity
-                  onPress={() => setIsCustomCategoryModalVisible(false)}
-                  style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
-                  <Text style={tw`text-white font-medium`}>Cancel</Text>
-                </TouchableOpacity>
+                <View style={tw`flex-row justify-between mt-6 gap-3`}>
+                  <TouchableOpacity
+                    onPress={() => setIsCustomTaskModalVisible(false)}
+                    style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-cente`}>
+                    <Text style={tw`text-white font-medium`}>Cancel</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={saveCustomCategory}
-                  style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
-                  <Text style={tw`text-white font-medium`}>Save Category</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={saveCustomTask}
+                    style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                    <Text style={tw`text-white font-medium`}>Save Task</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
-        {/* Premium Feature Modal */}
-        <Modal
-          visible={showPremiumModal}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => setShowPremiumModal(false)}>
-          <View
-            style={[
-              tw`items-center justify-center h-full`,
-              {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
-            ]}>
+          </Modal>
+          <Modal
+            visible={isCustomCategoryModalVisible}
+            transparent={true}
+            animationType="slide">
+            <View
+              style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+              <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
+                <Text style={tw`text-lg font-bold mb-4`}>
+                  Create Custom Category
+                </Text>
+
+                <TextInput
+                  placeholder="Enter Category Name"
+                  value={newCategoryName}
+                  onChangeText={setNewCategoryName}
+                  style={tw`border p-2 rounded mb-4`}
+                  placeholderTextColor="#9CA3AF"
+                />
+
+                <Text style={tw`mb-2 text-gray-700`}>Select Icon:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {Object.entries(tasksData).map(([category, tasks]) =>
+                    Object.entries(tasks).map(([taskName, iconSource]) => (
+                      <TouchableOpacity
+                        key={`${category}-${taskName}`}
+                        onPress={() => setSelectedCategoryIcon(iconSource)}
+                        style={tw`p-2 mx-1 rounded-lg ${
+                          selectedCategoryIcon === iconSource
+                            ? 'bg-blue-100'
+                            : 'bg-gray-100'
+                        }`}>
+                        <Image
+                          source={iconSource as ImageSourcePropType}
+                          style={tw`w-10 h-10`}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    )),
+                  )}
+
+                  {/* Add custom task icons */}
+                  {Object.entries(customTasksData).map(([category, tasks]) =>
+                    Object.entries(tasks).map(([taskName, iconSource]) => (
+                      <TouchableOpacity
+                        key={`custom-${category}-${taskName}`}
+                        onPress={() => setSelectedCategoryIcon(iconSource)}
+                        style={tw`p-2 mx-1 rounded-lg ${
+                          selectedCategoryIcon === iconSource
+                            ? 'bg-blue-100'
+                            : 'bg-gray-100'
+                        }`}>
+                        <Image
+                          source={iconSource}
+                          style={tw`w-10 h-10`}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    )),
+                  )}
+                </ScrollView>
+
+                <View style={tw`flex-row justify-between mt-6 gap-3`}>
+                  <TouchableOpacity
+                    onPress={() => setIsCustomCategoryModalVisible(false)}
+                    style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                    <Text style={tw`text-white font-medium`}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={saveCustomCategory}
+                    style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                    <Text style={tw`text-white font-medium`}>
+                      Save Category
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          {/* Premium Feature Modal */}
+          <Modal
+            visible={showPremiumModal}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setShowPremiumModal(false)}>
             <View
               style={[
-                tw`bg-blue-500 rounded-full px-10 py-6 shadow-md`,
-                {width: 300, height: 92},
+                tw`items-center justify-center h-full`,
+                {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
               ]}>
-              <View style={tw`flex-row`}>
-                <View>
-                  <Image
-                    source={require('../../assets/images/PremiumFeature.png')}
-                    style={{width: 37, height: 50, right: 12}}
-                    resizeMode="contain"
-                  />
+              <View
+                style={[
+                  tw`bg-blue-500 rounded-full px-10 py-6 shadow-md`,
+                  {width: 300, height: 92},
+                ]}>
+                <View style={tw`flex-row`}>
+                  <View>
+                    <Image
+                      source={require('../../assets/images/PremiumFeature.png')}
+                      style={{width: 37, height: 50, right: 12}}
+                      resizeMode="contain"
+                    />
+                  </View>
+                  <View>
+                    <Text
+                      style={[
+                        tw`text-white font-medium text-center bottom-3`,
+                        {fontSize: 20, letterSpacing: 1},
+                      ]}>
+                      Premium Feature!
+                    </Text>
+                    <Text
+                      style={[
+                        tw`text-white font-normal text-center bottom-2`,
+                        {fontSize: 10, color: '#C6CEDD', letterSpacing: 1},
+                      ]}>
+                      Only premium user can use this feature
+                    </Text>
+                  </View>
                 </View>
-                <View>
+
+                <Pressable
+                  style={tw`mt-4 bg-white rounded-md px-4 h-8 self-center bottom-3`}>
                   <Text
+                    onPress={() => {
+                      setShowPremiumModal(false);
+                      navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
+                    }}
                     style={[
-                      tw`text-white font-medium text-center bottom-3`,
-                      {fontSize: 20, letterSpacing: 1},
+                      tw` font-medium top-2`,
+                      {fontSize: 12, color: '#3580FF', letterSpacing: 1},
                     ]}>
-                    Premium Feature!
+                    Discover
                   </Text>
-                  <Text
-                    style={[
-                      tw`text-white font-normal text-center bottom-2`,
-                      {fontSize: 10, color: '#C6CEDD', letterSpacing: 1},
-                    ]}>
-                    Only premium user can use this feature
-                  </Text>
-                </View>
-              </View>
-
-              <Pressable
-                style={tw`mt-4 bg-white rounded-md px-4 h-8 self-center bottom-3`}>
-                <Text
-                  onPress={() => {
-                    setShowPremiumModal(false);
-                    navigation.navigate('PremiumPackage'); // Uncommented and corrected the screen name
-                  }}
-                  style={[
-                    tw` font-medium top-2`,
-                    {fontSize: 12, color: '#3580FF', letterSpacing: 1},
-                  ]}>
-                  Discover
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          visible={isEditModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setIsEditModalVisible(false)}>
-          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-            <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
-              <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
-
-              <TextInput
-                value={editingTask?.newName || ''}
-                onChangeText={text =>
-                  editingTask && setEditingTask({...editingTask, newName: text})
-                }
-                style={tw`border p-3 rounded mb-6`}
-                placeholder="Enter new task name"
-                autoFocus={true}
-              />
-
-              <View style={tw`flex-row justify-between`}>
-                <TouchableOpacity
-                  onPress={() => setIsEditModalVisible(false)}
-                  style={tw`px-4 py-2 bg-gray-200 rounded`}>
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={saveEditedTask}
-                  style={tw`px-4 py-2 bg-blue-500 rounded`}>
-                  <Text style={tw`text-white`}>Save</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
-          </View>
-        </Modal>
-      </ScrollView>
-      {!isKeyboardVisible && <BottomNavigation />}
-    </View>
+          </Modal>
+
+          <Modal
+            visible={isEditModalVisible}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setIsEditModalVisible(false)}>
+            <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+              <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
+                <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
+
+                <TextInput
+                  value={editingTask?.newName || ''}
+                  onChangeText={text =>
+                    editingTask &&
+                    setEditingTask({...editingTask, newName: text})
+                  }
+                  style={tw`border p-3 rounded mb-6`}
+                  placeholder="Enter new task name"
+                  autoFocus={true}
+                />
+
+                <View style={tw`flex-row justify-between`}>
+                  <TouchableOpacity
+                    onPress={() => setIsEditModalVisible(false)}
+                    style={tw`px-4 py-2 bg-gray-200 rounded`}>
+                    <Text>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={saveEditedTask}
+                    style={tw`px-4 py-2 bg-blue-500 rounded`}>
+                    <Text style={tw`text-white`}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </ScrollView>
+        {!isKeyboardVisible && <BottomNavigation />}
+      </View>
     </SafeAreaView>
   );
 };
