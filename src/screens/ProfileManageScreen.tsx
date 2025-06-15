@@ -111,7 +111,7 @@ const ProfileManageScreen = () => {
                 mrrony@gmail.com
               </Text>
               <TouchableOpacity
-                style={tw`bg-white px-2 py-1 rounded-lg bottom-16`}
+                style={tw`bg-white px-2 py-1 rounded-lg bottom-16 left-8`}
                 onPress={() => navigation.navigate('PremiumScreen')}>
                 <Text  onPress={() => navigation.navigate('PremiumPackage')} style={tw`text-blue-500 text-xs font-semibold`}>
                   Try Premium
@@ -193,7 +193,7 @@ const ProfileManageScreen = () => {
       {/* Scrollable Menu Options */}
       <ScrollView
         style={tw`flex-1 px-4 `}
-        contentContainerStyle={tw`pb-20`}
+        contentContainerStyle={tw`pb-32`}
         scrollEventThrottle={16}
         // Add these props for better scroll performance
         decelerationRate="normal"
@@ -201,11 +201,11 @@ const ProfileManageScreen = () => {
         overScrollMode="never">
         {/* Bottom Info Text */}
         <View
-          style={[tw`bg-white mt-4 bottom-4 p-3 rounded-xl shadow-sm mx-4`]}>
+          style={[tw`bg-white mt-4 bottom-4 p-6 rounded-xl shadow-sm `]}>
           <Text
             style={[
               tw`text-gray-500 text-center text-xs`,
-              {color: '#8D99AE', letterSpacing: 0.5},
+              {color: '#8D99AE', letterSpacing: 0.5,fontFamily:"Poppins"},
             ]}>
             Be regular, collect points, Stick with ProDAILY time{'\n'}
             consciousness journey. You'll get rewards.
@@ -405,7 +405,7 @@ const ProfileManageScreen = () => {
             ))}
           </View>
           <TouchableOpacity
-            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-20 w-32`}>
+            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-24 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
           <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
@@ -415,7 +415,7 @@ const ProfileManageScreen = () => {
         </View>
         {/* Google Play Button */}
         <TouchableOpacity
-          style={tw`bg-blue-500 mt-5 top-6 rounded-full py-2 items-center mx-4`}>
+          style={tw`bg-blue-500 mt-5 top-8 rounded-full py-2 items-center mx-4`}>
           <Text style={tw`text-white font-normal text-base`}>
             Rate Us on Google Play
           </Text>

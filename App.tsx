@@ -22,7 +22,7 @@ export default function App() {
   return (
     <PointsProvider>
       <ColorProvider>
-      <StatusBar backgroundColor="#3580FF" barStyle="light-content"/>
+      {/* <StatusBar backgroundColor="#3580FF" barStyle="light-content"/> */}
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="LogoSplashScreen"

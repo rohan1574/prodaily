@@ -85,7 +85,7 @@ const MyCalenderFutureTaskScreen = () => {
   }, [selectedDate]);
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
+    <SafeAreaView style={[tw`flex-1 bg-red-500`]}>
       <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
         {/* Header */}
         <View style={tw`mb-8 top-4 left-4`}>
