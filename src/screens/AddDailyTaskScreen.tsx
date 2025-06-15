@@ -384,40 +384,39 @@ const AddDailyTaskScreen = () => {
     }
     setIsDailyTargetEnabled(!isDailyTargetEnabled);
   };
-  // Existing code...
 
- // Update both toggle functions to reset the opposite state
-const handleToggleSpecificFor = () => {
-  const newState = !isSpecificForEnabled;
-  
-  // Reset specific day on when enabling specific for
-  if (newState && isSpecificDayOnSelected) {
-    setIsSpecificDayOnSelected(false);
-    // Reset day selection states
-    setSelectedDays([]);
-    setSelectedDates([]);
-    setSelectedMonths([]);
-  }
+  // Update both toggle functions to reset the opposite state
+  const handleToggleSpecificFor = () => {
+    const newState = !isSpecificForEnabled;
 
-  // Reset input field when disabling
-  if (!newState) {
-    setSpecificForValue('');
-  }
+    // Reset specific day on when enabling specific for
+    if (newState && isSpecificDayOnSelected) {
+      setIsSpecificDayOnSelected(false);
+      // Reset day selection states
+      setSelectedDays([]);
+      setSelectedDates([]);
+      setSelectedMonths([]);
+    }
 
-  setIsSpecificForEnabled(newState);
-};
+    // Reset input field when disabling
+    if (!newState) {
+      setSpecificForValue('');
+    }
 
-const toggleSpecificDayOn = () => {
-  const newState = !isSpecificDayOnSelected;
+    setIsSpecificForEnabled(newState);
+  };
 
-  // Reset specific for when enabling specific day on
-  if (newState && isSpecificForEnabled) {
-    setIsSpecificForEnabled(false);
-    setSpecificForValue('');
-  }
+  const toggleSpecificDayOn = () => {
+    const newState = !isSpecificDayOnSelected;
 
-  setIsSpecificDayOnSelected(newState);
-};
+    // Reset specific for when enabling specific day on
+    if (newState && isSpecificForEnabled) {
+      setIsSpecificForEnabled(false);
+      setSpecificForValue('');
+    }
+
+    setIsSpecificDayOnSelected(newState);
+  };
   const handleSaveTask = async () => {
     const currentDate = new Date();
     let endDate = new Date(currentDate);
@@ -833,10 +832,10 @@ const toggleSpecificDayOn = () => {
                     </View>
                   </View>
                   {/* Add Specific Day On */}
-                  <View style={tw`bottom-3`}>
+                  <View style={[tw`border-b border-blue-500 `,{borderColor:"#DEEAFF"}]}>
                     <TouchableOpacity
                       onPress={toggleSpecificDayOn}
-                      style={tw`flex-row items-center right-1`}>
+                      style={tw`flex-row items-center right-1 bottom-4`}>
                       <Icon
                         name={
                           isSpecificDayOnSelected
@@ -855,6 +854,7 @@ const toggleSpecificDayOn = () => {
                       </Text>
                     </TouchableOpacity>
                   </View>
+
                   {/* Buttons */}
                   <LinearGradient
                     colors={['#F7FAFF', '#DEEAFF']}
@@ -895,7 +895,7 @@ const toggleSpecificDayOn = () => {
                     </View>
                   </LinearGradient>
                   {/* Set Daily Target */}
-                  <View style={tw`bottom-`}>
+                  <View style={tw`bottom-2`}>
                     <View style={tw`flex-row items-center right-1`}>
                       <TouchableOpacity onPress={toggleDailyTarget}>
                         <Icon
