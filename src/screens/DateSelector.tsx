@@ -16,7 +16,6 @@ const ITEM_HEIGHT = 40;
 const VISIBLE_ITEMS = 3;
 const SCROLL_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS;
 
-const Days = Array.from({length: 31}, (_, index) => index + 1);
 const Months = [
   'January',
   'February',
@@ -33,8 +32,29 @@ const Months = [
 ];
 
 // Create extended arrays for circular scrolling
-const extendedDays = [...Days, ...Days, ...Days];
 const extendedMonths = [...Months, ...Months, ...Months];
+
+// Function to get days based on month and year
+const getDaysForMonth = (month: string, year: number) => {
+  const currentYear = year || new Date().getFullYear();
+  
+  if (month === 'February') {
+    // Check if it's a leap year
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || 
+                      (currentYear % 400 === 0);
+    return Array.from({length: isLeapYear ? 29 : 28}, (_, i) => i + 1);
+  }
+  
+  switch (month) {
+    case 'April':
+    case 'June':
+    case 'September':
+    case 'November':
+      return Array.from({length: 30}, (_, i) => i + 1);
+    default:
+      return Array.from({length: 31}, (_, i) => i + 1);
+  }
+};
 
 type DateSelectorProps = {
   selectedDates: number[];
@@ -44,6 +64,7 @@ type DateSelectorProps = {
   onCancel: () => void;
   onAddDay: (newDates: {date: number; month: string}[]) => void;
   onRemoveDay: (index: number) => void;
+  year: number; // Add year prop
 };
 
 const DateSelector: React.FC<DateSelectorProps> = ({
@@ -54,6 +75,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   onCancel,
   onAddDay,
   onRemoveDay,
+  year, // Use year prop
 }) => {
   const dayScrollRef = useRef<ScrollView>(null);
   const monthScrollRef = useRef<ScrollView>(null);
@@ -65,31 +87,53 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
   const [addedDates, setAddedDates] =
     useState<{date: number; month: string}[]>(initialDates);
-  const selectedDateRef = useRef<number>(initialDates[0]?.date || 1);
-  const selectedMonthRef = useRef<string>(initialDates[0]?.month || 'January');
+  
+  // Get initial month and adjust date if needed
+  const initialMonth = initialDates[0]?.month || 'January';
+  const initialDays = getDaysForMonth(initialMonth, year);
+  const initialDate = Math.min(initialDates[0]?.date || 1, initialDays[initialDays.length - 1]);
 
-  const [selectedDate, setSelectedDate] = useState(selectedDateRef.current);
-  const [selectedMonth, setSelectedMonth] = useState(selectedMonthRef.current);
+  const selectedDateRef = useRef<number>(initialDate);
+  const selectedMonthRef = useRef<string>(initialMonth);
+
+  const [selectedDate, setSelectedDate] = useState(initialDate);
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [daysInMonth, setDaysInMonth] = useState<number[]>(initialDays);
+
+  // Update days when month changes or year changes
+  useEffect(() => {
+    const newDays = getDaysForMonth(selectedMonth, year);
+    setDaysInMonth(newDays);
+    
+    // Adjust date if current date is invalid in new month
+    if (selectedDate > newDays[newDays.length - 1]) {
+      const newDate = newDays[newDays.length - 1];
+      setSelectedDate(newDate);
+      selectedDateRef.current = newDate;
+      onSelectDate(newDate);
+    }
+  }, [selectedMonth, year]);
+
+  // Create extended days array
+  const extendedDays = [...daysInMonth, ...daysInMonth, ...daysInMonth];
 
   useEffect(() => {
-    const dayIndex = Days.indexOf(selectedDate);
+    const dayIndex = daysInMonth.indexOf(selectedDate);
     const monthIndex = Months.indexOf(selectedMonth);
 
     if (dayIndex !== -1 && dayScrollRef.current) {
-      // Scroll to middle section of extended array
       dayScrollRef.current.scrollTo({
-        y: (Days.length + dayIndex) * ITEM_HEIGHT,
+        y: (daysInMonth.length + dayIndex) * ITEM_HEIGHT,
         animated: false,
       });
     }
     if (monthIndex !== -1 && monthScrollRef.current) {
-      // Scroll to middle section of extended array
       monthScrollRef.current.scrollTo({
         y: (Months.length + monthIndex) * ITEM_HEIGHT,
         animated: false,
       });
     }
-  }, []);
+  }, [daysInMonth]);
 
   const handleDateChange = (day: number) => {
     if (selectedDateRef.current === day) return;
@@ -110,28 +154,26 @@ const DateSelector: React.FC<DateSelectorProps> = ({
     let index = Math.round(offsetY / ITEM_HEIGHT);
 
     // Handle circular scrolling
-    if (index < Days.length) {
-      // If in first section, adjust to middle section
-      index += Days.length;
+    if (index < daysInMonth.length) {
+      index += daysInMonth.length;
       dayScrollRef.current?.scrollTo({
         y: index * ITEM_HEIGHT,
         animated: false,
       });
-    } else if (index >= 2 * Days.length) {
-      // If in last section, adjust to middle section
-      index -= Days.length;
+    } else if (index >= 2 * daysInMonth.length) {
+      index -= daysInMonth.length;
       dayScrollRef.current?.scrollTo({
         y: index * ITEM_HEIGHT,
         animated: false,
       });
     }
 
-    const dayIndex = index % Days.length;
+    const dayIndex = index % daysInMonth.length;
     if (
-      Days[dayIndex] !== undefined &&
-      Days[dayIndex] !== selectedDateRef.current
+      daysInMonth[dayIndex] !== undefined &&
+      daysInMonth[dayIndex] !== selectedDateRef.current
     ) {
-      handleDateChange(Days[dayIndex]);
+      handleDateChange(daysInMonth[dayIndex]);
     }
   };
 
@@ -141,14 +183,12 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
     // Handle circular scrolling
     if (index < Months.length) {
-      // If in first section, adjust to middle section
       index += Months.length;
       monthScrollRef.current?.scrollTo({
         y: index * ITEM_HEIGHT,
         animated: false,
       });
     } else if (index >= 2 * Months.length) {
-      // If in last section, adjust to middle section
       index -= Months.length;
       monthScrollRef.current?.scrollTo({
         y: index * ITEM_HEIGHT,
