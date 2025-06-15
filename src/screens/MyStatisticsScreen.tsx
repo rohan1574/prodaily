@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, AppState, useWindowDimensions} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, AppState} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -10,7 +10,6 @@ import {Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
-
 
 // Navigation টাইপ ডেফিনিশন
 type RootStackParamList = {
@@ -150,9 +149,7 @@ const MyStatisticsScreen = () => {
     const subscription = AppState.addEventListener('change', fetchStats);
     return () => subscription.remove();
   }, [isFocused]);
-const { width } = useWindowDimensions();
-  const isSmallScreen = width < 400;
-  const boxWidth = isSmallScreen ? 'w-1/4' : 'w-1/4'
+
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
       <View style={tw`flex-1 bg-gray-200`}>
@@ -314,59 +311,108 @@ const { width } = useWindowDimensions();
           </View>
 
           {/* হ্যাবিট সামারি */}
-         <View style={tw`p-4 bg-white rounded-lg mt-12`}>
-      {/* Header Section */}
-      <View style={tw`flex-row justify-between items-start mb-4`}>
-        <View>
-          <Text style={tw`text-black font-medium text-base`}>Habits</Text>
-          <Text style={tw`text-gray-400 font-normal text-xs mt-1`}>Summary</Text>
-        </View>
-        <Text style={tw`text-gray-400 text-xs font-normal`}>More Details</Text>
-      </View>
+          <View style={tw`p-4 bg-white rounded-lg top-12`}>
+            <View style={tw`flex-row justify-between mb-6`}>
+              <View>
+                <Text
+                  style={[
+                    tw`text-black font-medium `,
+                    {fontSize: 16, letterSpacing: 1, lineHeight: 20},
+                  ]}>
+                  Habits
+                </Text>
+                <Text
+                  style={[
+                    tw`text-gray-400  font-normal`,
+                    {fontSize: 12, letterSpacing: 0, lineHeight: 20, left: 1},
+                  ]}>
+                  Summary
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={[
+                    tw`text-gray-400 text-xs font-normal`,
+                    {letterSpacing: 1},
+                  ]}>
+                  More Details
+                </Text>
+              </View>
+            </View>
+            <View style={tw`flex-row flex-wrap justify-between px-2`}>
+              <View style={tw`w-1/4 items-center mb-2`}>
+                <Text
+                  style={[
+                    tw`font-medium`,
+                    {
+                      fontSize: 9,
+                      lineHeight: 16,
+                      letterSpacing: 0.5,
+                      color: '#9B9BA1',
+                    },
+                  ]}>
+                  SUCCESS SCORE
+                </Text>
+                <Text style={tw`text-gray-600 text-lg font-bold`}>
+                  {statsData.successScore}%
+                </Text>
+              </View>
 
-      {/* Stats Grid */}
-      <View style={tw`flex-row flex-wrap -mx-1`}>
-        {/* Success Score */}
-        <View style={tw`${boxWidth} p-1 items-center`}>
-          <Text style={[tw`font-medium text-gray-500`, { fontSize: isSmallScreen ? 10 : 9 }]}>
-            SUCCESS SCORE
-          </Text>
-          <Text style={tw`text-gray-600 text-lg font-bold mt-1`}>
-            {statsData.successScore}%
-          </Text>
-        </View>
+              <View style={tw`w-1/4 items-center mb-2`}>
+                <Text
+                  style={[
+                    tw`font-medium`,
+                    {
+                      fontSize: 9,
+                      lineHeight: 16,
+                      letterSpacing: 1,
+                      color: '#9B9BA1',
+                    },
+                  ]}>
+                  COMPLETED
+                </Text>
+                <Text style={tw`text-blue-400 text-lg font-bold`}>
+                  {statsData.completed}
+                </Text>
+              </View>
 
-        {/* Completed */}
-        <View style={tw`${boxWidth} p-1 items-center`}>
-          <Text style={[tw`font-medium text-gray-500`, { fontSize: isSmallScreen ? 10 : 9 }]}>
-            COMPLETED
-          </Text>
-          <Text style={tw`text-blue-400 text-lg font-bold mt-1`}>
-            {statsData.completed}
-          </Text>
-        </View>
+              <View style={tw`w-1/4 items-center mb-2`}>
+                <Text
+                  style={[
+                    tw`font-medium`,
+                    {
+                      fontSize: 9,
+                      lineHeight: 16,
+                      letterSpacing: 1,
+                      color: '#9B9BA1',
+                    },
+                  ]}>
+                  FAILED
+                </Text>
+                <Text style={tw`text-black text-lg font-bold`}>
+                  {statsData.totalTasks - statsData.completed}
+                </Text>
+              </View>
 
-        {/* Failed */}
-        <View style={tw`${boxWidth} p-1 items-center`}>
-          <Text style={[tw`font-medium text-gray-500`, { fontSize: isSmallScreen ? 10 : 9 }]}>
-            FAILED
-          </Text>
-          <Text style={tw`text-black text-lg font-bold mt-1`}>
-            {statsData.totalTasks - statsData.completed}
-          </Text>
-        </View>
-
-        {/* Best Streak */}
-        <View style={tw`${boxWidth} p-1 items-center`}>
-          <Text style={[tw`font-semibold text-gray-500`, { fontSize: isSmallScreen ? 10 : 8 }]}>
-            BEST STREAK DAY
-          </Text>
-          <Text style={tw`text-blue-400 text-lg font-bold mt-1`}>
-            {statsData.bestStreak}
-          </Text>
-        </View>
-      </View>
-    </View>
+              <View style={tw`w-1/4 items-center mb-2`}>
+                <Text
+                  style={[
+                    tw`font-medium`,
+                    {
+                      fontSize: 8,
+                      lineHeight: 16,
+                      letterSpacing: 0.5,
+                      color: '#9B9BA1',
+                    },
+                  ]}>
+                  BEST STREAK DAY
+                </Text>
+                <Text style={tw`text-blue-400 text-lg font-bold`}>
+                  {statsData.bestStreak}
+                </Text>
+              </View>
+            </View>
+          </View>
         </ScrollView>
 
         {/* বটম নেভিগেশন */}
