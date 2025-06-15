@@ -193,13 +193,13 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View
-        style={[tw`flex-1 justify-center items-center bg-black bg-opacity-30`]}>
+        style={[tw`flex-1 justify-center items-center bg-opacity-50`, {backgroundColor: 'rgba(32, 41, 56, 0.7)'}]}>
         <View style={tw`bg-white rounded-xl p-4 w-11/12 `}>
           {/* Header */}
           <View
             style={[
               tw`bg-gray-400 bottom-4 rounded-lg right-4 py-3 `,
-              {backgroundColor: '#8D99AE',width:352},
+              {backgroundColor: '#8D99AE',width:378},
             ]}>
             <Text style={tw`text-white text-center text-sm font-medium`}>
               Select Date for Every Year

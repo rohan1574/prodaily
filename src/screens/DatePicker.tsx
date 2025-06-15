@@ -26,7 +26,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View
-        style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        style={[tw`flex-1 justify-center items-center`,{backgroundColor: 'rgba(32, 41, 56, 0.7)'}]}>
         <View
           style={[tw`bg-white p-6 rounded-2xl w-80 shadow-xl`, {height: 420}]}>
           <View

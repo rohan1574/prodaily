@@ -30,7 +30,7 @@ const DayPicker: React.FC<DayPickerProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View
-        style={tw`flex-1 justify-center items-center bg-black bg-opacity-30`}>
+        style={[tw`flex-1 justify-center items-center`,{backgroundColor: 'rgba(32, 41, 56, 0.7)'}]}>
         <View style={tw`bg-white rounded-xl shadow-lg w-11/12`}>
           {/* Header */}
           <View
