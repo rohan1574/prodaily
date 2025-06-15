@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons'; // <- Icon import
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const MyCalenderFutureTaskScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -86,89 +86,102 @@ const MyCalenderFutureTaskScreen = () => {
 
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
-    <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
-      {/* Header */}
-      <View style={tw`mb-8 top-4 left-4`}>
-        <Text style={tw`text-xl font-bold`}>My Calendar</Text>
-        <Text style={[tw``, {fontSize: 11, color: '#8D99AE'}]}>
-          Your added tasks on the selected calendar day.
-        </Text>
-      </View>
+      <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
+        {/* Header */}
+        <View style={tw`mb-8 top-4 left-4`}>
+          <Text style={tw`text-xl font-bold`}>My Calendar</Text>
+          <Text style={[tw``, {fontSize: 11, color: '#8D99AE'}]}>
+            Your added tasks on the selected calendar day.
+          </Text>
+        </View>
 
-      {/* Calendar */}
-      <View
-        style={[
-          tw`bg-white mb-2 mx-4 rounded-lg`,
-          {paddingVertical: 10, alignItems: 'center'},
-        ]}>
-        <CalendarPicker
-          onDateChange={(date: Date) => setSelectedDate(date)}
-          selectedStartDate={selectedDate}
-          allowRangeSelection={false}
-          selectedDayColor="#3580FF"
-          selectedDayTextColor="#fff"
-          scaleFactor={375}
-          weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
-          width={300}
-          textStyle={{
-            fontFamily: 'Sora',
-            fontWeight: 600,
-            fontSize: 15,
-            color: '#2B2D42',
-          }}
-          // Corrected prop name below
-          dayLabelsWrapper={{
-            borderTopWidth: 0, // Remove top border
-            borderBottomWidth: 0, // Remove bottom border
-          }}
-        />
-      </View>
+        {/* Calendar */}
+        <View
+          style={[
+            tw`bg-white mb-2 mx-4 rounded-lg`,
+            {paddingVertical: 10, alignItems: 'center'},
+          ]}>
+          <CalendarPicker
+            onDateChange={(date: Date) => setSelectedDate(date)}
+            selectedStartDate={selectedDate}
+            allowRangeSelection={false}
+            selectedDayColor="#3580FF"
+            selectedDayTextColor="#fff"
+            scaleFactor={375}
+            weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
+            width={350}
+            textStyle={{
+              fontFamily: 'Sora',
+              fontWeight: '600',
+              fontSize: 14,
+              color: '#2B2D42',
+            }}
+            dayLabelsWrapper={{
+              borderTopWidth: 0,
+              borderBottomWidth: 0,
+            }}
+            customDatesStyles={[
+              {
+                date: selectedDate,
+                style: {
+                  backgroundColor: '#3580FF',
+                  borderRadius: 10,
+                },
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 15, // বড় সাইজ
+                  fontWeight: 'bold',
+                },
+              },
+            ]}
+          />
+        </View>
 
-      {/* Task List */}
-      {loading ? (
-        <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
-      ) : (
-        <ScrollView contentContainerStyle={tw`pb-10`}>
-          {tasks.length === 0 ? (
-            <Text style={tw`text-center text-gray-500`}>
-              No tasks for this date
-            </Text>
-          ) : (
-            tasks.map((task: any) => (
-              <View
-                key={task.id}
-                style={[tw`bg-white mx-4 mb-2 rounded-lg relative`]}>
-                <View style={tw`flex-row items-center p-2`}>
-                  {task.icon ? (
-                    <Image
-                      source={task.icon}
-                      style={[tw`left-2`, {width: 30, height: 30}]}
-                    />
-                  ) : (
-                    <Icon
-                      name="checkmark-circle-outline"
-                      size={24}
-                      color="#3580FF"
-                      style={tw`left-2`}
-                    />
-                  )}
-                  <Text
-                    style={[
-                      tw`text-sm font-medium left-6`,
-                      {color: '#2B2D42'},
-                    ]}>
-                    {task.name}
-                  </Text>
+        {/* Task List */}
+        {loading ? (
+          <Text style={tw`text-center text-gray-500`}>Loading tasks...</Text>
+        ) : (
+          <ScrollView contentContainerStyle={tw`pb-10`}>
+            {tasks.length === 0 ? (
+              <Text style={tw`text-center text-gray-500`}>
+                No tasks for this date
+              </Text>
+            ) : (
+              tasks.map((task: any) => (
+                <View
+                  key={task.id}
+                  style={[tw`bg-white mx-4 mb-2 rounded-lg relative`]}>
+                  <View style={tw`flex-row items-center p-2`}>
+                    {task.icon ? (
+                      <Image
+                        source={task.icon}
+                        style={[tw`left-2`, {width: 30, height: 30}]}
+                      />
+                    ) : (
+                      <Icon
+                        name="checkmark-circle-outline"
+                        size={24}
+                        color="#3580FF"
+                        style={tw`left-2`}
+                      />
+                    )}
+                    <Text
+                      style={[
+                        tw`text-sm font-medium left-6`,
+                        {color: '#2B2D42'},
+                      ]}>
+                      {task.name}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))
-          )}
-        </ScrollView>
-      )}
+              ))
+            )}
+          </ScrollView>
+        )}
 
-      {/* Bottom Nav */}
-      <BottomNavigation />
-    </View>
+        {/* Bottom Nav */}
+        <BottomNavigation />
+      </View>
     </SafeAreaView>
   );
 };
