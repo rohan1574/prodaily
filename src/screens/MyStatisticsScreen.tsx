@@ -10,6 +10,9 @@ import {Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
+const scale = width / 375; // 375px is standard iPhone screen width
+
+const normalize = (size: number) => Math.round(size * scale);
 
 // Navigation টাইপ ডেফিনিশন
 type RootStackParamList = {
@@ -311,103 +314,90 @@ const MyStatisticsScreen = () => {
           </View>
 
           {/* হ্যাবিট সামারি */}
-          <View style={tw`p-4 bg-white rounded-lg top-12`}>
+          <View style={tw`p-4 bg-white rounded-lg mt-12`}>
             <View style={tw`flex-row justify-between mb-6`}>
               <View>
                 <Text
                   style={[
-                    tw`text-black font-medium `,
-                    {fontSize: 16, letterSpacing: 1, lineHeight: 20},
+                    tw`text-black font-medium`,
+                    {
+                      fontSize: normalize(16),
+                      letterSpacing: 0.5,
+                      lineHeight: normalize(20),
+                    },
                   ]}>
                   Habits
                 </Text>
                 <Text
                   style={[
-                    tw`text-gray-400  font-normal`,
-                    {fontSize: 12, letterSpacing: 0, lineHeight: 20, left: 1},
+                    tw`text-gray-400 font-normal`,
+                    {
+                      fontSize: normalize(12),
+                      lineHeight: normalize(18),
+                      marginTop: 2,
+                    },
                   ]}>
                   Summary
                 </Text>
               </View>
+
               <View>
                 <Text
                   style={[
-                    tw`text-gray-400 text-xs font-normal`,
-                    {letterSpacing: 1},
+                    tw`text-gray-400 font-normal`,
+                    {
+                      fontSize: normalize(11),
+                      letterSpacing: 0.5,
+                    },
                   ]}>
                   More Details
                 </Text>
               </View>
             </View>
+
             <View style={tw`flex-row justify-between flex-wrap`}>
-              <View style={tw`w-1/4 items-center`}>
-                <Text
-                  style={[
-                    tw`font-medium`,
-                    {
-                      fontSize: 9,
-                      lineHeight: 16,
-                      letterSpacing: 0.5,
+              {[
+                {
+                  label: 'SUCCESS SCORE',
+                  value: `${statsData.successScore}%`,
+                  color: 'text-gray-600',
+                },
+                {
+                  label: 'COMPLETED',
+                  value: statsData.completed,
+                  color: 'text-blue-400',
+                },
+                {
+                  label: 'FAILED',
+                  value: statsData.totalTasks - statsData.completed,
+                  color: 'text-black',
+                },
+                {
+                  label: 'BEST STREAK DAY',
+                  value: statsData.bestStreak,
+                  color: 'text-blue-400',
+                },
+              ].map((item, index) => (
+                <View key={index} style={tw`w-1/4 md:w-1/2 items-center mb-4`}>
+                  <Text
+                    style={{
+                      fontSize: normalize(9),
+                      lineHeight: normalize(16),
                       color: '#9B9BA1',
-                    },
-                  ]}>
-                  SUCCESS SCORE
-                </Text>
-                <Text style={tw`text-gray-600 text-lg font-bold`}>
-                  {statsData.successScore}%
-                </Text>
-              </View>
-              <View style={tw`w-1/4 items-center`}>
-                <Text
-                  style={[
-                    tw`font-medium`,
-                    {
-                      fontSize: 9,
-                      lineHeight: 16,
-                      letterSpacing: 1,
-                      color: '#9B9BA1',
-                    },
-                  ]}>
-                  COMPLETED
-                </Text>
-                <Text style={tw`text-blue-400 text-lg font-bold`}>
-                  {statsData.completed}
-                </Text>
-              </View>
-              <View style={tw`w-1/4 items-center`}>
-                <Text
-                  style={[
-                    tw`font-medium`,
-                    {
-                      fontSize: 9,
-                      lineHeight: 16,
-                      letterSpacing: 1,
-                      color: '#9B9BA1',
-                    },
-                  ]}>
-                  FAILED
-                </Text>
-                <Text style={tw`text-black text-lg font-bold`}>
-                  {statsData.totalTasks - statsData.completed}
-                </Text>
-              </View>
-              <View style={tw`w-1/4 items-center`}>
-                <Text
-                  style={[
-                    tw`font-semibold `,
-                    {
-                      fontSize: 8,
-                      lineHeight: 16,
-                      letterSpacing: 0.5,
-                      color: '#9B9BA1',
-                    },
-                  ]}>
-                  BEST STREAK DAY
-                </Text>
-                <Text style={tw`text-blue-400 text-lg font-bold`}>
-                  {statsData.bestStreak}
-                </Text>
-              </View>
+                      fontWeight: '500',
+                      textAlign: 'center',
+                    }}>
+                    {item.label}
+                  </Text>
+                  <Text
+                    style={[
+                      tw`${item.color} font-bold`,
+                      {fontSize: normalize(18)},
+                    ]}>
+                    {item.value}
+                  </Text>
+                </View>
+              ))}
             </View>
           </View>
         </ScrollView>
