@@ -21,6 +21,7 @@ import {ColorContext} from '../context/ColorContext';
 import BottomNavigation from './BottomNavigation';
 import {usePoints} from '../context/PointsContext';
 import {Dimensions} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
 const cardWidth = width * 0.45;
@@ -72,6 +73,7 @@ const ProfileManageScreen = () => {
     'App Issue' | 'Suggestion'
   >('App Issue');
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={tw`flex-1 bg-gray-100`}>
       {/* Fixed Header Section */}
       <View style={tw`bg-gray-100`}>
@@ -481,6 +483,7 @@ const ProfileManageScreen = () => {
       {/* Bottom Navigation Bar */}
       <BottomNavigation />
     </View>
+    </SafeAreaView>
   );
 };
 

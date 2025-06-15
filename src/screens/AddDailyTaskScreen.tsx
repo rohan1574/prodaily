@@ -26,6 +26,7 @@ import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type RootStackParamList = {
   // ... your other screens
@@ -507,6 +508,7 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
       {/* Header */}
       <View style={tw``}>
@@ -1391,6 +1393,7 @@ const AddDailyTaskScreen = () => {
       </ScrollView>
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
+    </SafeAreaView>
   );
 };
 

@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigation';
 import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 type NavigationProp = NativeStackNavigationProp<
@@ -50,6 +51,7 @@ const OnboardingScreenTwo = () => {
   ];
 
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={tw`flex-1 bg-blue-500 justify-between relative`}>
       {/* Top right circle */}
       {/* <View
@@ -173,6 +175,7 @@ const OnboardingScreenTwo = () => {
         />
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 

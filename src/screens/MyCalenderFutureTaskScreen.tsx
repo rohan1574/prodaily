@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
 import BottomNavigation from './BottomNavigation';
 import Icon from 'react-native-vector-icons/Ionicons'; // <- Icon import
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MyCalenderFutureTaskScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -84,6 +85,7 @@ const MyCalenderFutureTaskScreen = () => {
   }, [selectedDate]);
 
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
       {/* Header */}
       <View style={tw`mb-8 top-4 left-4`}>
@@ -167,6 +169,7 @@ const MyCalenderFutureTaskScreen = () => {
       {/* Bottom Nav */}
       <BottomNavigation />
     </View>
+    </SafeAreaView>
   );
 };
 

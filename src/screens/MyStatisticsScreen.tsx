@@ -7,6 +7,7 @@ import type {StackNavigationProp} from '@react-navigation/stack';
 import Svg, {Circle, Text as SvgText, TSpan} from 'react-native-svg';
 import BottomNavigation from './BottomNavigation';
 import {Dimensions} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
 
@@ -150,6 +151,7 @@ const MyStatisticsScreen = () => {
   }, [isFocused]);
 
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={tw`flex-1 bg-gray-200`}>
       <ScrollView contentContainerStyle={tw`p-4 pb-28`}>
         {/* হেডার সেকশন */}
@@ -404,6 +406,7 @@ const MyStatisticsScreen = () => {
       {/* বটম নেভিগেশন */}
       <BottomNavigation></BottomNavigation>
     </View>
+    </SafeAreaView>
   );
 };
 

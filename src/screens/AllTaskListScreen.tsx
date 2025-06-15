@@ -17,6 +17,7 @@ import DatePicker from './DatePicker';
 import DateSelector from './DateSelector';
 import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Task {
   id: string;
@@ -293,6 +294,7 @@ const AllTaskListScreen = () => {
   );
 
   return (
+    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
     <View style={[tw`flex-1 `, {backgroundColor: '#F7FAFF'}]}>
       <DeleteConfirmationModal />
       {/* Success Modal */}
@@ -838,6 +840,7 @@ const AllTaskListScreen = () => {
 
       {!isKeyboardVisible && <BottomNavigation />}
     </View>
+    </SafeAreaView>
   );
 };
 
