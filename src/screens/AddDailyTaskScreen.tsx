@@ -508,7 +508,7 @@ const AddDailyTaskScreen = () => {
     }
   };
   return (
-    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
+    <SafeAreaView style={tw`flex-1 bg-red-500`}>
       <View style={[tw`flex-1 bg-red-50`, {backgroundColor: '#FAFAFA'}]}>
         {/* Header */}
         <View style={tw``}>
