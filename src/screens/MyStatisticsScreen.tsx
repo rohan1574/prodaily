@@ -154,7 +154,7 @@ const MyStatisticsScreen = () => {
 
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
-      <View style={tw`flex-1 bg-gray-200`}>
+      <View style={[tw`flex-1 `,{backgroundColor: '#F7FAFF'}]}>
         <ScrollView contentContainerStyle={tw`p-4 pb-28`}>
           {/* হেডার সেকশন */}
           <Text

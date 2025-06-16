@@ -302,7 +302,7 @@ const TodaysTaskToDoScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-200`}>
+    <SafeAreaView style={[tw`flex-1 `,{backgroundColor: '#F7FAFF'}]}>
       {/* Header - Fixed at top */}
       <ImageBackground
         source={require('../../assets/images/vec.png')}
