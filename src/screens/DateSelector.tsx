@@ -367,7 +367,6 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                   </ScrollView>
                 </View>
               </View>
-
               {/* Buttons and Options */}
               <View style={tw`bottom-4`}>
                 <View style={tw`flex-row items-center justify-center `}>
@@ -378,7 +377,6 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                       Cancel
                     </Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={handleAddDate}
                     style={tw`bg-blue-500 items-center justify-center rounded-md w-16 h-8 left-2`}>
@@ -387,10 +385,9 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                     </Text>
                   </TouchableOpacity>
                 </View>
-
                 <TouchableOpacity
                   onPress={() => setShowNextDay(!showNextDay)}
-                  style={tw`flex-row items-center right-4  top-4`}>
+                  style={tw`flex-row items-center right-4 top-4`}>
                   <Ionicons
                     name={showNextDay ? 'radio-button-on' : 'radio-button-off'}
                     size={20}
