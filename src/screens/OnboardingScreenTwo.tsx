@@ -34,14 +34,6 @@ const OnboardingScreenTwo = () => {
     navigation.replace('TodaysTaskToDoScreen');
   };
 
-  const handleNext = () => {
-    setStep(prev => (prev + 1) % 2); // toggle between 0 and 1
-  };
-
-  const handleBack = () => {
-    setStep(prev => (prev - 1 + 2) % 2); // toggle between 0 and 1
-  };
-
   const clipboardIcons: ClipboardIcon[] = [
     {type: 'image', source: require('../../assets/images/onboarding/dependability.png')},
   ];
@@ -84,7 +76,7 @@ const OnboardingScreenTwo = () => {
       /> */}
 
       {/* Top Text */}
-      <View style={tw`px-9 pt-12`}>
+      <View style={tw`px-6 pt-10`}>
         <Text
           style={[
             tw`text-white text-xl font-bold `,
@@ -94,7 +86,7 @@ const OnboardingScreenTwo = () => {
         </Text>
         <Text
           style={[
-            tw`text-white text-sm italic  font-semibold`,
+            tw`text-white text-sm italic font-semibold`,
             {fontSize: 16, lineHeight: 24, letterSpacing: 1},
           ]}>
           <Text
@@ -138,7 +130,7 @@ const OnboardingScreenTwo = () => {
       />
 
       {/* Bottom Text */}
-      <View style={tw`px-9 bottom-12 z-10`}>
+      <View style={tw`px-9  z-10`}>
         <Text
           style={[
             tw`text-white text-2xl font-bold mb-2`,
