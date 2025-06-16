@@ -696,7 +696,7 @@ const AddDailyTaskScreen = () => {
               {expandedTask === task && (
                 <View
                   style={[
-                    tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-84 top-2 mb-2`,
+                    tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-full top-2 mb-2`,
                     {
                       height: 270,
                       // iOS shadow
@@ -757,7 +757,7 @@ const AddDailyTaskScreen = () => {
 
                   {/* Add Specific For */}
                   <View style={tw`bottom-3`}>
-                    <View style={tw`flex-row items-center mb-4 right-1`}>
+                    <View style={tw`flex-row items-center mb-4 right-4`}>
                       <TouchableOpacity onPress={handleToggleSpecificFor}>
                         <Icon
                           name={
@@ -772,7 +772,7 @@ const AddDailyTaskScreen = () => {
                       <Text
                         style={[
                           tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: 1},
+                          {fontSize: 12, letterSpacing: .5},
                         ]}>
                         Add specific for
                       </Text>
@@ -835,7 +835,7 @@ const AddDailyTaskScreen = () => {
                   <View style={[tw`border-b border-blue-500 `,{borderColor:"#DEEAFF"}]}>
                     <TouchableOpacity
                       onPress={toggleSpecificDayOn}
-                      style={tw`flex-row items-center right-1 bottom-4`}>
+                      style={tw`flex-row items-center right-4 bottom-4`}>
                       <Icon
                         name={
                           isSpecificDayOnSelected
@@ -848,7 +848,7 @@ const AddDailyTaskScreen = () => {
                       <Text
                         style={[
                           tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: 1},
+                          {fontSize: 12, letterSpacing: .5},
                         ]}>
                         Add Specific day on
                       </Text>
@@ -861,8 +861,8 @@ const AddDailyTaskScreen = () => {
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 1}}
                     style={[
-                      tw` mx-2 rounded-full shadow-sm  left-36 bottom-10`,
-                      {width: 178, height: 30, backgroundColor: '#F7FAFF'},
+                      tw` mx-2 rounded-full shadow-sm bottom-10`,
+                      {width: 178, height: 30, backgroundColor: '#F7FAFF',left:122},
                     ]}>
                     <View style={tw`flex-row  `}>
                       {['Week', 'Month', 'Year'].map(type => {
@@ -896,7 +896,7 @@ const AddDailyTaskScreen = () => {
                   </LinearGradient>
                   {/* Set Daily Target */}
                   <View style={tw`bottom-2`}>
-                    <View style={tw`flex-row items-center right-1`}>
+                    <View style={tw`flex-row items-center right-4`}>
                       <TouchableOpacity onPress={toggleDailyTarget}>
                         <Icon
                           name={
@@ -1038,6 +1038,7 @@ const AddDailyTaskScreen = () => {
                           prev.filter((_, i) => i !== index),
                         );
                       }}
+                        year={2024} 
                     />
                   )}
                   <View>
