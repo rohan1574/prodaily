@@ -1341,7 +1341,7 @@ const AddDailyTaskScreen = () => {
                   onPress={() => setIsTaskOptionsModalVisible(false)}
                   style={[tw`p-3 rounded-lg bottom-2`, {left: 270}]}>
                   <Icon
-                    name=""
+                    name="chevron-down"
                     size={20}
                     color="#8D99AE"
                   />
