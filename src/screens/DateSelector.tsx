@@ -37,14 +37,15 @@ const extendedMonths = [...Months, ...Months, ...Months];
 // Function to get days based on month and year
 const getDaysForMonth = (month: string, year: number) => {
   const currentYear = year || new Date().getFullYear();
-  
+
   if (month === 'February') {
     // Check if it's a leap year
-    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || 
-                      (currentYear % 400 === 0);
+    const isLeapYear =
+      (currentYear % 4 === 0 && currentYear % 100 !== 0) ||
+      currentYear % 400 === 0;
     return Array.from({length: isLeapYear ? 29 : 28}, (_, i) => i + 1);
   }
-  
+
   switch (month) {
     case 'April':
     case 'June':
@@ -87,11 +88,14 @@ const DateSelector: React.FC<DateSelectorProps> = ({
 
   const [addedDates, setAddedDates] =
     useState<{date: number; month: string}[]>(initialDates);
-  
+
   // Get initial month and adjust date if needed
   const initialMonth = initialDates[0]?.month || 'January';
   const initialDays = getDaysForMonth(initialMonth, year);
-  const initialDate = Math.min(initialDates[0]?.date || 1, initialDays[initialDays.length - 1]);
+  const initialDate = Math.min(
+    initialDates[0]?.date || 1,
+    initialDays[initialDays.length - 1],
+  );
 
   const selectedDateRef = useRef<number>(initialDate);
   const selectedMonthRef = useRef<string>(initialMonth);
@@ -104,7 +108,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   useEffect(() => {
     const newDays = getDaysForMonth(selectedMonth, year);
     setDaysInMonth(newDays);
-    
+
     // Adjust date if current date is invalid in new month
     if (selectedDate > newDays[newDays.length - 1]) {
       const newDate = newDays[newDays.length - 1];
@@ -233,22 +237,22 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   return (
     <Modal transparent={true} visible={true}>
       <View
-        style={[tw`flex-1 justify-center items-center bg-opacity-50`, {backgroundColor: 'rgba(32, 41, 56, 0.7)'}]}>
-        <View style={tw`bg-white rounded-xl p-4 w-11/12 `}>
+        style={[
+          tw`flex-1 justify-center items-center bg-opacity-50 `,
+          {backgroundColor: 'rgba(32, 41, 56, 0.7)'},
+        ]}>
+        <View style={tw`bg-white rounded-xl  w-80`}>
           {/* Header */}
-          <View
-            style={[
-              tw`bg-gray-400 bottom-4 rounded-lg right-4 py-3 `,
-              {backgroundColor: '#8D99AE',width:378},
-            ]}>
-            <Text style={tw`text-white text-center text-sm font-medium`}>
+          <View style={[tw``, {backgroundColor: '', width: 37}]}>
+            <Text
+              style={tw`text-white text-center text-sm font-medium bg-gray-400 bottom-4 rounded-lg  py-3 w-80`}>
               Select Date for Every Year
             </Text>
           </View>
 
-          <View style={tw`flex-row `}>
+          <View style={tw`flex-row p-2`}>
             {/* Left Column - Added Dates */}
-            <View style={tw`w-1/2 pr-4 border-r border-gray-200 right-2`}>
+            <View style={tw`w-1/2 pr-8 `}>
               <ScrollView style={tw`h-36`}>
                 {addedDates.map((item, index) => (
                   <View
@@ -269,9 +273,9 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                 <Text style={tw`text-white text-center font-medium`}>Save</Text>
               </TouchableOpacity>
             </View>
-
+            <View style={tw`border-r border-gray-200 right-6`}></View>
             {/* Right Column - Date Pickers */}
-            <View style={tw`flex-1 pl-4`}>
+            <View style={tw`flex-1 `}>
               <View style={tw`flex-row justify-between mb-4 bottom-4`}>
                 {/* Days Picker */}
                 <View
@@ -285,7 +289,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                       key={`line-day-${index}`}
                       style={[
                         tw`absolute left-0 right-0  bg-gray-300`,
-                        {top: (index + 1) * ITEM_HEIGHT - 1,height:1},
+                        {top: (index + 1) * ITEM_HEIGHT - 1, height: 1},
                       ]}
                     />
                   ))}
@@ -332,7 +336,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                       key={`line-month-${index}`}
                       style={[
                         tw`absolute left-0 right-0  bg-gray-300 `,
-                        {top: (index + 1) * ITEM_HEIGHT - 1,height:1},
+                        {top: (index + 1) * ITEM_HEIGHT - 1, height: 1},
                       ]}
                     />
                   ))}
@@ -395,7 +399,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
                     style={tw`mr-2`}
                   />
                   <Text style={tw`text-gray-400 text-xs font-normal`}>
-                    Show Daily from start date{'\n'}Until Complete
+                    Show Daily from start date Until Complete
                   </Text>
                 </TouchableOpacity>
               </View>

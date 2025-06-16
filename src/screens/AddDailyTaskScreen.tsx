@@ -1038,7 +1038,7 @@ const AddDailyTaskScreen = () => {
                           prev.filter((_, i) => i !== index),
                         );
                       }}
-                        year={2024} 
+                        year={new Date().getFullYear()}
                     />
                   )}
                   <View>
