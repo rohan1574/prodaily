@@ -42,15 +42,15 @@ export default function PremiumPackage() {
                 position: 'absolute',
                 left: 20,
                 bottom: 175,
-                backgroundColor: '#DEEAFF',
+                backgroundColor: '#FFFFFF',
                 borderRadius: 50,
                 padding: 4,
               }}>
               <Icon
               onPress={() => navigation.goBack()}
                 name="chevron-back"
-                size={40}
-                color="#000000" // black icon
+                size={32}
+                color="#040415" // black icon
               />
             </View>
 
@@ -281,9 +281,9 @@ export default function PremiumPackage() {
       </View>
 
       {/* Continue Button */}
-      <TouchableOpacity style={tw`mx-12 top-12 bg-blue-600 py-3 rounded-full`}>
+      <TouchableOpacity style={tw`mx-4 top-8 bg-blue-600 py-3 rounded-full`}>
         <Text style={[tw`text-center text-white  font-normal`, {fontSize: 14}]}>
-          Continues
+          Continue
         </Text>
       </TouchableOpacity>
     </ScrollView>

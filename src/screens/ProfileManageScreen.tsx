@@ -406,7 +406,7 @@ const ProfileManageScreen = () => {
             ))}
           </View>
           <TouchableOpacity
-            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-24 w-32`}>
+            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-16 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
           <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
