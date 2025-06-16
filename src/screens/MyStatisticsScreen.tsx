@@ -197,7 +197,7 @@ const MyStatisticsScreen = () => {
 
               <View
                 style={[
-                  tw`bg-blue-500 p-4 rounded-lg justify-center items-center`,
+                  tw`bg-blue-500 rounded-lg justify-center items-center`,
                   {width: width * 0.42, height: width * 0.3},
                 ]}>
                 <Text
@@ -282,7 +282,7 @@ const MyStatisticsScreen = () => {
                     {statsData.completed} of {statsData.totalTasks}
                   </Text>
                 </View>
-                <View style={tw`flex-1 ml-4`}>
+                <View style={tw`flex-1 left-2`}>
                   <Text
                     style={[
                       tw`text-gray-600 font-normal text-center top-1`,
@@ -339,8 +339,8 @@ const MyStatisticsScreen = () => {
                 </Text>
               </View>
             </View>
-            <View style={tw`flex-row flex-wrap justify-between px-2`}>
-              <View style={tw`w-1/4 items-center mb-2`}>
+            <View style={tw`flex-row flex-wrap justify-between `}>
+              <View style={tw` items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -358,7 +358,7 @@ const MyStatisticsScreen = () => {
                 </Text>
               </View>
 
-              <View style={tw`w-1/4 items-center mb-2`}>
+              <View style={tw` items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -376,7 +376,7 @@ const MyStatisticsScreen = () => {
                 </Text>
               </View>
 
-              <View style={tw`w-1/4 items-center mb-2`}>
+              <View style={tw` items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -394,7 +394,7 @@ const MyStatisticsScreen = () => {
                 </Text>
               </View>
 
-              <View style={tw`w-1/4 items-center mb-2`}>
+              <View style={tw` items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
