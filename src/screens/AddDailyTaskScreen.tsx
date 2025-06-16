@@ -113,6 +113,7 @@ const AddDailyTaskScreen = () => {
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isTaskOptionsModalVisible, setIsTaskOptionsModalVisible] = useState(false);
   const [customTasksData, setCustomTasksData] = useState<
     Record<string, Record<string, ImageSourcePropType>>
   >({});
@@ -658,6 +659,7 @@ const AddDailyTaskScreen = () => {
                   }
                   setExpandedTask(expandedTask === task ? null : task);
                   setTaskName(task);
+                  setIsTaskOptionsModalVisible(true);
                 }}
                 onLongPress={() => handleLongPress(task, selectedCategory)}
                 style={[
@@ -692,445 +694,7 @@ const AddDailyTaskScreen = () => {
                 />
               </TouchableOpacity>
 
-              {/* Expanded Tasks Options */}
-              {expandedTask === task && (
-                <View
-                  style={[
-                    tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-full top-2 mb-2`,
-                    {
-                      height: 270,
-                      // iOS shadow
-                      shadowColor: '#5B86CD',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.1,
-                      shadowRadius: 6,
-                      elevation: 5, // for Android
-                      shadowContainer: {
-                        backgroundColor: 'transparent',
-                        borderRadius: 100, // same as inner
-                        shadowColor: '#5B86CD',
-                        shadowOffset: {width: 0, height: 4},
-                        shadowOpacity: 0.1,
-                        shadowRadius: 10,
-                        elevation: 8, // Android shadow
-                      },
-                      innerBox: {
-                        borderRadius: 16, // match shadow radius
-                        overflow: 'hidden', // prevent sharp shadow overflow
-                      },
-                    },
-                  ]}>
-                  {/* Header */}
-                  <View style={tw`flex-row justify-between`}>
-                    <View style={tw`flex-row items-center mb-6`}>
-                      <Image
-                        source={
-                          tasksData[selectedCategory]?.[expandedTask] ||
-                          customTasksData[selectedCategory]?.[expandedTask]
-                        }
-                        style={[
-                          tw`mr-3`,
-                          {width: 30, height: 30, tintColor: selectedColor},
-                        ]} // সংশোধিত লাইন
-                      />
-                      <Text
-                        style={[
-                          tw`text-sm font-medium text-black ml-2`,
-                          {letterSpacing: 1},
-                        ]}>
-                        {expandedTask}
-                      </Text>
-                      {/* star icon */}
-                    </View>
-                    <View style={[tw``]}>
-                      <TouchableOpacity
-                        onPress={() => setIsStarred(!isStarred)}>
-                        <Icon
-                          name={isStarred ? 'star' : 'star-outline'}
-                          size={20}
-                          color={isStarred ? '#3580FF' : 'gray'}
-                          style={tw`mr-2`}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  {/* Add Specific For */}
-                  <View style={tw`bottom-3`}>
-                    <View style={tw`flex-row items-center mb-4 right-4`}>
-                      <TouchableOpacity onPress={handleToggleSpecificFor}>
-                        <Icon
-                          name={
-                            isSpecificForEnabled
-                              ? 'radio-button-on'
-                              : 'radio-button-off'
-                          }
-                          size={24}
-                          color={isSpecificForEnabled ? '#3580FF' : 'gray'}
-                        />
-                      </TouchableOpacity>
-                      <Text
-                        style={[
-                          tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: .5},
-                        ]}>
-                        Add specific for
-                      </Text>
-
-                      <TextInput
-                        style={[
-                          tw`px-1 py-1 border rounded text-center left-1`,
-                          {
-                            borderColor: '#E3E8F1',
-                            width: 30,
-                            height: 23,
-                            fontSize: 12,
-                            letterSpacing: 1,
-                            color: '',
-                          },
-                        ]}
-                        keyboardType="numeric"
-                        placeholder="00"
-                        placeholderTextColor="#8D99AE"
-                        value={specificForValue}
-                        onChangeText={setSpecificForValue}
-                        editable={isSpecificForEnabled}
-                        maxLength={2}
-                      />
-                      <LinearGradient
-                        colors={['#F7FAFF', '#DEEAFF']}
-                        start={{x: 0, y: 0}}
-                        end={{x: 0, y: 1}}
-                        style={[
-                          tw`flex-row rounded-full mx-2`,
-                          {width: 170, height: 30},
-                        ]}>
-                        {['Days', 'Weeks', 'Months'].map(type => {
-                          const isSelected = specificFor === type;
-
-                          return (
-                            <TouchableOpacity
-                              key={type}
-                              style={tw`px-2 p-1 rounded-full ${
-                                isSelected
-                                  ? 'bg-blue-500 border border-blue-500'
-                                  : ''
-                              }`}
-                              onPress={() => setSpecificFor(type)}>
-                              <Text
-                                style={tw`text-sm ${
-                                  isSelected
-                                    ? 'text-white font-semibold'
-                                    : 'text-gray-500'
-                                }`}>
-                                {type}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </LinearGradient>
-                    </View>
-                  </View>
-                  {/* Add Specific Day On */}
-                  <View style={[tw`border-b border-blue-500 `,{borderColor:"#DEEAFF"}]}>
-                    <TouchableOpacity
-                      onPress={toggleSpecificDayOn}
-                      style={tw`flex-row items-center right-4 bottom-4`}>
-                      <Icon
-                        name={
-                          isSpecificDayOnSelected
-                            ? 'radio-button-on'
-                            : 'radio-button-off'
-                        }
-                        size={24}
-                        color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
-                      />
-                      <Text
-                        style={[
-                          tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: .5},
-                        ]}>
-                        Add Specific day on
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Buttons */}
-                  <LinearGradient
-                    colors={['#F7FAFF', '#DEEAFF']}
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}
-                    style={[
-                      tw` mx-2 rounded-full shadow-sm bottom-10`,
-                      {width: 178, height: 30, backgroundColor: '#F7FAFF',left:122},
-                    ]}>
-                    <View style={tw`flex-row  `}>
-                      {['Week', 'Month', 'Year'].map(type => {
-                        const lowerType = type.toLowerCase();
-                        const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
-
-                        return (
-                          <TouchableOpacity
-                            key={type}
-                            onPress={() => handleDayTypeClick(lowerType)}
-                            disabled={!isSpecificDayOnSelected}
-                            style={[
-                              tw`flex-1 p-1.5 rounded-full`,
-                              isSelected &&
-                                tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
-                              !isSpecificDayOnSelected && tw`opacity-50`,
-                            ]}>
-                            <Text
-                              style={[
-                                tw`text-center text-sm font-normal`,
-                                isSelected
-                                  ? tw`text-white font-semibold `
-                                  : {color: '#8D99AE'},
-                              ]}>
-                              {type}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                  </LinearGradient>
-                  {/* Set Daily Target */}
-                  <View style={tw`bottom-2`}>
-                    <View style={tw`flex-row items-center right-4`}>
-                      <TouchableOpacity onPress={toggleDailyTarget}>
-                        <Icon
-                          name={
-                            isDailyTargetEnabled
-                              ? 'checkbox-outline'
-                              : 'square-outline'
-                          }
-                          size={24}
-                          color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
-                        />
-                      </TouchableOpacity>
-                      <Text
-                        style={[
-                          tw`font-normal text-gray-500`,
-                          {fontSize: 12, letterSpacing: 1},
-                        ]}>
-                        Set Daily Target for
-                      </Text>
-                      <TextInput
-                        style={[
-                          tw`px-1 py-1 border rounded text-center left-3`,
-                          {
-                            borderColor: '#E3E8F1',
-                            width: 40,
-                            height: 23,
-                            fontSize: 12,
-                            letterSpacing: 1,
-                          },
-                        ]}
-                        keyboardType="numeric"
-                        placeholder="000"
-                        placeholderTextColor="#8D99AE"
-                        value={dailyTarget}
-                        onChangeText={setDailyTarget}
-                        editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
-                        maxLength={3}
-                      />
-                      <LinearGradient
-                        colors={['#F7FAFF', '#DEEAFF']}
-                        start={{x: 0, y: 0}}
-                        end={{x: 0, y: 1}}
-                        style={[tw`flex-row rounded-full left-4 `]}>
-                        {options.map(type => {
-                          const isSelected = targetType === type;
-
-                          return (
-                            <TouchableOpacity
-                              key={type}
-                              style={tw`px-2 py-1 rounded-full ${
-                                isSelected
-                                  ? 'bg-blue-500 border border-blue-500'
-                                  : '#F7FAFF'
-                              }`}
-                              onPress={() => setTargetType(type)}>
-                              <Text
-                                style={tw`text-sm ${
-                                  isSelected
-                                    ? 'text-white font-semibold'
-                                    : 'text-gray-500'
-                                }`}>
-                                {type}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </LinearGradient>
-                    </View>
-                  </View>
-                  {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
-                  {isDayPickerVisible && (
-                    <DayPicker
-                      selectedDays={selectedDays}
-                      onSelectDays={setSelectedDays}
-                      onCancel={() => {
-                        setIsDayPickerVisible(false);
-                        setSelectedDays([]);
-                      }}
-                      onAddDay={() => {
-                        setIsDayPickerVisible(false);
-                      }}
-                    />
-                  )}
-                  {isDatePickerVisible && (
-                    <DatePicker
-                      selectedDate={selectedDate}
-                      onSelectDate={setSelectedDate}
-                      onCancel={() => {
-                        setIsDatePickerVisible(false);
-                        setSelectedDate([]);
-                      }}
-                      onAddDay={() => {
-                        setIsDatePickerVisible(false);
-                      }}
-                    />
-                  )}
-                  {isDateSeletorVisible && (
-                    <DateSelector
-                      selectedDates={selectedDates}
-                      selectedMonths={selectedMonths}
-                      onSelectDate={(date: number) => setTempSelectedDate(date)}
-                      onSelectMonth={(month: string) =>
-                        setTempSelectedMonth(month)
-                      }
-                      onCancel={() => setIsDateSeletorVisible(false)}
-                      onAddDay={addedDates => {
-                        // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
-                        const uniqueDates = addedDates.filter(
-                          ({date, month}, index) =>
-                            addedDates.findIndex(
-                              d => d.date === date && d.month === month,
-                            ) === index,
-                        );
-
-                        // এক্সিস্টিং ডাটার সাথে মিলিয়ে চেক
-                        const newEntries = uniqueDates.filter(
-                          ({date, month}) =>
-                            !selectedDates.some(
-                              (d, i) =>
-                                d === date && selectedMonths[i] === month,
-                            ),
-                        );
-
-                        // স্টেট আপডেট
-                        setSelectedDates(prev => [
-                          ...prev,
-                          ...newEntries.map(e => e.date),
-                        ]);
-                        setSelectedMonths(prev => [
-                          ...prev,
-                          ...newEntries.map(e => e.month),
-                        ]);
-                        setIsDateSeletorVisible(false);
-                      }}
-                      onRemoveDay={index => {
-                        setSelectedDates(prev =>
-                          prev.filter((_, i) => i !== index),
-                        );
-                        setSelectedMonths(prev =>
-                          prev.filter((_, i) => i !== index),
-                        );
-                      }}
-                        year={new Date().getFullYear()}
-                    />
-                  )}
-                  <View>
-                    {/* Add to Routine Button */}
-                    <TouchableOpacity
-                      onPress={handleSaveTask}
-                      style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
-                      <Text style={tw`text-white text-center font-semibold `}>
-                        {isSpecificForEnabled || isSpecificDayOnSelected
-                          ? 'Add to Routine'
-                          : 'Add to Daily Routine'}
-                      </Text>
-                    </TouchableOpacity>
-                    {/* Toggle Button */}
-                    <TouchableOpacity
-                      onPress={() =>
-                        setExpandedTask(expandedTask === task ? null : task)
-                      }
-                      style={[tw`p-3 rounded-lg bottom-2 `, {left: 270}]}>
-                      <Icon
-                        name={
-                          expandedTask === task ? 'chevron-up' : 'chevron-down'
-                        }
-                        size={20}
-                        color="#8D99AE"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {showDuplicateAlert && (
-                    <Modal
-                      transparent={true}
-                      animationType="fade"
-                      visible={showDuplicateAlert}
-                      onRequestClose={() => setShowDuplicateAlert(false)}>
-                      <View
-                        style={[
-                          tw`flex-1 justify-center items-center`,
-                          {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
-                        ]}>
-                        <View
-                          style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
-                          <Icon
-                            name="checkmark-circle-outline"
-                            size={28}
-                            color="white"
-                            style={tw`mr-2`}
-                          />
-                          <View>
-                            <Text
-                              style={tw`text-white font-semibold text-base`}>
-                              Task Already
-                            </Text>
-                            <Text style={tw`text-white text-xs`}>
-                              Exist in your routine
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </Modal>
-                  )}
-                  {/* modal */}
-                  <Modal
-                    visible={showSuccessModal}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={() => setShowSuccessModal(false)}>
-                    <View
-                      style={[
-                        tw`flex-1 justify-center items-center`,
-                        {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
-                      ]}>
-                      <View
-                        style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
-                        <Icon
-                          name="checkmark-circle-outline"
-                          size={28}
-                          color="white"
-                          style={tw`mr-2`}
-                        />
-                        <View>
-                          <Text style={tw`text-white font-semibold text-base`}>
-                            Task Saved!
-                          </Text>
-                          <Text style={tw`text-white text-xs`}>
-                            to your routine Successfully
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </Modal>
-                </View>
-              )}
+             
             </View>
           ))}
           {/* Add Custom Task Button */}
@@ -1406,6 +970,450 @@ const AddDailyTaskScreen = () => {
           </Modal>
         </ScrollView>
         {!isKeyboardVisible && <BottomNavigation />}
+         {/* Task Options Modal */}
+        <Modal
+          visible={isTaskOptionsModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsTaskOptionsModalVisible(false)}>
+          <View style={[tw`flex-1 justify-center items-center bg-black/50`,{backgroundColor: 'rgba(32, 41, 56, 0.7)'},]}>
+            <View
+              style={[
+                tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-11/12`,
+                {
+                  // iOS shadow
+                  shadowColor: '#5B86CD',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.1,
+                  shadowRadius: 6,
+                  elevation: 5, // for Android
+                  shadowContainer: {
+                    backgroundColor: 'transparent',
+                    borderRadius: 100, // same as inner
+                    shadowColor: '#5B86CD',
+                    shadowOffset: {width: 0, height: 4},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 10,
+                    elevation: 8, // Android shadow
+                  },
+                  innerBox: {
+                    borderRadius: 16, // match shadow radius
+                    overflow: 'hidden', // prevent sharp shadow overflow
+                  },
+                },
+              ]}>
+              {/* Header */}
+              <View style={tw`flex-row justify-between`}>
+                <View style={tw`flex-row items-center mb-6`}>
+                  <Image
+                    source={
+                      tasksData[selectedCategory]?.[expandedTask || ''] ||
+                      customTasksData[selectedCategory]?.[expandedTask || '']
+                    }
+                    style={[
+                      tw`mr-3`,
+                      {width: 30, height: 30, tintColor: selectedColor},
+                    ]} // সংশোধিত লাইন
+                  />
+                  <Text
+                    style={[
+                      tw`text-sm font-medium text-black ml-2`,
+                      {letterSpacing: 1},
+                    ]}>
+                    {expandedTask}
+                  </Text>
+                  {/* star icon */}
+                </View>
+                <View style={[tw``]}>
+                  <TouchableOpacity onPress={() => setIsStarred(!isStarred)}>
+                    <Icon
+                      name={isStarred ? 'star' : 'star-outline'}
+                      size={20}
+                      color={isStarred ? '#3580FF' : 'gray'}
+                      style={tw`mr-2`}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Add Specific For */}
+              <View style={tw`bottom-3`}>
+                <View style={tw`flex-row items-center mb-4 right-4`}>
+                  <TouchableOpacity onPress={handleToggleSpecificFor}>
+                    <Icon
+                      name={
+                        isSpecificForEnabled
+                          ? 'radio-button-on'
+                          : 'radio-button-off'
+                      }
+                      size={24}
+                      color={isSpecificForEnabled ? '#3580FF' : 'gray'}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={[
+                      tw`font-normal text-gray-500`,
+                      {fontSize: 12, letterSpacing: .5},
+                    ]}>
+                    Add specific for
+                  </Text>
+
+                  <TextInput
+                    style={[
+                      tw`px-1 py-1 border rounded text-center left-1`,
+                      {
+                        borderColor: '#E3E8F1',
+                        width: 30,
+                        height: 23,
+                        fontSize: 12,
+                        letterSpacing: 1,
+                        color: '',
+                      },
+                    ]}
+                    keyboardType="numeric"
+                    placeholder="00"
+                    placeholderTextColor="#8D99AE"
+                    value={specificForValue}
+                    onChangeText={setSpecificForValue}
+                    editable={isSpecificForEnabled}
+                    maxLength={2}
+                  />
+                  <LinearGradient
+                    colors={['#F7FAFF', '#DEEAFF']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}
+                    style={[
+                      tw`flex-row rounded-full mx-2`,
+                      {width: 170, height: 30},
+                    ]}>
+                    {['Days', 'Weeks', 'Months'].map(type => {
+                      const isSelected = specificFor === type;
+
+                      return (
+                        <TouchableOpacity
+                          key={type}
+                          style={tw`px-2 p-1 rounded-full ${
+                            isSelected
+                              ? 'bg-blue-500 border border-blue-500'
+                              : ''
+                          }`}
+                          onPress={() => setSpecificFor(type)}>
+                          <Text
+                            style={tw`text-sm ${
+                              isSelected
+                                ? 'text-white font-semibold'
+                                : 'text-gray-500'
+                            }`}>
+                            {type}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </LinearGradient>
+                </View>
+              </View>
+              {/* Add Specific Day On */}
+              <View style={[tw`border-b border-blue-500 `,{borderColor:"#DEEAFF"}]}>
+                <TouchableOpacity
+                  onPress={toggleSpecificDayOn}
+                  style={tw`flex-row items-center right-4 bottom-4`}>
+                  <Icon
+                    name={
+                      isSpecificDayOnSelected
+                        ? 'radio-button-on'
+                        : 'radio-button-off'
+                    }
+                    size={24}
+                    color={isSpecificDayOnSelected ? '#3580FF' : 'gray'}
+                  />
+                  <Text
+                    style={[
+                      tw`font-normal text-gray-500`,
+                      {fontSize: 12, letterSpacing: .5},
+                    ]}>
+                    Add Specific day on
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Buttons */}
+              <LinearGradient
+                colors={['#F7FAFF', '#DEEAFF']}
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+                style={[
+                  tw` mx-2 rounded-full shadow-sm bottom-10`,
+                  {width: 178, height: 30, backgroundColor: '#F7FAFF',left:122},
+                ]}>
+                <View style={tw`flex-row  `}>
+                  {['Week', 'Month', 'Year'].map(type => {
+                    const lowerType = type.toLowerCase();
+                    const isSelected = selectedDayOnType === lowerType; // ডিফল্ট হিসেবে 'week' চেক হবে
+
+                    return (
+                      <TouchableOpacity
+                        key={type}
+                        onPress={() => handleDayTypeClick(lowerType)}
+                        disabled={!isSpecificDayOnSelected}
+                        style={[
+                          tw`flex-1 p-1.5 rounded-full`,
+                          isSelected &&
+                            tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
+                          !isSpecificDayOnSelected && tw`opacity-50`,
+                        ]}>
+                        <Text
+                          style={[
+                            tw`text-center text-sm font-normal`,
+                            isSelected
+                              ? tw`text-white font-semibold `
+                              : {color: '#8D99AE'},
+                          ]}>
+                          {type}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </LinearGradient>
+              {/* Set Daily Target */}
+              <View style={tw`bottom-2`}>
+                <View style={tw`flex-row items-center right-4`}>
+                  <TouchableOpacity onPress={toggleDailyTarget}>
+                    <Icon
+                      name={
+                        isDailyTargetEnabled
+                          ? 'checkbox-outline'
+                          : 'square-outline'
+                      }
+                      size={24}
+                      color={isDailyTargetEnabled ? '#3580FF' : 'gray'}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={[
+                      tw`font-normal text-gray-500`,
+                      {fontSize: 12, letterSpacing: 1},
+                    ]}>
+                    Set Daily Target for
+                  </Text>
+                  <TextInput
+                    style={[
+                      tw`px-1 py-1 border rounded text-center left-3`,
+                      {
+                        borderColor: '#E3E8F1',
+                        width: 40,
+                        height: 23,
+                        fontSize: 12,
+                        letterSpacing: 1,
+                      },
+                    ]}
+                    keyboardType="numeric"
+                    placeholder="000"
+                    placeholderTextColor="#8D99AE"
+                    value={dailyTarget}
+                    onChangeText={setDailyTarget}
+                    editable={isDailyTargetEnabled} // ✅ Radio Button ON means input will be editable
+                    maxLength={3}
+                  />
+                  <LinearGradient
+                    colors={['#F7FAFF', '#DEEAFF']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}
+                    style={[tw`flex-row rounded-full left-4 `]}>
+                    {options.map(type => {
+                      const isSelected = targetType === type;
+
+                      return (
+                        <TouchableOpacity
+                          key={type}
+                          style={tw`px-2 py-1 rounded-full ${
+                            isSelected
+                              ? 'bg-blue-500 border border-blue-500'
+                              : '#F7FAFF'
+                          }`}
+                          onPress={() => setTargetType(type)}>
+                          <Text
+                            style={tw`text-sm ${
+                              isSelected
+                                ? 'text-white font-semibold'
+                                : 'text-gray-500'
+                            }`}>
+                            {type}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </LinearGradient>
+                </View>
+              </View>
+              {/* মডাল রেন্ডারিং অংশ সংশোধন করুন */}
+              {isDayPickerVisible && (
+                <DayPicker
+                  selectedDays={selectedDays}
+                  onSelectDays={setSelectedDays}
+                  onCancel={() => {
+                    setIsDayPickerVisible(false);
+                    setSelectedDays([]);
+                  }}
+                  onAddDay={() => {
+                    setIsDayPickerVisible(false);
+                  }}
+                />
+              )}
+              {isDatePickerVisible && (
+                <DatePicker
+                  selectedDate={selectedDate}
+                  onSelectDate={setSelectedDate}
+                  onCancel={() => {
+                    setIsDatePickerVisible(false);
+                    setSelectedDate([]);
+                  }}
+                  onAddDay={() => {
+                    setIsDatePickerVisible(false);
+                  }}
+                />
+              )}
+              {isDateSeletorVisible && (
+                <DateSelector
+                  selectedDates={selectedDates}
+                  selectedMonths={selectedMonths}
+                  onSelectDate={(date: number) => setTempSelectedDate(date)}
+                  onSelectMonth={(month: string) =>
+                    setTempSelectedMonth(month)
+                  }
+                  onCancel={() => setIsDateSeletorVisible(false)}
+                  onAddDay={addedDates => {
+                    // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
+                    const uniqueDates = addedDates.filter(
+                      ({date, month}, index) =>
+                        addedDates.findIndex(
+                          d => d.date === date && d.month === month,
+                        ) === index,
+                    );
+
+                    // এক্সিস্টিং ডাটার সাথে মিলিয়ে চেক
+                    const newEntries = uniqueDates.filter(
+                      ({date, month}) =>
+                        !selectedDates.some(
+                          (d, i) =>
+                            d === date && selectedMonths[i] === month,
+                        ),
+                    );
+
+                    // স্টেট আপডেট
+                    setSelectedDates(prev => [
+                      ...prev,
+                      ...newEntries.map(e => e.date),
+                    ]);
+                    setSelectedMonths(prev => [
+                      ...prev,
+                      ...newEntries.map(e => e.month),
+                    ]);
+                    setIsDateSeletorVisible(false);
+                  }}
+                  onRemoveDay={index => {
+                    setSelectedDates(prev =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                    setSelectedMonths(prev =>
+                      prev.filter((_, i) => i !== index),
+                    );
+                  }}
+                    year={new Date().getFullYear()}
+                />
+              )}
+              <View>
+                {/* Add to Routine Button */}
+                <TouchableOpacity
+                  onPress={() => {
+                    handleSaveTask();
+                    setIsTaskOptionsModalVisible(false);
+                  }}
+                  style={tw`bg-blue-500 py-2 mx-8 rounded-full top-4`}>
+                  <Text style={tw`text-white text-center font-semibold `}>
+                    {isSpecificForEnabled || isSpecificDayOnSelected
+                      ? 'Add to Routine'
+                      : 'Add to Daily Routine'}
+                  </Text>
+                </TouchableOpacity>
+                {/* Close Button */}
+                <TouchableOpacity
+                  onPress={() => setIsTaskOptionsModalVisible(false)}
+                  style={[tw`p-3 rounded-lg bottom-2`, {left: 270}]}>
+                  <Icon
+                    name=""
+                    size={20}
+                    color="#8D99AE"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Success and Duplicate Alerts */}
+        {showDuplicateAlert && (
+          <Modal
+            transparent={true}
+            animationType="fade"
+            visible={showDuplicateAlert}
+            onRequestClose={() => setShowDuplicateAlert(false)}>
+            <View
+              style={[
+                tw`flex-1 justify-center items-center`,
+                {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+              ]}>
+              <View
+                style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
+                <Icon
+                  name="checkmark-circle-outline"
+                  size={28}
+                  color="white"
+                  style={tw`mr-2`}
+                />
+                <View>
+                  <Text
+                    style={tw`text-white font-semibold text-base`}>
+                    Task Already
+                  </Text>
+                  <Text style={tw`text-white text-xs`}>
+                    Exist in your routine
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        )}
+        {/* modal */}
+        <Modal
+          visible={showSuccessModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowSuccessModal(false)}>
+          <View
+            style={[
+              tw`flex-1 justify-center items-center`,
+              {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
+            ]}>
+            <View
+              style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
+              <Icon
+                name="checkmark-circle-outline"
+                size={28}
+                color="white"
+                style={tw`mr-2`}
+              />
+              <View>
+                <Text style={tw`text-white font-semibold text-base`}>
+                  Task Saved!
+                </Text>
+                <Text style={tw`text-white text-xs`}>
+                  to your routine Successfully
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
