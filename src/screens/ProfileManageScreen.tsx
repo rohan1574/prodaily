@@ -112,7 +112,7 @@ const ProfileManageScreen = () => {
                 mrrony@gmail.com
               </Text>
               <TouchableOpacity
-                style={tw`bg-white px-2 py-1 rounded-lg bottom-16 left-8`}
+                style={tw`bg-white px-2 py-1 rounded-lg bottom-16 left-4`}
                 onPress={() => navigation.navigate('PremiumScreen')}>
                 <Text  onPress={() => navigation.navigate('PremiumPackage')} style={tw`text-blue-500 text-xs font-semibold`}>
                   Try Premium
@@ -206,9 +206,9 @@ const ProfileManageScreen = () => {
           <Text
             style={[
               tw`text-gray-500 text-center text-xs`,
-              {color: '#8D99AE', letterSpacing: 0.5,fontFamily:"Poppins"},
+              {color: '#8D99AE', letterSpacing: 0.1,fontFamily:"Poppins"},
             ]}>
-            Be regular, collect points, Stick with ProDAILY time{'\n'}
+            Be regular, collect points, Stick with ProDAILY time
             consciousness journey. You'll get rewards.
           </Text>
         </View>
