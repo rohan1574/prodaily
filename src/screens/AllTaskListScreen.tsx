@@ -489,8 +489,8 @@ const AllTaskListScreen = () => {
                         {/* Label */}
                         <Text
                           style={[
-                            tw`font-normal text-gray-500 ml-1`,
-                            {fontSize: 12, letterSpacing: 1},
+                            tw`font-normal text-gray-500 `,
+                            {fontSize: 12, letterSpacing: .5},
                           ]}>
                           Add specific for
                         </Text>
@@ -498,7 +498,7 @@ const AllTaskListScreen = () => {
                         {/* Numeric Input */}
                         <TextInput
                           style={[
-                            tw`ml-2 px-1 py-1 border rounded text-center`,
+                            tw` px-1 py-1 border rounded text-center`,
                             {
                               borderColor: '#E3E8F1',
                               width: 30,
@@ -590,8 +590,8 @@ const AllTaskListScreen = () => {
 
                         <Text
                           style={[
-                            tw`font-normal text-gray-500 ml-1`,
-                            {fontSize: 12, letterSpacing: 1},
+                            tw`font-normal text-gray-500 `,
+                            {fontSize: 12, letterSpacing: .1},
                           ]}>
                           Add Specific Day On
                         </Text>
