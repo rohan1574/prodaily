@@ -89,6 +89,8 @@ const CircularProgress = ({
 
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  
   const [selectedTab, setSelectedTab] = useState<
     'Weekly' | 'Monthly' | 'Yearly'
   >('Weekly');
@@ -415,8 +417,10 @@ const MyStatisticsScreen = () => {
           </View>
         </ScrollView>
 
-        {/* বটম নেভিগেশন */}
-        <BottomNavigation></BottomNavigation>
+        {/* Fixed Bottom Navigation */}
+      <View style={tw`absolute bottom-0 w-full`}>
+        {!isKeyboardVisible && <BottomNavigation />}
+      </View>
       </View>
     </SafeAreaView>
   );
