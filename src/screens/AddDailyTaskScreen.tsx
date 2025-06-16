@@ -113,7 +113,8 @@ const AddDailyTaskScreen = () => {
   const [taskName, setTaskName] = useState('');
   const [isStarred, setIsStarred] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [isTaskOptionsModalVisible, setIsTaskOptionsModalVisible] = useState(false);
+  const [isTaskOptionsModalVisible, setIsTaskOptionsModalVisible] =
+    useState(false);
   const [customTasksData, setCustomTasksData] = useState<
     Record<string, Record<string, ImageSourcePropType>>
   >({});
@@ -693,8 +694,6 @@ const AddDailyTaskScreen = () => {
                   color="#DFDFDF"
                 />
               </TouchableOpacity>
-
-             
             </View>
           ))}
           {/* Add Custom Task Button */}
@@ -970,13 +969,17 @@ const AddDailyTaskScreen = () => {
           </Modal>
         </ScrollView>
         {!isKeyboardVisible && <BottomNavigation />}
-         {/* Task Options Modal */}
+        {/* Task Options Modal */}
         <Modal
           visible={isTaskOptionsModalVisible}
           transparent={true}
           animationType="slide"
           onRequestClose={() => setIsTaskOptionsModalVisible(false)}>
-          <View style={[tw`flex-1 justify-center items-center bg-black/50`,{backgroundColor: 'rgba(32, 41, 56, 0.7)'},]}>
+          <View
+            style={[
+              tw`flex-1 justify-center items-center bg-black/50`,
+              {backgroundColor: 'rgba(32, 41, 56, 0.7)'},
+            ]}>
             <View
               style={[
                 tw`p-4 bg-white rounded-2xl shadow-lg shadow-black w-11/12`,
@@ -1053,7 +1056,7 @@ const AddDailyTaskScreen = () => {
                   <Text
                     style={[
                       tw`font-normal text-gray-500`,
-                      {fontSize: 12, letterSpacing: .5},
+                      {fontSize: 12, letterSpacing: 0.5},
                     ]}>
                     Add specific for
                   </Text>
@@ -1113,7 +1116,11 @@ const AddDailyTaskScreen = () => {
                 </View>
               </View>
               {/* Add Specific Day On */}
-              <View style={[tw`border-b border-blue-500 `,{borderColor:"#DEEAFF"}]}>
+              <View
+                style={[
+                  tw`border-b border-blue-500 `,
+                  {borderColor: '#DEEAFF'},
+                ]}>
                 <TouchableOpacity
                   onPress={toggleSpecificDayOn}
                   style={tw`flex-row items-center right-4 bottom-4`}>
@@ -1129,7 +1136,7 @@ const AddDailyTaskScreen = () => {
                   <Text
                     style={[
                       tw`font-normal text-gray-500`,
-                      {fontSize: 12, letterSpacing: .5},
+                      {fontSize: 12, letterSpacing: 0.5},
                     ]}>
                     Add Specific day on
                   </Text>
@@ -1143,7 +1150,12 @@ const AddDailyTaskScreen = () => {
                 end={{x: 0, y: 1}}
                 style={[
                   tw` mx-2 rounded-full shadow-sm bottom-10`,
-                  {width: 178, height: 30, backgroundColor: '#F7FAFF',left:122},
+                  {
+                    width: 178,
+                    height: 30,
+                    backgroundColor: '#F7FAFF',
+                    left: 122,
+                  },
                 ]}>
                 <View style={tw`flex-row  `}>
                   {['Week', 'Month', 'Year'].map(type => {
@@ -1157,8 +1169,7 @@ const AddDailyTaskScreen = () => {
                         disabled={!isSpecificDayOnSelected}
                         style={[
                           tw`flex-1 p-1.5 rounded-full`,
-                          isSelected &&
-                            tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
+                          isSelected && tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
                           !isSpecificDayOnSelected && tw`opacity-50`,
                         ]}>
                         <Text
@@ -1278,9 +1289,7 @@ const AddDailyTaskScreen = () => {
                   selectedDates={selectedDates}
                   selectedMonths={selectedMonths}
                   onSelectDate={(date: number) => setTempSelectedDate(date)}
-                  onSelectMonth={(month: string) =>
-                    setTempSelectedMonth(month)
-                  }
+                  onSelectMonth={(month: string) => setTempSelectedMonth(month)}
                   onCancel={() => setIsDateSeletorVisible(false)}
                   onAddDay={addedDates => {
                     // ইউনিক ডাটা চেক করার সঠিক পদ্ধতি
@@ -1295,8 +1304,7 @@ const AddDailyTaskScreen = () => {
                     const newEntries = uniqueDates.filter(
                       ({date, month}) =>
                         !selectedDates.some(
-                          (d, i) =>
-                            d === date && selectedMonths[i] === month,
+                          (d, i) => d === date && selectedMonths[i] === month,
                         ),
                     );
 
@@ -1319,7 +1327,7 @@ const AddDailyTaskScreen = () => {
                       prev.filter((_, i) => i !== index),
                     );
                   }}
-                    year={new Date().getFullYear()}
+                  year={new Date().getFullYear()}
                 />
               )}
               <View>
@@ -1340,11 +1348,7 @@ const AddDailyTaskScreen = () => {
                 <TouchableOpacity
                   onPress={() => setIsTaskOptionsModalVisible(false)}
                   style={[tw`p-3 rounded-lg bottom-2`, {left: 270}]}>
-                  <Icon
-                    name="chevron-down"
-                    size={20}
-                    color="#8D99AE"
-                  />
+                  <Icon name="chevron-down" size={20} color="#8D99AE" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -1364,16 +1368,13 @@ const AddDailyTaskScreen = () => {
                 {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
               ]}>
               <View
-                style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
-                <Icon
-                  name="checkmark-circle-outline"
-                  size={28}
-                  color="white"
-                  style={tw`mr-2`}
+                style={[tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,{width:276,height:80}]}>
+                <Image
+                  source={require('../../assets/images/Notification/AlreadyExistIcon.png')}
+                  style={[tw`left-4`, {width: 31, height: 48}]}
                 />
-                <View>
-                  <Text
-                    style={tw`text-white font-semibold text-base`}>
+                <View style={tw`left-12`}>
+                  <Text style={tw`text-white font-semibold text-base`}>
                     Task Already
                   </Text>
                   <Text style={tw`text-white text-xs`}>
@@ -1396,14 +1397,12 @@ const AddDailyTaskScreen = () => {
               {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
             ]}>
             <View
-              style={tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`}>
-              <Icon
-                name="checkmark-circle-outline"
-                size={28}
-                color="white"
-                style={tw`mr-2`}
-              />
-              <View>
+                style={[tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,{width:276,height:80}]}>
+                <Image
+                  source={require('../../assets/images/Notification/UpdatedIcon.png')}
+                  style={[tw``, {width: 58, height: 58}]}
+                />
+              <View style={tw`left-6`}>
                 <Text style={tw`text-white font-semibold text-base`}>
                   Task Saved!
                 </Text>
