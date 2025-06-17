@@ -219,7 +219,7 @@ export default function PremiumPackage() {
       </View>
 
       {/* Pricing Options */}
-     <View style={tw`flex-row justify-around mt-6 mx-2`}>
+     <View style={tw`flex-row justify-around mt-6 `}>
         <PricingBox 
           title="Monthly"
           price="$1"
