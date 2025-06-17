@@ -720,7 +720,7 @@ const AddDailyTaskScreen = () => {
             transparent={true}
             animationType="slide">
             <View
-              style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+              style={[tw`flex-1 justify-center items-center p-4`, {backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
               <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
                 <Text style={tw`text-lg font-bold mb-4`}>
                   Create Custom Task
