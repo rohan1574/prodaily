@@ -48,7 +48,7 @@ const ProfileManageScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPremiumColor, setSelectedPremiumColor] = useState('');
   const handleColorPress = (color: string) => {
-    if (color === 'blue' || color === 'black') {
+    if (color === '#3580FF' || color === '#27282A') {
       setSelectedColor(color); // Apply directly for free colors
     } else {
       setSelectedPremiumColor(color);
@@ -319,7 +319,7 @@ const ProfileManageScreen = () => {
           {themes && (
             <View style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
               <View style={tw`flex-row justify-center flex-wrap`}>
-                {['blue', 'black', 'red', 'green', 'yellow', 'pink'].map(
+                {['#3580FF', '#27282A', '#F7FAFF', '#DEEAFF', '#FFF7FA #FFDEEC', '#FFFFFF'].map(
                   color => (
                     <TouchableOpacity
                       key={color}
