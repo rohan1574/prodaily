@@ -371,6 +371,7 @@ const TodaysTaskToDoScreen = () => {
               style={[tw``, {width: 20, height: 22, color: '#DEEAFF'}]}
               resizeMode="contain"
             />
+            {/* FIXED: Added Text wrapper around the string */}
             <Text
               style={[
                 tw` font-light left-2`,
