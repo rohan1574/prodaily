@@ -370,7 +370,7 @@ const AllTaskListScreen = () => {
                 style={tw`bg-white p-2 mx-4 mb-3 top-6 rounded-lg`}>
                 <View style={tw`flex-row justify-between items-center`}>
                   {/* Left Section - Image & Name */}
-                  <View style={tw`flex-row items-center flex-shrink`}>
+                  <View style={[tw`flex-row items-center flex-shrink`]}>
                     {task.icon && (
                       <Image
                         source={task.icon}

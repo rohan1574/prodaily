@@ -800,7 +800,10 @@ const AddDailyTaskScreen = () => {
             transparent={true}
             animationType="slide">
             <View
-              style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+              style={[
+                tw`flex-1  justify-center items-center p-4`,
+                {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
+              ]}>
               <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
                 <Text style={tw`text-lg font-bold mb-4`}>
                   Create Custom Category
@@ -941,10 +944,10 @@ const AddDailyTaskScreen = () => {
             onRequestClose={() => setIsEditModalVisible(false)}>
             <View
               style={[
-                tw`flex-1 justify-center items-center `,
+                tw`flex-1 justify-center items-center p-4`,
                 {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
               ]}>
-              <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
+              <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
                 <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
 
                 <TextInput
@@ -957,18 +960,17 @@ const AddDailyTaskScreen = () => {
                   placeholder="Enter new task name"
                   autoFocus={true}
                 />
-
-                <View style={tw`flex-row justify-between`}>
+                <View style={tw`flex-row justify-between mt- gap-3`}>
                   <TouchableOpacity
                     onPress={() => setIsEditModalVisible(false)}
-                    style={tw`px-4 py-2 bg-gray-200 rounded`}>
-                    <Text>Cancel</Text>
+                    style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                    <Text style={tw`text-white font-medium`}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     onPress={saveEditedTask}
-                    style={tw`px-4 py-2 bg-blue-500 rounded`}>
-                    <Text style={tw`text-white`}>Save</Text>
+                    style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>
+                    <Text style={tw`text-white font-medium`}>Save Task</Text>
                   </TouchableOpacity>
                 </View>
               </View>
