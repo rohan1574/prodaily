@@ -779,7 +779,7 @@ const AddDailyTaskScreen = () => {
                 <View style={tw`flex-row justify-between mt-6 gap-3`}>
                   <TouchableOpacity
                     onPress={() => setIsCustomTaskModalVisible(false)}
-                    style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-cente`}>
+                    style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
                     <Text style={tw`text-white font-medium`}>Cancel</Text>
                   </TouchableOpacity>
 
