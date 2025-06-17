@@ -1,13 +1,98 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {s as tw} from 'react-native-wind';
 import Svg, {Defs, RadialGradient, Rect, Stop} from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-
+type PricingBoxProps = {
+  title: string;
+  price: string;
+  billingText: string;
+  value: string;
+  isBestDeal?: boolean;
+};
 export default function PremiumPackage() {
    const navigation = useNavigation();
+     const [selectedOption, setSelectedOption] = useState('lifetime'); // Default selected
+
+  const PricingBox = ({ 
+    title, 
+    price, 
+    billingText, 
+    value, 
+    isBestDeal = false 
+  }: PricingBoxProps) => (
+    <TouchableOpacity 
+      onPress={() => setSelectedOption(value)}
+      style={tw`mx-1`}
+      activeOpacity={0.7}
+    >
+      <LinearGradient
+        colors={selectedOption === value ? ['#3580FF', '#3580FF'] : ['#FFF', '#FFF']}
+        style={{
+          padding: 1,
+          borderRadius: 16,
+          shadowColor: '#3580FF',
+          shadowOffset: {width: 2, height: 4},
+          shadowOpacity: 0.4,
+          shadowRadius: 6,
+          elevation: 6,
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: selectedOption === value ? '#3580FF' : '#FFF',
+            borderRadius: 16,
+            paddingVertical: 16,
+            paddingHorizontal: 20,
+            width: 110,
+            alignItems: 'center',
+          }}
+        >
+          {isBestDeal && (
+            <View style={[tw`absolute -top-3 px-2 py-1 rounded-full`, {backgroundColor: '#DEEAFF'}]}>
+              <Text style={[tw`font-light`, {fontSize: 10, color: '#2B2D42'}]}>
+                Best Deal
+              </Text>
+            </View>
+          )}
+          
+          <Text style={[
+            tw`font-normal mb-2`,
+            {
+              fontSize: 16,
+              letterSpacing: 1,
+              color: selectedOption === value ? 'white' : 'black'
+            }
+          ]}>
+            {title}
+          </Text>
+          
+          <Text style={[
+            tw`font-bold`,
+            {
+              fontSize: 22,
+              color: selectedOption === value ? 'white' : '#8D99AE'
+            }
+          ]}>
+            {price}
+          </Text>
+          
+          <Text style={[
+            tw`font-light`,
+            {
+              fontSize: 10,
+              color: selectedOption === value ? '#DEEAFF' : '#8D99AE'
+            }
+          ]}>
+            {billingText}
+          </Text>
+        </View>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView style={tw`flex-1 bg-sky-50`}>
       <View style={tw`items-center`}>
@@ -103,8 +188,8 @@ export default function PremiumPackage() {
             Premium Features
           </Text>
           <Image
-            source={require('../../assets/images/bage.png')}
-            style={[tw`w-4 h-4`, {top: 8, width: 23, height: 21, right: 12}]}
+            source={require('../../assets/images/PremiumBadge.png')}
+            style={[tw`w-4 h-4`, {top: 6, width: 26, height: 24, right: 12}]}
           />
         </View>
         <View style={tw`top-4 `}>
@@ -134,158 +219,40 @@ export default function PremiumPackage() {
       </View>
 
       {/* Pricing Options */}
-      <View style={tw`flex-row justify-around mt-6 mx-2`}>
-        {/* Monthly Box */}
-        <LinearGradient
-          colors={['#FFF', '#FFF']}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 0}}
-          style={{
-            padding: 1, // Border thickness
-            borderRadius: 16,
-            shadowColor: '#3580FF',
-            shadowOffset: {width: 2, height: 4}, // drop shadow
-            shadowOpacity: 0.4,
-            shadowRadius: 6,
-            elevation: 6,
-          }}>
-          {/* Inner box with background and inner shadow simulation */}
-          <View
-            style={{
-              backgroundColor: '#FFF',
-              borderRadius: 16,
-              paddingVertical: 16,
-              paddingHorizontal: 20,
-              width: 110,
-              alignItems: 'center',
-              // Inner shadow simulation using background gradient (not perfect)
-              shadowColor: '#3580FF',
-              shadowOffset: {width: 0, height: -4},
-              shadowOpacity: 0.3,
-              shadowRadius: 4,
-            }}>
-            <Text
-              style={[
-                tw`font-normal text-black mb-2`,
-                {fontSize: 16, letterSpacing: 1},
-              ]}>
-              Monthly
-            </Text>
-            <Text style={[tw`font-bold `, {color: '#8D99AE', fontSize: 22}]}>
-              $1
-            </Text>
-            <Text style={[tw`font-light`, {fontSize: 10, color: '#8D99AE'}]}>
-              Billed monthly
-            </Text>
-          </View>
-        </LinearGradient>
-        {/* year */}
-        <LinearGradient
-          colors={['#FFF', '#FFF']}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 0}}
-          style={{
-            padding: 1, // Border thickness
-            borderRadius: 16,
-            shadowColor: '#3580FF',
-            shadowOffset: {width: 2, height: 4}, // drop shadow
-            shadowOpacity: 0.4,
-            shadowRadius: 6,
-            elevation: 6,
-          }}>
-          {/* Inner box with background and inner shadow simulation */}
-          <View
-            style={{
-              backgroundColor: '#FFF',
-              borderRadius: 16,
-              paddingVertical: 16,
-              paddingHorizontal: 20,
-              width: 110,
-              alignItems: 'center',
-              // Inner shadow simulation using background gradient (not perfect)
-              shadowColor: '#3580FF',
-              shadowOffset: {width: 0, height: -4},
-              shadowOpacity: 0.3,
-              shadowRadius: 4,
-            }}>
-            <Text
-              style={[
-                tw`font-normal text-black mb-2`,
-                {fontSize: 16, letterSpacing: 1},
-              ]}>
-              Yearly
-            </Text>
-            <Text style={[tw`font-bold `, {color: '#8D99AE', fontSize: 22}]}>
-              $10
-            </Text>
-            <Text style={[tw`font-light`, {fontSize: 10, color: '#8D99AE'}]}>
-              Billed Yearly
-            </Text>
-          </View>
-        </LinearGradient>
-        {/* unlim */}
-        <LinearGradient
-          colors={['#FFF', '#FFF']}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 0}}
-          style={{
-            padding: 1, // Border thickness
-            borderRadius: 16,
-            shadowColor: '#3580FF',
-            shadowOffset: {width: 2, height: 4}, // drop shadow
-            shadowOpacity: 0.4,
-            shadowRadius: 6,
-            elevation: 6,
-          }}>
-          {/* Inner box with background and inner shadow simulation */}
-          <View
-            style={{
-              backgroundColor: '#3580FF',
-              borderRadius: 16,
-              paddingVertical: 16,
-              paddingHorizontal: 20,
-              width: 110,
-              alignItems: 'center',
-              // Inner shadow simulation using background gradient (not perfect)
-              shadowColor: '#3580FF',
-              shadowOffset: {width: 0, height: -4},
-              shadowOpacity: 0.3,
-              shadowRadius: 4,
-            }}>
-            <View
-              style={[
-                tw`absolute -top-3 px-2 py-1 rounded-full`,
-                {backgroundColor: '#DEEAFF'},
-              ]}>
-              <Text
-                style={[
-                  tw` font-light `,
-                  {fontSize: 10, color: '#2B2D42', letterSpacing: 1},
-                ]}>
-                Best Deal
-              </Text>
-            </View>
-            <Text
-              style={[
-                tw`font-normal text-black mb-2`,
-                {fontSize: 16, letterSpacing: 1},
-              ]}>
-              Lifetime
-            </Text>
-            <Text style={[tw`font-bold text-white`, {fontSize: 22}]}>$20</Text>
-            <Text style={[tw`font-light`, {fontSize: 10, color: '#2B2D42'}]}>
-              Billed once
-            </Text>
-          </View>
-        </LinearGradient>
+     <View style={tw`flex-row justify-around mt-6 mx-2`}>
+        <PricingBox 
+          title="Monthly"
+          price="$1"
+          billingText="Billed monthly"
+          value="monthly"
+        />
+        
+        <PricingBox 
+          title="Yearly"
+          price="$10"
+          billingText="Billed Yearly"
+          value="yearly"
+        />
+        
+        <PricingBox 
+          title="Lifetime"
+          price="$20"
+          billingText="Billed once"
+          value="lifetime"
+          isBestDeal={true}
+        />
       </View>
 
       {/* Continue Button */}
-      <TouchableOpacity style={tw`mx-4 top-8 bg-blue-600 py-3 rounded-full`}>
-        <Text style={[tw`text-center text-white  font-normal`, {fontSize: 14}]}>
+      <TouchableOpacity 
+        style={tw`mx-4 mt-8 bg-blue-600 py-3 rounded-full`}
+        onPress={() => console.log('Selected:', selectedOption)}
+      >
+        <Text style={[tw`text-center text-white font-normal`, {fontSize: 14}]}>
           Continue
         </Text>
       </TouchableOpacity>
+    
     </ScrollView>
   );
 }
