@@ -256,21 +256,21 @@ const AllTaskListScreen = () => {
       transparent={true}
       animationType="fade"
       onRequestClose={() => setDeleteModalVisible(false)}>
-      <View style={tw`flex-1 bg-black/50 justify-center items-center p-4`}>
+      <View style={[tw`flex-1 bg-black/50 justify-center items-center p-4`,{backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
         <View style={tw`bg-white p-6 rounded-xl w-full max-w-80`}>
           <Text style={tw`text-lg font-bold mb-4 text-center`}>
             Are you sure you want to delete this task?
           </Text>
 
-          <View style={tw`flex-row justify-between gap-3`}>
+          <View style={tw`flex-row justify-between `}>
             <TouchableOpacity
-              style={tw`flex-1 bg-gray-300 py-2  rounded-lg`}
+              style={tw`flex-1 bg-gray-300 py-2 mx-1  rounded-lg`}
               onPress={() => setDeleteModalVisible(false)}>
               <Text style={tw`text-center`}>Cancel</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={tw`flex-1 bg-red-500 py-2 rounded-lg`}
+              style={tw`flex-1 bg-red-500 py-2 mx-1 rounded-lg`}
               onPress={async () => {
                 if (!taskToDelete) return;
                 const updatedTasks = tasks.filter(
