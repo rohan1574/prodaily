@@ -966,7 +966,6 @@ const AddDailyTaskScreen = () => {
                     style={tw`flex-1 bg-red-500 px-4 py-3 mx-2 rounded-lg items-center`}>
                     <Text style={tw`text-white font-medium`}>Cancel</Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={saveEditedTask}
                     style={tw`flex-1 bg-blue-500 px-4 py-3 mx-2 rounded-lg items-center`}>

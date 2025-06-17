@@ -5,13 +5,11 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   Image,
-  Animated,
   ImageBackground,
   Modal,
   Pressable,
+  Linking 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
@@ -72,6 +70,18 @@ const ProfileManageScreen = () => {
   const [selectedOption, setSelectedOption] = useState<
     'App Issue' | 'Suggestion'
   >('App Issue');
+    // Mailto handler function
+  const handleEmailPress = () => {
+    const email = 'mrrony1574@gmail.com';
+    const subject = selectedOption;
+    const body = 'Hello, I wanted to discuss...';
+    
+    const url = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    Linking.openURL(url).catch(err => 
+      console.error('Failed to open email client:', err)
+    );
+  };
   return (
     <SafeAreaView style={tw`flex-1 bg-blue-500`}>
       <View style={tw`flex-1`}>
@@ -405,7 +415,7 @@ const ProfileManageScreen = () => {
               </TouchableOpacity>
             ))}
           </View>
-          <TouchableOpacity
+          <TouchableOpacity onPress={handleEmailPress}
             style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-16 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
