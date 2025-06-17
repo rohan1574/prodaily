@@ -720,7 +720,10 @@ const AddDailyTaskScreen = () => {
             transparent={true}
             animationType="slide">
             <View
-              style={[tw`flex-1 justify-center items-center p-4`, {backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
+              style={[
+                tw`flex-1 justify-center items-center p-4`,
+                {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
+              ]}>
               <View style={tw`bg-white p-6 rounded-xl w-full max-w-96`}>
                 <Text style={tw`text-lg font-bold mb-4`}>
                   Create Custom Task
@@ -936,7 +939,11 @@ const AddDailyTaskScreen = () => {
             transparent={true}
             animationType="slide"
             onRequestClose={() => setIsEditModalVisible(false)}>
-            <View style={[tw`flex-1 justify-center items-center `, {backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
+            <View
+              style={[
+                tw`flex-1 justify-center items-center `,
+                {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
+              ]}>
               <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
                 <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
 
@@ -1006,7 +1013,7 @@ const AddDailyTaskScreen = () => {
                 },
               ]}>
               {/* Header */}
-              <View style={tw`flex-row justify-between `}>
+              <View style={tw`flex-row justify-between right-2`}>
                 <View style={tw`flex-row items-center mb-6`}>
                   <Image
                     source={
@@ -1014,7 +1021,7 @@ const AddDailyTaskScreen = () => {
                       customTasksData[selectedCategory]?.[expandedTask || '']
                     }
                     style={[
-                      tw`mr-3`,
+                      tw``,
                       {width: 30, height: 30, tintColor: selectedColor},
                     ]} // সংশোধিত লাইন
                   />
@@ -1368,7 +1375,10 @@ const AddDailyTaskScreen = () => {
                 {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
               ]}>
               <View
-                style={[tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,{width:276,height:80}]}>
+                style={[
+                  tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,
+                  {width: 276, height: 80},
+                ]}>
                 <Image
                   source={require('../../assets/images/Notification/AlreadyExistIcon.png')}
                   style={[tw`left-4`, {width: 31, height: 48}]}
@@ -1397,11 +1407,14 @@ const AddDailyTaskScreen = () => {
               {backgroundColor: 'rgba(53, 128, 255, 0.2)'},
             ]}>
             <View
-                style={[tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,{width:276,height:80}]}>
-                <Image
-                  source={require('../../assets/images/Notification/UpdatedIcon.png')}
-                  style={[tw``, {width: 58, height: 58}]}
-                />
+              style={[
+                tw`flex-row items-center bg-blue-500 rounded-full px-4 py-2`,
+                {width: 276, height: 80},
+              ]}>
+              <Image
+                source={require('../../assets/images/Notification/UpdatedIcon.png')}
+                style={[tw``, {width: 58, height: 58}]}
+              />
               <View style={tw`left-6`}>
                 <Text style={tw`text-white font-semibold text-base`}>
                   Task Saved!
