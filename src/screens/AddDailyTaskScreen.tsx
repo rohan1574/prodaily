@@ -936,7 +936,7 @@ const AddDailyTaskScreen = () => {
             transparent={true}
             animationType="slide"
             onRequestClose={() => setIsEditModalVisible(false)}>
-            <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+            <View style={[tw`flex-1 justify-center items-center `, {backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
               <View style={tw`bg-white p-6 rounded-xl w-4/5`}>
                 <Text style={tw`text-lg font-bold mb-4`}>Edit Task Name</Text>
 
@@ -977,7 +977,7 @@ const AddDailyTaskScreen = () => {
           onRequestClose={() => setIsTaskOptionsModalVisible(false)}>
           <View
             style={[
-              tw`flex-1 justify-center items-center bg-black/50`,
+              tw`flex-1 justify-center items-center `,
               {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
             ]}>
             <View
