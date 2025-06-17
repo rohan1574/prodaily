@@ -978,7 +978,7 @@ const AddDailyTaskScreen = () => {
           <View
             style={[
               tw`flex-1 justify-center items-center bg-black/50`,
-              {backgroundColor: 'rgba(32, 41, 56, 0.7)'},
+              {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
             ]}>
             <View
               style={[
@@ -1006,7 +1006,7 @@ const AddDailyTaskScreen = () => {
                 },
               ]}>
               {/* Header */}
-              <View style={tw`flex-row justify-between`}>
+              <View style={tw`flex-row justify-between `}>
                 <View style={tw`flex-row items-center mb-6`}>
                   <Image
                     source={
@@ -1033,15 +1033,15 @@ const AddDailyTaskScreen = () => {
                       name={isStarred ? 'star' : 'star-outline'}
                       size={20}
                       color={isStarred ? '#3580FF' : 'gray'}
-                      style={tw`mr-2`}
+                      style={tw``}
                     />
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Add Specific For */}
-              <View style={tw`bottom-3`}>
-                <View style={tw`flex-row items-center mb-4 right-4`}>
+              <View style={tw`bottom-3 `}>
+                <View style={tw`flex-row items-center mb-4 right-3`}>
                   <TouchableOpacity onPress={handleToggleSpecificFor}>
                     <Icon
                       name={
@@ -1055,15 +1055,15 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                   <Text
                     style={[
-                      tw`font-normal text-gray-500`,
-                      {fontSize: 12, letterSpacing: 0.5},
+                      tw`font-normal text-gray-500 mr-1`,
+                      {fontSize: 12, letterSpacing: 0.4},
                     ]}>
                     Add specific for
                   </Text>
 
                   <TextInput
                     style={[
-                      tw`px-1 py-1 border rounded text-center left-1`,
+                      tw`mr-1 py-1 border rounded text-center `,
                       {
                         borderColor: '#E3E8F1',
                         width: 30,
@@ -1086,8 +1086,8 @@ const AddDailyTaskScreen = () => {
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 1}}
                     style={[
-                      tw`flex-row rounded-full mx-2`,
-                      {width: 170, height: 30},
+                      tw`flex-row rounded-full `,
+                      {width: 165, height: 30},
                     ]}>
                     {['Days', 'Weeks', 'Months'].map(type => {
                       const isSelected = specificFor === type;
@@ -1118,7 +1118,7 @@ const AddDailyTaskScreen = () => {
               {/* Add Specific Day On */}
               <View
                 style={[
-                  tw`border-b border-blue-500 `,
+                  tw`border-b border-blue-500 left-1`,
                   {borderColor: '#DEEAFF'},
                 ]}>
                 <TouchableOpacity
@@ -1168,7 +1168,7 @@ const AddDailyTaskScreen = () => {
                         onPress={() => handleDayTypeClick(lowerType)}
                         disabled={!isSpecificDayOnSelected}
                         style={[
-                          tw`flex-1 p-1.5 rounded-full`,
+                          tw`flex-1 p-1 rounded-full`,
                           isSelected && tw`bg-blue-500 border border-blue-500`, // সিলেক্টেড স্টাইল
                           !isSpecificDayOnSelected && tw`opacity-50`,
                         ]}>
@@ -1188,7 +1188,7 @@ const AddDailyTaskScreen = () => {
               </LinearGradient>
               {/* Set Daily Target */}
               <View style={tw`bottom-2`}>
-                <View style={tw`flex-row items-center right-4`}>
+                <View style={tw`flex-row items-center right-3`}>
                   <TouchableOpacity onPress={toggleDailyTarget}>
                     <Icon
                       name={
@@ -1209,7 +1209,7 @@ const AddDailyTaskScreen = () => {
                   </Text>
                   <TextInput
                     style={[
-                      tw`px-1 py-1 border rounded text-center left-3`,
+                      tw`px-1 py-1 border rounded text-center left-1`,
                       {
                         borderColor: '#E3E8F1',
                         width: 40,
@@ -1230,7 +1230,7 @@ const AddDailyTaskScreen = () => {
                     colors={['#F7FAFF', '#DEEAFF']}
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 1}}
-                    style={[tw`flex-row rounded-full left-4 `]}>
+                    style={[tw`flex-row rounded-full left-2 `]}>
                     {options.map(type => {
                       const isSelected = targetType === type;
 
@@ -1348,7 +1348,7 @@ const AddDailyTaskScreen = () => {
                 <TouchableOpacity
                   onPress={() => setIsTaskOptionsModalVisible(false)}
                   style={[tw`p-3 rounded-lg bottom-2`, {left: 270}]}>
-                  <Icon name="chevron-down" size={20} color="#8D99AE" />
+                  <Icon name="chevron-up" size={20} color="#8D99AE" />
                 </TouchableOpacity>
               </View>
             </View>
