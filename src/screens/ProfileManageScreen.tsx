@@ -393,7 +393,7 @@ const ProfileManageScreen = () => {
           <Text style={tw`text-black text-base`}>Sync Data</Text>
         </TouchableOpacity>
         {/* Support Section */}
-        <View style={[tw`bg-gray-200 rounded-lg p-4 mx-4 shadow-md top-4`]}>
+        <View style={[tw`bg-gray-200 rounded-lg p-4 shadow-md top-4`]}>
           <View style={tw`flex-row justify-around border-b border-white pb-3`}>
             {['App Issue', 'Suggestion'].map(option => (
               <TouchableOpacity
@@ -416,7 +416,7 @@ const ProfileManageScreen = () => {
             ))}
           </View>
           <TouchableOpacity onPress={handleEmailPress}
-            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-16 w-32`}>
+            style={tw`bg-blue-500 py-2 mt-4 rounded-full items-center left-20 w-32`}>
             <Text style={tw`text-white font-normal text-sm`}>Contact Us</Text>
           </TouchableOpacity>
           <Text style={tw`text-xs text-gray-400 text-center mt-3`}>
