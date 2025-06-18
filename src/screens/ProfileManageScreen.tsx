@@ -540,7 +540,7 @@ const MenuItem = ({
   <TouchableOpacity
     onPress={onPress}
     style={tw`flex-row items-center justify-between p-3`}>
-    <View style={tw`flex-row items-center left-`}>
+    <View style={tw`flex-row items-center left-1`}>
       <Icon name={icon} size={24} color="#3580FF" style={tw`mr-2`} />
       <Text style={tw`text-gray-800 text-base`}>{text}</Text>
     </View>
