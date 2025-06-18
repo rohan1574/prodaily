@@ -8,7 +8,7 @@ import Svg, {Circle, Text as SvgText, TSpan} from 'react-native-svg';
 import BottomNavigation from './BottomNavigation';
 import {Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { useColorContext } from '../context/ColorContext'; // Import the color context
+import {useColorContext} from '../context/ColorContext'; // Import the color context
 
 const {width} = Dimensions.get('window');
 
@@ -46,7 +46,7 @@ const CircularProgress = ({
   strokeWidth = 8,
   backgroundColor = '#D3E3FC',
   progressColor = '#3580FF',
-  textColor = 'black'
+  textColor = 'black',
 }: CircularProgressProps) => {
   const size = radius * 2;
   const circumference = 2 * Math.PI * radius;
@@ -100,35 +100,42 @@ const MyStatisticsScreen = () => {
   const [selectedTab, setSelectedTab] = useState<
     'Weekly' | 'Monthly' | 'Yearly'
   >('Weekly');
-  
- 
-   {/* Get the selected color from context */}
-  const { selectedColor } = useColorContext();
-  {/* Determine background and text colors based on selected theme */}
-  
- const isDarkTheme = selectedColor === '#3580FF';
-let backgroundColor = selectedColor;
-let textColor = '#000000';
-let cardBackground = '#FFFFFF';
-let secondaryTextColor = '#8D99AE';
-let progressBgColor = '#D3E3FC';
-let progressColor = '#3580FF';
- {/* Custom theme override for specific colors */}
-if (selectedColor === '#27282A') {
-  textColor = '#FFFFFF';
-  cardBackground = '#3A3A3A';
-  secondaryTextColor = '#B0B0B0';
-  progressBgColor = '#4A4A4A';
-  progressColor = '#F2247A';
-} else if (selectedColor === '#F2247A') {
-  {/*  Custom pink theme */}
-  textColor = '#27282A';
-  cardBackground = '#F2C66D';
-  secondaryTextColor = '#7441D9';
-  progressBgColor = '#E58139';
-  progressColor = '#30BF78';
-}
 
+  {
+    /* Get the selected color from context */
+  }
+  const {selectedColor} = useColorContext();
+  {
+    /* Determine background and text colors based on selected theme */
+  }
+
+  const isDarkTheme = selectedColor === '#3580FF';
+  let backgroundColor = selectedColor;
+  let textColor = '#000000';
+  let cardBackground = '#FFFFFF';
+  let secondaryTextColor = '#8D99AE';
+  let progressBgColor = '#D3E3FC';
+  let progressColor = '#3580FF';
+  {
+    /* Custom theme override for specific colors */
+  }
+  if (selectedColor === '#27282A') {
+    textColor = '#FFFFFF';
+    cardBackground = '#3A3A3A';
+    secondaryTextColor = '#B0B0B0';
+    progressBgColor = '#4A4A4A';
+    progressColor = '#F2247A';
+  } else if (selectedColor === '#F2247A') {
+    {
+      /*  Custom pink theme */
+    }
+    backgroundColor = '#F7FAFF';
+    textColor = '#F2247A';
+    cardBackground = '#FFFFFF';
+    secondaryTextColor = '#8D99AE';
+    progressBgColor = '#F2247A';
+    progressColor = '#30BF78';
+  }
 
   const getLastPeriodText = () => {
     switch (selectedTab) {
@@ -188,14 +195,14 @@ if (selectedColor === '#27282A') {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={[tw`flex-1`, { backgroundColor }]}>
+    <SafeAreaView style={[tw`flex-1`, {backgroundColor}]}>
       <View style={tw`flex-1`}>
-        <ScrollView contentContainerStyle={[tw`p-4`, { paddingBottom: 170 }]}>
+        <ScrollView contentContainerStyle={[tw`p-4`, {paddingBottom: 170}]}>
           {/* হেডার সেকশন */}
           <Text
             style={[
               tw`font-bold`,
-              { fontSize: 20, letterSpacing: 1, color: textColor },
+              {fontSize: 20, letterSpacing: 1, },
             ]}>
             My Statistics
           </Text>
@@ -213,25 +220,36 @@ if (selectedColor === '#27282A') {
           </Text>
 
           {/* টপ স্ট্যাটিস্টিক্স */}
-          <View style={[tw`rounded-lg top-4`, { height: 320, backgroundColor: cardBackground }]}>
+          <View
+            style={[
+              tw`rounded-lg top-4`,
+              {height: 320, backgroundColor: cardBackground},
+            ]}>
             <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
               <View
                 style={[
                   tw`rounded-lg justify-center items-center`,
-                  { 
-                    width: width * 0.42, 
+                  {
+                    width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#3580FF'
+                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#F2247A',
                   },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal bottom-4 text-xs `,
-                    { color: isDarkTheme ? '#CCCCCC' : '#DEEAFF', letterSpacing: 1 },
+                    {
+                      color: isDarkTheme ? '#CCCCCC' : '#DEEAFF',
+                      letterSpacing: 1,
+                    },
                   ]}>
                   All Time Completed
                 </Text>
-                <Text style={[tw`text-2xl font-bold mt-2`, { color: isDarkTheme ? '#FFFFFF' : '#FFFFFF' }]}>
+                <Text
+                  style={[
+                    tw`text-2xl font-bold mt-2`,
+                    {color: isDarkTheme ? '#FFFFFF' : '#FFFFFF'},
+                  ]}>
                   {statsData.allTimeCompleted}
                 </Text>
               </View>
@@ -239,20 +257,27 @@ if (selectedColor === '#27282A') {
               <View
                 style={[
                   tw`rounded-lg justify-center items-center`,
-                  { 
-                    width: width * 0.42, 
+                  {
+                    width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#3580FF'
+                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#F2247A',
                   },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal text-xs bottom-4`,
-                    { color: isDarkTheme ? '#CCCCCC' : '#DEEAFF', letterSpacing: 0.5 },
+                    {
+                      color: isDarkTheme ? '#CCCCCC' : '#DEEAFF',
+                      letterSpacing: 0.5,
+                    },
                   ]}>
                   Daily Task Into Habit
                 </Text>
-                <Text style={[tw`text-2xl font-bold`, { color: isDarkTheme ? '#FFFFFF' : '#FFFFFF' }]}>
+                <Text
+                  style={[
+                    tw`text-2xl font-bold`,
+                    {color: isDarkTheme ? '#FFFFFF' : '#FFFFFF'},
+                  ]}>
                   {statsData.dailyHabit}
                 </Text>
               </View>
@@ -262,24 +287,26 @@ if (selectedColor === '#27282A') {
               <Text
                 style={[
                   tw`font-medium mb-4`,
-                  { fontSize: 16, letterSpacing: 1, color: textColor },
+                  {fontSize: 16, letterSpacing: 1, },
                 ]}>
                 Overall Score
               </Text>
-              <CircularProgress 
-                percentage={statsData.successScore} 
+              <CircularProgress
+                percentage={statsData.successScore}
                 backgroundColor={progressBgColor}
                 progressColor={progressColor}
                 textColor={textColor}
               />
             </View>
           </View>
-          
-          <View style={[tw`top-8 rounded-lg`, { backgroundColor: cardBackground }]}>
+
+          <View
+            style={[tw`top-8 rounded-lg`, {backgroundColor: cardBackground}]}>
             <View style={tw`h-24 rounded-lg`}>
               <View
-                style={[tw`flex-row mx-2 rounded-full shadow-sm top-5`, 
-                  { backgroundColor: isDarkTheme ? '#5A5A5A' : '#E2E8F0' }
+                style={[
+                  tw`flex-row mx-2 rounded-full shadow-sm top-5`,
+                  {backgroundColor: isDarkTheme ? '#5A5A5A' : '#E2E8F0'},
                 ]}>
                 {['Weekly', 'Monthly', 'Yearly'].map(tab => (
                   <TouchableOpacity
@@ -287,19 +314,20 @@ if (selectedColor === '#27282A') {
                     onPress={() =>
                       setSelectedTab(tab as 'Weekly' | 'Monthly' | 'Yearly')
                     }
-                    style={tw`flex-1 p-2 rounded-full ${
-                      selectedTab === tab 
-                        ? isDarkTheme 
-                          ? 'bg-pink-500' 
-                          : 'bg-blue-500' 
-                        : 'bg-transparent'
-                    }`}>
+                    style={[
+                      tw`flex-1 p-2 rounded-full`,
+                      selectedTab === tab
+                        ? isDarkTheme
+                          ? tw`bg-pink-500`
+                          : {backgroundColor: '#F2247A'}
+                        : tw`bg-transparent`,
+                    ]}>
                     <Text
                       style={[
-                        tw`text-center text-sm font-normal`,
+                        tw`text-center text-white`,
                         selectedTab === tab
-                          ? tw`text-white font-semibold`
-                          : { color: secondaryTextColor },
+                          ? tw`font-bold`
+                          : tw`font-normal text-gray-400`,
                       ]}>
                       {tab}
                     </Text>
@@ -311,10 +339,14 @@ if (selectedColor === '#27282A') {
             <View
               style={[
                 tw`shadow-lg rounded-lg p-4 bottom-4`,
-                { height: 145, backgroundColor: cardBackground },
+                {height: 145, backgroundColor: cardBackground},
               ]}>
               {/* last */}
-              <Text style={[tw`font-medium text-base mb-2 bottom-4`, { color: textColor }]}>
+              <Text
+                style={[
+                  tw`font-medium text-base mb-2 bottom-4`,
+                 ,
+                ]}>
                 {getLastPeriodText()}
               </Text>
               <View style={tw`flex-row items-center justify-between`}>
@@ -333,12 +365,12 @@ if (selectedColor === '#27282A') {
                         fontSize: 14,
                         lineHeight: 20,
                         letterSpacing: 1,
-                        color: textColor,
+                        
                       },
                     ]}>
                     Task{'\n'}Completed
                   </Text>
-                  <Text style={[tw`text-xs`, { color: secondaryTextColor }]}>
+                  <Text style={[tw`text-xs`, {color: secondaryTextColor}]}>
                     {statsData.completed} of {statsData.totalTasks}
                   </Text>
                 </View>
@@ -346,9 +378,9 @@ if (selectedColor === '#27282A') {
                   <Text
                     style={[
                       tw`font-normal text-center top-1`,
-                      { 
+                      {
                         fontSize: 12,
-                        color: secondaryTextColor
+                        color: secondaryTextColor,
                       },
                     ]}>
                     {statsData.successScore > 70
@@ -358,15 +390,15 @@ if (selectedColor === '#27282A') {
                   <TouchableOpacity
                     style={[
                       tw`p-2 rounded-xl mx-4 top-3 items-center`,
-                      { backgroundColor: isDarkTheme ? '#5A5A5A' : '#F1F7FF' },
+                      {backgroundColor: isDarkTheme ? '#5A5A5A' : '#F1F7FF'},
                     ]}>
                     <Text
                       style={[
                         tw`font-medium`,
-                        { 
-                          color: isDarkTheme ? '#F2247A' : '#3580FF', 
-                          fontSize: 11, 
-                          letterSpacing: 1 
+                        {
+                          color:  textColor,
+                          fontSize: 11,
+                          letterSpacing: 1,
                         },
                       ]}>
                       Follow
@@ -378,17 +410,21 @@ if (selectedColor === '#27282A') {
           </View>
 
           {/* হ্যাবিট সামারি */}
-          <View style={[tw`p-4 rounded-lg top-12`, { backgroundColor: cardBackground }]}>
+          <View
+            style={[
+              tw`p-4 rounded-lg top-12`,
+              {backgroundColor: cardBackground},
+            ]}>
             <View style={tw`flex-row justify-between mb-6`}>
               <View>
                 <Text
                   style={[
                     tw`font-medium`,
-                    { 
-                      fontSize: 16, 
-                      letterSpacing: 1, 
+                    {
+                      fontSize: 16,
+                      letterSpacing: 1,
                       lineHeight: 20,
-                      color: textColor
+                     
                     },
                   ]}>
                   Habits
@@ -396,12 +432,12 @@ if (selectedColor === '#27282A') {
                 <Text
                   style={[
                     tw`font-normal`,
-                    { 
-                      fontSize: 12, 
-                      letterSpacing: 0, 
-                      lineHeight: 20, 
+                    {
+                      fontSize: 12,
+                      letterSpacing: 0,
+                      lineHeight: 20,
                       left: 1,
-                      color: secondaryTextColor
+                      color: secondaryTextColor,
                     },
                   ]}>
                   Summary
@@ -411,9 +447,9 @@ if (selectedColor === '#27282A') {
                 <Text
                   style={[
                     tw`text-xs font-normal`,
-                    { 
+                    {
                       letterSpacing: 1,
-                      color: secondaryTextColor
+                      color: secondaryTextColor,
                     },
                   ]}>
                   More Details
@@ -434,7 +470,7 @@ if (selectedColor === '#27282A') {
                   ]}>
                   SUCCESS SCORE
                 </Text>
-                <Text style={[tw`text-lg font-bold`, { color: textColor }]}>
+                <Text style={[tw`text-lg font-bold`, ]}>
                   {statsData.successScore}%
                 </Text>
               </View>
@@ -452,7 +488,11 @@ if (selectedColor === '#27282A') {
                   ]}>
                   COMPLETED
                 </Text>
-                <Text style={[tw`text-lg font-bold`, { color: isDarkTheme ? '#F2247A' : '#3580FF' }]}>
+                <Text
+                  style={[
+                    tw`text-lg font-bold`,
+                    {color: isDarkTheme ? '#F2247A' : '#F2247A'},
+                  ]}>
                   {statsData.completed}
                 </Text>
               </View>
@@ -470,7 +510,7 @@ if (selectedColor === '#27282A') {
                   ]}>
                   FAILED
                 </Text>
-                <Text style={[tw`text-lg font-bold`, { color: textColor }]}>
+                <Text style={[tw`text-lg font-bold`, ]}>
                   {statsData.totalTasks - statsData.completed}
                 </Text>
               </View>
@@ -488,7 +528,11 @@ if (selectedColor === '#27282A') {
                   ]}>
                   BEST STREAK DAY
                 </Text>
-                <Text style={[tw`text-lg font-bold`, { color: isDarkTheme ? '#F2247A' : '#3580FF' }]}>
+                <Text
+                  style={[
+                    tw`text-lg font-bold`,
+                    {color: isDarkTheme ? '#F2247A' : '#F2247A'},
+                  ]}>
                   {statsData.bestStreak}
                 </Text>
               </View>
