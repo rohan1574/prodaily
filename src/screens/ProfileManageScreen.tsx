@@ -547,7 +547,7 @@ const MenuItem = ({
     {showChevron && (
       <Icon 
         name={`chevron-${chevronDirection}`} 
-        size={20} 
+        size={2} 
         color="#D1D5DB" 
       />
     )}
