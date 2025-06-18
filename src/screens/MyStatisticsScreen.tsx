@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, AppState} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +8,7 @@ import Svg, {Circle, Text as SvgText, TSpan} from 'react-native-svg';
 import BottomNavigation from './BottomNavigation';
 import {Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { useColorContext } from '../context/ColorContext'; // Import the color context
 
 const {width} = Dimensions.get('window');
 
@@ -35,11 +36,17 @@ type CircularProgressProps = {
   percentage?: number;
   radius?: number;
   strokeWidth?: number;
+  backgroundColor?: string;
+  progressColor?: string;
+  textColor?: string;
 };
 const CircularProgress = ({
   percentage = 0,
   radius = 50,
   strokeWidth = 8,
+  backgroundColor = '#D3E3FC',
+  progressColor = '#3580FF',
+  textColor = 'black'
 }: CircularProgressProps) => {
   const size = radius * 2;
   const circumference = 2 * Math.PI * radius;
@@ -53,7 +60,7 @@ const CircularProgress = ({
           cx={radius}
           cy={radius}
           r={radius - strokeWidth / 2}
-          stroke="#D3E3FC"
+          stroke={backgroundColor}
           strokeWidth={strokeWidth}
           fill="none"
         />
@@ -63,7 +70,7 @@ const CircularProgress = ({
           cx={radius}
           cy={radius}
           r={radius - strokeWidth / 2}
-          stroke="#3580FF"
+          stroke={progressColor}
           strokeWidth={strokeWidth}
           fill="none"
           strokeDasharray={`${progress} ${circumference}`}
@@ -79,7 +86,7 @@ const CircularProgress = ({
           textAnchor="middle"
           fontSize="20"
           fontWeight="bold"
-          fill="black">
+          fill={textColor}>
           {`${percentage}%`}
         </SvgText>
       </Svg>
@@ -89,11 +96,39 @@ const CircularProgress = ({
 
 const MyStatisticsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
-    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState<
     'Weekly' | 'Monthly' | 'Yearly'
   >('Weekly');
+  
+ 
+   {/* Get the selected color from context */}
+  const { selectedColor } = useColorContext();
+  {/* Determine background and text colors based on selected theme */}
+  
+ const isDarkTheme = selectedColor === '#3580FF';
+let backgroundColor = selectedColor;
+let textColor = '#000000';
+let cardBackground = '#FFFFFF';
+let secondaryTextColor = '#8D99AE';
+let progressBgColor = '#D3E3FC';
+let progressColor = '#3580FF';
+ {/* Custom theme override for specific colors */}
+if (selectedColor === '#27282A') {
+  textColor = '#FFFFFF';
+  cardBackground = '#3A3A3A';
+  secondaryTextColor = '#B0B0B0';
+  progressBgColor = '#4A4A4A';
+  progressColor = '#F2247A';
+} else if (selectedColor === '#F2247A') {
+  {/*  Custom pink theme */}
+  textColor = '#27282A';
+  cardBackground = '#F2C66D';
+  secondaryTextColor = '#7441D9';
+  progressBgColor = '#E58139';
+  progressColor = '#30BF78';
+}
+
 
   const getLastPeriodText = () => {
     switch (selectedTab) {
@@ -153,14 +188,14 @@ const MyStatisticsScreen = () => {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-blue-500`}>
-      <View  style={[tw`flex-1 `,{backgroundColor: '#F7FAFF'}]}>
-        <ScrollView contentContainerStyle={[tw`p-4 `,{paddingBottom:170}]}>
+    <SafeAreaView style={[tw`flex-1`, { backgroundColor }]}>
+      <View style={tw`flex-1`}>
+        <ScrollView contentContainerStyle={[tw`p-4`, { paddingBottom: 170 }]}>
           {/* হেডার সেকশন */}
           <Text
             style={[
-              tw` font-bold`,
-              {fontSize: 20, letterSpacing: 1, color: '#000000'},
+              tw`font-bold`,
+              { fontSize: 20, letterSpacing: 1, color: textColor },
             ]}>
             My Statistics
           </Text>
@@ -168,7 +203,7 @@ const MyStatisticsScreen = () => {
             style={[
               tw``,
               {
-                color: '#8D99AE',
+                color: secondaryTextColor,
                 lineHeight: 20,
                 letterSpacing: 1,
                 fontSize: 11,
@@ -178,38 +213,46 @@ const MyStatisticsScreen = () => {
           </Text>
 
           {/* টপ স্ট্যাটিস্টিক্স */}
-          <View style={[tw`rounded-lg bg-white top-4`, {height: 320}]}>
+          <View style={[tw`rounded-lg top-4`, { height: 320, backgroundColor: cardBackground }]}>
             <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
               <View
                 style={[
-                  tw`bg-blue-500  rounded-lg justify-center items-center`,
-                  {width: width * 0.42, height: width * 0.3},
+                  tw`rounded-lg justify-center items-center`,
+                  { 
+                    width: width * 0.42, 
+                    height: width * 0.3,
+                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#3580FF'
+                  },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal bottom-4 text-xs `,
-                    {color: '#DEEAFF', letterSpacing: 1},
+                    { color: isDarkTheme ? '#CCCCCC' : '#DEEAFF', letterSpacing: 1 },
                   ]}>
                   All Time Completed
                 </Text>
-                <Text style={tw`text-white text-2xl font-bold mt-2`}>
+                <Text style={[tw`text-2xl font-bold mt-2`, { color: isDarkTheme ? '#FFFFFF' : '#FFFFFF' }]}>
                   {statsData.allTimeCompleted}
                 </Text>
               </View>
 
               <View
                 style={[
-                  tw`bg-blue-500 rounded-lg justify-center items-center`,
-                  {width: width * 0.42, height: width * 0.3},
+                  tw`rounded-lg justify-center items-center`,
+                  { 
+                    width: width * 0.42, 
+                    height: width * 0.3,
+                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#3580FF'
+                  },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal text-xs bottom-4`,
-                    {color: '#DEEAFF', letterSpacing: 0.5},
+                    { color: isDarkTheme ? '#CCCCCC' : '#DEEAFF', letterSpacing: 0.5 },
                   ]}>
                   Daily Task Into Habit
                 </Text>
-                <Text style={tw`text-white text-2xl font-bold `}>
+                <Text style={[tw`text-2xl font-bold`, { color: isDarkTheme ? '#FFFFFF' : '#FFFFFF' }]}>
                   {statsData.dailyHabit}
                 </Text>
               </View>
@@ -219,17 +262,25 @@ const MyStatisticsScreen = () => {
               <Text
                 style={[
                   tw`font-medium mb-4`,
-                  {fontSize: 16, letterSpacing: 1},
+                  { fontSize: 16, letterSpacing: 1, color: textColor },
                 ]}>
                 Overall Score
               </Text>
-              <CircularProgress percentage={statsData.successScore} />
+              <CircularProgress 
+                percentage={statsData.successScore} 
+                backgroundColor={progressBgColor}
+                progressColor={progressColor}
+                textColor={textColor}
+              />
             </View>
           </View>
-          <View style={tw`bg-white top-8 rounded-lg`}>
-            <View style={tw`bg-white h-24 rounded-lg`}>
+          
+          <View style={[tw`top-8 rounded-lg`, { backgroundColor: cardBackground }]}>
+            <View style={tw`h-24 rounded-lg`}>
               <View
-                style={tw`flex-row bg-gray-200 mx-2 rounded-full shadow-sm top-5`}>
+                style={[tw`flex-row mx-2 rounded-full shadow-sm top-5`, 
+                  { backgroundColor: isDarkTheme ? '#5A5A5A' : '#E2E8F0' }
+                ]}>
                 {['Weekly', 'Monthly', 'Yearly'].map(tab => (
                   <TouchableOpacity
                     key={tab}
@@ -237,14 +288,18 @@ const MyStatisticsScreen = () => {
                       setSelectedTab(tab as 'Weekly' | 'Monthly' | 'Yearly')
                     }
                     style={tw`flex-1 p-2 rounded-full ${
-                      selectedTab === tab ? 'bg-blue-500' : 'bg-transparent'
+                      selectedTab === tab 
+                        ? isDarkTheme 
+                          ? 'bg-pink-500' 
+                          : 'bg-blue-500' 
+                        : 'bg-transparent'
                     }`}>
                     <Text
                       style={[
                         tw`text-center text-sm font-normal`,
                         selectedTab === tab
                           ? tw`text-white font-semibold`
-                          : {color: '#8D99AE'},
+                          : { color: secondaryTextColor },
                       ]}>
                       {tab}
                     </Text>
@@ -255,17 +310,20 @@ const MyStatisticsScreen = () => {
             {/* কারেন্ট প্রোগ্রেস সেকশন */}
             <View
               style={[
-                tw`bg-white shadow-lg rounded-lg p-4 bottom-4`,
-                {height: 145},
+                tw`shadow-lg rounded-lg p-4 bottom-4`,
+                { height: 145, backgroundColor: cardBackground },
               ]}>
               {/* last */}
-              <Text style={tw`text-black font-medium text-base mb-2 bottom-4`}>
+              <Text style={[tw`font-medium text-base mb-2 bottom-4`, { color: textColor }]}>
                 {getLastPeriodText()}
               </Text>
               <View style={tw`flex-row items-center justify-between`}>
                 <CircularProgress
                   percentage={statsData.successScore}
                   radius={40}
+                  backgroundColor={progressBgColor}
+                  progressColor={progressColor}
+                  textColor={textColor}
                 />
                 <View style={tw`ml-4 bottom-2`}>
                   <Text
@@ -275,20 +333,23 @@ const MyStatisticsScreen = () => {
                         fontSize: 14,
                         lineHeight: 20,
                         letterSpacing: 1,
-                        color: '#2B2D42',
+                        color: textColor,
                       },
                     ]}>
                     Task{'\n'}Completed
                   </Text>
-                  <Text style={tw`text-gray-500 text-xs`}>
+                  <Text style={[tw`text-xs`, { color: secondaryTextColor }]}>
                     {statsData.completed} of {statsData.totalTasks}
                   </Text>
                 </View>
                 <View style={tw`flex-1 left-2`}>
                   <Text
                     style={[
-                      tw`text-gray-600 font-normal text-center top-1`,
-                      {fontSize: 12},
+                      tw`font-normal text-center top-1`,
+                      { 
+                        fontSize: 12,
+                        color: secondaryTextColor
+                      },
                     ]}>
                     {statsData.successScore > 70
                       ? "You're doing great! 🚀 Keep it up!"
@@ -297,12 +358,16 @@ const MyStatisticsScreen = () => {
                   <TouchableOpacity
                     style={[
                       tw`p-2 rounded-xl mx-4 top-3 items-center`,
-                      {backgroundColor: '#F1F7FF'},
+                      { backgroundColor: isDarkTheme ? '#5A5A5A' : '#F1F7FF' },
                     ]}>
                     <Text
                       style={[
-                        tw`font-medium `,
-                        {color: '#3580FF', fontSize: 11, letterSpacing: 1},
+                        tw`font-medium`,
+                        { 
+                          color: isDarkTheme ? '#F2247A' : '#3580FF', 
+                          fontSize: 11, 
+                          letterSpacing: 1 
+                        },
                       ]}>
                       Follow
                     </Text>
@@ -313,20 +378,31 @@ const MyStatisticsScreen = () => {
           </View>
 
           {/* হ্যাবিট সামারি */}
-          <View style={tw`p-4 bg-white rounded-lg top-12`}>
+          <View style={[tw`p-4 rounded-lg top-12`, { backgroundColor: cardBackground }]}>
             <View style={tw`flex-row justify-between mb-6`}>
               <View>
                 <Text
                   style={[
-                    tw`text-black font-medium `,
-                    {fontSize: 16, letterSpacing: 1, lineHeight: 20},
+                    tw`font-medium`,
+                    { 
+                      fontSize: 16, 
+                      letterSpacing: 1, 
+                      lineHeight: 20,
+                      color: textColor
+                    },
                   ]}>
                   Habits
                 </Text>
                 <Text
                   style={[
-                    tw`text-gray-400  font-normal`,
-                    {fontSize: 12, letterSpacing: 0, lineHeight: 20, left: 1},
+                    tw`font-normal`,
+                    { 
+                      fontSize: 12, 
+                      letterSpacing: 0, 
+                      lineHeight: 20, 
+                      left: 1,
+                      color: secondaryTextColor
+                    },
                   ]}>
                   Summary
                 </Text>
@@ -334,15 +410,18 @@ const MyStatisticsScreen = () => {
               <View>
                 <Text
                   style={[
-                    tw`text-gray-400 text-xs font-normal`,
-                    {letterSpacing: 1},
+                    tw`text-xs font-normal`,
+                    { 
+                      letterSpacing: 1,
+                      color: secondaryTextColor
+                    },
                   ]}>
                   More Details
                 </Text>
               </View>
             </View>
-            <View style={tw`flex-row flex-wrap justify-between `}>
-              <View style={tw` items-center mb-2`}>
+            <View style={tw`flex-row flex-wrap justify-between`}>
+              <View style={tw`items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -350,17 +429,17 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: '#9B9BA1',
+                      color: secondaryTextColor,
                     },
                   ]}>
                   SUCCESS SCORE
                 </Text>
-                <Text style={tw`text-gray-600 text-lg font-bold`}>
+                <Text style={[tw`text-lg font-bold`, { color: textColor }]}>
                   {statsData.successScore}%
                 </Text>
               </View>
 
-              <View style={tw` items-center mb-2`}>
+              <View style={tw`items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -368,17 +447,17 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: '#9B9BA1',
+                      color: secondaryTextColor,
                     },
                   ]}>
                   COMPLETED
                 </Text>
-                <Text style={tw`text-blue-400 text-lg font-bold`}>
+                <Text style={[tw`text-lg font-bold`, { color: isDarkTheme ? '#F2247A' : '#3580FF' }]}>
                   {statsData.completed}
                 </Text>
               </View>
 
-              <View style={tw` items-center mb-2`}>
+              <View style={tw`items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -386,17 +465,17 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: '#9B9BA1',
+                      color: secondaryTextColor,
                     },
                   ]}>
                   FAILED
                 </Text>
-                <Text style={tw`text-black text-lg font-bold`}>
+                <Text style={[tw`text-lg font-bold`, { color: textColor }]}>
                   {statsData.totalTasks - statsData.completed}
                 </Text>
               </View>
 
-              <View style={tw` items-center mb-2`}>
+              <View style={tw`items-center mb-2`}>
                 <Text
                   style={[
                     tw`font-medium`,
@@ -404,12 +483,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 8,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: '#9B9BA1',
+                      color: secondaryTextColor,
                     },
                   ]}>
                   BEST STREAK DAY
                 </Text>
-                <Text style={tw`text-blue-400 text-lg font-bold`}>
+                <Text style={[tw`text-lg font-bold`, { color: isDarkTheme ? '#F2247A' : '#3580FF' }]}>
                   {statsData.bestStreak}
                 </Text>
               </View>
@@ -418,9 +497,9 @@ const MyStatisticsScreen = () => {
         </ScrollView>
 
         {/* Fixed Bottom Navigation */}
-      <View style={tw`absolute bottom-0 w-full`}>
-        {!isKeyboardVisible && <BottomNavigation />}
-      </View>
+        <View style={tw`absolute bottom-0 w-full`}>
+          {!isKeyboardVisible && <BottomNavigation />}
+        </View>
       </View>
     </SafeAreaView>
   );

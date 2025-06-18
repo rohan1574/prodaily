@@ -682,7 +682,7 @@ const AddDailyTaskScreen = () => {
                   <Text
                     style={[
                       tw`text-sm font-medium text-black`,
-                      // {color: selectedColor},
+                      {color: selectedColor},
                     ]}>
                     {task}
                   </Text>
@@ -1046,7 +1046,6 @@ const AddDailyTaskScreen = () => {
                   </TouchableOpacity>
                 </View>
               </View>
-
               {/* Add Specific For */}
               <View style={tw`bottom-3 `}>
                 <View style={tw`flex-row items-center mb-4 right-3`}>
@@ -1150,7 +1149,6 @@ const AddDailyTaskScreen = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
               {/* Buttons */}
               <LinearGradient
                 colors={['#F7FAFF', '#DEEAFF']}

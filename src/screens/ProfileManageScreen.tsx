@@ -16,6 +16,7 @@ import {s as tw} from 'react-native-wind';
 import {useNavigation} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {ColorContext} from '../context/ColorContext';
+import {useColorContext} from '../context/ColorContext';
 import BottomNavigation from './BottomNavigation';
 import {usePoints} from '../context/PointsContext';
 import {Dimensions} from 'react-native';
@@ -34,7 +35,21 @@ type RootStackParamList = {
   PremiumPackage: undefined;
   PremiumScreen: undefined;
 };
+// Add type definitions for MenuItem and ColorOption components
+type MenuItemProps = {
+  icon: string;
+  text: string;
+  onPress: () => void;
+  showChevron?: boolean;
+  chevronDirection?: 'up' | 'down';
+};
 
+type ColorOptionProps = {
+  color: string;
+  onPress: () => void;
+  isPremium?: boolean;
+  isSelected?: boolean;
+};
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'TodaysTaskToDoScreen'
@@ -44,17 +59,10 @@ const ProfileManageScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [showSignOut, setShowSignOut] = useState(false);
   const [themes, setThemes] = useState(false);
+  const [showThemes, setShowThemes] = useState(false);
   const context = useContext(ColorContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPremiumColor, setSelectedPremiumColor] = useState('');
-  const handleColorPress = (color: string) => {
-    if (color === '#3580FF' || color === '#27282A') {
-      setSelectedColor(color); // Apply directly for free colors
-    } else {
-      setSelectedPremiumColor(color);
-      setModalVisible(true); // Show modal for premium colors
-    }
-  };
 
   // Handle premium confirmation
   const handlePremiumConfirm = () => {
@@ -65,8 +73,23 @@ const ProfileManageScreen = () => {
   if (!context) {
     throw new Error('ColorContext is not available');
   }
-  const {setSelectedColor} = context;
+  const {selectedColor, setSelectedColor, isPremium, unlockPremium} =
+    useColorContext();
+
   const {points} = usePoints();
+
+  // Define theme colors
+  const freeColors = ['#3580FF', '#27282A','#F7FAFF','#F2247A'];
+  const premiumColors = [ '#DEEAFF', '#FFDEEC', '#F7FAFF'];
+
+  const handleThemeSelect = (color: string) => {
+    if (freeColors.includes(color) || isPremium) {
+      setSelectedColor(color);
+    } else {
+      setModalVisible(true);
+    }
+  };
+
   const [selectedOption, setSelectedOption] = useState<
     'App Issue' | 'Suggestion'
   >('App Issue');
@@ -302,61 +325,50 @@ const ProfileManageScreen = () => {
               )}
             </View>
             {/* Themes Section */}
-            <View style={tw`bg-white rounded-xl shadow mb-2`}>
-              <TouchableOpacity
-                onPress={() => setThemes(!themes)}
-                style={tw`flex-row items-center justify-between p-3 bg-white mb-2 rounded-xl shadow`}>
-                <View style={tw`flex-row items-center`}>
-                  <Icon
-                    name="moon-outline"
-                    size={24}
-                    color="#3580FF"
-                    style={tw`mr-2`}
-                  />
-                  <Text style={tw`text-black text-base`}>Themes</Text>
-                </View>
-                <Icon
-                  name={themes ? 'chevron-up' : 'chevron-down'}
-                  size={20}
-                  color="#DFDFDF"
-                />
-              </TouchableOpacity>
+            <View style={tw`bg-white rounded-xl shadow mb-2 `}>
               {/* Theme color options */}
-              {themes && (
-                <View style={tw`p-4 bg-white mb-2 rounded-xl shadow`}>
-                  <View style={tw`flex-row justify-center flex-wrap`}>
-                    {[
-                      '#3580FF',
-                      '#27282A',
-                      '#F7FAFF',
-                      '#DEEAFF',
-                      ' #FFDEEC',
-                      '#FFFFFF',
-                    ].map(color => (
-                      <TouchableOpacity
-                        key={color}
-                        onPress={() => handleColorPress(color)}
-                        style={tw`items-center mx-1`}>
-                        <View
-                          style={[
-                            tw`w-6 h-6 rounded-full`,
-                            {
-                              backgroundColor: color,
-                              shadowColor: '#4A90E2',
-                              shadowOffset: {width: 0, height: 3},
-                              shadowOpacity: 0.15,
-                              shadowRadius: 6,
-                              elevation: 4,
-                              width: 28,
-                              height: 28,
-                            },
-                          ]}
+              <View
+                style={tw`bg-white rounded-xl shadow-sm mb-2  overflow-hidden`}>
+                <MenuItem
+                  icon="moon-outline"
+                  text="Themes"
+                  onPress={() => setShowThemes(!showThemes)}
+                  showChevron
+                  chevronDirection={showThemes ? 'up' : 'down'}
+                />
+                {showThemes && (
+                  <View style={tw`p-4`}>
+                    <Text style={tw`text-gray-500 text-sm mb-3`}>
+                      Free Colors
+                    </Text>
+                    <View style={tw`flex-row flex-wrap mb-4`}>
+                      {freeColors.map(color => (
+                        <ColorOption
+                          key={color}
+                          color={color}
+                          onPress={() => handleThemeSelect(color)}
+                          isSelected={selectedColor === color}
                         />
-                      </TouchableOpacity>
-                    ))}
+                      ))}
+                    </View>
+
+                    <Text style={tw`text-gray-500 text-sm mb-3`}>
+                      Premium Colors
+                    </Text>
+                    <View style={tw`flex-row flex-wrap`}>
+                      {premiumColors.map(color => (
+                        <ColorOption
+                          key={color}
+                          color={color}
+                          onPress={() => handleThemeSelect(color)}
+                          isPremium={!isPremium}
+                          isSelected={selectedColor === color}
+                        />
+                      ))}
+                    </View>
                   </View>
-                </View>
-              )}
+                )}
+              </View>
             </View>
             <TouchableOpacity
               style={tw`flex-row items-center p-4 bg-white mb-2 rounded-xl shadow`}>
@@ -517,5 +529,54 @@ const ProfileManageScreen = () => {
     </SafeAreaView>
   );
 };
+// Helper Components
+const MenuItem = ({ 
+  icon, 
+  text, 
+  onPress, 
+  showChevron = false,
+  chevronDirection = 'down'
+}: MenuItemProps) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={tw`flex-row items-center justify-between p-3`}>
+    <View style={tw`flex-row items-center left-1`}>
+      <Icon name={icon} size={24} color="#3580FF" style={tw`mr-2`} />
+      <Text style={tw`text-gray-800 text-base`}>{text}</Text>
+    </View>
+    {showChevron && (
+      <Icon 
+        name={`chevron-${chevronDirection}`} 
+        size={20} 
+        color="#D1D5DB" 
+      />
+    )}
+  </TouchableOpacity>
+);
+
+// Update the ColorOption component with proper typing
+const ColorOption = ({ 
+  color, 
+  onPress, 
+  isPremium = false, 
+  isSelected = false 
+}: ColorOptionProps) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={tw`m-2`}>
+    <View style={[
+      tw`w-10 h-10 rounded-full border-2 border-white relative`,
+      { backgroundColor: color },
+      isSelected && tw`border-blue-500 border-3`,
+      isPremium && tw`opacity-80`
+    ]}>
+      {isPremium && (
+        <View style={tw`absolute -top-1 -right-1 bg-amber-500 rounded-full w-4 h-4 items-center justify-center`}>
+          <Icon name="lock-closed" size={10} color="white" />
+        </View>
+      )}
+    </View>
+  </TouchableOpacity>
+);
 
 export default ProfileManageScreen;
