@@ -204,7 +204,7 @@ const MyStatisticsScreen = () => {
               tw`font-bold`,
               {fontSize: 20, letterSpacing: 1, },
             ]}>
-            My Statistic
+            My Statistics
           </Text>
           <Text
             style={[
