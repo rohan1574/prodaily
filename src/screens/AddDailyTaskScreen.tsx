@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useContext} from 'react';
+import React, {useState, useRef, useEffect, useContext, useMemo} from 'react';
 import {
   View,
   Text,
@@ -141,6 +141,28 @@ const AddDailyTaskScreen = () => {
   }
 
   const {selectedColor} = colorContext;
+  const getGradientColors = useMemo(() => {
+    switch (selectedColor) {
+      case '#3580FF':
+        return ['#F7FAFF', '#DEEAFF']; // Default
+      case '#2B2D42':
+        return ['#5F636A', '#282A2D']; // Black variant
+      case '#20BAD9':
+        return ['#F7FEFF', '#DEF9FF']; // Blue variant
+      case '#F2247A':
+        return ['#FFF7FA', '#FFDEEC']; // Pink variant
+      case '#29CC5F':
+        return ['#F7FFFB', '#DEFFEF']; // Sky variant
+      case '#F2C66D':
+        return ['#FFFCF7', '#FFF4DE']; // Blue variant
+      case '#7441D9':
+        return ['#FAF7FF', '#E9DEFF']; // bikune variant
+      case '#E58439':
+        return ['#FFFAF7', '#FFECDE']; // Orange variant
+      default:
+        return ['#F7FAFF', '#DEEAFF']; // Fallback to default
+    }
+  }, [selectedColor]);
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState<{
@@ -928,7 +950,7 @@ const AddDailyTaskScreen = () => {
                     }}
                     style={[
                       tw` font-medium top-2`,
-                      {fontSize: 12, color: '#3580FF', letterSpacing: 1},
+                      {fontSize: 12, color: selectedColor, letterSpacing: 1},
                     ]}>
                     Discover
                   </Text>
@@ -1089,7 +1111,7 @@ const AddDailyTaskScreen = () => {
                     maxLength={2}
                   />
                   <LinearGradient
-                    colors={['#F7FAFF', '#DEEAFF']}
+                    colors={getGradientColors}
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 1}}
                     style={[
@@ -1126,7 +1148,7 @@ const AddDailyTaskScreen = () => {
               <View
                 style={[
                   tw`border-b border-blue-500 left-1`,
-                  {borderColor: '#DEEAFF'},
+                  {borderColor: selectedColor},
                 ]}>
                 <TouchableOpacity
                   onPress={toggleSpecificDayOn}
@@ -1151,7 +1173,7 @@ const AddDailyTaskScreen = () => {
               </View>
               {/* Buttons */}
               <LinearGradient
-                colors={['#F7FAFF', '#DEEAFF']}
+                colors={getGradientColors}
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1}}
                 style={[
@@ -1233,7 +1255,7 @@ const AddDailyTaskScreen = () => {
                     maxLength={3}
                   />
                   <LinearGradient
-                    colors={['#F7FAFF', '#DEEAFF']}
+                    colors={getGradientColors}
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 1}}
                     style={[tw`flex-row rounded-full left-2 `]}>
