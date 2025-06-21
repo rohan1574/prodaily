@@ -748,7 +748,7 @@ const AllTaskListScreen = () => {
 
                         {/* Type Selector */}
                         <LinearGradient
-                         colors={getGradientColors}
+                          colors={getGradientColors}
                           start={{x: 0, y: 0}}
                           end={{x: 0, y: 1}}
                           style={[
