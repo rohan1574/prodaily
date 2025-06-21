@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import {View, Text, TouchableOpacity, Image, SafeAreaView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { s as tw } from 'react-native-wind';
+import {s as tw} from 'react-native-wind';
 
 const DailyDoneCongratsScreen = () => {
   return (
@@ -13,18 +13,22 @@ const DailyDoneCongratsScreen = () => {
 
       {/* Badge and Glow */}
       <View style={tw`items-center justify-center mb-8`}>
-        <View style={tw`w-32 h-32 rounded-full bg-yellow-400 items-center justify-center shadow-lg`}>
+        <View
+          style={tw`w-32 h-32 rounded-full bg-yellow-400 items-center justify-center shadow-lg`}>
           <Text style={tw`text-3xl font-bold text-white`}>10</Text>
         </View>
       </View>
 
       {/* Congrats Text */}
       <Text style={tw`text-white text-2xl font-bold mb-2`}>Congrats!</Text>
-      <Text style={tw`text-white text-base mb-4`}>All the Daily Task Done!</Text>
+      <Text style={tw`text-white text-base mb-4`}>
+        All the Daily Task Done!
+      </Text>
 
       {/* Description */}
       <Text style={tw`text-center text-white text-xs px-8 mb-10`}>
-        You deserve this badge for your commitment to yourself. Stay with us and earn more Points to get rewards.
+        You deserve this badge for your commitment to yourself. Stay with us and
+        earn more Points to get rewards.
       </Text>
 
       {/* Claim Button */}
