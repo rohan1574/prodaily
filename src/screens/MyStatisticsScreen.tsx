@@ -356,11 +356,12 @@ const MyStatisticsScreen = () => {
                         fontSize: 14,
                         lineHeight: 20,
                         letterSpacing: 1,
+                        color:"#2B2D42"
                       },
                     ]}>
                     Task{'\n'}Completed
                   </Text>
-                  <Text style={[tw`text-xs`, {color: secondaryTextColor}]}>
+                  <Text style={[tw`text-xs`, {color: "#2B2D42"}]}>
                     {statsData.completed} of {statsData.totalTasks}
                   </Text>
                 </View>
@@ -370,7 +371,7 @@ const MyStatisticsScreen = () => {
                       tw`font-normal text-center top-1`,
                       {
                         fontSize: 12,
-                        color: secondaryTextColor,
+                        color: "#2B2D42",
                       },
                     ]}>
                     {statsData.successScore > 70
@@ -380,13 +381,13 @@ const MyStatisticsScreen = () => {
                   <TouchableOpacity
                     style={[
                       tw`p-2 rounded-xl mx-4 top-3 items-center`,
-                      {backgroundColor: isDarkTheme ? '#5A5A5A' : '#F1F7FF'},
+                      {backgroundColor: '#F1F7FF'},
                     ]}>
                     <Text
                       style={[
                         tw`font-medium`,
                         {
-                          color: textColor,
+                          color: "#3580FF",
                           fontSize: 11,
                           letterSpacing: 1,
                         },
@@ -403,7 +404,7 @@ const MyStatisticsScreen = () => {
           <View
             style={[
               tw`p-4 rounded-lg top-12`,
-              {backgroundColor: cardBackground},
+              {backgroundColor: "#FFFFFF"},
             ]}>
             <View style={tw`flex-row justify-between mb-6`}>
               <View>
