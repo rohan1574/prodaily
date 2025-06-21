@@ -415,6 +415,7 @@ const MyStatisticsScreen = () => {
                       fontSize: 16,
                       letterSpacing: 1,
                       lineHeight: 20,
+                      color:"#040415"
                     },
                   ]}>
                   Habits
@@ -427,10 +428,10 @@ const MyStatisticsScreen = () => {
                       letterSpacing: 0,
                       lineHeight: 20,
                       left: 1,
-                      color: secondaryTextColor,
+                      color: "#9B9BA1",
                     },
                   ]}>
-                  Summary
+                  Building Summary
                 </Text>
               </View>
               <View>
@@ -439,7 +440,7 @@ const MyStatisticsScreen = () => {
                     tw`text-xs font-normal`,
                     {
                       letterSpacing: 1,
-                      color: secondaryTextColor,
+                      color: "#8D99AE",
                     },
                   ]}>
                   More Details
@@ -455,12 +456,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: secondaryTextColor,
+                      color: "#9B9BA1",
                     },
                   ]}>
-                  SUCCESS SCORE
+                  Habit Score
                 </Text>
-                <Text style={[tw`text-lg font-bold`]}>
+                <Text style={[tw`text-lg font-bold`,{color:"#8D99AE"}]}>
                   {statsData.successScore}%
                 </Text>
               </View>
@@ -473,7 +474,7 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: secondaryTextColor,
+                      color: "#9B9BA1"
                     },
                   ]}>
                   COMPLETED
@@ -481,7 +482,7 @@ const MyStatisticsScreen = () => {
                 <Text
                   style={[
                     tw`text-lg font-bold`,
-                    {color: isDarkTheme ? '#F2247A' : '#F2247A'},
+                     {color: "#3580FF"},
                   ]}>
                   {statsData.completed}
                 </Text>
@@ -495,12 +496,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: secondaryTextColor,
+                      color: "#9B9BA1"
                     },
                   ]}>
                   FAILED
                 </Text>
-                <Text style={[tw`text-lg font-bold`]}>
+                <Text style={[tw`text-lg font-bold`,{color:"#000000"}]}>
                   {statsData.totalTasks - statsData.completed}
                 </Text>
               </View>
@@ -513,7 +514,7 @@ const MyStatisticsScreen = () => {
                       fontSize: 8,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: secondaryTextColor,
+                      color: "#9B9BA1"
                     },
                   ]}>
                   BEST STREAK DAY
@@ -521,7 +522,7 @@ const MyStatisticsScreen = () => {
                 <Text
                   style={[
                     tw`text-lg font-bold`,
-                    {color: isDarkTheme ? '#F2247A' : '#F2247A'},
+                    {color: "#3580FF"},
                   ]}>
                   {statsData.bestStreak}
                 </Text>
