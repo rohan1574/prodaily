@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useMemo} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, AppState} from 'react-native';
 import {s as tw} from 'react-native-wind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -109,33 +109,29 @@ const MyStatisticsScreen = () => {
     /* Determine background and text colors based on selected theme */
   }
 
-  const isDarkTheme = selectedColor === '#3580FF';
-  let backgroundColor = selectedColor;
-  let textColor = '#000000';
-  let cardBackground = '#FFFFFF';
-  let secondaryTextColor = '#8D99AE';
-  let progressBgColor = '#D3E3FC';
-  let progressColor = '#3580FF';
-  {
-    /* Custom theme override for specific colors */
+  const getColors = useMemo(() => {
+  switch (selectedColor) {
+    case '#3580FF':
+      return { background: '#3580FF', text: '#DEEAFF' };
+    case '#2B2D42':
+      return { background: '#5A9BD4', text: '#9CA3AF' };
+    case '#20BAD9':
+      return { background: '#20BAD9', text: '#DEF9FF' };
+    case '#F2247A':
+      return { background: '#F2247A', text: '#FFDEEC' };
+    case '#29CC5F':
+      return { background: '#30BF78', text: '#DEFFEF' };
+    case '#F2C66D':
+      return { background: '#F2C66D', text: '#FFF4DE' };
+    case '#7441D9':
+      return { background: '#FAF7FF', text: '#E9DEFF' };
+    case '#E58439':
+      return { background: '#E58139', text: '#FFECDE' };
+    default:
+      return { background: '#F7FAFF', text: '#DEEAFF' };
   }
-  if (selectedColor === '#27282A') {
-    textColor = '#FFFFFF';
-    cardBackground = '#3A3A3A';
-    secondaryTextColor = '#B0B0B0';
-    progressBgColor = '#4A4A4A';
-    progressColor = '#F2247A';
-  } else if (selectedColor === '#F2247A') {
-    {
-      /*  Custom pink theme */
-    }
-    backgroundColor = '#F7FAFF';
-    textColor = '#F2247A';
-    cardBackground = '#FFFFFF';
-    secondaryTextColor = '#8D99AE';
-    progressBgColor = '#F2247A';
-    progressColor = '#30BF78';
-  }
+}, [selectedColor]);
+
 
   const getLastPeriodText = () => {
     switch (selectedTab) {
@@ -232,14 +228,15 @@ const MyStatisticsScreen = () => {
                   {
                     width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: '#3580FF',
+                    backgroundColor: getColors.background,
                   },
                 ]}>
+                {/* colors={getGradientColors} */}
                 <Text
                   style={[
                     tw`font-normal bottom-4 text-xs `,
                     {
-                      color: '#DEEAFF',
+                      color: getColors.text,
                       letterSpacing: 1,
                     },
                   ]}>
@@ -256,14 +253,14 @@ const MyStatisticsScreen = () => {
                   {
                     width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: '#3580FF',
+                    backgroundColor: getColors.background,
                   },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal text-xs bottom-4`,
                     {
-                      color: '#DEEAFF',
+                      color: getColors.text,
                       letterSpacing: 0.5,
                     },
                   ]}>
@@ -285,8 +282,8 @@ const MyStatisticsScreen = () => {
               </Text>
               <CircularProgress
                 percentage={statsData.successScore}
-                backgroundColor="#DEEAFF"
-                progressColor="#3580FF"
+                backgroundColor={getColors.text}
+                progressColor={getColors.background}
                 textColor="#2B2D42"
               />
             </View>
@@ -309,7 +306,7 @@ const MyStatisticsScreen = () => {
                       tw`flex-1 p-2 rounded-full`,
                       {
                         backgroundColor:
-                          selectedTab === tab ? '#3580FF' : 'transparent',
+                          selectedTab === tab ? getColors.background : 'transparent',
                       },
                     ]}>
                     <Text
@@ -344,8 +341,8 @@ const MyStatisticsScreen = () => {
                 <CircularProgress
                   percentage={statsData.successScore}
                   radius={40}
-                  backgroundColor="#DEEAFF"
-                  progressColor="#3580FF"
+                  backgroundColor={getColors.text}
+                  progressColor={getColors.background}
                   textColor="#2B2D42"
                 />
                 <View style={tw`ml-4 bottom-2`}>
@@ -356,12 +353,12 @@ const MyStatisticsScreen = () => {
                         fontSize: 14,
                         lineHeight: 20,
                         letterSpacing: 1,
-                        color:"#2B2D42"
+                        color: '#2B2D42',
                       },
                     ]}>
                     Task{'\n'}Completed
                   </Text>
-                  <Text style={[tw`text-xs`, {color: "#2B2D42"}]}>
+                  <Text style={[tw`text-xs`, {color: '#2B2D42'}]}>
                     {statsData.completed} of {statsData.totalTasks}
                   </Text>
                 </View>
@@ -371,7 +368,7 @@ const MyStatisticsScreen = () => {
                       tw`font-normal text-center top-1`,
                       {
                         fontSize: 12,
-                        color: "#2B2D42",
+                        color: '#2B2D42',
                       },
                     ]}>
                     {statsData.successScore > 70
@@ -387,7 +384,7 @@ const MyStatisticsScreen = () => {
                       style={[
                         tw`font-medium`,
                         {
-                          color: "#3580FF",
+                          color: getColors.background,
                           fontSize: 11,
                           letterSpacing: 1,
                         },
@@ -402,10 +399,7 @@ const MyStatisticsScreen = () => {
 
           {/* হ্যাবিট সামারি */}
           <View
-            style={[
-              tw`p-4 rounded-lg top-12`,
-              {backgroundColor: "#FFFFFF"},
-            ]}>
+            style={[tw`p-4 rounded-lg top-12`, {backgroundColor: '#FFFFFF'}]}>
             <View style={tw`flex-row justify-between mb-6`}>
               <View>
                 <Text
@@ -415,7 +409,7 @@ const MyStatisticsScreen = () => {
                       fontSize: 16,
                       letterSpacing: 1,
                       lineHeight: 20,
-                      color:"#040415"
+                      color: '#040415',
                     },
                   ]}>
                   Habits
@@ -428,7 +422,7 @@ const MyStatisticsScreen = () => {
                       letterSpacing: 0,
                       lineHeight: 20,
                       left: 1,
-                      color: "#9B9BA1",
+                      color: '#9B9BA1',
                     },
                   ]}>
                   Building Summary
@@ -440,7 +434,7 @@ const MyStatisticsScreen = () => {
                     tw`text-xs font-normal`,
                     {
                       letterSpacing: 1,
-                      color: "#8D99AE",
+                      color: '#8D99AE',
                     },
                   ]}>
                   More Details
@@ -456,12 +450,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: "#9B9BA1",
+                      color: '#9B9BA1',
                     },
                   ]}>
                   Habit Score
                 </Text>
-                <Text style={[tw`text-lg font-bold`,{color:"#8D99AE"}]}>
+                <Text style={[tw`text-lg font-bold`, {color: '#8D99AE'}]}>
                   {statsData.successScore}%
                 </Text>
               </View>
@@ -474,16 +468,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: "#9B9BA1"
+                      color: '#9B9BA1',
                     },
                   ]}>
                   COMPLETED
                 </Text>
-                <Text
-                  style={[
-                    tw`text-lg font-bold`,
-                     {color: "#3580FF"},
-                  ]}>
+                <Text style={[tw`text-lg font-bold`, {color: getColors.background}]}>
                   {statsData.completed}
                 </Text>
               </View>
@@ -496,12 +486,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 9,
                       lineHeight: 16,
                       letterSpacing: 1,
-                      color: "#9B9BA1"
+                      color: '#9B9BA1',
                     },
                   ]}>
                   FAILED
                 </Text>
-                <Text style={[tw`text-lg font-bold`,{color:"#000000"}]}>
+                <Text style={[tw`text-lg font-bold`, {color: '#000000'}]}>
                   {statsData.totalTasks - statsData.completed}
                 </Text>
               </View>
@@ -514,16 +504,12 @@ const MyStatisticsScreen = () => {
                       fontSize: 8,
                       lineHeight: 16,
                       letterSpacing: 0.5,
-                      color: "#9B9BA1"
+                      color: '#9B9BA1',
                     },
                   ]}>
                   BEST STREAK DAY
                 </Text>
-                <Text
-                  style={[
-                    tw`text-lg font-bold`,
-                    {color: "#3580FF"},
-                  ]}>
+                <Text style={[tw`text-lg font-bold`, {color: getColors.background}]}>
                   {statsData.bestStreak}
                 </Text>
               </View>
