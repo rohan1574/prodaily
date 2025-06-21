@@ -125,7 +125,7 @@ const ProfileManageScreen = () => {
                 <View
                   style={[
                     tw` px-2 py-0.5 rounded`,
-                    {backgroundColor: '#DEEAFF'},
+                    {backgroundColor: selectedColor},
                   ]}>
                   <Text style={tw`text-xs text-white font-normal`}>Free</Text>
                 </View>
