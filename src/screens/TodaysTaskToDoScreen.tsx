@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {usePoints} from '../context/PointsContext';
 import {Keyboard} from 'react-native';
+import {useColorContext} from '../context/ColorContext';
 interface Task {
   id: string;
   isStarred: boolean;
@@ -57,7 +58,8 @@ const TodaysTaskToDoScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState(false);
   const {addPoints} = usePoints();
-
+// Get the selected color from context
+  const { selectedColor } = useColorContext();
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -440,13 +442,13 @@ const TodaysTaskToDoScreen = () => {
                       {task.completed ? (
                         <Image
                           source={require('../../assets/images/check.png')}
-                          style={{width: 24, height: 24, tintColor: '#3580FF'}}
+                          style={{width: 24, height: 24,tintColor: selectedColor}}
                           resizeMode="contain"
                         />
                       ) : (
                         <Image
                           source={require('../../assets/images/circle.png')}
-                          style={{width: 24, height: 24, tintColor: 'gray'}}
+                          style={{width: 24, height: 24, tintColor: selectedColor}}
                           resizeMode="contain"
                         />
                       )}
@@ -456,7 +458,7 @@ const TodaysTaskToDoScreen = () => {
                       {task.icon && (
                         <Image
                           source={task.icon}
-                          style={[tw`mr-2`, {width: 30, height: 30}]}
+                          style={[tw`mr-2`, {width: 30, height: 30,tintColor: selectedColor}]}
                         />
                       )}
 
