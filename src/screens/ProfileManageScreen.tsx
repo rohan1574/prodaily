@@ -79,17 +79,8 @@ const ProfileManageScreen = () => {
   const {points} = usePoints();
 
   // Define theme colors
-  const freeColors = [
-    '#3580FF',
-    '#27282A',
-    '#20BAD9',
-    '#F2247A',
-    '#29CC5F',
-    '#F2C66D',
-    '#7441D9',
-    '#E58439',
-  ];
-  const premiumColors = ['#DEEAFF', '#FFDEEC', '#F7FAFF'];
+  const freeColors = ['#3580FF', '#27282A', '#20BAD9'];
+  const premiumColors = ['#F2247A', '#29CC5F', '#F2C66D', '#7441D9', '#E58439'];
 
   const handleThemeSelect = (color: string) => {
     if (freeColors.includes(color) || isPremium) {
@@ -348,30 +339,19 @@ const ProfileManageScreen = () => {
                 />
                 {showThemes && (
                   <View style={tw`p-4`}>
-                    <Text style={tw`text-gray-500 text-sm mb-3`}>
-                      Free Colors
-                    </Text>
-                    <View style={tw`flex-row flex-wrap mb-4`}>
-                      {freeColors.map(color => (
-                        <ColorOption
-                          key={color}
-                          color={color}
-                          onPress={() => handleThemeSelect(color)}
-                          isSelected={selectedColor === color}
-                        />
-                      ))}
-                    </View>
-
-                    <Text style={tw`text-gray-500 text-sm mb-3`}>
-                      Premium Colors
-                    </Text>
                     <View style={tw`flex-row flex-wrap`}>
-                      {premiumColors.map(color => (
+                      {[
+                        ...freeColors.map(color => ({color, isPremium: false})),
+                        ...premiumColors.map(color => ({
+                          color,
+                          isPremium: true,
+                        })),
+                      ].map(({color, isPremium}) => (
                         <ColorOption
                           key={color}
                           color={color}
                           onPress={() => handleThemeSelect(color)}
-                          isPremium={!isPremium}
+                          isPremium={isPremium}
                           isSelected={selectedColor === color}
                         />
                       ))}
@@ -567,10 +547,10 @@ const ColorOption = ({
   isPremium = false,
   isSelected = false,
 }: ColorOptionProps) => (
-  <TouchableOpacity onPress={onPress} style={tw`m-2`}>
+  <TouchableOpacity onPress={onPress} style={tw`m-1`}>
     <View
       style={[
-        tw`w-10 h-10 rounded-full border-2 border-white relative`,
+        tw`w-8 h-8 rounded-full border-2 border-white relative`,
         {backgroundColor: color},
         isSelected && tw`border-blue-500 border-3`,
         isPremium && tw`opacity-80`,
