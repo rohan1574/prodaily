@@ -79,7 +79,7 @@ const ProfileManageScreen = () => {
   const {points} = usePoints();
 
   // Define theme colors
-  const freeColors = ['#3580FF', '#27282A','#F7FAFF','#F2247A'];
+  const freeColors = ['#3580FF', '#27282A','#20BAD9','#F2247A'];
   const premiumColors = [ '#DEEAFF', '#FFDEEC', '#F7FAFF'];
 
   const handleThemeSelect = (color: string) => {

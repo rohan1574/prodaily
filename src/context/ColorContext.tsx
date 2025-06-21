@@ -16,7 +16,7 @@ interface ColorProviderProps {
 }
 
 const ColorProvider = ({ children }: ColorProviderProps) => {
-  const [selectedColor, setSelectedColor] = useState<string>(''); // default color
+  const [selectedColor, setSelectedColor] = useState<string>('#3580FF'); // default color
   const [isPremium, setIsPremium] = useState<boolean>(false);
 
   const unlockPremium = () => {

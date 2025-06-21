@@ -12,7 +12,8 @@ const MyCalenderFutureTaskScreen = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
+// Get the selected color from context
+  const { selectedColor } = useColorContext();
   // Task filtering helper
   const isTaskVisible = (task: any, currentDate: Date): boolean => {
     currentDate.setHours(0, 0, 0, 0);
@@ -106,7 +107,7 @@ const MyCalenderFutureTaskScreen = () => {
             onDateChange={(date: Date) => setSelectedDate(date)}
             selectedStartDate={selectedDate}
             allowRangeSelection={false}
-            selectedDayColor="#3580FF"
+            selectedDayColor={selectedColor} 
             selectedDayTextColor="#fff"
             scaleFactor={375}
             weekdays={['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}
@@ -125,7 +126,7 @@ const MyCalenderFutureTaskScreen = () => {
               {
                 date: selectedDate,
                 style: {
-                  backgroundColor: '#3580FF',
+                  backgroundColor:selectedColor,
                   borderRadius: 10,
                 },
                 textStyle: {
@@ -156,20 +157,20 @@ const MyCalenderFutureTaskScreen = () => {
                     {task.icon ? (
                       <Image
                         source={task.icon}
-                        style={[tw`left-2`, {width: 30, height: 30}]}
+                        style={[tw`left-4`, {width: 30, height: 30,  tintColor: selectedColor}]}
                       />
                     ) : (
                       <Icon
                         name="checkmark-circle-outline"
                         size={24}
-                        color="#3580FF"
+                        color={selectedColor}
                         style={tw`left-2`}
                       />
                     )}
                     <Text
                       style={[
                         tw`text-sm font-medium left-6`,
-                        {color: '#2B2D42'},
+                        {color:selectedColor},
                       ]}>
                       {task.name}
                     </Text>
