@@ -110,28 +110,27 @@ const MyStatisticsScreen = () => {
   }
 
   const getColors = useMemo(() => {
-  switch (selectedColor) {
-    case '#3580FF':
-      return { background: '#3580FF', text: '#DEEAFF' };
-    case '#2B2D42':
-      return { background: '#5A9BD4', text: '#9CA3AF' };
-    case '#20BAD9':
-      return { background: '#20BAD9', text: '#DEF9FF' };
-    case '#F2247A':
-      return { background: '#F2247A', text: '#FFDEEC' };
-    case '#29CC5F':
-      return { background: '#30BF78', text: '#DEFFEF' };
-    case '#F2C66D':
-      return { background: '#F2C66D', text: '#FFF4DE' };
-    case '#7441D9':
-      return { background: '#FAF7FF', text: '#E9DEFF' };
-    case '#E58439':
-      return { background: '#E58139', text: '#FFECDE' };
-    default:
-      return { background: '#F7FAFF', text: '#DEEAFF' };
-  }
-}, [selectedColor]);
-
+    switch (selectedColor) {
+      case '#3580FF':
+        return {background: '#3580FF', text: '#DEEAFF'};
+      case '#2B2D42':
+        return {background: '#5A9BD4', text: '#9CA3AF'};
+      case '#20BAD9':
+        return {background: '#20BAD9', text: '#DEF9FF'};
+      case '#F2247A':
+        return {background: '#F2247A', text: '#FFDEEC'};
+      case '#29CC5F':
+        return {background: '#30BF78', text: '#DEFFEF'};
+      case '#F2C66D':
+        return {background: '#F2C66D', text: '#FFF4DE'};
+      case '#7441D9':
+        return {background: '#FAF7FF', text: '#E9DEFF'};
+      case '#E58439':
+        return {background: '#E58139', text: '#FFECDE'};
+      default:
+        return {background: '#F7FAFF', text: '#DEEAFF'};
+    }
+  }, [selectedColor]);
 
   const getLastPeriodText = () => {
     switch (selectedTab) {
@@ -306,7 +305,9 @@ const MyStatisticsScreen = () => {
                       tw`flex-1 p-2 rounded-full`,
                       {
                         backgroundColor:
-                          selectedTab === tab ? getColors.background : 'transparent',
+                          selectedTab === tab
+                            ? getColors.background
+                            : 'transparent',
                       },
                     ]}>
                     <Text
@@ -473,7 +474,11 @@ const MyStatisticsScreen = () => {
                   ]}>
                   COMPLETED
                 </Text>
-                <Text style={[tw`text-lg font-bold`, {color: getColors.background}]}>
+                <Text
+                  style={[
+                    tw`text-lg font-bold`,
+                    {color: getColors.background},
+                  ]}>
                   {statsData.completed}
                 </Text>
               </View>
@@ -509,7 +514,11 @@ const MyStatisticsScreen = () => {
                   ]}>
                   BEST STREAK DAY
                 </Text>
-                <Text style={[tw`text-lg font-bold`, {color: getColors.background}]}>
+                <Text
+                  style={[
+                    tw`text-lg font-bold`,
+                    {color: getColors.background},
+                  ]}>
                   {statsData.bestStreak}
                 </Text>
               </View>

@@ -2,7 +2,11 @@ import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {s as tw} from 'react-native-wind';
-import {useNavigation, useRoute, useFocusEffect} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {useColorContext} from '../context/ColorContext';
 import type {StackNavigationProp} from '@react-navigation/stack';
 
@@ -24,9 +28,8 @@ const BottomNavigation: React.FC = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // যখন স্ক্রিন ফোকাসে আসে, তখন activeTab হালনাগাদ করা হবে
       setActiveTab(route.name);
-    }, [route.name])
+    }, [route.name]),
   );
 
   const iconStyle = (screen: string) => ({
