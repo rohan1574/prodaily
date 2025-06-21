@@ -195,14 +195,14 @@ const MyStatisticsScreen = () => {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={[tw`flex-1`, {backgroundColor}]}>
+    <SafeAreaView style={[tw`flex-1`, {backgroundColor:'#F7FAFF'}]}>
       <View style={tw`flex-1`}>
         <ScrollView contentContainerStyle={[tw`p-4`, {paddingBottom: 170}]}>
           {/* হেডার সেকশন */}
           <Text
             style={[
               tw`font-bold`,
-              {fontSize: 20, letterSpacing: 1, },
+              {fontSize: 20, letterSpacing: 1,color:"000000" },
             ]}>
             My Statistics
           </Text>
@@ -210,7 +210,7 @@ const MyStatisticsScreen = () => {
             style={[
               tw``,
               {
-                color: secondaryTextColor,
+                color: "#8D99AE",
                 lineHeight: 20,
                 letterSpacing: 1,
                 fontSize: 11,
@@ -223,7 +223,7 @@ const MyStatisticsScreen = () => {
           <View
             style={[
               tw`rounded-lg top-4`,
-              {height: 320, backgroundColor: cardBackground},
+              {height: 320, backgroundColor: "#FFFFFF"},
             ]}>
             <View style={tw`flex-row justify-between h-32 top-4 mx-2`}>
               <View
@@ -232,14 +232,14 @@ const MyStatisticsScreen = () => {
                   {
                     width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#F2247A',
+                    backgroundColor: "#3580FF",
                   },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal bottom-4 text-xs `,
                     {
-                      color: isDarkTheme ? '#CCCCCC' : '#DEEAFF',
+                      color: '#DEEAFF',
                       letterSpacing: 1,
                     },
                   ]}>
@@ -260,14 +260,14 @@ const MyStatisticsScreen = () => {
                   {
                     width: width * 0.42,
                     height: width * 0.3,
-                    backgroundColor: isDarkTheme ? '#4A4A4A' : '#F2247A',
+                    backgroundColor: "#3580FF",
                   },
                 ]}>
                 <Text
                   style={[
                     tw`font-normal text-xs bottom-4`,
                     {
-                      color: isDarkTheme ? '#CCCCCC' : '#DEEAFF',
+                      color: '#DEEAFF',
                       letterSpacing: 0.5,
                     },
                   ]}>
