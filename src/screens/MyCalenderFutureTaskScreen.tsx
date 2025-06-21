@@ -157,7 +157,7 @@ const MyCalenderFutureTaskScreen = () => {
                     {task.icon ? (
                       <Image
                         source={task.icon}
-                        style={[tw`left-4`, {width: 30, height: 30,  tintColor: selectedColor}]}
+                        style={[tw`left-2`, {width: 30, height: 30,  tintColor: selectedColor}]}
                       />
                     ) : (
                       <Icon
