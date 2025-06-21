@@ -19,6 +19,7 @@ import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useColorContext} from '../context/ColorContext';
+
 interface Task {
   id: string;
   name: string;

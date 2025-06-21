@@ -42,7 +42,9 @@ type MenuItemProps = {
   onPress: () => void;
   showChevron?: boolean;
   chevronDirection?: 'up' | 'down';
+  selectedColor?: string; // optional
 };
+
 
 type ColorOptionProps = {
   color: string;
@@ -62,7 +64,6 @@ const ProfileManageScreen = () => {
   const [showThemes, setShowThemes] = useState(false);
   const context = useContext(ColorContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedPremiumColor, setSelectedPremiumColor] = useState('');
 
   // Handle premium confirmation
   const handlePremiumConfirm = () => {
@@ -79,7 +80,7 @@ const ProfileManageScreen = () => {
   const {points} = usePoints();
 
   // Define theme colors
-  const freeColors = ['#3580FF', '#27282A','#20BAD9','#F2247A','#29CC5F','#F2C66D','#7441D9','#E58439'];
+  const freeColors = [ '#27282A','#20BAD9','#F2247A','#29CC5F','#F2C66D','#7441D9','#E58439'];
   const premiumColors = [ '#DEEAFF', '#FFDEEC', '#F7FAFF'];
 
   const handleThemeSelect = (color: string) => {
@@ -124,7 +125,7 @@ const ProfileManageScreen = () => {
                 <View
                   style={[
                     tw` px-2 py-0.5 rounded`,
-                    {backgroundColor: '#DEEAFF4D'},
+                    {backgroundColor: '#DEEAFF'},
                   ]}>
                   <Text style={tw`text-xs text-white font-normal`}>Free</Text>
                 </View>
@@ -256,7 +257,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="home-outline"
                 size={24}
-                color="#3580FF"
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>Home</Text>
@@ -270,7 +271,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="sparkles-outline"
                 size={24}
-                color="#3580FF"
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>Premium</Text>
@@ -287,7 +288,7 @@ const ProfileManageScreen = () => {
                   <Icon
                     name="person-outline"
                     size={24}
-                    color="#3580FF"
+                     color={selectedColor}
                     style={tw`mr-2`}
                   />
                   <Text style={tw`text-black text-base`}>Account</Text>
@@ -331,6 +332,7 @@ const ProfileManageScreen = () => {
                 style={tw`bg-white rounded-xl shadow-sm mb-2  overflow-hidden`}>
                 <MenuItem
                   icon="moon-outline"
+                  selectedColor={selectedColor}
                   text="Themes"
                   onPress={() => setShowThemes(!showThemes)}
                   showChevron
@@ -375,7 +377,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="bar-chart-outline"
                 size={24}
-                color="#3580FF"
+                 color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>Statistics</Text>
@@ -385,7 +387,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="calendar-outline"
                 size={24}
-                color="#3580FF"
+                 color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>My Calendar</Text>
@@ -396,7 +398,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="clipboard-outline"
                 size={24}
-                color="#3580FF"
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text
@@ -410,7 +412,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="cloud-outline"
                 size={24}
-                color="#3580FF"
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>Sync Data</Text>
@@ -513,7 +515,7 @@ const ProfileManageScreen = () => {
                       }}
                       style={[
                         tw` font-medium top-2`,
-                        {fontSize: 12, color: '#3580FF', letterSpacing: 1},
+                        {fontSize: 12, color:selectedColor, letterSpacing: 1},
                       ]}>
                       Discover
                     </Text>
@@ -530,18 +532,19 @@ const ProfileManageScreen = () => {
   );
 };
 // Helper Components
-const MenuItem = ({ 
-  icon, 
-  text, 
-  onPress, 
+const MenuItem = ({
+  icon,
+  text,
+  onPress,
   showChevron = false,
-  chevronDirection = 'down'
+  chevronDirection = 'down',
+  selectedColor = '#000'  // fallback color
 }: MenuItemProps) => (
   <TouchableOpacity
     onPress={onPress}
     style={tw`flex-row items-center justify-between p-3`}>
     <View style={tw`flex-row items-center left-1`}>
-      <Icon name={icon} size={24} color="#3580FF" style={tw`mr-2`} />
+      <Icon name={icon} size={24} color={selectedColor} style={tw`mr-2`} />
       <Text style={tw`text-gray-800 text-base`}>{text}</Text>
     </View>
     {showChevron && (
@@ -553,7 +556,6 @@ const MenuItem = ({
     )}
   </TouchableOpacity>
 );
-
 // Update the ColorOption component with proper typing
 const ColorOption = ({ 
   color, 
