@@ -45,7 +45,6 @@ type MenuItemProps = {
   selectedColor?: string; // optional
 };
 
-
 type ColorOptionProps = {
   color: string;
   onPress: () => void;
@@ -80,8 +79,17 @@ const ProfileManageScreen = () => {
   const {points} = usePoints();
 
   // Define theme colors
-  const freeColors = [ '#3580FF','#27282A','#20BAD9','#F2247A','#29CC5F','#F2C66D','#7441D9','#E58439'];
-  const premiumColors = [ '#DEEAFF', '#FFDEEC', '#F7FAFF'];
+  const freeColors = [
+    '#3580FF',
+    '#27282A',
+    '#20BAD9',
+    '#F2247A',
+    '#29CC5F',
+    '#F2C66D',
+    '#7441D9',
+    '#E58439',
+  ];
+  const premiumColors = ['#DEEAFF', '#FFDEEC', '#F7FAFF'];
 
   const handleThemeSelect = (color: string) => {
     if (freeColors.includes(color) || isPremium) {
@@ -288,7 +296,7 @@ const ProfileManageScreen = () => {
                   <Icon
                     name="person-outline"
                     size={24}
-                     color={selectedColor}
+                    color={selectedColor}
                     style={tw`mr-2`}
                   />
                   <Text style={tw`text-black text-base`}>Account</Text>
@@ -377,7 +385,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="bar-chart-outline"
                 size={24}
-                 color={selectedColor}
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>Statistics</Text>
@@ -387,7 +395,7 @@ const ProfileManageScreen = () => {
               <Icon
                 name="calendar-outline"
                 size={24}
-                 color={selectedColor}
+                color={selectedColor}
                 style={tw`mr-2`}
               />
               <Text style={tw`text-black text-base`}>My Calendar</Text>
@@ -515,7 +523,7 @@ const ProfileManageScreen = () => {
                       }}
                       style={[
                         tw` font-medium top-2`,
-                        {fontSize: 12, color:selectedColor, letterSpacing: 1},
+                        {fontSize: 12, color: selectedColor, letterSpacing: 1},
                       ]}>
                       Discover
                     </Text>
@@ -538,7 +546,7 @@ const MenuItem = ({
   onPress,
   showChevron = false,
   chevronDirection = 'down',
-  selectedColor = '#000'  // fallback color
+  selectedColor = '#000', // fallback color
 }: MenuItemProps) => (
   <TouchableOpacity
     onPress={onPress}
@@ -548,32 +556,28 @@ const MenuItem = ({
       <Text style={tw`text-gray-800 text-base`}>{text}</Text>
     </View>
     {showChevron && (
-      <Icon 
-        name={`chevron-${chevronDirection}`} 
-        size={20} 
-        color="#D1D5DB" 
-      />
+      <Icon name={`chevron-${chevronDirection}`} size={20} color="#D1D5DB" />
     )}
   </TouchableOpacity>
 );
 // Update the ColorOption component with proper typing
-const ColorOption = ({ 
-  color, 
-  onPress, 
-  isPremium = false, 
-  isSelected = false 
+const ColorOption = ({
+  color,
+  onPress,
+  isPremium = false,
+  isSelected = false,
 }: ColorOptionProps) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={tw`m-2`}>
-    <View style={[
-      tw`w-10 h-10 rounded-full border-2 border-white relative`,
-      { backgroundColor: color },
-      isSelected && tw`border-blue-500 border-3`,
-      isPremium && tw`opacity-80`
-    ]}>
+  <TouchableOpacity onPress={onPress} style={tw`m-2`}>
+    <View
+      style={[
+        tw`w-10 h-10 rounded-full border-2 border-white relative`,
+        {backgroundColor: color},
+        isSelected && tw`border-blue-500 border-3`,
+        isPremium && tw`opacity-80`,
+      ]}>
       {isPremium && (
-        <View style={tw`absolute -top-1 -right-1 bg-amber-500 rounded-full w-4 h-4 items-center justify-center`}>
+        <View
+          style={tw`absolute -top-1 -right-1 bg-amber-500 rounded-full w-4 h-4 items-center justify-center`}>
           <Icon name="lock-closed" size={10} color="white" />
         </View>
       )}
