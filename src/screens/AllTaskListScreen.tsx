@@ -18,7 +18,7 @@ import DateSelector from './DateSelector';
 import {Keyboard} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
+import {useColorContext} from '../context/ColorContext';
 interface Task {
   id: string;
   name: string;
@@ -54,6 +54,20 @@ const AllTaskListScreen = () => {
   const [successAction, setSuccessAction] = useState<
     'updated' | 'deleted' | null
   >(null);
+
+  const {selectedColor} = useColorContext();
+  const getGradientColors = useMemo(() => {
+    switch (selectedColor) {
+      case '#3580FF':
+        return ['#F7FAFF', '#DEEAFF']; // Default
+      case '#20BAD9':
+        return ['#F7FEFF', '#DEF9FF']; // Blue variant
+      case '#F2247A':
+        return ['#FFF7FA', '#FFDEEC']; // Pink variant
+      default:
+        return ['#F7FAFF', '#DEEAFF']; // Fallback to default
+    }
+  }, [selectedColor]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -256,7 +270,11 @@ const AllTaskListScreen = () => {
       transparent={true}
       animationType="fade"
       onRequestClose={() => setDeleteModalVisible(false)}>
-      <View style={[tw`flex-1 bg-black/50 justify-center items-center p-4`,{backgroundColor: 'rgba(32, 41, 56, 0.85)'}]}>
+      <View
+        style={[
+          tw`flex-1 bg-black/50 justify-center items-center p-4`,
+          {backgroundColor: 'rgba(32, 41, 56, 0.85)'},
+        ]}>
         <View style={tw`bg-white p-6 rounded-xl w-full max-w-80`}>
           <Text style={tw`text-lg font-bold mb-4 text-center`}>
             Are you sure you want to delete this task?
@@ -444,7 +462,7 @@ const AllTaskListScreen = () => {
                           <Icon
                             name={task.isStarred ? 'star' : 'star-outline'}
                             size={20}
-                            color={task.isStarred ? '#3580FF' : 'gray'}
+                            color={task.isStarred ? '#3580FF' : '#8D99AE'}
                           />
                         </TouchableOpacity>
                       )}
@@ -490,7 +508,7 @@ const AllTaskListScreen = () => {
                         <Text
                           style={[
                             tw`font-normal text-gray-500 `,
-                            {fontSize: 12, letterSpacing: .5},
+                            {fontSize: 12, letterSpacing: 0.5},
                           ]}>
                           Add specific for
                         </Text>
@@ -531,7 +549,7 @@ const AllTaskListScreen = () => {
 
                         {/* Button Group */}
                         <LinearGradient
-                          colors={['#F7FAFF', '#DEEAFF']}
+                          colors={getGradientColors}
                           start={{x: 0, y: 0}}
                           end={{x: 0, y: 1}}
                           style={[
@@ -591,14 +609,14 @@ const AllTaskListScreen = () => {
                         <Text
                           style={[
                             tw`font-normal text-gray-500 `,
-                            {fontSize: 12, letterSpacing: .1},
+                            {fontSize: 12, letterSpacing: 0.1},
                           ]}>
                           Add Specific Day On
                         </Text>
 
                         {/* Weekly, Monthly, Yearly Button Group */}
                         <LinearGradient
-                          colors={['#F7FAFF', '#DEEAFF']}
+                          colors={getGradientColors}
                           start={{x: 0, y: 0}}
                           end={{x: 0, y: 1}}
                           style={[
@@ -719,7 +737,7 @@ const AllTaskListScreen = () => {
 
                         {/* Type Selector */}
                         <LinearGradient
-                          colors={['#F7FAFF', '#DEEAFF']}
+                         colors={getGradientColors}
                           start={{x: 0, y: 0}}
                           end={{x: 0, y: 1}}
                           style={[
@@ -827,7 +845,7 @@ const AllTaskListScreen = () => {
 
         {isDateSelectorVisible && (
           <DateSelector
-          year={editedTask.year}
+            year={editedTask.year}
             selectedDates={editedTask.selectedDates || []}
             selectedMonths={editedTask.selectedMonths || []}
             onSelectDate={date =>
