@@ -314,10 +314,11 @@ const MyStatisticsScreen = () => {
                     ]}>
                     <Text
                       style={[
-                        tw`text-center text-white`,
-                        selectedTab === tab
-                          ? tw`font-bold`
-                          : tw`font-normal text-gray-400`,
+                        tw`text-center`,
+                        {
+                          color: selectedTab === tab ? '#FFFFFF' : '#8D99AE',
+                          fontWeight: selectedTab === tab ? 'bold' : 'normal',
+                        },
                       ]}>
                       {tab}
                     </Text>
@@ -329,19 +330,23 @@ const MyStatisticsScreen = () => {
             <View
               style={[
                 tw`shadow-lg rounded-lg p-4 bottom-4`,
-                {height: 145, backgroundColor: cardBackground},
+                {height: 145, backgroundColor: '#FFFFFF'},
               ]}>
               {/* last */}
-              <Text style={[tw`font-medium text-base mb-2 bottom-4`, ,]}>
+              <Text
+                style={[
+                  tw`font-medium text-base mb-2 bottom-4`,
+                  {color: '#2B2D42'},
+                ]}>
                 {getLastPeriodText()}
               </Text>
               <View style={tw`flex-row items-center justify-between`}>
                 <CircularProgress
                   percentage={statsData.successScore}
                   radius={40}
-                  backgroundColor={progressBgColor}
-                  progressColor={progressColor}
-                  textColor={textColor}
+                  backgroundColor="#DEEAFF"
+                  progressColor="#3580FF"
+                  textColor="#2B2D42"
                 />
                 <View style={tw`ml-4 bottom-2`}>
                   <Text
